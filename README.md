@@ -5,7 +5,7 @@ Bienvenue dans la documentation officielle de **LifeSteal FR**.
 📌 Choisis une section :
 
 - 👉 [📖 Players](Players.md)
-- 👉 [🛠️ Staff](Staff.md)
+- 👉 [🛠️ Staff](Staff)
 
 ---
 
