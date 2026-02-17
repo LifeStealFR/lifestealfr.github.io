@@ -8,28 +8,28 @@ Ici se trouvent toutes les procédures officielles à respecter.
 
 ## 📜 Règles Générales
 
-- [Charte Staff](charte-staff.md)
-- [Déroulement d’une Convocation](convocations.md)
-- [Casier Judiciaire Joueur](casier-judiciaire.md)
+- [Charte Staff](charte-staff)
+- [Déroulement d’une Convocation](convocations)
+- [Casier Judiciaire Joueur](casier-judiciaire)
 
 ---
 
 ## 🎟 Gestion des Tickets
 
-- [Types de Ticket & Permissions](tickets/types-de-ticket.md)
-- [Retrait de Sanction](tickets/retrait-sanction.md)
-- [Signalement](tickets/signalement.md)
-- [Partenariat](tickets/partenariat.md)
-- [Critères Partenariat](tickets/criteres-partenariat.md)
-- [Recrutement](tickets/recrutement.md)
-- [Correction & Tutos](tickets/correction.md)
+- [Types de Ticket & Permissions](tickets/types-de-ticket)
+- [Retrait de Sanction](tickets/retrait-sanction)
+- [Signalement](tickets/signalement)
+- [Partenariat](tickets/partenariat)
+- [Critères Partenariat](tickets/criteres-partenariat)
+- [Recrutement](tickets/recrutement)
+- [Correction & Tutos](tickets/correction)
 
 ---
 
 ## 🛡 Administration
 
-- [Charte Administrateur](administration/charte-admin.md)
-- [Charte Administrateur+](administration/charte-admin-plus.md)
+- [Charte Administrateur](administration/charte-admin)
+- [Charte Administrateur+](administration/charte-admin-plus)
 
 ---
 
