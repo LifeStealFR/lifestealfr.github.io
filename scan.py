@@ -10,7 +10,6 @@ def generate_sidebar():
             
             for root, dirs, files in os.walk(folder):
                 files.sort()
-                # Calcul de l'indentation
                 depth = root.count(os.sep)
                 indent = '  ' * (depth + 1)
                 
@@ -22,12 +21,11 @@ def generate_sidebar():
 
                 # Ajout des fichiers
                 for file in files:
-                    if file.endswith('.md'):
+                    if file.endswith('.md') and file not in ['_sidebar.md', 'README.md' if root=='.' else '']:
                         path = os.path.join(root, file).replace('\\', '/')
                         name = file.replace('.md', '').replace('-', ' ').title()
-                        if name.lower() == 'readme': name = "Accueil"
+                        if name.lower() == 'readme': name = "Introduction"
                         f.write(f'{indent}* [{name}]({path})\n')
 
 if __name__ == "__main__":
     generate_sidebar()
-    print("[SYSTEM] Indexation terminée. Le menu _sidebar.md est à jour !")
