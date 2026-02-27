@@ -2,269 +2,350 @@
 <html lang="fr">
 <head>
   <meta charset="UTF-8">
-  <title>LifeSteal FR // SYSTEM</title>
+  <title>Cardinal System // LOGIN</title>
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
   
-  <!-- Police SAO Style (Exo 2 est très proche de la police officielle) -->
-  <link href="https://fonts.googleapis.com/css2?family=Exo+2:ital,wght@0,300;0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
-
-  <!-- Thème de base (Dark) -->
+  <!-- Polices SAO & Icônes -->
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700;900&family=Rajdhani:wght@300;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  
+  <!-- CSS Base Docsify -->
   <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/docsify@4/lib/themes/dark.css">
   <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/docsify-sidebar-collapse/dist/sidebar.min.css" />
 
   <style>
     :root {
-      /* Palette Aincrad */
-      --sao-orange: #ffaa00;
-      --sao-orange-glow: rgba(255, 170, 0, 0.6);
-      --sao-dark: #1a1a1a;
-      --sao-panel-bg: rgba(30, 30, 30, 0.85);
-      --sao-panel-border: rgba(200, 200, 200, 0.3);
-      --sao-text: #eee;
-      --sao-font: 'Exo 2', sans-serif;
+      /* Palette SAO UI */
+      --c-orange: #ffb700;
+      --c-orange-dim: rgba(255, 183, 0, 0.2);
+      --c-dark: #121212;
+      --c-panel: rgba(20, 20, 25, 0.90);
+      --c-text: #eaeaea;
+      --c-border: rgba(200, 200, 200, 0.4);
+      --font-tech: 'Orbitron', sans-serif;
+      --font-body: 'Rajdhani', sans-serif;
     }
 
-    /* --- 1. BACKGROUND "LINK START" --- */
-    body {
-      background: radial-gradient(circle at center, #2b2b35 0%, #050505 100%);
-      font-family: var(--sao-font);
-      color: var(--sao-text);
-      overflow-x: hidden;
-    }
-
-    /* Animation de particules en arrière-plan */
-    body::before {
-      content: "";
-      position: fixed;
-      top: 0; left: 0; width: 100%; height: 100%;
-      background-image: 
-        linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
-      background-size: 100px 100px;
-      z-index: -1;
-      animation: gridFloat 60s linear infinite;
-    }
-
-    @keyframes gridFloat {
-      0% { transform: scale(1); }
-      50% { transform: scale(1.1); }
-      100% { transform: scale(1); }
-    }
-
-    /* --- 2. BARRE LATÉRALE (Le Menu Principal) --- */
-    .sidebar {
-      background: linear-gradient(180deg, rgba(40,40,40,0.95) 0%, rgba(20,20,20,0.95) 100%);
-      border-right: 1px solid rgba(255, 255, 255, 0.1);
-      width: 300px;
-      padding-top: 20px;
-      box-shadow: 10px 0 30px rgba(0,0,0,0.5);
-      /* Forme biseautée typique des menus SAO (illusion via clip-path) */
-    }
-
-    /* Le Titre (Nom du Serveur) */
-    .app-name-link {
-      font-weight: 700;
-      font-size: 1.6em;
-      color: #fff !important;
-      text-transform: uppercase;
-      letter-spacing: 2px;
-      text-shadow: 0 0 10px rgba(255,255,255,0.5);
-      border-bottom: 2px solid var(--sao-orange);
-      padding-bottom: 10px;
-      display: inline-block;
-      width: 90%;
-      text-align: center;
-    }
-
-    /* Les liens du menu */
-    .sidebar-nav ul { padding-left: 0; }
+    /* --- 0. CURSEUR & BODY --- */
+    * { cursor: crosshair; box-sizing: border-box; }
     
-    .sidebar-nav li {
-      margin: 5px 10px;
-      list-style: none;
+    body {
+      background-color: #000;
+      font-family: var(--font-body);
+      overflow: hidden; /* On gère le scroll dans les fenêtres */
+      color: var(--c-text);
     }
 
+    /* Grille de fond animée (Aincrad Sky) */
+    .bg-grid {
+      position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+      background: 
+        radial-gradient(circle at 50% 50%, rgba(40, 40, 50, 1) 0%, rgba(0,0,0,1) 100%),
+        linear-gradient(0deg, rgba(255, 183, 0, 0.05) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 183, 0, 0.05) 1px, transparent 1px);
+      background-size: 100% 100%, 40px 40px, 40px 40px;
+      perspective: 1000px;
+      z-index: -10;
+    }
+    .floating-particles {
+      position: absolute; top:0; left:0; width:100%; height:100%;
+      background-image: radial-gradient(white 1px, transparent 1px);
+      background-size: 60px 60px;
+      opacity: 0.1;
+      animation: particleFloat 20s linear infinite;
+    }
+    @keyframes particleFloat { from { transform: translateY(0); } to { transform: translateY(100px); } }
+
+    /* --- 1. SÉQUENCE LINK START (Overlay) --- */
+    #link-start {
+      position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+      background: #000; z-index: 99999;
+      display: flex; flex-direction: column;
+      justify-content: center; align-items: center;
+      animation: fadeOutIntro 1s forwards 3.5s; /* Disparait après 3.5s */
+      pointer-events: none;
+    }
+    .tunnel {
+      width: 100%; height: 2px; background: var(--c-orange);
+      box-shadow: 0 0 20px var(--c-orange), 0 0 50px var(--c-orange);
+      animation: expandLine 0.5s ease-out forwards;
+    }
+    .sao-logo {
+      font-family: var(--font-tech); font-size: 4em; color: var(--c-orange);
+      text-shadow: 0 0 20px var(--c-orange);
+      opacity: 0; animation: textAppear 0.5s forwards 0.8s;
+    }
+    .check-system {
+      font-family: monospace; color: #fff; margin-top: 20px;
+      opacity: 0; animation: textAppear 0.5s forwards 1.5s;
+    }
+    @keyframes expandLine { 0% { width:0; } 100% { width:100%; } }
+    @keyframes textAppear { 0% { opacity:0; transform:scale(2); } 100% { opacity:1; transform:scale(1); } }
+    @keyframes fadeOutIntro { to { opacity: 0; visibility: hidden; } }
+
+    /* --- 2. SIDEBAR (MENU FLOTTANT) --- */
+    .sidebar {
+      background: transparent !important;
+      border: none !important;
+      width: 280px;
+      padding-top: 50px;
+      overflow: visible;
+    }
+
+    /* Le menu SAO (icônes flottantes) */
+    .sidebar-nav {
+      margin-left: 20px;
+    }
+    
+    .sidebar-nav ul { padding: 0; }
+    .sidebar-nav li { list-style: none; margin-bottom: 8px; position: relative; }
+
+    /* Liens principaux */
     .sidebar-nav a {
       display: block;
-      padding: 10px 15px;
-      border: 1px solid transparent;
-      border-radius: 4px; /* Un peu arrondi */
-      color: #bbb !important;
+      background: rgba(30, 30, 30, 0.8);
+      border: 1px solid rgba(255,255,255,0.2);
+      border-radius: 50px; /* Forme de pilule */
+      padding: 10px 20px;
+      color: #ccc !important;
       text-decoration: none !important;
-      transition: all 0.2s;
-      font-size: 0.95rem;
-      position: relative;
-      background: rgba(0,0,0,0.2);
+      font-weight: 600;
+      transition: all 0.2s ease;
+      font-family: var(--font-body);
+      font-size: 1.1em;
+      box-shadow: 5px 5px 10px rgba(0,0,0,0.5);
     }
 
-    /* EFFET HOVER SAO : Barre Orange qui apparaît */
+    /* Hover Effect "Swipe" */
     .sidebar-nav a:hover, .sidebar-nav li.active > a {
-      background: linear-gradient(90deg, rgba(255, 170, 0, 0.2) 0%, transparent 100%);
-      border-left: 4px solid var(--sao-orange);
-      color: #fff !important;
-      padding-left: 25px;
-      box-shadow: 0 0 15px var(--sao-orange-glow);
+      background: linear-gradient(90deg, var(--c-orange), #ff8800);
+      color: #000 !important;
+      border-color: #fff;
+      transform: translateX(15px) scale(1.05);
+      box-shadow: 0 0 15px var(--c-orange);
+      padding-left: 30px;
     }
 
-    /* Icone de dossier */
+    /* Titres de dossiers */
     .sidebar-nav > ul > li > strong {
-      color: var(--sao-orange);
-      font-size: 0.85em;
-      text-transform: uppercase;
-      letter-spacing: 1.5px;
-      margin-top: 25px;
-      margin-left: 10px;
-      border-bottom: 1px solid rgba(255, 170, 0, 0.3);
       display: block;
+      color: var(--c-orange);
+      font-family: var(--font-tech);
+      font-size: 0.8em;
+      letter-spacing: 2px;
+      margin: 20px 0 5px 10px;
+      text-transform: uppercase;
+      border-bottom: 1px solid rgba(255, 183, 0, 0.3);
       width: fit-content;
     }
 
-    /* --- 3. CONTENU (La Fenêtre Flottante) --- */
+    /* --- 3. FENÊTRE PRINCIPALE (POPUP) --- */
     .content {
-      padding-top: 40px;
+      padding-top: 0;
+      padding-left: 320px; /* Espace pour le menu */
+      padding-right: 20px;
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
 
+    /* Le cadre de la fenêtre */
     .markdown-section {
-      background: var(--sao-panel-bg);
-      border: 1px solid var(--sao-panel-border);
+      background: var(--c-panel);
+      width: 100%;
+      max-width: 1100px;
+      height: 85vh; /* Fenêtre flottante */
+      border: 1px solid rgba(200,200,200,0.3);
       border-radius: 8px;
-      padding: 50px;
-      box-shadow: 0 10px 50px rgba(0,0,0,0.8);
+      box-shadow: 0 0 50px rgba(0,0,0,0.8);
       position: relative;
-      max-width: 950px;
-      margin: 0 auto;
-      backdrop-filter: blur(5px);
+      overflow-y: auto; /* Scroll à l'intérieur de la fenêtre */
+      padding: 60px 40px 40px 40px; /* Espace pour le header */
+      backdrop-filter: blur(10px);
+      animation: windowOpen 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     }
 
-    /* Barre de titre de la fenêtre (Décoration) */
+    @keyframes windowOpen {
+      from { transform: scale(0); opacity: 0; }
+      to { transform: scale(1); opacity: 1; }
+    }
+
+    /* Décoration Header de Fenêtre (Faux UI) */
     .markdown-section::before {
-      content: "SYSTEM ALERT // MESSAGE WINDOW";
-      position: absolute;
-      top: 0; left: 0; width: 100%;
-      height: 25px;
-      background: rgba(255, 255, 255, 0.1);
-      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-      color: rgba(255, 255, 255, 0.5);
-      font-size: 10px;
-      line-height: 25px;
-      padding-left: 15px;
-      box-sizing: border-box;
-      border-radius: 8px 8px 0 0;
-      font-family: monospace;
-    }
-
-    /* Titres */
-    .markdown-section h1 {
-      color: #fff;
-      font-size: 2.5rem;
-      border-bottom: 2px solid var(--sao-orange);
-      padding-bottom: 10px;
-      margin-top: 0;
-      text-shadow: 0 0 10px rgba(255, 170, 0, 0.5);
-    }
-
-    .markdown-section h2 {
-      color: var(--sao-orange);
-      margin-top: 40px;
-      border-left: 5px solid var(--sao-orange);
-      padding-left: 15px;
-      background: linear-gradient(90deg, rgba(255, 170, 0, 0.1), transparent);
-    }
-
-    /* Liens hypertexte */
-    .markdown-section a {
-      color: var(--sao-orange);
-      font-weight: 600;
-      text-decoration: none;
-      position: relative;
-    }
-    .markdown-section a::after {
-      content: ' »';
-      font-size: 0.8em;
-    }
-    .markdown-section a:hover {
-      text-shadow: 0 0 8px var(--sao-orange);
-    }
-
-    /* Codes */
-    .markdown-section code {
-      color: var(--sao-orange) !important;
-      background: rgba(0,0,0,0.5) !important;
-      border: 1px solid rgba(255, 170, 0, 0.2);
+      content: "MESSAGE // SYSTEM ALERT";
+      position: absolute; top: 0; left: 0; right: 0;
+      height: 35px;
+      background: linear-gradient(90deg, rgba(255,255,255,0.1), transparent);
+      border-bottom: 1px solid rgba(255,255,255,0.2);
+      color: var(--c-orange);
+      font-family: var(--font-tech);
+      font-size: 14px;
+      line-height: 35px;
+      padding-left: 20px;
+      letter-spacing: 1px;
     }
     
-    .markdown-section pre {
-      background: rgba(10, 10, 10, 0.8) !important;
-      border: 1px solid var(--sao-panel-border);
+    /* Boutons décoratifs (X, O) */
+    .markdown-section::after {
+      content: "⬤ ⬤";
+      position: absolute; top: 5px; right: 15px;
+      color: rgba(255,255,255,0.3);
+      font-size: 12px;
+      letter-spacing: 5px;
+    }
+
+    /* --- 4. TYPOGRAPHIE & ÉLÉMENTS INTERNES --- */
+    
+    /* Titres */
+    h1 {
+      font-family: var(--font-tech);
+      color: #fff;
+      font-size: 2.5em;
+      border-bottom: 2px solid var(--c-orange);
+      padding-bottom: 10px;
+      text-shadow: 0 0 10px var(--c-orange-dim);
+    }
+    h2, h3 {
+      color: var(--c-orange);
+      margin-top: 40px;
+    }
+
+    /* Tableaux (Style Inventaire) */
+    table {
+      width: 100%;
+      background: rgba(0,0,0,0.3);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 4px;
+    }
+    thead tr { background: rgba(255, 183, 0, 0.1); }
+    th { color: var(--c-orange); font-family: var(--font-tech); border: none; }
+    td { border-top: 1px solid rgba(255,255,255,0.05); }
+
+    /* Alertes / Citations (Style Polygone) */
+    blockquote {
+      background: rgba(255, 0, 0, 0.15);
+      border-left: 5px solid #ff0000;
+      color: #ffaaaa;
+      padding: 15px;
+      margin: 20px 0;
       position: relative;
     }
+    /* Pour les infos (!>) */
+    .tip {
+      border-left-color: var(--c-orange) !important;
+      background: rgba(255, 183, 0, 0.1) !important;
+      color: #fff !important;
+    }
+    .tip::before { content: "INFO"; font-weight: bold; color: var(--c-orange); display:block; margin-bottom:5px; font-size:0.8em; }
 
-    /* --- 4. BARRE DE RECHERCHE (Input Field) --- */
+    /* Liens internes */
+    .markdown-section a {
+      color: var(--c-orange);
+      font-weight: bold;
+      text-decoration: none;
+      border-bottom: 1px dotted var(--c-orange);
+    }
+    .markdown-section a:hover {
+      background: var(--c-orange);
+      color: #000;
+      box-shadow: 0 0 10px var(--c-orange);
+    }
+
+    /* Code Blocks */
+    pre {
+      background: #000 !important;
+      border: 1px solid var(--c-orange);
+      box-shadow: inset 0 0 20px rgba(0,0,0,0.8);
+    }
+    code { color: var(--c-orange) !important; font-family: monospace; }
+
+    /* --- 5. SEARCH & LOGO --- */
+    .app-name-link { display: none; } /* On cache le titre défaut pour mettre le nôtre */
+    
     .search {
-      margin-bottom: 20px;
-      border-bottom: none !important;
-      padding: 10px;
+      margin: 20px;
+      position: relative;
     }
     .search input {
-      background: rgba(0,0,0,0.4) !important;
-      border: 1px solid rgba(255, 255, 255, 0.2) !important;
+      background: rgba(0,0,0,0.5) !important;
+      border: 1px solid #555 !important;
+      border-radius: 20px;
       color: #fff !important;
-      border-radius: 20px; /* Forme de pilule */
-      padding: 5px 15px !important;
-      transition: all 0.3s;
+      font-family: var(--font-tech);
+      padding-left: 35px !important;
     }
-    .search input:focus {
-      border-color: var(--sao-orange) !important;
-      box-shadow: 0 0 10px var(--sao-orange-glow);
+    .search::before {
+      content: "\f002"; /* FontAwesome Search Icon */
+      font-family: "Font Awesome 6 Free"; font-weight: 900;
+      position: absolute; left: 10px; top: 8px; color: #777; z-index: 2;
     }
 
-    /* --- 5. SCROLLBARS --- */
-    ::-webkit-scrollbar { width: 8px; }
-    ::-webkit-scrollbar-track { background: #111; }
-    ::-webkit-scrollbar-thumb { background: #555; border-radius: 4px; }
-    ::-webkit-scrollbar-thumb:hover { background: var(--sao-orange); }
+    /* --- CUSTOM SCROLLBAR (Fine et Orange) --- */
+    ::-webkit-scrollbar { width: 6px; background: #111; }
+    ::-webkit-scrollbar-thumb { background: #444; border-radius: 3px; }
+    ::-webkit-scrollbar-thumb:hover { background: var(--c-orange); }
 
-    /* --- CHARGEMENT --- */
-    #app {
-      transition: opacity 0.5s;
-    }
   </style>
 </head>
 <body>
-  <!-- Point de montage avec texte de chargement immersif -->
-  <div id="app">
-    <div style="position:absolute; top:50%; left:50%; transform:translate(-50%, -50%); text-align:center; color:#ffaa00;">
-      <h2 style="font-family: sans-serif; letter-spacing: 5px;">LINK START</h2>
-      <p style="color:#666;">INITIALIZING CARDINAL SYSTEM...</p>
+  
+  <!-- BACKGROUND LAYERS -->
+  <div class="bg-grid">
+    <div class="floating-particles"></div>
+  </div>
+
+  <!-- INTRO ANIMATION (LINK START) -->
+  <div id="link-start">
+    <div class="sao-logo">LINK START</div>
+    <div class="tunnel"></div>
+    <div class="check-system">
+      > CHECKING NERVEGEAR STATUS... OK<br>
+      > CONNECTING TO LIFESTEAL SERVER... OK<br>
+      > AUTHENTICATION... SUCCESS
     </div>
   </div>
 
+  <!-- DOCSIFY APP -->
+  <div id="app"></div>
+
   <script>
     window.$docsify = {
-      // Le logo est stylisé via CSS, on met juste le texte ici
       name: 'LifeSteal FR',
-      repo: '', 
+      repo: '',
       
+      // La page d'accueil
       homepage: 'README.md',
-      loadSidebar: true, // Nécessite toujours le script Python
-      subMaxLevel: 3,
+      loadSidebar: true,
+      subMaxLevel: 2,
       auto2top: true,
       
       // Configuration Recherche
       search: {
-        placeholder: 'SEARCH OBJECT...',
-        noData: 'NO DATA FOUND.',
+        placeholder: 'SEARCH DATABASE',
+        noData: 'NO DATA FOUND',
         depth: 6
       },
+      
+      sidebarDisplayLevel: 1, // Dossiers fermés par défaut
 
-      sidebarDisplayLevel: 1,
-
-      copyCode: {
-        buttonText: 'COPY',
-        errorText: 'ERROR',
-        successText: 'COPIED'
-      }
+      // Custom Plugin pour l'immersion
+      plugins: [
+        function(hook, vm) {
+          // A chaque changement de page (pour réinitialiser l'animation fenêtre)
+          hook.doneEach(function() {
+            // Ajout d'un petit son visuel ou log console
+            console.log("[SYSTEM] Window Refreshed.");
+            
+            // On force le titre à être plus "Tech"
+            const title = document.querySelector('h1');
+            if(title) {
+              title.innerHTML = '<i class="fa-solid fa-terminal" style="font-size:0.7em; margin-right:15px; color:var(--c-orange);"></i>' + title.innerHTML;
+            }
+          });
+        }
+      ]
     }
   </script>
 
@@ -272,8 +353,10 @@
   <script src="//cdn.jsdelivr.net/npm/docsify@4"></script>
   <script src="//cdn.jsdelivr.net/npm/docsify/lib/plugins/search.min.js"></script>
   <script src="//cdn.jsdelivr.net/npm/docsify-copy-code/dist/docsify-copy-code.min.js"></script>
-  <script src="//cdn.jsdelivr.net/npm/docsify/lib/plugins/zoom-image.min.js"></script>
   <script src="//cdn.jsdelivr.net/npm/docsify-sidebar-collapse/dist/docsify-sidebar-collapse.min.js"></script>
+  
+  <!-- Script pour les icônes (FontAwesome) -->
+  <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
 
 </body>
 </html>
