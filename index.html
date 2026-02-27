@@ -6,14 +6,17 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
   
+  <!-- Polices & Icônes -->
   <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700;900&family=Share+Tech+Mono&family=Rajdhani:wght@500;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   
+  <!-- Docsify Styles de Base -->
   <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/docsify@4/lib/themes/dark.css">
   <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/docsify-sidebar-collapse/dist/sidebar.min.css" />
 
   <style>
     :root {
+      /* VARIABLES DYNAMIQUES */
       --main-color: #ffaa00; 
       --main-color-dim: rgba(255, 170, 0, 0.15);
       --bg-opacity: 0.85;
@@ -28,26 +31,25 @@
       --admin-color: #ff0033;
     }
 
+    /* === MODE ADMIN OVERRIDE === */
     body.admin-mode {
       --main-color: var(--admin-color) !important;
       --main-color-dim: rgba(255, 0, 51, 0.15) !important;
     }
-
     .admin-only { display: none !important; }
     body.admin-mode .admin-only { display: block !important; }
     body.admin-mode .admin-only-flex { display: flex !important; }
 
-    /* --- GLOBAL & EFFETS ECRAN --- */
+    /* --- GLOBAL --- */
     * { box-sizing: border-box; cursor: default; user-select: none; }
     body { background-color: #020202; font-family: var(--font-main); color: var(--sao-text); overflow: hidden; margin: 0; zoom: var(--ui-scale); }
     
+    /* Effets CRT et Scanline */
     .crt-overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06)); background-size: 100% 2px, 3px 100%; z-index: 9000; pointer-events: none; opacity: var(--crt-opacity); }
-    
-    /* Animation Balayage d'écran (Nouveau) */
     .scanline { position: fixed; top: 0; left: 0; width: 100vw; height: 2px; background: var(--main-color); opacity: 0.15; z-index: 9001; pointer-events: none; animation: scanDown 6s linear infinite; box-shadow: 0 0 20px var(--main-color); }
     @keyframes scanDown { 0% { top: -10px; } 100% { top: 100vh; } }
 
-    .sidebar-toggle { display: none !important; }
+    .sidebar-toggle { display: none !important; } /* On cache le bouton mobile */
 
     /* --- FOND 3D ANIMÉ --- */
     #world-bg { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: radial-gradient(circle at 50% 50%, #111 0%, #000 100%); perspective: 1000px; z-index: -10; }
@@ -86,8 +88,6 @@
     .system-ready.admin-mode #admin-toolbar { opacity: 1; transform: translateY(-50%) translateX(0); }
     .admin-tool-btn { color: #ff0033; font-size: 20px; margin: 15px 0; cursor: pointer; transition: 0.2s; text-shadow: 0 0 5px #ff0033; position: relative; }
     .admin-tool-btn:hover { color: #fff; text-shadow: 0 0 15px #fff; transform: scale(1.2); }
-    .admin-tool-btn::after { content: attr(data-tooltip); position: absolute; right: 40px; top: 5px; background: #ff0033; color: #000; font-size: 10px; font-family: var(--font-code); padding: 2px 5px; border-radius: 2px; opacity: 0; pointer-events: none; white-space: nowrap; transition: 0.2s; transform: translateX(10px); }
-    .admin-tool-btn:hover::after { opacity: 1; transform: translateX(0); }
 
     /* === LE MENU KERNEL (Modale) === */
     #settings-modal { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0.9); width: 90vw; height: 85vh; max-width: 1200px; background: rgba(5, 5, 8, 0.95); border: 1px solid var(--main-color); z-index: 8500; display: flex; flex-direction: column; box-shadow: 0 0 60px rgba(0,0,0,1), inset 0 0 30px var(--main-color-dim); opacity: 0; visibility: hidden; transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); backdrop-filter: blur(20px); }
@@ -100,6 +100,7 @@
     .cfg-tab { padding: 15px 25px; color: #888; font-family: var(--font-code); font-size: 13px; cursor: pointer; transition: 0.2s; border-left: 3px solid transparent; letter-spacing: 1px; }
     .cfg-tab:hover { background: rgba(255,255,255,0.05); color: #ccc; }
     .cfg-tab.active { background: var(--main-color-dim); color: var(--main-color); border-left: 3px solid var(--main-color); text-shadow: 0 0 10px var(--main-color); }
+    
     .cfg-diag { margin-top: auto; padding: 20px; font-family: var(--font-code); font-size: 10px; color: var(--main-color); border-top: 1px dashed #333; }
     .diag-bar { width: 100%; height: 4px; background: #222; margin-top: 5px; margin-bottom: 15px; }
     .diag-fill { height: 100%; background: var(--main-color); width: 0%; transition: width 0.5s; }
@@ -107,12 +108,13 @@
     .tab-content { display: none; animation: glitchIn 0.3s ease; }
     .tab-content.active { display: block; }
     @keyframes glitchIn { 0% { opacity:0; transform: translateX(20px) skewX(10deg); filter: hue-rotate(90deg); } 100% { opacity:1; transform: translateX(0) skewX(0); filter: hue-rotate(0); } }
+
     .cfg-group { margin-bottom: 40px; }
     .cfg-group h3 { font-family: var(--font-code); color: #fff; font-size: 16px; border-bottom: 1px solid #444; padding-bottom: 10px; margin-bottom: 20px; text-transform: uppercase; letter-spacing: 2px; }
     .cfg-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; background: rgba(255,255,255,0.02); padding: 10px 15px; border-left: 2px solid #333; transition: 0.2s; }
     .cfg-row:hover { border-left-color: var(--main-color); background: rgba(255,255,255,0.05); }
     .cfg-row label { font-family: var(--font-code); font-size: 12px; color: #bbb; display: flex; flex-direction: column; }
-    .cfg-row label span { font-size: 9px; color: #666; margin-top: 3px; }
+    
     input, select { background: #000; color: var(--main-color); border: 1px solid #444; padding: 8px 12px; font-family: var(--font-code); font-size: 12px; outline: none; transition: 0.3s; }
     input:focus, select:focus { border-color: var(--main-color); box-shadow: 0 0 10px var(--main-color-dim); }
     input[type=range] { -webkit-appearance: none; width: 200px; background: transparent; border:none; padding:0; }
@@ -122,11 +124,12 @@
     input[type=checkbox]:checked { background: var(--main-color-dim); border-color: var(--main-color); }
     input[type=checkbox]::before { content: ''; position: absolute; width: 10px; height: 10px; top: 1px; left: 1px; background: #666; transition: 0.2s; }
     input[type=checkbox]:checked::before { left: 17px; background: var(--main-color); }
-    
+
     .pwd-box { display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 40px; border: 1px dashed var(--main-color); background: rgba(255,0,0,0.05); }
     .pwd-input { font-size: 24px; text-align: center; letter-spacing: 10px; width: 300px; padding: 15px; color: #fff; text-transform: uppercase; border-color: var(--main-color); margin-bottom: 20px; }
     .btn-override { padding: 15px 40px; background: var(--main-color); color: #000; font-family: var(--font-main); font-weight: bold; font-size: 16px; border: none; cursor: pointer; letter-spacing: 3px; }
     .btn-override:hover { box-shadow: 0 0 20px var(--main-color); background: #fff; }
+    
     #admin-panel { display: none; background: rgba(255, 0, 51, 0.1); border: 1px solid #ff0033; padding: 20px; margin-top: 20px; }
     body.admin-mode #admin-panel { display: block; }
     body.admin-mode .pwd-box { display: none; }
@@ -134,28 +137,41 @@
     .close-btn { padding: 10px 30px; background: transparent; color: var(--main-color); border: 1px solid var(--main-color); font-family: var(--font-code); cursor: pointer; transition: 0.3s; }
     .close-btn:hover { background: var(--main-color); color: #000; box-shadow: 0 0 15px var(--main-color); }
 
-    /* --- SIDEBAR DOCSIFY (MENU NAVIGATION) --- */
-    .sidebar { background: transparent !important; border: none !important; width: 300px; top: 110px !important; padding-top: 0 !important; padding-left: 20px; opacity: 0; transition: opacity 1s ease 2.5s; overflow: visible; }
+    /* --- SIDEBAR DOCSIFY (MENU NAVIGATION CORRIGÉ) --- */
+    .sidebar { 
+      background: transparent !important; border: none !important; width: 300px; 
+      top: 110px !important; padding-top: 0 !important; padding-left: 20px; 
+      opacity: 0; transform: translateX(-30px);
+      transition: opacity 0.6s ease, transform 0.6s ease; /* Apparition rapide et fluide */
+      overflow: visible; z-index: 1000;
+    }
+    .system-ready .sidebar { opacity: 1; transform: translateX(0); }
+    
     .app-name { display: none; }
     .sidebar-nav ul { padding: 0; margin: 0; }
     .sidebar-nav li { list-style: none; margin: 8px 0; }
-    .sidebar-nav > ul > li > strong, .sidebar-nav > ul > li > span { color: var(--main-color); font-size: 13px; letter-spacing: 3px; text-transform: uppercase; font-weight: 800; border-bottom: 1px solid var(--main-color-dim); display: block; margin-top: 15px; margin-bottom: 15px; padding-bottom: 5px; width: 85%; text-shadow: 0 0 5px var(--main-color-dim); }
+    .sidebar-nav > ul > li > strong, .sidebar-nav > ul > li > span { 
+      color: var(--main-color); font-size: 13px; letter-spacing: 3px; 
+      text-transform: uppercase; font-weight: 800; border-bottom: 1px solid var(--main-color-dim); 
+      display: block; margin-top: 15px; margin-bottom: 15px; padding-bottom: 5px; width: 85%; 
+      text-shadow: 0 0 5px var(--main-color-dim); 
+    }
     .sidebar-nav ul ul { padding-left: 10px; }
     
-    /* Animation d'apparition des liens */
-    .sidebar-nav a { display: flex; align-items: center; width: 85%; height: 42px; background: rgba(30, 30, 35, 0.8); border: 1px solid #444; border-radius: 4px; padding-left: 20px; color: #ccc !important; text-decoration: none !important; font-size: 14px; transition: all 0.2s ease; font-family: var(--font-code); animation: slideRight 0.5s ease backwards; }
-    .sidebar-nav ul li:nth-child(1) a { animation-delay: 2.6s; }
-    .sidebar-nav ul li:nth-child(2) a { animation-delay: 2.7s; }
-    .sidebar-nav ul li:nth-child(3) a { animation-delay: 2.8s; }
-    .sidebar-nav ul li:nth-child(4) a { animation-delay: 2.9s; }
-    .sidebar-nav ul li:nth-child(5) a { animation-delay: 3.0s; }
-    
-    @keyframes slideRight { 0% { opacity: 0; transform: translateX(-20px); } 100% { opacity: 1; transform: translateX(0); } }
-
-    .sidebar-nav a:hover, .sidebar-nav li.active > a { background: var(--main-color-dim); color: var(--main-color) !important; font-weight: bold; border-left: 4px solid var(--main-color); padding-left: 25px; width: 95%; box-shadow: 0 0 10px var(--main-color-dim); }
+    .sidebar-nav a { 
+      display: flex; align-items: center; width: 85%; height: 42px; 
+      background: rgba(30, 30, 35, 0.8); border: 1px solid #444; border-radius: 4px; 
+      padding-left: 20px; color: #ccc !important; text-decoration: none !important; 
+      font-size: 14px; transition: all 0.2s ease; font-family: var(--font-code); 
+    }
+    .sidebar-nav a:hover, .sidebar-nav li.active > a { 
+      background: var(--main-color-dim); color: var(--main-color) !important; 
+      font-weight: bold; border-left: 4px solid var(--main-color); 
+      padding-left: 25px; width: 95%; box-shadow: 0 0 10px var(--main-color-dim); 
+    }
     .folder-icon { display: none; }
 
-    /* --- SEARCH BAR CORRIGÉE (EN HAUT DU MENU) --- */
+    /* --- SEARCH BAR CORRIGÉE --- */
     .sidebar .search {
       margin: 10px 0 20px 0 !important; padding: 0 !important; width: 85%;
       border-bottom: none !important; background: transparent !important;
@@ -168,11 +184,10 @@
     .sidebar .search .input-wrap:focus-within { box-shadow: 0 0 15px var(--main-color-dim); border-color: #fff; }
     .sidebar .search input { color: #fff !important; font-family: var(--font-code); font-size: 13px; padding: 0 !important; }
     
-    /* Design des Résultats de Recherche (Holographique) */
     .sidebar .search .results-panel {
       background: rgba(10, 10, 15, 0.95); border: 1px solid var(--main-color); border-radius: 4px;
       box-shadow: 0 10px 30px rgba(0,0,0,0.9); margin-top: 10px; max-height: 400px; overflow-y: auto;
-      backdrop-filter: blur(10px);
+      backdrop-filter: blur(10px); position: relative; z-index: 1001;
     }
     .sidebar .search .matching-post { border-bottom: 1px solid #333; padding: 12px 15px; transition: 0.2s; cursor: pointer; }
     .sidebar .search .matching-post:hover { background: var(--main-color-dim); border-left: 3px solid var(--main-color); padding-left: 18px; }
@@ -190,9 +205,10 @@
       background: rgba(10, 10, 12, var(--bg-opacity)); width: 100%; max-width: 1100px; height: 85vh;
       border: 1px solid rgba(255,255,255,0.1); position: relative; padding: 60px 50px; overflow-y: auto;
       box-shadow: 0 15px 50px rgba(0,0,0,0.9); backdrop-filter: blur(var(--blur-lvl));
-      /* NOUVELLE ANIMATION SAO : Ligne puis Expansion */
       opacity: 0; transform: scaleY(0.01) scaleX(0.01); 
     }
+    
+    /* Animation Vrai SAO Pop-up */
     .system-ready .markdown-section { animation: bootUpWindow 0.8s cubic-bezier(0.165, 0.84, 0.44, 1) forwards; }
     @keyframes bootUpWindow {
       0% { opacity: 0; transform: scaleY(0.01) scaleX(0.01); border-color: var(--main-color); box-shadow: 0 0 50px var(--main-color); }
@@ -200,15 +216,13 @@
       100% { opacity: 1; transform: scaleY(1) scaleX(1); border-color: rgba(255,255,255,0.1); box-shadow: 0 15px 50px rgba(0,0,0,0.9); }
     }
 
-    .system-ready .sidebar, .system-ready #hud-hp, .system-ready #hud-console, .system-ready #btn-settings { opacity: 1; transform: translateX(0); }
+    .system-ready #hud-hp, .system-ready #hud-console, .system-ready #btn-settings { opacity: 1; transform: translateX(0); }
 
     .markdown-section::before { content: "SYSTEM VISUALIZER // MAIN WINDOW"; position: absolute; top: 0; left: 0; width: 100%; height: 35px; background: var(--main-color-dim); border-bottom: 1px solid var(--main-color); color: var(--main-color); font-size: 12px; line-height: 35px; padding-left: 20px; font-family: var(--font-code); letter-spacing: 2px; }
     .markdown-section::after { content: "\f00d  \f111"; font-family: "Font Awesome 6 Free"; font-weight: 900; position: absolute; top: 10px; right: 20px; color: var(--main-color); font-size: 14px; letter-spacing: 10px; cursor: pointer; }
 
-    /* Animation au survol des titres (Glitch Effect) */
     h1 { color: #fff; font-size: 2.2em; border-bottom: 2px solid var(--main-color); padding-bottom: 10px; font-family: var(--font-main); transition: 0.2s; }
     h1:hover { text-shadow: 2px 2px 0 var(--main-color), -2px -2px 0 #00f3ff; }
-    
     h2 { color: var(--main-color); margin-top: 35px; border-left: 5px solid var(--main-color); padding-left: 15px; background: linear-gradient(90deg, var(--main-color-dim), transparent); font-family: var(--font-main); }
     a { color: var(--main-color); text-decoration: none; font-weight: bold; border-bottom: 1px dashed var(--main-color); }
     a:hover { background: var(--main-color); color: #000; box-shadow: 0 0 10px var(--main-color); }
@@ -252,7 +266,7 @@
     <div class="corner-tl"></div><div class="corner-br"></div>
     <div class="cfg-header">
       <span>CARDINAL // KERNEL CONFIGURATION</span>
-      <span style="font-size:10px; color:#666;">SYS_BUILD: 4.4.1</span>
+      <span style="font-size:10px; color:#666;">SYS_BUILD: 4.5.0</span>
     </div>
 
     <div class="cfg-layout">
@@ -304,7 +318,6 @@
             <h3>Overlay Elements</h3>
             <div class="cfg-row"><label>Player Vitals (HP Bar)</label><input type="checkbox" id="cfg-hud-hp" onchange="updateSettings()"></div>
             <div class="cfg-row"><label>Environment Threat Level</label><select id="cfg-safezone" onchange="updateSettings()"><option value="SAFE">SAFE_ZONE</option><option value="COMBAT">COMBAT_ZONE</option><option value="DANGER">DANGER_ZONE</option></select></div>
-            <!-- CONSOLE MODIFIEE ICI -->
             <div class="cfg-row"><label>Debug Terminal Stream</label><input type="checkbox" id="cfg-hud-console" onchange="updateSettings()"></div>
             <div class="cfg-row"><label>UI Viewport Scale</label><input type="range" id="cfg-scale" min="0.8" max="1.3" step="0.05" onchange="updateSettings()"></div>
           </div>
@@ -355,14 +368,14 @@
 
   <!-- SCRIPTS -->
   <script>
-    // --- GESTION DES PARAMÈTRES (Console FALSE par défaut) ---
+    // --- GESTION DES PARAMÈTRES (V6 pour reset de force les bugs) ---
     let defaultConf = {
       color: '#ffaa00', font: "'Orbitron', sans-serif", opacity: 0.85, blur: 12, gridSpeed: 15,
       crt: true, crtOp: 0.5, audio: true, vol: 0.2, sndType: 'sine',
-      hudHp: true, safeZone: 'SAFE', hudConsole: false, scale: 1, // CONSOLE DESACTIVEE
+      hudHp: true, safeZone: 'SAFE', hudConsole: false, scale: 1, // CONSOLE OFF PAR DEFAUT
       isAdmin: false 
     };
-    let sysConf = JSON.parse(localStorage.getItem('cardinalConfigV5')) || defaultConf;
+    let sysConf = JSON.parse(localStorage.getItem('cardinalConfigV6')) || defaultConf;
 
     if(sysConf.isAdmin) {
       document.getElementById('start-button-main').innerText = "SYSTEM // ADMIN";
@@ -430,7 +443,7 @@
       sysConf.hudConsole = document.getElementById('cfg-hud-console').checked;
       sysConf.scale = document.getElementById('cfg-scale').value;
       
-      localStorage.setItem('cardinalConfigV5', JSON.stringify(sysConf));
+      localStorage.setItem('cardinalConfigV6', JSON.stringify(sysConf));
       applySettings(); playSound('click');
     }
 
@@ -452,16 +465,12 @@
     function checkAdminPassword() {
       const pwd = document.getElementById('admin-pwd').value.toUpperCase();
       const err = document.getElementById('pwd-error');
-      
       if(pwd === "KAYABA" || pwd === "HEATHCLIFF") {
-        err.style.display = "none";
-        sysConf.isAdmin = true;
-        localStorage.setItem('cardinalConfigV5', JSON.stringify(sysConf));
-        
+        err.style.display = "none"; sysConf.isAdmin = true;
+        localStorage.setItem('cardinalConfigV6', JSON.stringify(sysConf));
         applySettings();
         if(sysConf.hudConsole) addLog("[CRITICAL] ADMIN OVERRIDE ACCEPTED.");
-        playAdminSound('granted');
-        document.getElementById('admin-pwd').value = "";
+        playAdminSound('granted'); document.getElementById('admin-pwd').value = "";
       } else {
         err.style.display = "block";
         if(sysConf.hudConsole) addLog("[WARNING] INVALID AUTHENTICATION ATTEMPT.");
@@ -471,11 +480,10 @@
 
     function revokeAdmin() {
       sysConf.isAdmin = false;
-      localStorage.setItem('cardinalConfigV5', JSON.stringify(sysConf));
+      localStorage.setItem('cardinalConfigV6', JSON.stringify(sysConf));
       applySettings(); 
       if(sysConf.hudConsole) addLog("[SYS] ADMIN PRIVILEGES REVOKED.");
-      switchTab('tab-render'); 
-      playSound('click');
+      switchTab('tab-render'); playSound('click');
     }
 
     function adminAction(action) {
@@ -576,14 +584,14 @@
       setInterval(() => { if(Math.random() > 0.8 && sysConf.hudConsole) addLog(messages[Math.floor(Math.random() * messages.length)]); }, 3000);
     }
 
-    // --- CONFIG DOCSIFY (RECHERCHE CORRIGÉE) ---
+    // --- CONFIG DOCSIFY ---
     window.$docsify = {
       name: 'Cardinal OS', repo: '', homepage: 'README.md', loadSidebar: true, subMaxLevel: 2, auto2top: true,
       search: { 
         placeholder: 'SEARCH DATABASE...', 
         noData: 'NO DATA FOUND',
         depth: 6,
-        hideOtherSidebarContent: false // Important pour ne pas casser le menu SAO
+        hideOtherSidebarContent: false
       }, 
       sidebarDisplayLevel: 1,
       plugins:[ function(hook) { hook.doneEach(function() { 
