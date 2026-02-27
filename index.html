@@ -2,26 +2,88 @@
 <html lang="fr">
 <head>
   <meta charset="UTF-8">
-  <title>LifeSteal FR Staff Wiki</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>LifeSteal FR Wiki</title>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+  <meta name="description" content="Wiki officiel du serveur Minecraft LifeSteal FR - Staff & Joueurs">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
+  
+  <!-- 
+     NOTE IMPORTANTE :
+     Docsify ne contient pas le contenu directement dans ce fichier HTML.
+     Il va chercher et lire les fichiers .md (Markdown) situés dans vos dossiers :
+     - /staff/
+     - /player/
+     
+     Assurez-vous que vos fichiers Markdown existent à la racine relative de ce fichier index.html.
+  -->
 
-  <!-- Thème Docsify -->
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/docsify/lib/themes/vue.css">
-
-  <!-- Scripts Docsify -->
-  <script src="https://cdn.jsdelivr.net/npm/docsify/lib/docsify.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/docsify/lib/plugins/search.min.js"></script>
+  <!-- Thème Vue.js (Style simple et propre) -->
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/docsify@4/lib/themes/vue.css">
+  
+  <style>
+    /* Petite personnalisation CSS optionnelle pour Minecraft */
+    :root {
+      --theme-color: #42b983; /* Tu peux changer cette couleur (ex: #d32f2f pour du rouge LifeSteal) */
+    }
+    .sidebar-nav li { margin: 5px 0; }
+  </style>
 </head>
 <body>
-  <div id="app"></div>
+  <!-- Point de montage de l'application Docsify -->
+  <div id="app">Chargement du Wiki LifeSteal FR...</div>
 
+  <!-- Configuration de Docsify -->
   <script>
     window.$docsify = {
       name: 'LifeSteal FR Wiki',
+      repo: '', // Tu peux mettre l'URL de ton repo GitHub ici (ex: 'ton-pseudo/lifesteal-wiki')
+      
+      // Page d'accueil par défaut (doit être à la racine)
+      homepage: 'README.md',
+      
+      // Active la barre latérale personnalisée (nécessite un fichier _sidebar.md)
       loadSidebar: true,
-      search: 'auto',
-      homepage: 'Accueil.md'
+      
+      // Niveau maximum des sous-titres affichés dans la barre latérale
+      subMaxLevel: 2,
+      
+      // Active la barre de navigation (optionnel, nécessite _navbar.md si true)
+      loadNavbar: false,
+
+      // Remonte en haut de page lors du changement de fichier
+      auto2top: true,
+
+      // Configuration de la recherche
+      search: {
+        maxAge: 86400000, // Expiration du cache (1 jour)
+        paths: 'auto',
+        placeholder: 'Rechercher...',
+        noData: 'Aucun résultat trouvé.',
+        depth: 6
+      },
+      
+      // Copier le code dans le presse-papier
+      copyCode: {
+        buttonText: 'Copier',
+        errorText: 'Erreur',
+        successText: 'Copié'
+      }
     }
   </script>
+
+  <!-- 1. Script Principal Docsify (Doit être chargé après la configuration) -->
+  <script src="//cdn.jsdelivr.net/npm/docsify@4"></script>
+
+  <!-- 2. Plugins (Doivent être chargés après le script principal) -->
+  
+  <!-- Plugin de Recherche -->
+  <script src="//cdn.jsdelivr.net/npm/docsify/lib/plugins/search.min.js"></script>
+  
+  <!-- Plugin pour copier les blocs de code (utile pour les commandes Minecraft) -->
+  <script src="//cdn.jsdelivr.net/npm/docsify-copy-code/dist/docsify-copy-code.min.js"></script>
+  
+  <!-- Zoom sur les images -->
+  <script src="//cdn.jsdelivr.net/npm/docsify/lib/plugins/zoom-image.min.js"></script>
+
 </body>
 </html>
