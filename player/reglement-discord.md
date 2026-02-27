@@ -1,145 +1,423 @@
-# PROTOCOLE DE COMMUNICATION // DISCORD
-
-> **SYSTEM ALERT :** La lecture et l'acceptation de ces directives sont obligatoires. L'ignorance du règlement ne constitue en aucun cas une excuse valable lors d'une procédure de sanction.
+# 📜 RÈGLEMENT OFFICIEL DU SERVEUR DISCORD
 
 ---
 
-## 📁 Partie 1 : Profil Utilisateur
+# 🧑 PARTIE 1 — VOS PROFILS
 
-### Article A : Les Images de Profil
-* Votre image de profil ne doit pas faire référence à du contenu obscène ou à de la politique.
-* Les images ne doivent pas être offensantes envers un individu ou un groupe.
-* **Interdit :** Afficher des photographies personnelles d'un autre utilisateur.
-* **Interdit :** Photo de profil vierge, inappropriée ou sexuellement explicite.
+## Article A — Images de Profil
 
-### Article B : Les Pseudos
-* Votre pseudo ne doit pas faire référence à un personnage historique ou politique.
-* Les pseudos doivent débuter par un caractère disponible sur le clavier AZERTY afin d'être mentionnables.
-* **Interdit :** Afficher des informations personnelles et privées d'un joueur.
-* **Interdit :** Pseudos vides, inappropriés, sexuellement explicites ou offensants.
+### Obligations
+- L’image de profil ne doit contenir aucun contenu obscène ou politique.
+- Elle ne doit pas être offensante envers un individu ou un groupe.
+- Interdiction d’utiliser la photo personnelle d’un autre utilisateur.
+- Respect obligatoire de la vie privée.
 
-### Article C : Les Statuts & Descriptions
-* Ne doivent pas faire référence à de la politique ou inciter à la haine.
-* Les liens menant vers des arnaques/scams sont strictement interdits.
-* Tout manque de respect envers une quelconque personne sera sanctionné.
-
-### Article D : Bannières & Banners
-* Ne doivent contenir aucun contenu sexuel, gore, choquant ou offensant.
-* Aucune image politique, religieuse, extrémiste ou incitant à la haine.
-* **Interdit :** Utiliser des images personnelles de quelqu’un d’autre sans consentement.
-* Pas de promotion de produits, services ou serveurs externes.
-
-### Article E : Badges, Pronoms & Infos affichées
-* Aucun badge ou mention ne doit être utilisé dans un but de provocation, harcèlement ou moquerie.
-* **Usurpation :** Il est interdit de se faire passer pour un membre du staff à l’aide d’éléments affichés sur le profil.
-* *Conseil Système :* Toute mention d’informations personnelles sensibles est déconseillée pour protéger votre vie privée.
+### Interdictions
+- Photo de profil vierge.
+- Photo inappropriée.
+- Contenu sexuellement explicite.
+- Contenu offensant.
+- Image politique, religieuse extrême ou incitant à la haine.
 
 ---
 
-## 💬 Partie 2 : Les Salons Textuels
+## Article B — Pseudos
 
-### Article A : Pollution
-* Le **Spam** et le **Flood** sont proscrits.
-* Il est interdit de poster des liens autres que le site du serveur, le lien d'invitation Discord ou les réseaux sociaux officiels.
-* Mentionner abusivement un rôle/membre est strictement interdit.
+### Règles
+- Le pseudo doit commencer par un caractère AZERTY standard.
+- Il doit être mentionnable.
+- Respect de la vie privée des autres joueurs.
 
-### Article B : Conduite à tenir
-* Vous devez discuter dans le respect avec les joueurs.
-* En ticket, toute insulte, provocation, moquerie ou fausse accusation entraînera des sanctions allant jusqu'au **bannissement permanent**.
-* La politesse est de mise, particulièrement avec le Staff. *(Dire "Bonjour" lors de l'ouverture d'un ticket nous rendra tout de suite plus à l'écoute !)*
-* Pas de demande d'attribution de rôle de modérateur.
-
-### Article C : Sujets Prohibés
-> **CRITICAL WARNING :** Le racisme, l'homophobie, la xénophobie et toutes les autres formes de haine sont proscrits. Toute forme de harcèlement entraînera de très lourdes sanctions.
-
-* Politique, sexisme, attaques personnelles, discours de haine.
-* Publicité sans permission & liens vers d'autres serveurs.
-* Contenu NSFW, pornographique, gore ou illégal.
-* Publication d'informations personnelles (Doxxing : vrais noms, adresses, e-mails, mots de passe, IP, données bancaires).
-
-### Article D : Emojis, Stickers & GIFs
-L’utilisation d’emojis/GIFs doit rester respectueuse.
-* **Interdit :** Caractère sexuel, suggestif (+18), nudité, gore.
-* **Interdit :** Emojis détournés dans un contexte sexuel (🍆🍑💦).
-* **Interdit :** Contenus visant à harceler, humilier ou ridiculiser un membre.
-* *Sanctions :* Suppression, Avertissement, Mute ou plus en cas de récidive.
-
-### Article E : Gestion des Conflits
-* Les conflits doivent être réglés calmement et **en privé**.
-* Ouvrez un ticket plutôt que de continuer la dispute en public.
-* La provocation pour “faire réagir” et les insultes indirectes/passives-agressives sont sanctionnables.
-
-### Article F & G : Tickets & Sécurité
-* **Tickets :** À utiliser pour des problèmes réels (pas de troll). Ne pinguez pas le staff pour accélérer la prise en charge. Fausse accusation = sanction.
-* **Fraudes :** Tentative de phishing, arnaques, scams, usurpation d'identité d'un admin ou partenaire = **Bannissement immédiat**.
+### Interdictions
+- Référence à un personnage historique ou politique.
+- Informations personnelles d’un joueur dans le pseudo.
+- Pseudo vide.
+- Pseudo offensant.
+- Pseudo sexuellement explicite.
+- Pseudo inapproprié.
 
 ---
 
-## 🎙️ Partie 3 : Les Salons Vocaux
+## Article C — Statuts & Descriptions
 
-### Article A & B : Conduite & Interdictions
-* Respect mutuel obligatoire. Prenez en considération l'âge des personnes présentes.
-* **Interdit :** Crier dans le micro ou utiliser un soundboard dans le but d'agacer.
-* **Interdit :** Divulguer des informations personnelles à l'oral.
-
-### Article C & D : Technique & Partage d'Écran
-* Évitez les bruits de fond excessifs. Les modificateurs de voix sont interdits s'ils servent à troll.
-* Pas de diffusion de musique sans l’accord de tous.
-* **Partage d'écran :** Aucun contenu NSFW, illégal, piraté ou protégé par des droits d'auteur (films/séries). Interdiction de regarder du NSFW en vocal, même sans partage.
+### Interdit
+- Référence politique.
+- Incitation à la haine.
+- Liens vers des arnaques.
+- Manque de respect envers une personne.
 
 ---
 
-## 🛡️ Partie 4 : Sécurité & Comportement Général
+## Article D — Bannières
 
-* **Usurpation :** Interdit de prendre le pseudo, avatar ou style d'un membre du staff, d'un streamer ou d'une figure publique.
-* **Respect du Staff :** Les décisions sont indiscutables. Pression, insultes ou harcèlement sur un staff = Sanction immédiate.
-* **Comportement :** Pas de drama, de toxicité ou de trolling continu.
-* **Sécurité de Compte :** Votre compte est votre responsabilité. Un compte piraté spammant des arnaques sera banni par sécurité.
-
----
-
-## ⚙️ Partie 5 : Systèmes Discord
-
-* **Mentions :** Ping abusif interdit. `@everyone` et `@here` réservés au staff.
-* **Réactions :** Spam ou réactions inappropriées (gore, sexuel, moquerie) interdits.
-* **Bots :** Commandes réservées aux salons dédiés. Bots personnels externes interdits.
-* **Messages Privés (MP) :** Le harcèlement ou la pub en MP est sanctionnable sur le serveur. Ne pas MP un staff pour des faveurs.
-* **Fichiers :** Interdiction d'envoyer des exécutables (.exe, .bat), archives suspectes, cracks ou NSFW.
+### Interdit
+- Contenu sexuel.
+- Gore / violent / choquant.
+- Contenu offensant.
+- Image politique, religieuse ou extrémiste.
+- Image personnelle d’autrui sans consentement.
+- Promotion de produits, services ou serveurs externes.
 
 ---
 
-## ⚖️ Partie 6 : Sanctions & Procédures Disciplinaires
+## Article E — Badges, Pronoms & Informations Affichées
 
-Les décisions du staff ne sont pas discutables en public, sauf erreur manifeste.
+### Interdit
+- Utilisation dans un but de provocation, harcèlement ou moquerie.
+- Usurpation d’un membre du staff.
+- Mention d’informations personnelles sensibles.
 
-### Grille des Sanctions
-1. Avertissement (oral ou écrit)
-2. Suppression de message / Déconnexion forcée
-3. Mute temporaire (texte ou vocal)
-4. Restriction temporaire de salon(s)
-5. Kick du serveur
-6. Ban temporaire ou permanent
+---
+
+# 💬 PARTIE 2 — SALONS TEXTUELS
+
+## Article A — Pollution
+
+| Interdiction | Description |
+|--------------|------------|
+| Spam | Messages répétitifs ou inutiles |
+| Flood | Envoi massif de messages |
+| Liens externes | Interdits sauf site & réseaux officiels |
+| Mention abusive | Ping massif interdit |
+
+---
+
+## Article B — Conduite
+
+- Respect obligatoire envers tous les membres.
+- En ticket : aucun manque de respect.
+- Politesse exigée.
+- Pas de demande d’attribution de rôle modérateur.
+
+---
+
+## Article C — Sujets & Contenus
+
+### Strictement interdit
+- Politique.
+- Racisme.
+- Sexisme.
+- Homophobie.
+- Xénophobie.
+- Harcèlement.
+- Attaques personnelles.
+- Discours de haine.
+- Contenu NSFW.
+- Pornographie.
+- Contenu illégal.
+- Publication d’informations personnelles.
+- Publicité sans permission.
+- Lien vers autre serveur.
+
+---
+
+## Article D — Emojis, Stickers & GIFs
+
+### Interdit
+- Contenu sexuel ou +18.
+- Nudité.
+- Gore.
+- Emojis détournés dans un contexte sexuel.
+- GIF humiliants.
+- Spam de réactions.
+
+### Autorisé
+- Emojis standards.
+- GIF sans violence.
+- Stickers humoristiques appropriés.
+
+### Sanctions possibles
+- Suppression du message.
+- Avertissement.
+- Mute.
+- Sanction aggravée en cas de récidive.
+
+---
+
+## Article E — Gestion des Conflits
+
+- Les conflits doivent être réglés en privé.
+- Ouvrir un ticket si nécessaire.
+- Provocation interdite.
+- Sous-entendus passifs-agressifs sanctionnables.
+
+---
+
+## Article F — Utilisation des Tickets
+
+- Problème réel uniquement.
+- Pas de ping staff pour accélérer.
+- Fausse accusation = sanction.
+- Non coopération = fermeture du ticket.
+
+---
+
+## Article G — Sécurité & Fraudes
+
+- Interdiction de phishing.
+- Interdiction d’usurpation staff.
+- Scams = bannissement immédiat.
+
+---
+
+# 🎙️ PARTIE 3 — SALONS VOCAUX
+
+## Article A — Conduite
+
+- Respect obligatoire.
+- Adapter les discussions à l’âge des présents.
+- Salons privés disponibles si nécessaire.
+
+---
+
+## Article B — Interdictions
+
+- Crier volontairement.
+- Soundboard pour troller.
+- Divulguer des informations personnelles.
+
+---
+
+## Article C — Règles Techniques
+
+- Micro fonctionnel.
+- Pas de modificateur de voix gênant.
+- Pas de musique sans accord.
+- Pas de contenu NSFW en vocal.
+
+---
+
+## Article D — Partage d’Écran
+
+- Pas de NSFW.
+- Pas de contenu illégal.
+- Pas de films protégés.
+- Le staff peut interrompre à tout moment.
+
+---
+
+# ✨ PARTIE 4 — SÉCURITÉ & COMPORTEMENT GÉNÉRAL
+
+## Article A — Usurpation
+
+- Interdiction d’utiliser pseudo/avatar staff.
+- Interdiction d’usurper l’identité d’une personne publique.
+
+---
+
+## Article B — Respect du Staff
+
+- Décisions à respecter.
+- Pas de pression.
+- Insulte staff = sanction immédiate.
+
+---
+
+## Article C — Comportement Toxique
+
+- Pas de trolling volontaire.
+- Pas de drama volontaire.
+- Pas de comportement conflictuel.
+
+---
+
+## Article D — Sécurité des Comptes
+
+- Sécurité du compte = responsabilité personnelle.
+- Compte compromis = bannissement temporaire possible.
+
+---
+
+# ⚙️ PARTIE 5 — FONCTIONNALITÉS DISCORD
+
+## Mentions
+
+| Interdit | Détail |
+|----------|--------|
+| Ping abusif | Sans raison valable |
+| @everyone | Réservé au staff |
+| Ping rôle inutile | Sanction |
+
+---
+
+## Réactions
+
+- Pas de spam.
+- Pas de réaction provocatrice.
+- Pas de contenu suggestif ou gore.
+
+---
+
+## Bots
+
+- Commandes dans salons dédiés.
+- Pas de spam.
+- Pas de bot externe non autorisé.
+- Pas de contournement de sanction.
+
+---
+
+## Messages Privés
+
+- Pas de harcèlement.
+- Pas de publicité.
+- Pas de demande de faveur au staff.
+
+---
+
+## Fichiers
+
+- Pas d’exécutables suspects.
+- Pas de clients moddés non officiels.
+- Pas de fichiers NSFW ou illégaux.
+
+---
+
+## Salons Automatiques
+
+- Pas de création pour troll.
+- Pas de contournement de sanction.
+- Pas de spam join/leave.
+
+---
+
+## Permissions & Rôles
+
+- Pas de demande de rôle staff.
+- Usurpation = sanction.
+
+---
+
+# ⚖️ PARTIE 6 — SANCTIONS
+
+## Article A — Types
+
+| Sanction | Description |
+|----------|------------|
+| Avertissement | Oral ou écrit |
+| Suppression | Message supprimé |
+| Mute | Temporaire |
+| Kick | Exclusion |
+| Ban | Temporaire ou permanent |
+
+---
+
+## Article B — Récidive
+
+- Aggravation automatique.
+- Contournement = ban permanent.
+
+---
+
+## Article C — Respect des Décisions
+
+- Non négociables publiquement.
+- Refus de coopérer = sanction.
+
+---
+
+## Article D — Contestation
+
+- En ticket uniquement.
+- Pas publiquement.
+- Décision finale du staff.
+
+---
+
+## Article E — Multi-Comptes
+
+- Tous comptes bannis.
+- Contournement = permanent.
+
+---
+
+## Article F — Infractions Majeures
+
+| Infraction | Sanction |
+|------------|----------|
+| NSFW | Ban direct |
+| Harcèlement | Ban direct |
+| Racisme | Ban direct |
+| Escroquerie | Ban direct |
+| Doxxing | Ban direct |
+| Raid | Ban direct |
+
+---
+
+## Article G — Pouvoirs Staff
+
+Le staff peut :
+- Supprimer un message.
+- Intervenir en vocal.
+- Sanctionner même si non listé explicitement.
+- Protéger la communauté.
+- Agir rapidement en cas d’urgence.
+
+---
+
+# 🤝 PARTIE 7 — PARTENARIATS & VIE PRIVÉE
+
+## Partenariats
+
+- Ticket obligatoire.
+- Pas de publicité hors validation.
+- Annonce officielle par le staff uniquement.
+
+---
+
+## Contenus Externes
+
+- Pas de virus.
+- Pas de crack.
+- Pas de cheat.
+- Pas de NSFW.
+- Pas de contenu illégal.
+
+---
+
+## Vie Privée
+
+- Ne jamais partager ses informations personnelles.
+- Ne jamais demander celles d’un autre membre.
+- Doxxing = signalement possible aux autorités.
+
+---
+
+## Contenus liés au serveur Minecraft
+
+- Pas de hack ou cheat.
+- Pas de diffusion de fichiers non autorisés.
+- Spoilers clairement indiqués.
+- Respect de l’image du serveur.
+
+---
+
+# 🛡️ POUVOIRS & AUTORITÉ DU STAFF
+
+## Convocations
+- Vocal obligatoire si demandé.
+- Refus injustifié = sanction.
+
+## Modération Messages
+- Suppression immédiate si non conforme.
+- Intervention même si la règle n’est pas explicitement listée.
+
+## Gestion Vocal
+- Déplacement / mute / deaf.
+- Intervention si nuisance.
+- Enregistrement possible.
+
+## Identité
+- Changement pseudo possible si non conforme.
+
+## Sécurité
+- Raid = ban définitif.
+
+## Décisions
+- Non négociables publiquement.
+- Contestation uniquement en privé.
 
 > **[INFO] RÉCIDIVE :** En cas de récidive, les sanctions sont automatiquement aggravées. Contourner une sanction (Multi-compte, VPN) entraîne un **Ban Permanent (Blacklist) sans discussion**.
-
-### Fautes Majeures (Ban Immédiat)
-* Contenu NSFW / Gore / +18
-* Harcèlement, menaces, intimidation
-* Racisme, homophobie, xénophobie
-* Escroquerie, phishing, malwares
-* Doxxing (Diffusion d'infos IRL)
-* Raid de serveur (participation ou incitation)
-
 ---
 
-## 👑 Pouvoirs & Autorité du Staff (CARDINAL PROTOCOL)
-
-L’équipe de modération dispose de privilèges absolus pour garantir l'intégrité du système :
-
-1. **Convocations :** Le staff peut vous invoquer en vocal. Un refus non justifié est sanctionnable.
-2. **Modération :** Droit de suppression et de censure de tout paquet de données (message) non conforme.
-3. **Contrôle Vocal :** Pouvoir de déplacement, mute, deaf ou déconnexion forcée d'une entité perturbatrice.
-4. **Override d'Identité :** Le staff peut forcer le changement de votre pseudo s'il enfreint les protocoles.
-5. **Jugement Souverain :** Le staff peut intervenir même si une règle n'est pas explicitement écrite, en utilisant le bon sens pour préserver la communauté.
-
-> **SYSTEM END :** Les contestations ne se font *uniquement* que via le système de Ticket privé. Toute contestation publique sera réprimée.
+# ✅ FIN DU RÈGLEMENT
