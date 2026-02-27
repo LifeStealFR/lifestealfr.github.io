@@ -2,249 +2,274 @@
 <html lang="fr">
 <head>
   <meta charset="UTF-8">
-  <title>LifeSteal FR // WIKI</title>
+  <title>LifeSteal FR // SYSTEM</title>
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
   
-  <!-- Polices Cyberpunk -->
-  <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;600;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+  <!-- Police SAO Style (Exo 2 est très proche de la police officielle) -->
+  <link href="https://fonts.googleapis.com/css2?family=Exo+2:ital,wght@0,300;0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
 
   <!-- Thème de base (Dark) -->
   <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/docsify@4/lib/themes/dark.css">
-  
-  <!-- Sidebar Collapse -->
   <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/docsify-sidebar-collapse/dist/sidebar.min.css" />
 
   <style>
     :root {
-      /* Palette Cyberpunk LifeSteal */
-      --neon-pink: #ff0055;
-      --neon-cyan: #00f3ff;
-      --neon-purple: #bd00ff;
-      --bg-dark: #050505;
-      --glass-bg: rgba(10, 10, 16, 0.65);
-      --border-color: rgba(0, 243, 255, 0.3);
+      /* Palette Aincrad */
+      --sao-orange: #ffaa00;
+      --sao-orange-glow: rgba(255, 170, 0, 0.6);
+      --sao-dark: #1a1a1a;
+      --sao-panel-bg: rgba(30, 30, 30, 0.85);
+      --sao-panel-border: rgba(200, 200, 200, 0.3);
+      --sao-text: #eee;
+      --sao-font: 'Exo 2', sans-serif;
     }
 
-    /* --- 1. FOND ET AMBIANCE --- */
+    /* --- 1. BACKGROUND "LINK START" --- */
     body {
-      background-color: var(--bg-dark);
-      color: #e0e0e0;
-      font-family: 'Rajdhani', sans-serif; /* Police technique */
-      font-size: 18px;
+      background: radial-gradient(circle at center, #2b2b35 0%, #050505 100%);
+      font-family: var(--sao-font);
+      color: var(--sao-text);
       overflow-x: hidden;
     }
 
-    /* Grille de fond animée (Perspective 3D) */
+    /* Animation de particules en arrière-plan */
     body::before {
       content: "";
       position: fixed;
       top: 0; left: 0; width: 100%; height: 100%;
-      background: 
-        linear-gradient(transparent 0%, rgba(189, 0, 255, 0.1) 2%, transparent 3%),
-        linear-gradient(90deg, transparent 0%, rgba(0, 243, 255, 0.1) 2%, transparent 3%);
-      background-size: 50px 50px;
-      transform: perspective(500px) rotateX(20deg) scale(1.5);
-      animation: gridMove 20s linear infinite;
-      z-index: -2;
-      pointer-events: none;
+      background-image: 
+        linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+      background-size: 100px 100px;
+      z-index: -1;
+      animation: gridFloat 60s linear infinite;
     }
 
-    /* Effet CRT (Lignes de balayage écran) */
-    body::after {
-      content: " ";
-      display: block;
-      position: fixed;
-      top: 0; left: 0; bottom: 0; right: 0;
-      background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
-      z-index: 9999;
-      background-size: 100% 2px, 3px 100%;
-      pointer-events: none; /* Laisse passer les clics */
+    @keyframes gridFloat {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.1); }
+      100% { transform: scale(1); }
     }
 
-    @keyframes gridMove {
-      0% { background-position: 0 0; }
-      100% { background-position: 0 500px; }
-    }
-
-    /* --- 2. SIDEBAR (Transparente & Neon) --- */
+    /* --- 2. BARRE LATÉRALE (Le Menu Principal) --- */
     .sidebar {
-      background: var(--glass-bg);
-      backdrop-filter: blur(15px); /* Flou derrière la barre */
-      border-right: 1px solid var(--border-color);
-      box-shadow: 5px 0 30px rgba(0, 243, 255, 0.1);
+      background: linear-gradient(180deg, rgba(40,40,40,0.95) 0%, rgba(20,20,20,0.95) 100%);
+      border-right: 1px solid rgba(255, 255, 255, 0.1);
+      width: 300px;
       padding-top: 20px;
+      box-shadow: 10px 0 30px rgba(0,0,0,0.5);
+      /* Forme biseautée typique des menus SAO (illusion via clip-path) */
     }
 
-    /* Nom du Wiki (Logo) */
+    /* Le Titre (Nom du Serveur) */
     .app-name-link {
-      font-family: 'Share Tech Mono', monospace;
-      color: var(--neon-cyan) !important;
-      text-shadow: 0 0 10px var(--neon-cyan);
-      font-size: 1.5em;
-      letter-spacing: 2px;
-    }
-
-    /* Liens de navigation */
-    .sidebar-nav a {
-      color: #a0a0a0 !important;
-      transition: all 0.2s ease-in-out;
-      border-left: 2px solid transparent;
-      padding-left: 10px;
-      font-weight: 600;
-    }
-
-    /* Hover et Active sur les liens */
-    .sidebar-nav a:hover, .sidebar-nav li.active > a {
-      color: var(--neon-pink) !important;
-      text-shadow: 0 0 8px var(--neon-pink);
-      border-left: 2px solid var(--neon-pink);
-      background: linear-gradient(90deg, rgba(255, 0, 85, 0.1), transparent);
-      padding-left: 20px; /* Petit décalage animé */
-    }
-
-    /* Dossiers (Sidebar Collapse) */
-    .sidebar-nav > ul > li > strong {
-      color: #fff;
+      font-weight: 700;
+      font-size: 1.6em;
+      color: #fff !important;
       text-transform: uppercase;
       letter-spacing: 2px;
-      border-bottom: 1px solid rgba(255,255,255,0.1);
-      padding-bottom: 5px;
-      margin-top: 20px;
-      display: block;
+      text-shadow: 0 0 10px rgba(255,255,255,0.5);
+      border-bottom: 2px solid var(--sao-orange);
+      padding-bottom: 10px;
+      display: inline-block;
+      width: 90%;
+      text-align: center;
     }
 
-    /* --- 3. CONTENU PRINCIPAL --- */
+    /* Les liens du menu */
+    .sidebar-nav ul { padding-left: 0; }
+    
+    .sidebar-nav li {
+      margin: 5px 10px;
+      list-style: none;
+    }
+
+    .sidebar-nav a {
+      display: block;
+      padding: 10px 15px;
+      border: 1px solid transparent;
+      border-radius: 4px; /* Un peu arrondi */
+      color: #bbb !important;
+      text-decoration: none !important;
+      transition: all 0.2s;
+      font-size: 0.95rem;
+      position: relative;
+      background: rgba(0,0,0,0.2);
+    }
+
+    /* EFFET HOVER SAO : Barre Orange qui apparaît */
+    .sidebar-nav a:hover, .sidebar-nav li.active > a {
+      background: linear-gradient(90deg, rgba(255, 170, 0, 0.2) 0%, transparent 100%);
+      border-left: 4px solid var(--sao-orange);
+      color: #fff !important;
+      padding-left: 25px;
+      box-shadow: 0 0 15px var(--sao-orange-glow);
+    }
+
+    /* Icone de dossier */
+    .sidebar-nav > ul > li > strong {
+      color: var(--sao-orange);
+      font-size: 0.85em;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      margin-top: 25px;
+      margin-left: 10px;
+      border-bottom: 1px solid rgba(255, 170, 0, 0.3);
+      display: block;
+      width: fit-content;
+    }
+
+    /* --- 3. CONTENU (La Fenêtre Flottante) --- */
     .content {
       padding-top: 40px;
     }
 
-    /* Zone de texte (Markdown) */
     .markdown-section {
-      background: rgba(0, 0, 0, 0.4); /* Fond noir très léger pour lire le texte */
-      border: 1px solid rgba(255, 255, 255, 0.05);
-      border-radius: 10px;
-      padding: 40px;
-      box-shadow: 0 0 50px rgba(0,0,0,0.5);
-      max-width: 900px;
+      background: var(--sao-panel-bg);
+      border: 1px solid var(--sao-panel-border);
+      border-radius: 8px;
+      padding: 50px;
+      box-shadow: 0 10px 50px rgba(0,0,0,0.8);
+      position: relative;
+      max-width: 950px;
       margin: 0 auto;
+      backdrop-filter: blur(5px);
     }
 
-    /* Titres H1 avec effet Glitch statique */
+    /* Barre de titre de la fenêtre (Décoration) */
+    .markdown-section::before {
+      content: "SYSTEM ALERT // MESSAGE WINDOW";
+      position: absolute;
+      top: 0; left: 0; width: 100%;
+      height: 25px;
+      background: rgba(255, 255, 255, 0.1);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      color: rgba(255, 255, 255, 0.5);
+      font-size: 10px;
+      line-height: 25px;
+      padding-left: 15px;
+      box-sizing: border-box;
+      border-radius: 8px 8px 0 0;
+      font-family: monospace;
+    }
+
+    /* Titres */
     .markdown-section h1 {
-      font-family: 'Share Tech Mono', monospace;
       color: #fff;
-      font-size: 3rem;
-      text-shadow: 2px 2px var(--neon-pink), -2px -2px var(--neon-cyan);
-      border-bottom: 2px solid var(--neon-cyan);
+      font-size: 2.5rem;
+      border-bottom: 2px solid var(--sao-orange);
       padding-bottom: 10px;
+      margin-top: 0;
+      text-shadow: 0 0 10px rgba(255, 170, 0, 0.5);
+    }
+
+    .markdown-section h2 {
+      color: var(--sao-orange);
+      margin-top: 40px;
+      border-left: 5px solid var(--sao-orange);
+      padding-left: 15px;
+      background: linear-gradient(90deg, rgba(255, 170, 0, 0.1), transparent);
+    }
+
+    /* Liens hypertexte */
+    .markdown-section a {
+      color: var(--sao-orange);
+      font-weight: 600;
+      text-decoration: none;
+      position: relative;
+    }
+    .markdown-section a::after {
+      content: ' »';
+      font-size: 0.8em;
+    }
+    .markdown-section a:hover {
+      text-shadow: 0 0 8px var(--sao-orange);
+    }
+
+    /* Codes */
+    .markdown-section code {
+      color: var(--sao-orange) !important;
+      background: rgba(0,0,0,0.5) !important;
+      border: 1px solid rgba(255, 170, 0, 0.2);
+    }
+    
+    .markdown-section pre {
+      background: rgba(10, 10, 10, 0.8) !important;
+      border: 1px solid var(--sao-panel-border);
       position: relative;
     }
 
-    .markdown-section h2, .markdown-section h3 {
-      color: var(--neon-cyan);
-      margin-top: 40px;
-      text-shadow: 0 0 5px rgba(0, 243, 255, 0.5);
-    }
-
-    /* Liens dans le texte */
-    .markdown-section a {
-      color: var(--neon-pink);
-      font-weight: bold;
-      text-decoration: none;
-      border-bottom: 1px dashed var(--neon-pink);
-    }
-    .markdown-section a:hover {
-      background-color: var(--neon-pink);
-      color: #000;
-      box-shadow: 0 0 15px var(--neon-pink);
-    }
-
-    /* Blocs de code */
-    .markdown-section pre {
-      background: #0a0a0f !important;
-      border: 1px solid var(--neon-purple);
-      box-shadow: 0 0 15px rgba(189, 0, 255, 0.2);
-      border-radius: 5px;
-    }
-    .markdown-section code {
-      font-family: 'Share Tech Mono', monospace;
-      color: var(--neon-cyan) !important;
-    }
-
-    /* Citations / Info boxes */
-    .markdown-section blockquote {
-      border-left: 4px solid var(--neon-purple);
-      background: rgba(189, 0, 255, 0.1);
-      color: #ddd;
-      margin: 2em 0;
-      padding: 15px 20px;
-      border-radius: 0 10px 10px 0;
-    }
-
-    /* --- 4. BARRE DE RECHERCHE --- */
+    /* --- 4. BARRE DE RECHERCHE (Input Field) --- */
     .search {
-      border-bottom: 1px solid var(--neon-cyan) !important;
-      background: rgba(0,0,0,0.3);
       margin-bottom: 20px;
+      border-bottom: none !important;
+      padding: 10px;
     }
     .search input {
+      background: rgba(0,0,0,0.4) !important;
+      border: 1px solid rgba(255, 255, 255, 0.2) !important;
       color: #fff !important;
-      font-family: 'Share Tech Mono', monospace;
+      border-radius: 20px; /* Forme de pilule */
+      padding: 5px 15px !important;
+      transition: all 0.3s;
     }
-    .search .clear-button { cursor: pointer; }
+    .search input:focus {
+      border-color: var(--sao-orange) !important;
+      box-shadow: 0 0 10px var(--sao-orange-glow);
+    }
 
     /* --- 5. SCROLLBARS --- */
-    ::-webkit-scrollbar { width: 6px; }
-    ::-webkit-scrollbar-track { background: #000; }
-    ::-webkit-scrollbar-thumb { background: var(--neon-purple); border-radius: 3px; }
-    ::-webkit-scrollbar-thumb:hover { background: var(--neon-pink); box-shadow: 0 0 10px var(--neon-pink); }
-    
-    /* Toggle Button (Mobile) */
-    .sidebar-toggle {
-      background: transparent;
-      color: var(--neon-cyan);
+    ::-webkit-scrollbar { width: 8px; }
+    ::-webkit-scrollbar-track { background: #111; }
+    ::-webkit-scrollbar-thumb { background: #555; border-radius: 4px; }
+    ::-webkit-scrollbar-thumb:hover { background: var(--sao-orange); }
+
+    /* --- CHARGEMENT --- */
+    #app {
+      transition: opacity 0.5s;
     }
   </style>
 </head>
 <body>
-  <div id="app">Chargement du Système Neural...</div>
+  <!-- Point de montage avec texte de chargement immersif -->
+  <div id="app">
+    <div style="position:absolute; top:50%; left:50%; transform:translate(-50%, -50%); text-align:center; color:#ffaa00;">
+      <h2 style="font-family: sans-serif; letter-spacing: 5px;">LINK START</h2>
+      <p style="color:#666;">INITIALIZING CARDINAL SYSTEM...</p>
+    </div>
+  </div>
 
   <script>
     window.$docsify = {
-      // Titre avec HTML pour l'effet de couleur
-      name: '<span style="color:#ff0055">LIFESTEAL</span> <span style="font-size:0.8em; color:#00f3ff;">// FR</span>',
-      repo: '', // Mettre l'URL GitHub ici pour le coin en haut à droite
+      // Le logo est stylisé via CSS, on met juste le texte ici
+      name: 'LifeSteal FR',
+      repo: '', 
       
-      // Configuration Navigation
       homepage: 'README.md',
-      loadSidebar: true, // INDISPENSABLE : Utilise le fichier _sidebar.md généré par le script Python
+      loadSidebar: true, // Nécessite toujours le script Python
       subMaxLevel: 3,
       auto2top: true,
       
       // Configuration Recherche
       search: {
-        placeholder: 'ACCÈS BASE DE DONNÉES...',
-        noData: 'ERREUR 404: DONNÉE INTROUVABLE',
+        placeholder: 'SEARCH OBJECT...',
+        noData: 'NO DATA FOUND.',
         depth: 6
       },
 
-      // Configuration Sidebar Collapse
       sidebarDisplayLevel: 1,
 
-      // Plugin Copy Code
       copyCode: {
-        buttonText: 'COPIER',
-        errorText: 'ERREUR',
-        successText: 'SUCCÈS'
+        buttonText: 'COPY',
+        errorText: 'ERROR',
+        successText: 'COPIED'
       }
     }
   </script>
 
   <!-- Scripts Docsify -->
   <script src="//cdn.jsdelivr.net/npm/docsify@4"></script>
-  
-  <!-- Plugins -->
   <script src="//cdn.jsdelivr.net/npm/docsify/lib/plugins/search.min.js"></script>
   <script src="//cdn.jsdelivr.net/npm/docsify-copy-code/dist/docsify-copy-code.min.js"></script>
   <script src="//cdn.jsdelivr.net/npm/docsify/lib/plugins/zoom-image.min.js"></script>
