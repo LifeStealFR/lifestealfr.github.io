@@ -2,57 +2,64 @@
 <html lang="fr">
 <head>
   <meta charset="UTF-8">
-  <title>Cardinal System // CONSOLE</title>
+  <title>Cardinal System // OS</title>
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
   
-  <!-- 1. RESSOURCES EXTERNES -->
+  <!-- Polices & Icônes -->
   <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700;900&family=Share+Tech+Mono&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   
-  <!-- 2. STYLES DOCSIFY -->
+  <!-- Docsify Styles -->
   <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/docsify@4/lib/themes/dark.css">
   <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/docsify-sidebar-collapse/dist/sidebar.min.css" />
 
-  <!-- 3. CSS CARDINAL SYSTEM (Recherche en bas à gauche) -->
   <style>
     :root {
-      --sao-orange: #ffaa00;
-      --sao-orange-dim: rgba(255, 170, 0, 0.15);
+      /* Couleurs Dynamiques (Modifiables via les paramètres) */
+      --main-color: #ffaa00; 
+      --main-color-dim: rgba(255, 170, 0, 0.15);
+      
       --sao-text: #eee;
-      --sao-bg: rgba(20, 20, 25, 0.92);
+      --sao-bg: rgba(20, 20, 25, 0.85);
       --font-ui: 'Orbitron', sans-serif;
       --font-code: 'Share Tech Mono', monospace;
     }
 
-    /* --- GLOBAL --- */
+    /* --- GLOBAL & CRT EFFECT --- */
     * { box-sizing: border-box; cursor: default; user-select: none; }
     body {
-      background-color: #000;
+      background-color: #050505;
       font-family: var(--font-ui);
       color: var(--sao-text);
       overflow: hidden;
       margin: 0;
     }
+
+    /* Effet d'écran cathodique (Désactivable) */
+    .crt-overlay {
+      position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+      background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
+      background-size: 100% 2px, 3px 100%;
+      z-index: 9000; pointer-events: none;
+      opacity: 0.5;
+    }
+
     .sidebar-toggle { display: none !important; }
 
-    /* --- FOND 3D --- */
+    /* --- FOND 3D ANIMÉ --- */
     #world-bg {
       position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
-      background: radial-gradient(circle at 50% 50%, #2a2a2a 0%, #000 100%);
-      perspective: 1000px;
-      z-index: -10;
+      background: radial-gradient(circle at 50% 50%, #1a1a24 0%, #000 100%);
+      perspective: 1000px; z-index: -10;
     }
     .grid-floor {
       position: absolute; bottom: -50%; left: -50%; width: 200%; height: 200%;
-      background-image: 
-        linear-gradient(rgba(255, 170, 0, 0.1) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(255, 170, 0, 0.1) 1px, transparent 1px);
-      background-size: 60px 60px;
-      transform: rotateX(70deg);
-      animation: floorMove 10s linear infinite;
+      background-image: linear-gradient(var(--main-color-dim) 1px, transparent 1px), linear-gradient(90deg, var(--main-color-dim) 1px, transparent 1px);
+      background-size: 80px 80px; transform: rotateX(75deg);
+      animation: floorMove 15s linear infinite;
     }
-    @keyframes floorMove { from { transform: rotateX(70deg) translateY(0); } to { transform: rotateX(70deg) translateY(60px); } }
+    @keyframes floorMove { from { transform: rotateX(75deg) translateY(0); } to { transform: rotateX(75deg) translateY(80px); } }
 
     /* --- LOGIN SCREEN --- */
     #login-screen {
@@ -62,175 +69,174 @@
       transition: opacity 1s;
     }
     .start-btn {
-      border: 2px solid var(--sao-orange); color: var(--sao-orange);
-      padding: 20px 60px; font-size: 24px; font-family: var(--font-ui);
-      letter-spacing: 5px; background: transparent; cursor: pointer;
-      text-transform: uppercase; box-shadow: 0 0 15px var(--sao-orange);
-      transition: all 0.3s;
+      border: 2px solid var(--main-color); color: var(--main-color);
+      padding: 15px 50px; font-size: 28px; font-family: var(--font-ui);
+      letter-spacing: 6px; background: rgba(0,0,0,0.5); cursor: pointer;
+      text-transform: uppercase; box-shadow: 0 0 20px var(--main-color-dim);
+      transition: all 0.3s; border-radius: 4px; backdrop-filter: blur(5px);
     }
-    .start-btn:hover { background: var(--sao-orange); color: #000; }
+    .start-btn:hover { background: var(--main-color); color: #000; box-shadow: 0 0 30px var(--main-color); transform: scale(1.05); }
     .tunnel-fx {
       position: absolute; top:0; left:0; width:100%; height:100%;
-      background: conic-gradient(from 0deg, transparent, var(--sao-orange), transparent);
+      background: conic-gradient(from 0deg, transparent, var(--main-color), transparent);
       opacity: 0; pointer-events: none;
     }
-    .link-start-active .tunnel-fx { animation: tunnelZoom 2s forwards; opacity: 1; }
-    .link-start-active .start-btn { display: none; }
-    @keyframes tunnelZoom { 0% { transform: scale(1) rotate(0deg); opacity: 0; } 50% { opacity: 1; } 100% { transform: scale(20) rotate(180deg); opacity: 0; } }
+    .link-start-active .tunnel-fx { animation: tunnelZoom 1.5s cubic-bezier(0.4, 0, 0.2, 1) forwards; opacity: 1; }
+    .link-start-active .start-btn { opacity: 0; pointer-events: none; }
+    @keyframes tunnelZoom { 0% { transform: scale(1) rotate(0deg); opacity: 0; } 40% { opacity: 1; } 100% { transform: scale(30) rotate(180deg); opacity: 0; } }
 
-    /* --- HUD : HP BAR --- */
+    /* --- HUD : HP BAR (FIXÉE EN HAUT) --- */
     #hud-hp {
-      position: fixed; top: 20px; left: 20px;
+      position: fixed; top: 20px; left: 30px; /* Position absolue sécurisée */
       min-width: 350px; height: 80px; z-index: 500;
       display: flex; align-items: flex-start;
-      opacity: 0; transform: translateX(-100px); transition: all 1s ease 2.5s;
+      opacity: 0; transform: translateX(-50px); transition: all 1s ease 2s;
     }
     .avatar-frame {
-      flex-shrink: 0; width: 50px; height: 50px; border-radius: 50%;
-      border: 2px solid var(--sao-orange); background: #333; 
+      flex-shrink: 0; width: 55px; height: 55px; border-radius: 50%;
+      border: 2px solid var(--main-color); background: #222; 
       display: flex; align-items: center; justify-content: center;
-      box-shadow: 0 0 10px var(--sao-orange); margin-right: 15px; margin-top: 5px;
+      box-shadow: 0 0 15px var(--main-color-dim); margin-right: 15px;
     }
     .stats-container { flex: 1; display: flex; flex-direction: column; }
-    .player-name { font-size: 16px; color: #fff; letter-spacing: 1px; text-shadow: 0 0 5px var(--sao-orange); margin-bottom: 2px; }
-    .hp-bar-bg { width: 100%; max-width: 250px; height: 12px; background: rgba(0,0,0,0.6); border: 1px solid #555; position:relative; transform: skewX(-20deg); }
-    .hp-bar-fill { width: 85%; height: 100%; background: linear-gradient(90deg, #ffcc00, #ff0000); box-shadow: 0 0 10px #ff0000; animation: hpPulse 3s infinite; }
-    .lvl-badge { position: absolute; right: -25px; top: -3px; color: var(--sao-orange); font-size: 10px; transform: skewX(20deg); }
+    .player-name { font-size: 16px; color: #fff; letter-spacing: 2px; text-shadow: 0 0 5px var(--main-color); margin-bottom: 4px; font-weight: bold; }
+    .hp-bar-bg { width: 100%; max-width: 260px; height: 14px; background: rgba(0,0,0,0.8); border: 1px solid #555; position:relative; transform: skewX(-20deg); }
+    .hp-bar-fill { width: 85%; height: 100%; background: linear-gradient(90deg, #ffcc00, #ff0000); box-shadow: 0 0 10px #ff0000; animation: hpPulse 2s infinite; }
+    .lvl-badge { position: absolute; right: -30px; top: -2px; color: var(--main-color); font-size: 11px; transform: skewX(20deg); font-weight: bold; }
 
-    /* --- HUD : CONSOLE --- */
-    #hud-console {
-      position: fixed; bottom: 20px; right: 20px;
-      width: 300px; height: 150px; background: rgba(0,0,0,0.8);
-      border-top: 2px solid var(--sao-orange); padding: 10px;
-      font-family: var(--font-code); font-size: 10px; color: #0f0; overflow: hidden;
-      z-index: 500; opacity: 0; transition: opacity 1s ease 3s;
+    /* --- MENU PARAMÈTRES (GEAR ICON) --- */
+    #btn-settings {
+      position: fixed; top: 25px; right: 30px;
+      font-size: 24px; color: var(--main-color); cursor: pointer;
+      z-index: 8000; opacity: 0; transition: opacity 1s ease 2s, transform 0.3s;
+      text-shadow: 0 0 10px var(--main-color);
     }
-    .log-line { margin-bottom: 2px; border-bottom: 1px solid rgba(0,255,0,0.1); }
+    #btn-settings:hover { transform: rotate(90deg) scale(1.2); }
 
-    /* --- SIDEBAR (MENU) --- */
+    /* FENÊTRE PARAMÈTRES */
+    #settings-modal {
+      position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0.8);
+      width: 400px; background: var(--sao-bg); border: 1px solid var(--main-color);
+      border-radius: 8px; z-index: 8500; padding: 30px;
+      box-shadow: 0 0 50px rgba(0,0,0,0.9), 0 0 15px var(--main-color-dim);
+      opacity: 0; visibility: hidden; transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      backdrop-filter: blur(10px);
+    }
+    #settings-modal.active { opacity: 1; visibility: visible; transform: translate(-50%, -50%) scale(1); }
+    #settings-modal h2 { color: #fff; border-bottom: 2px solid var(--main-color); padding-bottom: 10px; margin-top: 0; font-size: 1.5em; text-align: center; }
+    .setting-row { display: flex; justify-content: space-between; align-items: center; margin: 20px 0; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 10px; }
+    .setting-row label { font-size: 14px; color: #ccc; }
+    .setting-row select, .setting-row input[type="checkbox"] { background: #000; color: var(--main-color); border: 1px solid var(--main-color); padding: 5px; font-family: var(--font-ui); cursor: pointer; }
+    .close-btn { width: 100%; padding: 10px; background: var(--main-color); color: #000; border: none; font-family: var(--font-ui); font-weight: bold; cursor: pointer; margin-top: 10px; border-radius: 4px; }
+    .close-btn:hover { box-shadow: 0 0 15px var(--main-color); }
+
+    /* --- SIDEBAR (MENU NAVIGATION) --- */
     .sidebar {
       background: transparent !important; border: none !important;
-      width: 300px; padding-top: 100px; padding-left: 20px;
-      opacity: 0; transition: opacity 1s ease 3s; overflow: visible;
+      width: 300px; 
+      top: 130px !important; /* DÉCALAGE : La sidebar commence SOUS la barre de vie */
+      padding-top: 0 !important; padding-left: 20px;
+      opacity: 0; transition: opacity 1s ease 2.5s; overflow: visible;
     }
     .app-name { display: none; }
     .sidebar-nav ul { padding: 0; margin: 0; }
-    .sidebar-nav li { list-style: none; margin: 5px 0; }
+    .sidebar-nav li { list-style: none; margin: 8px 0; }
     
-    /* Titres de dossiers */
-    .sidebar-nav > ul > li > strong, .sidebar-nav > ul > li > span, .sidebar-nav > ul > li > p {
-      color: var(--sao-orange); font-size: 12px; letter-spacing: 2px;
-      text-transform: uppercase; font-weight: 800; border-bottom: 1px solid rgba(255, 170, 0, 0.3);
-      display: block; margin-top: 25px; margin-bottom: 10px; padding-bottom: 2px; width: 80%;
+    /* Titres Catégories */
+    .sidebar-nav > ul > li > strong, .sidebar-nav > ul > li > span {
+      color: var(--main-color); font-size: 13px; letter-spacing: 3px;
+      text-transform: uppercase; font-weight: 800; border-bottom: 1px solid var(--main-color-dim);
+      display: block; margin-top: 25px; margin-bottom: 15px; padding-bottom: 5px; width: 85%;
     }
-    /* Liens */
+    /* Boutons de navigation */
     .sidebar-nav ul ul { padding-left: 10px; }
     .sidebar-nav a {
-      display: flex; align-items: center; width: 90%; height: 40px;
-      background: rgba(30, 30, 35, 0.9); border: 1px solid #555; border-radius: 20px;
-      padding-left: 15px; color: #bbb !important; text-decoration: none !important;
-      font-size: 13px; transition: all 0.2s ease;
+      display: flex; align-items: center; width: 85%; height: 42px;
+      background: rgba(30, 30, 35, 0.8); border: 1px solid #444; border-radius: 20px;
+      padding-left: 20px; color: #ccc !important; text-decoration: none !important;
+      font-size: 14px; transition: all 0.2s ease; position: relative;
     }
     .sidebar-nav a:hover, .sidebar-nav li.active > a {
-      background: linear-gradient(90deg, rgba(255, 170, 0, 0.8), rgba(255, 100, 0, 0.6));
-      color: #000 !important; font-weight: bold; border-color: #fff;
-      box-shadow: 0 0 15px var(--sao-orange); padding-left: 25px; width: 95%;
+      background: linear-gradient(90deg, var(--main-color), transparent);
+      color: #fff !important; font-weight: bold; border-color: var(--main-color);
+      box-shadow: 0 0 20px var(--main-color-dim); padding-left: 30px; width: 95%;
     }
     .folder-icon { display: none; }
 
     /* --- SEARCH BAR (BAS GAUCHE) --- */
     .sidebar .search {
-      position: fixed; /* Sort du flux de la sidebar */
-      bottom: 20px;
-      left: 20px;
-      width: 280px;
-      z-index: 600; /* Au dessus du fond */
-      padding: 0;
-      margin: 0;
-      border-bottom: none !important;
-      background: transparent !important;
-      opacity: 0; /* Caché au début */
-      transition: opacity 1s ease 3s;
+      position: fixed; bottom: 30px; left: 30px; width: 280px; z-index: 600;
+      padding: 0; margin: 0; border-bottom: none !important; background: transparent !important;
+      opacity: 0; transition: opacity 1s ease 3s;
     }
-    
-    /* Quand le système est prêt, on affiche la barre */
     .system-ready .sidebar .search { opacity: 1; }
+    .sidebar .search .input-wrap { background: rgba(0,0,0,0.8); border: 1px solid var(--main-color); border-radius: 25px; padding: 8px 20px !important; box-shadow: 0 0 15px var(--main-color-dim); }
+    .sidebar .search input { color: #fff !important; font-family: var(--font-ui); font-size: 14px; }
+    .sidebar .search .clear-button { color: var(--main-color); cursor: pointer; }
 
-    /* Le container de l'input */
-    .sidebar .search .input-wrap {
-      margin: 0 !important;
-      padding: 5px 15px !important;
-      background: rgba(30, 30, 35, 0.95);
-      border: 1px solid var(--sao-orange);
-      border-radius: 25px;
-      box-shadow: 0 0 15px rgba(255, 170, 0, 0.1);
+    /* --- HUD : CONSOLE LOG --- */
+    #hud-console {
+      position: fixed; bottom: 30px; right: 30px; width: 320px; height: 160px;
+      background: rgba(0,0,0,0.85); border-top: 2px solid var(--main-color); padding: 15px;
+      font-family: var(--font-code); font-size: 11px; color: #0f0; overflow: hidden;
+      z-index: 500; opacity: 0; transition: opacity 1s ease 3s; box-shadow: 0 5px 20px rgba(0,0,0,0.8);
     }
-    
-    .sidebar .search .input-wrap:hover {
-      box-shadow: 0 0 20px var(--sao-orange);
-      background: rgba(10, 10, 15, 0.95);
-    }
+    .log-line { margin-bottom: 4px; border-bottom: 1px solid rgba(0,255,0,0.1); }
 
-    .sidebar .search input {
-      background: transparent !important;
-      border: none !important;
-      color: #fff !important;
-      font-family: var(--font-ui);
-      font-size: 14px;
-      padding: 5px 0 !important;
-      box-shadow: none !important;
-    }
-    
-    .sidebar .search .clear-button {
-      cursor: pointer;
-      color: var(--sao-orange);
-    }
-
-    /* --- FENÊTRE CONTENU --- */
+    /* --- FENÊTRE CONTENU PRINCIPAL --- */
     .content {
-      padding-top: 0; padding-left: 320px; padding-right: 20px;
+      padding-top: 0; padding-left: 330px; padding-right: 30px;
       height: 100vh; display: flex; align-items: center; justify-content: center;
     }
     .markdown-section {
-      background: var(--sao-bg);
-      width: 100%; max-width: 1100px; height: 85vh;
-      border: 1px solid rgba(150,150,150,0.3); border-radius: 6px;
-      position: relative; padding: 50px 40px; overflow-y: auto;
-      box-shadow: 0 10px 60px rgba(0,0,0,0.9); backdrop-filter: blur(8px);
-      opacity: 0; transform: scale(0.9); transition: all 0.4s ease;
+      background: var(--sao-bg); width: 100%; max-width: 1100px; height: 85vh;
+      border: 1px solid rgba(255,255,255,0.1); border-radius: 6px;
+      position: relative; padding: 60px 50px; overflow-y: auto;
+      box-shadow: 0 15px 50px rgba(0,0,0,0.9); backdrop-filter: blur(12px);
+      
+      /* ANIMATION VRAI SAO (Ligne verticale puis ouverture horizontale) */
+      opacity: 0; transform: scaleY(0.01) scaleX(0); transform-origin: center;
+      transition: transform 0.6s cubic-bezier(0.8, 0, 0.2, 1), opacity 0.3s;
     }
-    .system-ready .markdown-section { opacity: 1; transform: scale(1); }
-    .system-ready .sidebar, .system-ready #hud-hp, .system-ready #hud-console { opacity: 1; transform: translateX(0); }
+    .system-ready .markdown-section { opacity: 1; transform: scaleY(1) scaleX(1); }
+    .system-ready .sidebar, .system-ready #hud-hp, .system-ready #hud-console, .system-ready #btn-settings { opacity: 1; transform: translateX(0); }
 
+    /* En-tête de la fenêtre */
     .markdown-section::before {
-      content: "MESSAGE WINDOW // MAIN VISUALIZER";
-      position: absolute; top: 0; left: 0; width: 100%; height: 30px;
-      background: rgba(255,255,255,0.05); border-bottom: 1px solid rgba(255,255,255,0.1);
-      color: var(--sao-orange); font-size: 11px; line-height: 30px;
-      padding-left: 15px; font-family: var(--font-code);
+      content: "SYSTEM VISUALIZER // MAIN WINDOW";
+      position: absolute; top: 0; left: 0; width: 100%; height: 35px;
+      background: linear-gradient(90deg, rgba(255,255,255,0.1), transparent); border-bottom: 1px solid rgba(255,255,255,0.2);
+      color: var(--main-color); font-size: 12px; line-height: 35px; padding-left: 20px; font-family: var(--font-code); letter-spacing: 2px;
     }
     .markdown-section::after {
       content: "\f00d  \f111"; font-family: "Font Awesome 6 Free"; font-weight: 900;
-      position: absolute; top: 8px; right: 15px; color: #888; font-size: 12px; letter-spacing: 8px;
+      position: absolute; top: 10px; right: 20px; color: #888; font-size: 14px; letter-spacing: 10px; cursor: pointer;
     }
 
-    h1 { color: #fff; font-size: 2em; border-bottom: 2px solid var(--sao-orange); padding-bottom: 10px; }
-    h2 { color: var(--sao-orange); margin-top: 30px; border-left: 4px solid var(--sao-orange); padding-left: 10px; }
-    a { color: var(--sao-orange); text-decoration: none; font-weight: bold; }
-    code { color: var(--sao-orange) !important; background: rgba(0,0,0,0.6) !important; }
+    /* Style du texte interne */
+    h1 { color: #fff; font-size: 2.2em; border-bottom: 2px solid var(--main-color); padding-bottom: 10px; text-shadow: 0 0 15px var(--main-color-dim); }
+    h2 { color: var(--main-color); margin-top: 35px; border-left: 5px solid var(--main-color); padding-left: 15px; background: linear-gradient(90deg, var(--main-color-dim), transparent); }
+    a { color: var(--main-color); text-decoration: none; font-weight: bold; border-bottom: 1px dashed var(--main-color); }
+    a:hover { background: var(--main-color); color: #000; box-shadow: 0 0 10px var(--main-color); }
+    code { color: var(--main-color) !important; background: rgba(0,0,0,0.8) !important; border: 1px solid #333; font-family: var(--font-code); }
+    pre { border: 1px solid var(--main-color-dim); box-shadow: inset 0 0 20px rgba(0,0,0,0.8); }
+    blockquote { border-left: 4px solid #ff3333; background: rgba(255, 0, 0, 0.1); color: #ff9999; padding: 15px; }
 
-    ::-webkit-scrollbar { width: 6px; }
-    ::-webkit-scrollbar-track { background: #111; }
-    ::-webkit-scrollbar-thumb { background: #555; }
-    ::-webkit-scrollbar-thumb:hover { background: var(--sao-orange); }
+    ::-webkit-scrollbar { width: 8px; }
+    ::-webkit-scrollbar-track { background: #050505; }
+    ::-webkit-scrollbar-thumb { background: #333; border-radius: 4px; }
+    ::-webkit-scrollbar-thumb:hover { background: var(--main-color); }
   </style>
 </head>
 <body>
 
+  <!-- EFFET ECRAN (Désactivable via paramètre) -->
+  <div id="crt-layer" class="crt-overlay"></div>
+
   <!-- ECRAN DE DÉMARRAGE -->
   <div id="login-screen">
     <div class="tunnel-fx"></div>
-    <button class="start-btn" onclick="systemStart()">LINK START</button>
+    <button class="start-btn" onclick="systemStart()" onmouseenter="playSound('hover')">LINK START</button>
   </div>
 
   <!-- FOND -->
@@ -238,11 +244,38 @@
     <div class="grid-floor"></div>
   </div>
 
+  <!-- BOUTON PARAMÈTRES -->
+  <i id="btn-settings" class="fa-solid fa-gear" onclick="toggleSettings()" onmouseenter="playSound('hover')"></i>
+
+  <!-- MODAL PARAMÈTRES -->
+  <div id="settings-modal">
+    <h2>SYSTEM CONFIG</h2>
+    <div class="setting-row">
+      <label>Couleur du Thème</label>
+      <select id="theme-color" onchange="updateSettings()">
+        <option value="#ffaa00">Orange (SAO)</option>
+        <option value="#00bfff">Bleu (ALO)</option>
+        <option value="#ff3333">Rouge (PK/Admin)</option>
+        <option value="#33ff33">Vert (Safe Zone)</option>
+        <option value="#bd00ff">Violet (Cyber)</option>
+      </select>
+    </div>
+    <div class="setting-row">
+      <label>Effet Écran Cathodique (CRT)</label>
+      <input type="checkbox" id="setting-crt" onchange="updateSettings()" checked>
+    </div>
+    <div class="setting-row">
+      <label>Effets Sonores UI</label>
+      <input type="checkbox" id="setting-audio" onchange="updateSettings()" checked>
+    </div>
+    <button class="close-btn" onclick="toggleSettings()" onmouseenter="playSound('hover')">SAUVEGARDER & FERMER</button>
+  </div>
+
   <!-- INTERFACE (HUD) -->
   <div id="hud-hp">
-    <div class="avatar-frame"><i class="fa-solid fa-user" style="color:#ccc; font-size:24px;"></i></div>
+    <div class="avatar-frame"><i class="fa-solid fa-user" style="color:#fff; font-size:26px;"></i></div>
     <div class="stats-container">
-      <div class="player-name">VISITOR <span style="font-size:12px; color:#aaa;">LV. 1</span></div>
+      <div class="player-name">VISITOR <span style="font-size:12px; color:#aaa; font-weight:normal;">LV. 1</span></div>
       <div class="hp-bar-bg">
         <div class="hp-bar-fill"></div>
         <div class="lvl-badge">SAFE</div>
@@ -253,27 +286,104 @@
   <div id="hud-console"></div>
 
   <!-- DOCSIFY APP -->
-  <div id="app">Initialisation...</div>
+  <div id="app">Initialisation du Cardinal System...</div>
 
   <!-- SCRIPTS -->
   <script>
+    // --- GESTION DES PARAMÈTRES (LocalStorage = Cookies persistants) ---
+    let sysConfig = JSON.parse(localStorage.getItem('cardinalConfig')) || {
+      theme: '#ffaa00',
+      crt: true,
+      audio: true
+    };
+
+    function applySettings() {
+      // Applique la couleur CSS
+      document.documentElement.style.setProperty('--main-color', sysConfig.theme);
+      // Calcul de la version transparente de la couleur (HEX to RGBA approximation)
+      document.documentElement.style.setProperty('--main-color-dim', sysConfig.theme + '25');
+      
+      // Applique l'effet CRT
+      document.getElementById('crt-layer').style.display = sysConfig.crt ? 'block' : 'none';
+      
+      // Met à jour les inputs du menu
+      document.getElementById('theme-color').value = sysConfig.theme;
+      document.getElementById('setting-crt').checked = sysConfig.crt;
+      document.getElementById('setting-audio').checked = sysConfig.audio;
+    }
+
+    function updateSettings() {
+      sysConfig.theme = document.getElementById('theme-color').value;
+      sysConfig.crt = document.getElementById('setting-crt').checked;
+      sysConfig.audio = document.getElementById('setting-audio').checked;
+      localStorage.setItem('cardinalConfig', JSON.stringify(sysConfig));
+      applySettings();
+      playSound('click');
+    }
+
+    function toggleSettings() {
+      const modal = document.getElementById('settings-modal');
+      modal.classList.toggle('active');
+      if(modal.classList.contains('active')) playSound('start');
+    }
+
+    // --- MOTEUR AUDIO JS ---
+    const AudioContext = window.AudioContext || window.webkitAudioContext;
+    let audioCtx;
+
+    function playSound(type) {
+      if(!sysConfig.audio) return; // Stoppe si le son est désactivé
+      if (!audioCtx) audioCtx = new AudioContext();
+      if (audioCtx.state === 'suspended') audioCtx.resume();
+      
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+      osc.connect(gain); gain.connect(audioCtx.destination);
+
+      if (type === 'hover') { // Bip rapide
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(800, audioCtx.currentTime);
+        osc.frequency.exponentialRampToValueAtTime(1200, audioCtx.currentTime + 0.05);
+        gain.gain.setValueAtTime(0.05, audioCtx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.05);
+        osc.start(); osc.stop(audioCtx.currentTime + 0.05);
+      } else if (type === 'click') { // Validation
+        osc.type = 'triangle';
+        osc.frequency.setValueAtTime(600, audioCtx.currentTime);
+        osc.frequency.exponentialRampToValueAtTime(300, audioCtx.currentTime + 0.1);
+        gain.gain.setValueAtTime(0.1, audioCtx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.15);
+        osc.start(); osc.stop(audioCtx.currentTime + 0.15);
+      } else if (type === 'start') { // Gros lancement
+        osc.type = 'sawtooth';
+        osc.frequency.setValueAtTime(100, audioCtx.currentTime);
+        osc.frequency.linearRampToValueAtTime(800, audioCtx.currentTime + 1);
+        gain.gain.setValueAtTime(0.1, audioCtx.currentTime);
+        gain.gain.linearRampToValueAtTime(0, audioCtx.currentTime + 1.5);
+        osc.start(); osc.stop(audioCtx.currentTime + 1.5);
+      }
+    }
+
+    // --- SÉQUENCE DE DÉMARRAGE ---
     function systemStart() {
+      playSound('start');
       const screen = document.getElementById('login-screen');
       screen.classList.add('link-start-active');
       
       addLog("[SYS] INITIALIZING NERVEGEAR...");
-      setTimeout(() => addLog("[NET] CONNECTING TO SERVER..."), 500);
-      setTimeout(() => addLog("[AUTH] ACCESS GRANTED."), 1000);
-      setTimeout(() => addLog("[SYS] LOADING CARDINAL UI..."), 1500);
+      setTimeout(() => addLog("[NET] CONNECTING TO SERVER..."), 400);
+      setTimeout(() => addLog("[AUTH] ACCESS GRANTED."), 800);
+      setTimeout(() => addLog("[SYS] LOADING CARDINAL UI..."), 1200);
 
       setTimeout(() => {
         screen.style.opacity = '0';
         setTimeout(() => { screen.style.display = 'none'; }, 1000);
         document.body.classList.add('system-ready'); 
         startConsoleLoop();
-      }, 2500);
+      }, 2000);
     }
 
+    // --- CONSOLE ---
     function addLog(text) {
       const consoleDiv = document.getElementById('hud-console');
       const line = document.createElement('div');
@@ -284,16 +394,15 @@
     }
 
     function startConsoleLoop() {
-      const messages = ["Ping: 24ms", "Updating chunks...", "LifeSteal Protocol Active", "Syncing data..."];
+      const messages =["Ping: 18ms", "Updating chunks...", "Protocol Active", "Scanning environment...", "Rendering UI..."];
       setInterval(() => {
-        if(Math.random() > 0.8) {
-          addLog(messages[Math.floor(Math.random() * messages.length)]);
-        }
-      }, 3000);
+        if(Math.random() > 0.7) addLog(messages[Math.floor(Math.random() * messages.length)]);
+      }, 2500);
     }
 
+    // --- CONFIGURATION DOCSIFY ---
     window.$docsify = {
-      name: 'LifeSteal FR',
+      name: 'LifeSteal OS',
       repo: '',
       homepage: 'README.md',
       loadSidebar: true,
@@ -303,10 +412,25 @@
         placeholder: 'SEARCH DATABASE...',
         noData: 'NO DATA FOUND',
       },
-      sidebarDisplayLevel: 1
-    }
+      sidebarDisplayLevel: 1,
+      plugins:[
+        function(hook) {
+          // Ajoute les sons sur les liens Docsify générés dynamiquement
+          hook.doneEach(function() {
+            document.querySelectorAll('.sidebar-nav a, .search input').forEach(el => {
+              el.addEventListener('mouseenter', () => playSound('hover'));
+              if(el.tagName === 'A') el.addEventListener('click', () => playSound('click'));
+            });
+          });
+        }
+      ]
+    };
+
+    // Initialisation au chargement
+    applySettings();
   </script>
 
+  <!-- LIBS DOCSIFY -->
   <script src="//cdn.jsdelivr.net/npm/docsify@4"></script>
   <script src="//cdn.jsdelivr.net/npm/docsify/lib/plugins/search.min.js"></script>
   <script src="//cdn.jsdelivr.net/npm/docsify-copy-code/dist/docsify-copy-code.min.js"></script>
