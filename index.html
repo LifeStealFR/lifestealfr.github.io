@@ -2,169 +2,241 @@
 <html lang="fr">
 <head>
   <meta charset="UTF-8">
-  <title>LifeSteal FR Wiki</title>
+  <title>LifeSteal FR // WIKI</title>
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
   
-  <!-- 1. Police Futuriste (Google Fonts) -->
-  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
+  <!-- Polices Cyberpunk -->
+  <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;600;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
 
-  <!-- 2. Thème de base Docsify (Dark) -->
+  <!-- Thème de base (Dark) -->
   <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/docsify@4/lib/themes/dark.css">
   
-  <!-- 3. Plugin Sidebar Collapse -->
+  <!-- Sidebar Collapse -->
   <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/docsify-sidebar-collapse/dist/sidebar.min.css" />
 
-  <!-- 4. CSS Personnalisé "FUTURIST / LIFESTEAL" -->
   <style>
     :root {
-      /* Palette de couleurs */
-      --base-bg: #0b0c15;           /* Noir profond bleuté */
-      --sidebar-bg: rgba(11, 12, 21, 0.85); /* Semi-transparent */
-      --accent-color: #ff2a6d;      /* Rouge/Rose Néon (Style LifeSteal) */
-      --accent-glow: #ff2a6d;       /* Couleur de la lueur */
-      --text-color: #e0e6ed;        /* Blanc cassé */
-      --code-bg: #161b22;           /* Fond des blocs de code */
+      /* Palette Cyberpunk LifeSteal */
+      --neon-pink: #ff0055;
+      --neon-cyan: #00f3ff;
+      --neon-purple: #bd00ff;
+      --bg-dark: #050505;
+      --glass-bg: rgba(10, 10, 16, 0.65);
+      --border-color: rgba(0, 243, 255, 0.3);
     }
 
-    /* --- FOND ANIMÉ STYLE CYBERPUNK --- */
+    /* --- 1. FOND ET AMBIANCE --- */
     body {
-      background-color: var(--base-bg);
-      background-image: 
-        linear-gradient(rgba(255, 42, 109, 0.05) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(255, 42, 109, 0.05) 1px, transparent 1px);
-      background-size: 40px 40px; /* Taille de la grille */
-      font-family: 'Roboto', sans-serif;
-      color: var(--text-color);
+      background-color: var(--bg-dark);
+      color: #e0e0e0;
+      font-family: 'Rajdhani', sans-serif; /* Police technique */
+      font-size: 18px;
+      overflow-x: hidden;
     }
 
-    /* --- BARRE LATÉRALE (SIDEBAR) --- */
-    .sidebar {
-      background-color: var(--sidebar-bg);
-      backdrop-filter: blur(10px); /* Effet de flou derrière */
-      border-right: 1px solid rgba(255, 42, 109, 0.2);
-    }
-    
-    .sidebar-nav li { margin: 6px 0; }
-    
-    /* Liens dans la sidebar */
-    .sidebar-nav a {
-      color: #a0aabf !important;
-      transition: all 0.3s ease;
-      text-decoration: none !important;
-    }
-
-    .sidebar-nav a:hover, .sidebar-nav .active {
-      color: var(--accent-color) !important;
-      text-shadow: 0 0 8px var(--accent-glow); /* Lueur au survol */
-      border-right: 2px solid var(--accent-color);
+    /* Grille de fond animée (Perspective 3D) */
+    body::before {
+      content: "";
+      position: fixed;
+      top: 0; left: 0; width: 100%; height: 100%;
+      background: 
+        linear-gradient(transparent 0%, rgba(189, 0, 255, 0.1) 2%, transparent 3%),
+        linear-gradient(90deg, transparent 0%, rgba(0, 243, 255, 0.1) 2%, transparent 3%);
+      background-size: 50px 50px;
+      transform: perspective(500px) rotateX(20deg) scale(1.5);
+      animation: gridMove 20s linear infinite;
+      z-index: -2;
+      pointer-events: none;
     }
 
-    /* Titres des dossiers */
-    .sidebar-nav > ul > li > strong {
-      font-family: 'Orbitron', sans-serif; /* Police futuriste */
-      color: #fff;
-      letter-spacing: 1px;
-      margin-top: 15px;
+    /* Effet CRT (Lignes de balayage écran) */
+    body::after {
+      content: " ";
       display: block;
+      position: fixed;
+      top: 0; left: 0; bottom: 0; right: 0;
+      background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
+      z-index: 9999;
+      background-size: 100% 2px, 3px 100%;
+      pointer-events: none; /* Laisse passer les clics */
     }
 
-    /* --- CONTENU PRINCIPAL --- */
-    .content {
+    @keyframes gridMove {
+      0% { background-position: 0 0; }
+      100% { background-position: 0 500px; }
+    }
+
+    /* --- 2. SIDEBAR (Transparente & Neon) --- */
+    .sidebar {
+      background: var(--glass-bg);
+      backdrop-filter: blur(15px); /* Flou derrière la barre */
+      border-right: 1px solid var(--border-color);
+      box-shadow: 5px 0 30px rgba(0, 243, 255, 0.1);
       padding-top: 20px;
     }
 
-    /* Titres H1, H2, H3 */
-    .markdown-section h1, .markdown-section h2, .markdown-section h3 {
-      font-family: 'Orbitron', sans-serif;
-      color: #fff;
-      border-bottom: 1px solid rgba(255, 42, 109, 0.3);
+    /* Nom du Wiki (Logo) */
+    .app-name-link {
+      font-family: 'Share Tech Mono', monospace;
+      color: var(--neon-cyan) !important;
+      text-shadow: 0 0 10px var(--neon-cyan);
+      font-size: 1.5em;
+      letter-spacing: 2px;
     }
-    
+
+    /* Liens de navigation */
+    .sidebar-nav a {
+      color: #a0a0a0 !important;
+      transition: all 0.2s ease-in-out;
+      border-left: 2px solid transparent;
+      padding-left: 10px;
+      font-weight: 600;
+    }
+
+    /* Hover et Active sur les liens */
+    .sidebar-nav a:hover, .sidebar-nav li.active > a {
+      color: var(--neon-pink) !important;
+      text-shadow: 0 0 8px var(--neon-pink);
+      border-left: 2px solid var(--neon-pink);
+      background: linear-gradient(90deg, rgba(255, 0, 85, 0.1), transparent);
+      padding-left: 20px; /* Petit décalage animé */
+    }
+
+    /* Dossiers (Sidebar Collapse) */
+    .sidebar-nav > ul > li > strong {
+      color: #fff;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+      padding-bottom: 5px;
+      margin-top: 20px;
+      display: block;
+    }
+
+    /* --- 3. CONTENU PRINCIPAL --- */
+    .content {
+      padding-top: 40px;
+    }
+
+    /* Zone de texte (Markdown) */
+    .markdown-section {
+      background: rgba(0, 0, 0, 0.4); /* Fond noir très léger pour lire le texte */
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      border-radius: 10px;
+      padding: 40px;
+      box-shadow: 0 0 50px rgba(0,0,0,0.5);
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    /* Titres H1 avec effet Glitch statique */
     .markdown-section h1 {
-      text-shadow: 0 0 10px rgba(255, 42, 109, 0.5); /* Gros titre brillant */
-      font-size: 2.5rem;
+      font-family: 'Share Tech Mono', monospace;
+      color: #fff;
+      font-size: 3rem;
+      text-shadow: 2px 2px var(--neon-pink), -2px -2px var(--neon-cyan);
+      border-bottom: 2px solid var(--neon-cyan);
+      padding-bottom: 10px;
+      position: relative;
+    }
+
+    .markdown-section h2, .markdown-section h3 {
+      color: var(--neon-cyan);
+      margin-top: 40px;
+      text-shadow: 0 0 5px rgba(0, 243, 255, 0.5);
     }
 
     /* Liens dans le texte */
     .markdown-section a {
-      color: var(--accent-color);
+      color: var(--neon-pink);
       font-weight: bold;
       text-decoration: none;
+      border-bottom: 1px dashed var(--neon-pink);
     }
     .markdown-section a:hover {
-      text-decoration: underline;
-      text-shadow: 0 0 5px var(--accent-glow);
+      background-color: var(--neon-pink);
+      color: #000;
+      box-shadow: 0 0 15px var(--neon-pink);
     }
 
-    /* --- BLOCS DE CODE ET CITATIONS --- */
-    .markdown-section code {
-      background-color: rgba(255, 42, 109, 0.15) !important;
-      color: #ff85a9 !important;
-      border-radius: 4px;
-    }
-
+    /* Blocs de code */
     .markdown-section pre {
-      background-color: var(--code-bg) !important;
-      border: 1px solid rgba(255, 42, 109, 0.2);
-      box-shadow: 0 0 15px rgba(0,0,0,0.5);
+      background: #0a0a0f !important;
+      border: 1px solid var(--neon-purple);
+      box-shadow: 0 0 15px rgba(189, 0, 255, 0.2);
+      border-radius: 5px;
+    }
+    .markdown-section code {
+      font-family: 'Share Tech Mono', monospace;
+      color: var(--neon-cyan) !important;
     }
 
+    /* Citations / Info boxes */
     .markdown-section blockquote {
-      border-left: 4px solid var(--accent-color);
-      background: rgba(255, 255, 255, 0.05);
-      color: #ccc;
+      border-left: 4px solid var(--neon-purple);
+      background: rgba(189, 0, 255, 0.1);
+      color: #ddd;
+      margin: 2em 0;
+      padding: 15px 20px;
+      border-radius: 0 10px 10px 0;
     }
 
-    /* --- BOUTON DE RECHERCHE --- */
+    /* --- 4. BARRE DE RECHERCHE --- */
     .search {
-      border-bottom: 1px solid rgba(255, 42, 109, 0.3) !important;
+      border-bottom: 1px solid var(--neon-cyan) !important;
+      background: rgba(0,0,0,0.3);
+      margin-bottom: 20px;
     }
     .search input {
-      background: rgba(0,0,0,0.3) !important;
       color: #fff !important;
-      border: 1px solid #333 !important;
+      font-family: 'Share Tech Mono', monospace;
     }
+    .search .clear-button { cursor: pointer; }
 
-    /* --- SCROLLBAR CUSTOM --- */
-    ::-webkit-scrollbar { width: 8px; }
-    ::-webkit-scrollbar-track { background: #0b0c15; }
-    ::-webkit-scrollbar-thumb { 
-      background: #333; 
-      border-radius: 4px; 
+    /* --- 5. SCROLLBARS --- */
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: #000; }
+    ::-webkit-scrollbar-thumb { background: var(--neon-purple); border-radius: 3px; }
+    ::-webkit-scrollbar-thumb:hover { background: var(--neon-pink); box-shadow: 0 0 10px var(--neon-pink); }
+    
+    /* Toggle Button (Mobile) */
+    .sidebar-toggle {
+      background: transparent;
+      color: var(--neon-cyan);
     }
-    ::-webkit-scrollbar-thumb:hover { background: var(--accent-color); }
   </style>
 </head>
 <body>
-  <div id="app">Initialisation du système...</div>
+  <div id="app">Chargement du Système Neural...</div>
 
   <script>
     window.$docsify = {
-      name: '<span style="color:var(--accent-color); font-family:Orbitron;">LIFESTEAL</span> WIKI',
-      repo: '',
+      // Titre avec HTML pour l'effet de couleur
+      name: '<span style="color:#ff0055">LIFESTEAL</span> <span style="font-size:0.8em; color:#00f3ff;">// FR</span>',
+      repo: '', // Mettre l'URL GitHub ici pour le coin en haut à droite
       
-      // Configuration Standard
+      // Configuration Navigation
       homepage: 'README.md',
-      loadSidebar: true, // Lit le _sidebar.md généré par le script Python
+      loadSidebar: true, // INDISPENSABLE : Utilise le fichier _sidebar.md généré par le script Python
       subMaxLevel: 3,
       auto2top: true,
       
       // Configuration Recherche
       search: {
-        placeholder: 'Rechercher une info...',
-        noData: 'Donnée introuvable.',
+        placeholder: 'ACCÈS BASE DE DONNÉES...',
+        noData: 'ERREUR 404: DONNÉE INTROUVABLE',
         depth: 6
       },
 
-      // Configuration Sidebar Collapse (Dossiers)
-      sidebarDisplayLevel: 1, // 0 = tout fermé, 1 = dossiers principaux ouverts
+      // Configuration Sidebar Collapse
+      sidebarDisplayLevel: 1,
 
       // Plugin Copy Code
       copyCode: {
         buttonText: 'COPIER',
         errorText: 'ERREUR',
-        successText: 'COPIÉ'
+        successText: 'SUCCÈS'
       }
     }
   </script>
