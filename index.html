@@ -6,15 +6,15 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
   
-  <!-- 1. RESSOURCES EXTERNES (Polices & Icones) -->
+  <!-- 1. RESSOURCES EXTERNES -->
   <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700;900&family=Share+Tech+Mono&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   
-  <!-- 2. STYLES DOCSIFY DE BASE -->
+  <!-- 2. STYLES DOCSIFY -->
   <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/docsify@4/lib/themes/dark.css">
   <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/docsify-sidebar-collapse/dist/sidebar.min.css" />
 
-  <!-- 3. CSS "PIXEL PERFECT" CARDINAL SYSTEM -->
+  <!-- 3. CSS CARDINAL SYSTEM (Recherche en bas à gauche) -->
   <style>
     :root {
       --sao-orange: #ffaa00;
@@ -31,11 +31,9 @@
       background-color: #000;
       font-family: var(--font-ui);
       color: var(--sao-text);
-      overflow: hidden; /* Empêche le scroll global */
+      overflow: hidden;
       margin: 0;
     }
-    
-    /* Cache le bouton mobile moche */
     .sidebar-toggle { display: none !important; }
 
     /* --- FOND 3D --- */
@@ -56,7 +54,7 @@
     }
     @keyframes floorMove { from { transform: rotateX(70deg) translateY(0); } to { transform: rotateX(70deg) translateY(60px); } }
 
-    /* --- ECRAN DE LOGIN (LINK START) --- */
+    /* --- LOGIN SCREEN --- */
     #login-screen {
       position: fixed; top: 0; left: 0; width: 100%; height: 100%;
       background: #000; z-index: 99999;
@@ -64,20 +62,13 @@
       transition: opacity 1s;
     }
     .start-btn {
-      border: 2px solid var(--sao-orange);
-      color: var(--sao-orange);
-      padding: 20px 60px;
-      font-size: 24px;
-      font-family: var(--font-ui);
-      letter-spacing: 5px;
-      background: transparent;
-      cursor: pointer;
-      text-transform: uppercase;
-      box-shadow: 0 0 15px var(--sao-orange);
+      border: 2px solid var(--sao-orange); color: var(--sao-orange);
+      padding: 20px 60px; font-size: 24px; font-family: var(--font-ui);
+      letter-spacing: 5px; background: transparent; cursor: pointer;
+      text-transform: uppercase; box-shadow: 0 0 15px var(--sao-orange);
       transition: all 0.3s;
     }
     .start-btn:hover { background: var(--sao-orange); color: #000; }
-    
     .tunnel-fx {
       position: absolute; top:0; left:0; width:100%; height:100%;
       background: conic-gradient(from 0deg, transparent, var(--sao-orange), transparent);
@@ -85,109 +76,117 @@
     }
     .link-start-active .tunnel-fx { animation: tunnelZoom 2s forwards; opacity: 1; }
     .link-start-active .start-btn { display: none; }
-    
-    @keyframes tunnelZoom { 
-      0% { transform: scale(1) rotate(0deg); opacity: 0; }
-      50% { opacity: 1; }
-      100% { transform: scale(20) rotate(180deg); opacity: 0; }
-    }
+    @keyframes tunnelZoom { 0% { transform: scale(1) rotate(0deg); opacity: 0; } 50% { opacity: 1; } 100% { transform: scale(20) rotate(180deg); opacity: 0; } }
 
     /* --- HUD : HP BAR --- */
     #hud-hp {
       position: fixed; top: 20px; left: 20px;
-      min-width: 350px; height: 80px;
-      z-index: 500;
+      min-width: 350px; height: 80px; z-index: 500;
       display: flex; align-items: flex-start;
-      opacity: 0; transform: translateX(-100px);
-      transition: all 1s ease 2.5s;
+      opacity: 0; transform: translateX(-100px); transition: all 1s ease 2.5s;
     }
     .avatar-frame {
-      flex-shrink: 0;
-      width: 50px; height: 50px; border-radius: 50%;
-      border: 2px solid var(--sao-orange);
-      background: #333; display: flex; align-items: center; justify-content: center;
-      box-shadow: 0 0 10px var(--sao-orange);
-      margin-right: 15px; margin-top: 5px;
+      flex-shrink: 0; width: 50px; height: 50px; border-radius: 50%;
+      border: 2px solid var(--sao-orange); background: #333; 
+      display: flex; align-items: center; justify-content: center;
+      box-shadow: 0 0 10px var(--sao-orange); margin-right: 15px; margin-top: 5px;
     }
     .stats-container { flex: 1; display: flex; flex-direction: column; }
-    .player-name { 
-      font-size: 16px; color: #fff; letter-spacing: 1px; 
-      text-shadow: 0 0 5px var(--sao-orange); margin-bottom: 2px;
-    }
-    .hp-bar-bg { 
-      width: 100%; max-width: 250px; height: 12px; 
-      background: rgba(0,0,0,0.6); border: 1px solid #555; 
-      position:relative; transform: skewX(-20deg); 
-    }
-    .hp-bar-fill { 
-      width: 85%; height: 100%; 
-      background: linear-gradient(90deg, #ffcc00, #ff0000); 
-      box-shadow: 0 0 10px #ff0000;
-      animation: hpPulse 3s infinite;
-    }
-    .lvl-badge { 
-      position: absolute; right: -25px; top: -3px; 
-      color: var(--sao-orange); font-size: 10px; transform: skewX(20deg); 
-    }
+    .player-name { font-size: 16px; color: #fff; letter-spacing: 1px; text-shadow: 0 0 5px var(--sao-orange); margin-bottom: 2px; }
+    .hp-bar-bg { width: 100%; max-width: 250px; height: 12px; background: rgba(0,0,0,0.6); border: 1px solid #555; position:relative; transform: skewX(-20deg); }
+    .hp-bar-fill { width: 85%; height: 100%; background: linear-gradient(90deg, #ffcc00, #ff0000); box-shadow: 0 0 10px #ff0000; animation: hpPulse 3s infinite; }
+    .lvl-badge { position: absolute; right: -25px; top: -3px; color: var(--sao-orange); font-size: 10px; transform: skewX(20deg); }
 
     /* --- HUD : CONSOLE --- */
     #hud-console {
       position: fixed; bottom: 20px; right: 20px;
-      width: 300px; height: 150px;
-      background: rgba(0,0,0,0.8);
-      border-top: 2px solid var(--sao-orange);
-      padding: 10px;
-      font-family: var(--font-code);
-      font-size: 10px; color: #0f0; overflow: hidden;
+      width: 300px; height: 150px; background: rgba(0,0,0,0.8);
+      border-top: 2px solid var(--sao-orange); padding: 10px;
+      font-family: var(--font-code); font-size: 10px; color: #0f0; overflow: hidden;
       z-index: 500; opacity: 0; transition: opacity 1s ease 3s;
     }
     .log-line { margin-bottom: 2px; border-bottom: 1px solid rgba(0,255,0,0.1); }
 
     /* --- SIDEBAR (MENU) --- */
     .sidebar {
-      background: transparent !important;
-      border: none !important;
-      width: 300px;
-      padding-top: 100px; padding-left: 20px;
-      opacity: 0; transition: opacity 1s ease 3s;
-      overflow: visible;
+      background: transparent !important; border: none !important;
+      width: 300px; padding-top: 100px; padding-left: 20px;
+      opacity: 0; transition: opacity 1s ease 3s; overflow: visible;
     }
     .app-name { display: none; }
-    
     .sidebar-nav ul { padding: 0; margin: 0; }
     .sidebar-nav li { list-style: none; margin: 5px 0; }
-
-    /* Titres de dossiers */
-    .sidebar-nav > ul > li > strong,
-    .sidebar-nav > ul > li > span,
-    .sidebar-nav > ul > li > p {
-      color: var(--sao-orange); font-size: 12px; letter-spacing: 2px;
-      text-transform: uppercase; font-weight: 800;
-      border-bottom: 1px solid rgba(255, 170, 0, 0.3);
-      display: block; margin-top: 25px; margin-bottom: 10px;
-      padding-bottom: 2px; width: 80%;
-    }
     
-    /* Boutons de liens */
+    /* Titres de dossiers */
+    .sidebar-nav > ul > li > strong, .sidebar-nav > ul > li > span, .sidebar-nav > ul > li > p {
+      color: var(--sao-orange); font-size: 12px; letter-spacing: 2px;
+      text-transform: uppercase; font-weight: 800; border-bottom: 1px solid rgba(255, 170, 0, 0.3);
+      display: block; margin-top: 25px; margin-bottom: 10px; padding-bottom: 2px; width: 80%;
+    }
+    /* Liens */
     .sidebar-nav ul ul { padding-left: 10px; }
     .sidebar-nav a {
-      display: flex; align-items: center;
-      width: 90%; height: 40px;
-      background: rgba(30, 30, 35, 0.9);
-      border: 1px solid #555; border-radius: 20px;
-      padding-left: 15px;
-      color: #bbb !important; text-decoration: none !important;
+      display: flex; align-items: center; width: 90%; height: 40px;
+      background: rgba(30, 30, 35, 0.9); border: 1px solid #555; border-radius: 20px;
+      padding-left: 15px; color: #bbb !important; text-decoration: none !important;
       font-size: 13px; transition: all 0.2s ease;
     }
     .sidebar-nav a:hover, .sidebar-nav li.active > a {
       background: linear-gradient(90deg, rgba(255, 170, 0, 0.8), rgba(255, 100, 0, 0.6));
       color: #000 !important; font-weight: bold; border-color: #fff;
-      box-shadow: 0 0 15px var(--sao-orange);
-      padding-left: 25px; width: 95%;
+      box-shadow: 0 0 15px var(--sao-orange); padding-left: 25px; width: 95%;
     }
     .folder-icon { display: none; }
 
-    /* --- FENÊTRE DE CONTENU --- */
+    /* --- SEARCH BAR (BAS GAUCHE) --- */
+    .sidebar .search {
+      position: fixed; /* Sort du flux de la sidebar */
+      bottom: 20px;
+      left: 20px;
+      width: 280px;
+      z-index: 600; /* Au dessus du fond */
+      padding: 0;
+      margin: 0;
+      border-bottom: none !important;
+      background: transparent !important;
+      opacity: 0; /* Caché au début */
+      transition: opacity 1s ease 3s;
+    }
+    
+    /* Quand le système est prêt, on affiche la barre */
+    .system-ready .sidebar .search { opacity: 1; }
+
+    /* Le container de l'input */
+    .sidebar .search .input-wrap {
+      margin: 0 !important;
+      padding: 5px 15px !important;
+      background: rgba(30, 30, 35, 0.95);
+      border: 1px solid var(--sao-orange);
+      border-radius: 25px;
+      box-shadow: 0 0 15px rgba(255, 170, 0, 0.1);
+    }
+    
+    .sidebar .search .input-wrap:hover {
+      box-shadow: 0 0 20px var(--sao-orange);
+      background: rgba(10, 10, 15, 0.95);
+    }
+
+    .sidebar .search input {
+      background: transparent !important;
+      border: none !important;
+      color: #fff !important;
+      font-family: var(--font-ui);
+      font-size: 14px;
+      padding: 5px 0 !important;
+      box-shadow: none !important;
+    }
+    
+    .sidebar .search .clear-button {
+      cursor: pointer;
+      color: var(--sao-orange);
+    }
+
+    /* --- FENÊTRE CONTENU --- */
     .content {
       padding-top: 0; padding-left: 320px; padding-right: 20px;
       height: 100vh; display: flex; align-items: center; justify-content: center;
@@ -196,10 +195,8 @@
       background: var(--sao-bg);
       width: 100%; max-width: 1100px; height: 85vh;
       border: 1px solid rgba(150,150,150,0.3); border-radius: 6px;
-      position: relative; padding: 50px 40px;
-      overflow-y: auto;
-      box-shadow: 0 10px 60px rgba(0,0,0,0.9);
-      backdrop-filter: blur(8px);
+      position: relative; padding: 50px 40px; overflow-y: auto;
+      box-shadow: 0 10px 60px rgba(0,0,0,0.9); backdrop-filter: blur(8px);
       opacity: 0; transform: scale(0.9); transition: all 0.4s ease;
     }
     .system-ready .markdown-section { opacity: 1; transform: scale(1); }
@@ -221,7 +218,6 @@
     h2 { color: var(--sao-orange); margin-top: 30px; border-left: 4px solid var(--sao-orange); padding-left: 10px; }
     a { color: var(--sao-orange); text-decoration: none; font-weight: bold; }
     code { color: var(--sao-orange) !important; background: rgba(0,0,0,0.6) !important; }
-    .search input { background: rgba(0,0,0,0.5) !important; border-radius: 20px; color: #fff !important; }
 
     ::-webkit-scrollbar { width: 6px; }
     ::-webkit-scrollbar-track { background: #111; }
@@ -259,30 +255,25 @@
   <!-- DOCSIFY APP -->
   <div id="app">Initialisation...</div>
 
-  <!-- CONFIGURATION ET SCRIPTS -->
+  <!-- SCRIPTS -->
   <script>
-    // 1. Démarrage Système (Animation)
     function systemStart() {
-      // Animation visuelle
       const screen = document.getElementById('login-screen');
       screen.classList.add('link-start-active');
       
-      // Logs Console Fakes
       addLog("[SYS] INITIALIZING NERVEGEAR...");
       setTimeout(() => addLog("[NET] CONNECTING TO SERVER..."), 500);
       setTimeout(() => addLog("[AUTH] ACCESS GRANTED."), 1000);
       setTimeout(() => addLog("[SYS] LOADING CARDINAL UI..."), 1500);
 
-      // Transition
       setTimeout(() => {
         screen.style.opacity = '0';
         setTimeout(() => { screen.style.display = 'none'; }, 1000);
-        document.body.classList.add('system-ready'); // Déclenche l'apparition du reste
+        document.body.classList.add('system-ready'); 
         startConsoleLoop();
       }, 2500);
     }
 
-    // 2. Gestion Console
     function addLog(text) {
       const consoleDiv = document.getElementById('hud-console');
       const line = document.createElement('div');
@@ -301,23 +292,21 @@
       }, 3000);
     }
 
-    // 3. Configuration Docsify
     window.$docsify = {
       name: 'LifeSteal FR',
       repo: '',
       homepage: 'README.md',
-      loadSidebar: true, // IMPORTANT : Nécessite _sidebar.md
+      loadSidebar: true,
       subMaxLevel: 2,
       auto2top: true,
       search: {
         placeholder: 'SEARCH DATABASE...',
         noData: 'NO DATA FOUND',
       },
-      sidebarDisplayLevel: 1 // Dossiers fermés par défaut
+      sidebarDisplayLevel: 1
     }
   </script>
 
-  <!-- CHARGEMENT DES LIBS DOCSIFY (Dans le bon ordre) -->
   <script src="//cdn.jsdelivr.net/npm/docsify@4"></script>
   <script src="//cdn.jsdelivr.net/npm/docsify/lib/plugins/search.min.js"></script>
   <script src="//cdn.jsdelivr.net/npm/docsify-copy-code/dist/docsify-copy-code.min.js"></script>
