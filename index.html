@@ -2,7 +2,7 @@
 <html lang="fr">
 <head>
   <meta charset="UTF-8">
-  <title>Cardinal System // OS</title>
+  <title>Cardinal System // KERNEL</title>
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
   
@@ -16,7 +16,7 @@
 
   <style>
     :root {
-      /* VARIABLES DYNAMIQUES GÉRÉES PAR LES PARAMÈTRES */
+      /* VARIABLES DYNAMIQUES */
       --main-color: #ffaa00; 
       --main-color-dim: rgba(255, 170, 0, 0.15);
       --bg-opacity: 0.85;
@@ -28,38 +28,37 @@
       
       --sao-text: #eee;
       --font-code: 'Share Tech Mono', monospace;
+      --admin-color: #ff0033; /* Couleur forcée en mode admin */
     }
 
-    /* --- GLOBAL & CRT EFFECT --- */
+    /* Override Administrateur */
+    body.admin-mode {
+      --main-color: var(--admin-color) !important;
+      --main-color-dim: rgba(255, 0, 51, 0.15) !important;
+    }
+
+    /* --- GLOBAL --- */
     * { box-sizing: border-box; cursor: default; user-select: none; }
     body {
-      background-color: #050505;
-      font-family: var(--font-main);
-      color: var(--sao-text);
-      overflow: hidden; margin: 0;
-      zoom: var(--ui-scale); /* Echelle globale */
+      background-color: #020202; font-family: var(--font-main);
+      color: var(--sao-text); overflow: hidden; margin: 0; zoom: var(--ui-scale);
     }
-
     .crt-overlay {
       position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
       background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
-      background-size: 100% 2px, 3px 100%;
-      z-index: 9000; pointer-events: none;
-      opacity: var(--crt-opacity);
+      background-size: 100% 2px, 3px 100%; z-index: 9000; pointer-events: none; opacity: var(--crt-opacity);
     }
     .sidebar-toggle { display: none !important; }
 
     /* --- FOND 3D ANIMÉ --- */
     #world-bg {
       position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
-      background: radial-gradient(circle at 50% 50%, #1a1a24 0%, #000 100%);
-      perspective: 1000px; z-index: -10;
+      background: radial-gradient(circle at 50% 50%, #111 0%, #000 100%); perspective: 1000px; z-index: -10;
     }
     .grid-floor {
       position: absolute; bottom: -50%; left: -50%; width: 200%; height: 200%;
       background-image: linear-gradient(var(--main-color-dim) 1px, transparent 1px), linear-gradient(90deg, var(--main-color-dim) 1px, transparent 1px);
-      background-size: 80px 80px; transform: rotateX(75deg);
-      animation: floorMove var(--grid-speed) linear infinite;
+      background-size: 80px 80px; transform: rotateX(75deg); animation: floorMove var(--grid-speed) linear infinite;
     }
     @keyframes floorMove { from { transform: rotateX(75deg) translateY(0); } to { transform: rotateX(75deg) translateY(80px); } }
 
@@ -72,14 +71,9 @@
       border: 2px solid var(--main-color); color: var(--main-color); padding: 15px 50px; font-size: 28px;
       font-family: var(--font-main); letter-spacing: 6px; background: rgba(0,0,0,0.5); cursor: pointer;
       text-transform: uppercase; box-shadow: 0 0 20px var(--main-color-dim); transition: all 0.3s;
-      border-radius: 4px; backdrop-filter: blur(5px);
     }
     .start-btn:hover { background: var(--main-color); color: #000; box-shadow: 0 0 30px var(--main-color); transform: scale(1.05); }
-    .tunnel-fx {
-      position: absolute; top:0; left:0; width:100%; height:100%;
-      background: conic-gradient(from 0deg, transparent, var(--main-color), transparent);
-      opacity: 0; pointer-events: none;
-    }
+    .tunnel-fx { position: absolute; top:0; left:0; width:100%; height:100%; background: conic-gradient(from 0deg, transparent, var(--main-color), transparent); opacity: 0; pointer-events: none; }
     .link-start-active .tunnel-fx { animation: tunnelZoom 1.5s cubic-bezier(0.4, 0, 0.2, 1) forwards; opacity: 1; }
     .link-start-active .start-btn { opacity: 0; pointer-events: none; }
     @keyframes tunnelZoom { 0% { transform: scale(1) rotate(0deg); opacity: 0; } 40% { opacity: 1; } 100% { transform: scale(30) rotate(180deg); opacity: 0; } }
@@ -90,265 +84,273 @@
       display: flex; align-items: flex-start; opacity: 0; transform: translateX(-50px); transition: all 1s ease 2s;
     }
     .avatar-frame {
-      flex-shrink: 0; width: 55px; height: 55px; border-radius: 50%; border: 2px solid var(--main-color);
-      background: #222; display: flex; align-items: center; justify-content: center;
-      box-shadow: 0 0 15px var(--main-color-dim); margin-right: 15px;
+      flex-shrink: 0; width: 55px; height: 55px; border-radius: 50%; border: 2px solid var(--main-color); background: #222; 
+      display: flex; align-items: center; justify-content: center; box-shadow: 0 0 15px var(--main-color-dim); margin-right: 15px;
     }
     .stats-container { flex: 1; display: flex; flex-direction: column; }
     .player-name { font-size: 16px; color: #fff; letter-spacing: 2px; text-shadow: 0 0 5px var(--main-color); margin-bottom: 4px; font-weight: bold; }
+    body.admin-mode .player-name { color: var(--main-color); text-shadow: 0 0 15px var(--main-color); }
     .hp-bar-bg { width: 100%; max-width: 260px; height: 14px; background: rgba(0,0,0,0.8); border: 1px solid #555; position:relative; transform: skewX(-20deg); }
     .hp-bar-fill { width: 85%; height: 100%; background: linear-gradient(90deg, #ffcc00, #ff0000); box-shadow: 0 0 10px #ff0000; animation: hpPulse 2s infinite; }
+    body.admin-mode .hp-bar-fill { background: #ff0033; box-shadow: 0 0 15px #ff0033; width: 100%; animation: none; }
     .lvl-badge { position: absolute; right: -40px; top: -2px; color: var(--main-color); font-size: 11px; transform: skewX(20deg); font-weight: bold; }
 
-    /* --- BOUTON PARAMÈTRES --- */
+    /* --- BOUTON KERNEL (ENGRENAGE) --- */
     #btn-settings {
       position: fixed; top: 25px; right: 30px; font-size: 24px; color: var(--main-color); cursor: pointer;
       z-index: 8000; opacity: 0; transition: opacity 1s ease 2s, transform 0.3s; text-shadow: 0 0 10px var(--main-color);
     }
     #btn-settings:hover { transform: rotate(90deg) scale(1.2); }
+    body.admin-mode #btn-settings { animation: pulseWarning 2s infinite; }
+    @keyframes pulseWarning { 0% { text-shadow: 0 0 10px red; } 50% { text-shadow: 0 0 30px red; color: white; } 100% { text-shadow: 0 0 10px red; } }
 
-    /* --- SUPER MENU PARAMÈTRES (SANS FIN) --- */
+    /* === LE MENU KERNEL "CARDINAL" (COMPLEXE) === */
     #settings-modal {
       position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0.9);
-      width: 700px; height: 600px; background: rgba(15, 15, 20, 0.95); border: 1px solid var(--main-color);
-      border-radius: 8px; z-index: 8500; display: flex; flex-direction: column;
-      box-shadow: 0 0 60px rgba(0,0,0,1), 0 0 20px var(--main-color-dim);
+      width: 90vw; height: 85vh; max-width: 1200px;
+      background: rgba(5, 5, 8, 0.95); border: 1px solid var(--main-color);
+      z-index: 8500; display: flex; flex-direction: column;
+      box-shadow: 0 0 60px rgba(0,0,0,1), inset 0 0 30px var(--main-color-dim);
       opacity: 0; visibility: hidden; transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
       backdrop-filter: blur(20px);
     }
     #settings-modal.active { opacity: 1; visibility: visible; transform: translate(-50%, -50%) scale(1); }
     
-    .settings-header { padding: 20px; border-bottom: 2px solid var(--main-color); display: flex; flex-direction: column; }
-    .settings-header h2 { margin: 0 0 15px 0; color: #fff; font-size: 1.5em; text-align: center; letter-spacing: 5px; text-shadow: 0 0 10px var(--main-color); }
-    
-    /* Onglets */
-    .settings-tabs { display: flex; justify-content: space-between; background: rgba(0,0,0,0.5); border-radius: 5px; padding: 5px; }
-    .tab-btn { flex: 1; text-align: center; padding: 10px; color: #888; font-family: var(--font-main); cursor: pointer; border-radius: 4px; font-size: 12px; font-weight: bold; letter-spacing: 1px; transition: 0.3s; }
-    .tab-btn:hover { color: #fff; background: rgba(255,255,255,0.1); }
-    .tab-btn.active { background: var(--main-color); color: #000; box-shadow: 0 0 10px var(--main-color); }
+    /* Décorations de coin */
+    .corner-tl { position: absolute; top: -1px; left: -1px; width: 30px; height: 30px; border-top: 3px solid var(--main-color); border-left: 3px solid var(--main-color); }
+    .corner-br { position: absolute; bottom: -1px; right: -1px; width: 30px; height: 30px; border-bottom: 3px solid var(--main-color); border-right: 3px solid var(--main-color); }
 
-    /* Contenu scrollable */
-    .settings-body { flex: 1; padding: 20px 30px; overflow-y: auto; }
-    .tab-content { display: none; animation: fadeIn 0.3s ease; }
-    .tab-content.active { display: block; }
-    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-
-    /* Lignes de paramètres */
-    .setting-group { margin-bottom: 25px; }
-    .setting-group h3 { color: var(--main-color); font-size: 12px; margin-bottom: 10px; border-bottom: 1px dashed #444; padding-bottom: 5px; }
-    .setting-row { display: flex; justify-content: space-between; align-items: center; margin: 12px 0; }
-    .setting-row label { font-size: 13px; color: #ccc; }
-    
-    /* Inputs Custom */
-    .setting-row select, .setting-row input[type="text"] { background: #000; color: var(--main-color); border: 1px solid var(--main-color); padding: 5px 10px; font-family: var(--font-code); cursor: pointer; width: 180px; }
-    
-    /* Sliders (Range) style SAO */
-    input[type=range] { -webkit-appearance: none; width: 180px; background: transparent; }
-    input[type=range]:focus { outline: none; }
-    input[type=range]::-webkit-slider-runnable-track { width: 100%; height: 4px; cursor: pointer; background: #333; border-radius: 2px; }
-    input[type=range]::-webkit-slider-thumb { height: 16px; width: 16px; border-radius: 50%; background: var(--main-color); cursor: pointer; -webkit-appearance: none; margin-top: -6px; box-shadow: 0 0 10px var(--main-color); }
-    
-    /* Checkbox Cyberpunk */
-    input[type=checkbox] { appearance: none; width: 40px; height: 20px; background: #333; border-radius: 10px; position: relative; cursor: pointer; outline: none; box-shadow: inset 0 0 5px rgba(0,0,0,0.5); transition: 0.3s; }
-    input[type=checkbox]::before { content: ''; position: absolute; width: 16px; height: 16px; border-radius: 50%; top: 2px; left: 2px; background: #888; transition: 0.3s; }
-    input[type=checkbox]:checked { background: var(--main-color-dim); border: 1px solid var(--main-color); }
-    input[type=checkbox]:checked::before { left: 20px; background: var(--main-color); box-shadow: 0 0 10px var(--main-color); }
-
-    /* Pied de page */
-    .settings-footer { padding: 15px 20px; border-top: 1px solid #333; display: flex; justify-content: flex-end; background: rgba(0,0,0,0.5); }
-    .close-btn { padding: 10px 30px; background: var(--main-color); color: #000; border: none; font-family: var(--font-main); font-weight: bold; cursor: pointer; border-radius: 4px; font-size: 14px; }
-    .close-btn:hover { box-shadow: 0 0 20px var(--main-color); transform: scale(1.02); }
-
-    /* --- SIDEBAR (MENU NAVIGATION) --- */
-    .sidebar {
-      background: transparent !important; border: none !important; width: 300px; 
-      top: 130px !important; padding-top: 0 !important; padding-left: 20px;
-      opacity: 0; transition: opacity 1s ease 2.5s; overflow: visible;
+    .cfg-header {
+      padding: 15px 25px; border-bottom: 1px solid var(--main-color); background: var(--main-color-dim);
+      color: var(--main-color); font-size: 1.2em; letter-spacing: 5px; font-family: var(--font-code);
+      display: flex; justify-content: space-between; align-items: center;
     }
+    .cfg-layout { display: flex; flex: 1; overflow: hidden; }
+    
+    /* Sidebar du Kernel */
+    .cfg-sidebar { width: 250px; background: rgba(0,0,0,0.5); border-right: 1px solid #333; display: flex; flex-direction: column; padding: 20px 0; }
+    .cfg-tab { padding: 15px 25px; color: #888; font-family: var(--font-code); font-size: 13px; cursor: pointer; transition: 0.2s; border-left: 3px solid transparent; letter-spacing: 1px; }
+    .cfg-tab:hover { background: rgba(255,255,255,0.05); color: #ccc; }
+    .cfg-tab.active { background: var(--main-color-dim); color: var(--main-color); border-left: 3px solid var(--main-color); text-shadow: 0 0 10px var(--main-color); }
+    
+    /* Diagnostic Faux (Live Data) */
+    .cfg-diag { margin-top: auto; padding: 20px; font-family: var(--font-code); font-size: 10px; color: var(--main-color); border-top: 1px dashed #333; }
+    .diag-bar { width: 100%; height: 4px; background: #222; margin-top: 5px; margin-bottom: 15px; }
+    .diag-fill { height: 100%; background: var(--main-color); width: 0%; transition: width 0.5s; }
+
+    /* Contenu du Kernel */
+    .cfg-content { flex: 1; padding: 40px; overflow-y: auto; position: relative; }
+    .tab-content { display: none; animation: glitchIn 0.3s ease; }
+    .tab-content.active { display: block; }
+    @keyframes glitchIn { 0% { opacity:0; transform: translateX(20px) skewX(10deg); filter: hue-rotate(90deg); } 100% { opacity:1; transform: translateX(0) skewX(0); filter: hue-rotate(0); } }
+
+    /* Éléments de formulaire hardcore */
+    .cfg-group { margin-bottom: 40px; }
+    .cfg-group h3 { font-family: var(--font-code); color: #fff; font-size: 16px; border-bottom: 1px solid #444; padding-bottom: 10px; margin-bottom: 20px; text-transform: uppercase; letter-spacing: 2px; }
+    .cfg-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; background: rgba(255,255,255,0.02); padding: 10px 15px; border-left: 2px solid #333; transition: 0.2s; }
+    .cfg-row:hover { border-left-color: var(--main-color); background: rgba(255,255,255,0.05); }
+    .cfg-row label { font-family: var(--font-code); font-size: 12px; color: #bbb; display: flex; flex-direction: column; }
+    .cfg-row label span { font-size: 9px; color: #666; margin-top: 3px; }
+
+    input, select { background: #000; color: var(--main-color); border: 1px solid #444; padding: 8px 12px; font-family: var(--font-code); font-size: 12px; outline: none; transition: 0.3s; }
+    input:focus, select:focus { border-color: var(--main-color); box-shadow: 0 0 10px var(--main-color-dim); }
+    input[type=range] { -webkit-appearance: none; width: 200px; background: transparent; border:none; padding:0; }
+    input[type=range]::-webkit-slider-runnable-track { width: 100%; height: 2px; background: #444; }
+    input[type=range]::-webkit-slider-thumb { height: 12px; width: 8px; background: var(--main-color); -webkit-appearance: none; margin-top: -5px; cursor: pointer; }
+    input[type=checkbox] { appearance: none; width: 30px; height: 14px; background: #222; position: relative; cursor: pointer; border-radius: 0; border: 1px solid #444; }
+    input[type=checkbox]:checked { background: var(--main-color-dim); border-color: var(--main-color); }
+    input[type=checkbox]::before { content: ''; position: absolute; width: 10px; height: 10px; top: 1px; left: 1px; background: #666; transition: 0.2s; }
+    input[type=checkbox]:checked::before { left: 17px; background: var(--main-color); }
+
+    /* Onglet Security (Mot de passe) */
+    .pwd-box { display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 40px; border: 1px dashed var(--main-color); background: rgba(255,0,0,0.05); }
+    .pwd-input { font-size: 24px; text-align: center; letter-spacing: 10px; width: 300px; padding: 15px; color: #fff; text-transform: uppercase; border-color: var(--main-color); margin-bottom: 20px; }
+    .btn-override { padding: 15px 40px; background: var(--main-color); color: #000; font-family: var(--font-main); font-weight: bold; font-size: 16px; border: none; cursor: pointer; letter-spacing: 3px; }
+    .btn-override:hover { box-shadow: 0 0 20px var(--main-color); background: #fff; }
+    
+    #admin-panel { display: none; background: rgba(255, 0, 51, 0.1); border: 1px solid #ff0033; padding: 20px; margin-top: 20px; }
+    body.admin-mode #admin-panel { display: block; }
+    body.admin-mode .pwd-box { display: none; }
+
+    .cfg-footer { padding: 15px 25px; border-top: 1px solid #333; background: #000; display: flex; justify-content: flex-end; }
+    .close-btn { padding: 10px 30px; background: transparent; color: var(--main-color); border: 1px solid var(--main-color); font-family: var(--font-code); cursor: pointer; transition: 0.3s; }
+    .close-btn:hover { background: var(--main-color); color: #000; box-shadow: 0 0 15px var(--main-color); }
+
+    /* --- SIDEBAR DOCSIFY (MENU NAVIGATION) --- */
+    .sidebar { background: transparent !important; border: none !important; width: 300px; top: 130px !important; padding-top: 0 !important; padding-left: 20px; opacity: 0; transition: opacity 1s ease 2.5s; overflow: visible; }
     .app-name { display: none; }
     .sidebar-nav ul { padding: 0; margin: 0; }
     .sidebar-nav li { list-style: none; margin: 8px 0; }
     .sidebar-nav > ul > li > strong, .sidebar-nav > ul > li > span { color: var(--main-color); font-size: 13px; letter-spacing: 3px; text-transform: uppercase; font-weight: 800; border-bottom: 1px solid var(--main-color-dim); display: block; margin-top: 25px; margin-bottom: 15px; padding-bottom: 5px; width: 85%; }
     .sidebar-nav ul ul { padding-left: 10px; }
-    .sidebar-nav a { display: flex; align-items: center; width: 85%; height: 42px; background: rgba(30, 30, 35, 0.8); border: 1px solid #444; border-radius: 20px; padding-left: 20px; color: #ccc !important; text-decoration: none !important; font-size: 14px; transition: all 0.2s ease; position: relative; }
-    .sidebar-nav a:hover, .sidebar-nav li.active > a { background: linear-gradient(90deg, var(--main-color), transparent); color: #fff !important; font-weight: bold; border-color: var(--main-color); box-shadow: 0 0 20px var(--main-color-dim); padding-left: 30px; width: 95%; }
+    .sidebar-nav a { display: flex; align-items: center; width: 85%; height: 42px; background: rgba(30, 30, 35, 0.8); border: 1px solid #444; border-radius: 4px; padding-left: 20px; color: #ccc !important; text-decoration: none !important; font-size: 14px; transition: all 0.2s ease; font-family: var(--font-code); }
+    .sidebar-nav a:hover, .sidebar-nav li.active > a { background: var(--main-color-dim); color: var(--main-color) !important; font-weight: bold; border-left: 4px solid var(--main-color); padding-left: 25px; width: 95%; }
     .folder-icon { display: none; }
 
-    /* --- SEARCH BAR (BAS GAUCHE) --- */
+    /* --- SEARCH BAR --- */
     .sidebar .search { position: fixed; bottom: 30px; left: 30px; width: 280px; z-index: 600; padding: 0; margin: 0; border-bottom: none !important; background: transparent !important; opacity: 0; transition: opacity 1s ease 3s; }
     .system-ready .sidebar .search { opacity: 1; }
-    .sidebar .search .input-wrap { background: rgba(0,0,0,0.8); border: 1px solid var(--main-color); border-radius: 25px; padding: 8px 20px !important; box-shadow: 0 0 15px var(--main-color-dim); }
-    .sidebar .search input { color: #fff !important; font-family: var(--font-main); font-size: 14px; }
-    .sidebar .search .clear-button { color: var(--main-color); cursor: pointer; }
+    .sidebar .search .input-wrap { background: rgba(0,0,0,0.8); border: 1px solid var(--main-color); padding: 8px 20px !important; border-radius: 4px; }
+    .sidebar .search input { color: #fff !important; font-family: var(--font-code); font-size: 14px; }
 
     /* --- HUD : CONSOLE LOG --- */
-    #hud-console {
-      position: fixed; bottom: 30px; right: 30px; width: 320px; height: 160px;
-      background: rgba(0,0,0,0.85); border-top: 2px solid var(--main-color); padding: 15px;
-      font-family: var(--font-code); font-size: 11px; color: #0f0; overflow: hidden;
-      z-index: 500; opacity: 0; transition: opacity 1s ease 3s; box-shadow: 0 5px 20px rgba(0,0,0,0.8);
-    }
+    #hud-console { position: fixed; bottom: 30px; right: 30px; width: 350px; height: 180px; background: rgba(0,0,0,0.85); border: 1px solid #333; border-top: 2px solid var(--main-color); padding: 15px; font-family: var(--font-code); font-size: 10px; color: #0f0; overflow: hidden; z-index: 500; opacity: 0; transition: opacity 1s ease 3s; box-shadow: 0 5px 20px rgba(0,0,0,0.8); }
     .log-line { margin-bottom: 4px; border-bottom: 1px solid rgba(0,255,0,0.1); }
 
     /* --- FENÊTRE CONTENU PRINCIPAL --- */
     .content { padding-top: 0; padding-left: 330px; padding-right: 30px; height: 100vh; display: flex; align-items: center; justify-content: center; }
     .markdown-section {
-      background: rgba(20, 20, 25, var(--bg-opacity)); width: 100%; max-width: 1100px; height: 85vh;
-      border: 1px solid rgba(255,255,255,0.1); border-radius: 6px;
-      position: relative; padding: 60px 50px; overflow-y: auto;
+      background: rgba(10, 10, 12, var(--bg-opacity)); width: 100%; max-width: 1100px; height: 85vh;
+      border: 1px solid rgba(255,255,255,0.1); position: relative; padding: 60px 50px; overflow-y: auto;
       box-shadow: 0 15px 50px rgba(0,0,0,0.9); backdrop-filter: blur(var(--blur-lvl));
-      opacity: 0; transform: scaleY(0.01) scaleX(0); transform-origin: center;
-      transition: transform 0.6s cubic-bezier(0.8, 0, 0.2, 1), opacity 0.3s;
+      opacity: 0; transform: scaleY(0.01) scaleX(0); transform-origin: center; transition: transform 0.6s cubic-bezier(0.8, 0, 0.2, 1), opacity 0.3s;
     }
     .system-ready .markdown-section { opacity: 1; transform: scaleY(1) scaleX(1); }
     .system-ready .sidebar, .system-ready #hud-hp, .system-ready #hud-console, .system-ready #btn-settings { opacity: 1; transform: translateX(0); }
 
-    .markdown-section::before {
-      content: "SYSTEM VISUALIZER // MAIN WINDOW"; position: absolute; top: 0; left: 0; width: 100%; height: 35px;
-      background: linear-gradient(90deg, rgba(255,255,255,0.1), transparent); border-bottom: 1px solid rgba(255,255,255,0.2);
-      color: var(--main-color); font-size: 12px; line-height: 35px; padding-left: 20px; font-family: var(--font-code); letter-spacing: 2px;
-    }
-    .markdown-section::after { content: "\f00d  \f111"; font-family: "Font Awesome 6 Free"; font-weight: 900; position: absolute; top: 10px; right: 20px; color: #888; font-size: 14px; letter-spacing: 10px; cursor: pointer; }
+    .markdown-section::before { content: "SYSTEM VISUALIZER // MAIN WINDOW"; position: absolute; top: 0; left: 0; width: 100%; height: 35px; background: var(--main-color-dim); border-bottom: 1px solid var(--main-color); color: var(--main-color); font-size: 12px; line-height: 35px; padding-left: 20px; font-family: var(--font-code); letter-spacing: 2px; }
+    .markdown-section::after { content: "\f00d  \f111"; font-family: "Font Awesome 6 Free"; font-weight: 900; position: absolute; top: 10px; right: 20px; color: var(--main-color); font-size: 14px; letter-spacing: 10px; cursor: pointer; }
 
-    h1 { color: #fff; font-size: 2.2em; border-bottom: 2px solid var(--main-color); padding-bottom: 10px; text-shadow: 0 0 15px var(--main-color-dim); }
-    h2 { color: var(--main-color); margin-top: 35px; border-left: 5px solid var(--main-color); padding-left: 15px; background: linear-gradient(90deg, var(--main-color-dim), transparent); }
+    h1 { color: #fff; font-size: 2.2em; border-bottom: 2px solid var(--main-color); padding-bottom: 10px; font-family: var(--font-main); }
+    h2 { color: var(--main-color); margin-top: 35px; border-left: 5px solid var(--main-color); padding-left: 15px; background: linear-gradient(90deg, var(--main-color-dim), transparent); font-family: var(--font-main); }
     a { color: var(--main-color); text-decoration: none; font-weight: bold; border-bottom: 1px dashed var(--main-color); }
     a:hover { background: var(--main-color); color: #000; box-shadow: 0 0 10px var(--main-color); }
     code { color: var(--main-color) !important; background: rgba(0,0,0,0.8) !important; border: 1px solid #333; font-family: var(--font-code); }
     pre { border: 1px solid var(--main-color-dim); box-shadow: inset 0 0 20px rgba(0,0,0,0.8); }
-    blockquote { border-left: 4px solid #ff3333; background: rgba(255, 0, 0, 0.1); color: #ff9999; padding: 15px; }
+    blockquote { border-left: 4px solid #ff3333; background: rgba(255, 0, 0, 0.1); color: #ff9999; padding: 15px; font-family: var(--font-code); font-size: 13px; }
 
-    ::-webkit-scrollbar { width: 8px; }
+    ::-webkit-scrollbar { width: 6px; }
     ::-webkit-scrollbar-track { background: #050505; }
-    ::-webkit-scrollbar-thumb { background: #333; border-radius: 4px; }
+    ::-webkit-scrollbar-thumb { background: #444; }
     ::-webkit-scrollbar-thumb:hover { background: var(--main-color); }
   </style>
 </head>
 <body>
 
-  <!-- EFFET ECRAN -->
   <div id="crt-layer" class="crt-overlay"></div>
 
-  <!-- ECRAN DE DÉMARRAGE -->
+  <!-- LOGIN -->
   <div id="login-screen">
     <div class="tunnel-fx"></div>
     <button class="start-btn" onclick="systemStart()" onmouseenter="playSound('hover')">LINK START</button>
   </div>
 
-  <!-- FOND -->
-  <div id="world-bg">
-    <div class="grid-floor"></div>
-  </div>
+  <div id="world-bg"><div class="grid-floor"></div></div>
 
-  <!-- BOUTON PARAMÈTRES -->
-  <i id="btn-settings" class="fa-solid fa-gear" onclick="toggleSettings()" onmouseenter="playSound('hover')"></i>
+  <!-- BOUTON KERNEL -->
+  <i id="btn-settings" class="fa-solid fa-microchip" onclick="toggleSettings()" onmouseenter="playSound('hover')"></i>
 
-  <!-- === PANNEAU DE CONFIGURATION COMPLET === -->
+  <!-- === PANNEAU KERNEL SYSTEM (COMPLEXE) === -->
   <div id="settings-modal">
-    <div class="settings-header">
-      <h2>CARDINAL SYSTEM // CONFIG</h2>
-      <div class="settings-tabs">
-        <div class="tab-btn active" onclick="switchTab('tab-visuel')">AFFICHAGE</div>
-        <div class="tab-btn" onclick="switchTab('tab-audio')">AUDIO</div>
-        <div class="tab-btn" onclick="switchTab('tab-hud')">INTERFACE</div>
-        <div class="tab-btn" onclick="switchTab('tab-systeme')">NERVEGEAR</div>
+    <div class="corner-tl"></div><div class="corner-br"></div>
+    <div class="cfg-header">
+      <span>CARDINAL // KERNEL CONFIGURATION</span>
+      <span style="font-size:10px; color:#666;">SYS_BUILD: 4.2.9</span>
+    </div>
+
+    <div class="cfg-layout">
+      <!-- SIDEBAR KERNEL -->
+      <div class="cfg-sidebar">
+        <div class="cfg-tab active" onclick="switchTab('tab-render')">RENDER ENGINE</div>
+        <div class="cfg-tab" onclick="switchTab('tab-dsp')">DSP & AUDIO</div>
+        <div class="cfg-tab" onclick="switchTab('tab-net')">NETWORK PROTOCOL</div>
+        <div class="cfg-tab" onclick="switchTab('tab-hud')">HUD OVERLAY</div>
+        <div class="cfg-tab" style="color:#ff3333; font-weight:bold; margin-top:20px; border-top:1px solid #333; padding-top:20px;" onclick="switchTab('tab-sec')">SECURITY OVERRIDE</div>
+        
+        <!-- Faux Stats -->
+        <div class="cfg-diag">
+          <div>CPU LOAD <span style="float:right" id="diag-cpu">34%</span></div>
+          <div class="diag-bar"><div class="diag-fill" id="bar-cpu"></div></div>
+          <div>MEM ALLOC <span style="float:right" id="diag-mem">1.2GB</span></div>
+          <div class="diag-bar"><div class="diag-fill" id="bar-mem"></div></div>
+          <div>SYNCHRO RATE <span style="float:right" id="diag-sync">99.9%</span></div>
+          <div class="diag-bar"><div class="diag-fill" style="width:99.9%; background:#0f0;"></div></div>
+        </div>
+      </div>
+
+      <!-- CONTENU KERNEL -->
+      <div class="cfg-content">
+        
+        <!-- RENDER -->
+        <div id="tab-render" class="tab-content active">
+          <div class="cfg-group">
+            <h3>Graphic Pipeline</h3>
+            <div class="cfg-row"><label>Color Matrix (Hex)<span>Override default UI color scheme</span></label><select id="cfg-color" onchange="updateSettings()"><option value="#ffaa00">ORG_DEFAULT (#ffaa00)</option><option value="#00f3ff">CYAN_INFO (#00f3ff)</option><option value="#00ff44">GRN_SAFE (#00ff44)</option><option value="#bd00ff">PURP_VOID (#bd00ff)</option></select></div>
+            <div class="cfg-row"><label>Font Rendering Engine<span>System typography package</span></label><select id="cfg-font" onchange="updateSettings()"><option value="'Orbitron', sans-serif">PKG_ORBITRON (Modern)</option><option value="'Rajdhani', sans-serif">PKG_RAJDHANI (Clean)</option><option value="'Share Tech Mono', monospace">PKG_TERMINAL (Raw)</option></select></div>
+            <div class="cfg-row"><label>Background Grid Velocity<span>Holographic projection speed</span></label><input type="range" id="cfg-grid-speed" min="5" max="40" step="1" dir="rtl" onchange="updateSettings()"></div>
+          </div>
+          <div class="cfg-group">
+            <h3>Post-Processing</h3>
+            <div class="cfg-row"><label>Window Alpha Channel<span>Transparency layer calculation</span></label><input type="range" id="cfg-opacity" min="0.3" max="1" step="0.1" onchange="updateSettings()"></div>
+            <div class="cfg-row"><label>Gaussian Blur Radius (px)<span>Glassmorphism intensity</span></label><input type="range" id="cfg-blur" min="0" max="30" step="2" onchange="updateSettings()"></div>
+            <div class="cfg-row"><label>CRT Scanline Emulation<span>Legacy monitor effect</span></label><input type="checkbox" id="cfg-crt" onchange="updateSettings()"></div>
+          </div>
+        </div>
+
+        <!-- AUDIO -->
+        <div id="tab-dsp" class="tab-content">
+          <div class="cfg-group">
+            <h3>Digital Signal Processing</h3>
+            <div class="cfg-row"><label>Enable Audio Context<span>Web Audio API Master Switch</span></label><input type="checkbox" id="cfg-audio" onchange="updateSettings()"></div>
+            <div class="cfg-row"><label>Master Gain (Db)<span>Output volume multiplier</span></label><input type="range" id="cfg-vol" min="0" max="1" step="0.1" onchange="updateSettings()"></div>
+            <div class="cfg-row"><label>Oscillator Waveform<span>Synthesis method for UI feedback</span></label><select id="cfg-snd-type" onchange="updateSettings()"><option value="sine">SINE_WAVE (Smooth)</option><option value="square">SQUARE_WAVE (Retro)</option><option value="sawtooth">SAWTOOTH (Harsh)</option></select></div>
+          </div>
+        </div>
+
+        <!-- HUD -->
+        <div id="tab-hud" class="tab-content">
+          <div class="cfg-group">
+            <h3>Overlay Elements</h3>
+            <div class="cfg-row"><label>Player Vitals (HP Bar)<span>Show bio-metric health data</span></label><input type="checkbox" id="cfg-hud-hp" onchange="updateSettings()"></div>
+            <div class="cfg-row"><label>Environment Threat Level<span>Force zone status badge</span></label><select id="cfg-safezone" onchange="updateSettings()"><option value="SAFE">SAFE_ZONE (Green)</option><option value="COMBAT">COMBAT_ZONE (Orange)</option><option value="DANGER">DANGER_ZONE (Red)</option></select></div>
+            <div class="cfg-row"><label>Debug Terminal Stream<span>Show live system logs</span></label><input type="checkbox" id="cfg-hud-console" onchange="updateSettings()"></div>
+            <div class="cfg-row"><label>UI Viewport Scale<span>Zoom factor (Warning: experimental)</span></label><input type="range" id="cfg-scale" min="0.8" max="1.3" step="0.05" onchange="updateSettings()"></div>
+          </div>
+        </div>
+
+        <!-- NETWORK (Fake Lore) -->
+        <div id="tab-net" class="tab-content">
+          <div class="cfg-group">
+            <h3>Network Protocol (Read-Only)</h3>
+            <div class="cfg-row"><label>Server Ping Simulation<span>Latency injection</span></label><input type="text" value="18ms (Optimal)" disabled></div>
+            <div class="cfg-row"><label>Packet Encryption<span>Data security layer</span></label><input type="text" value="AES-256 (Cardinal V4)" disabled></div>
+            <div class="cfg-row"><label>NerveGear Output Limits<span>Microwave emitter power</span></label><input type="text" value="RESTRICTED BY KAYABA" style="color:red; border-color:red;" disabled></div>
+          </div>
+        </div>
+
+        <!-- SECURITY (MOT DE PASSE) -->
+        <div id="tab-sec" class="tab-content">
+          <div class="pwd-box">
+            <h3 style="color:#ff3333; font-family:var(--font-code); margin-bottom:10px;">AUTHORIZATION REQUIRED</h3>
+            <p style="font-family:var(--font-code); font-size:12px; color:#aaa; margin-bottom:30px; text-align:center;">Entrez la clé de chiffrement maître pour accéder aux privilèges administrateur.</p>
+            <input type="password" id="admin-pwd" class="pwd-input" placeholder="••••••" autocomplete="off">
+            <button class="btn-override" onclick="checkAdminPassword()" onmouseenter="playSound('hover')">EXECUTE OVERRIDE</button>
+            <div id="pwd-error" style="color:red; margin-top:15px; font-family:monospace; display:none;">> ACCESS DENIED. ILLEGAL ATTEMPT LOGGED.</div>
+          </div>
+
+          <!-- PANEL ADMIN CACHÉ -->
+          <div id="admin-panel">
+            <h3 style="color:#ff0033; border-bottom:1px solid #ff0033; padding-bottom:10px;">> ROOT ACCESS GRANTED</h3>
+            <p style="color:#ff9999; font-family:monospace; font-size:12px;">Welcome back, Commander.</p>
+            <div class="cfg-row" style="border-left-color:#ff0033;"><label style="color:#fff;">God Mode (Invincibility)</label><input type="checkbox" checked disabled></div>
+            <div class="cfg-row" style="border-left-color:#ff0033;"><label style="color:#fff;">Bypass Cardinal Restrictions</label><input type="checkbox" checked disabled></div>
+            <button style="width:100%; padding:15px; background:#ff0033; color:#000; font-weight:bold; border:none; margin-top:20px; cursor:pointer;" onclick="revokeAdmin()">LOGOUT ADMIN</button>
+          </div>
+        </div>
+
       </div>
     </div>
 
-    <div class="settings-body">
-      <!-- ONGLET VISUEL -->
-      <div id="tab-visuel" class="tab-content active">
-        <div class="setting-group">
-          <h3>Thème & Couleurs</h3>
-          <div class="setting-row">
-            <label>Couleur d'Énergie</label>
-            <select id="cfg-color" onchange="updateSettings()">
-              <option value="#ffaa00">Orange (Défaut SAO)</option>
-              <option value="#00f3ff">Cyan (ALO / Info)</option>
-              <option value="#ff0055">Rouge (PK / Admin)</option>
-              <option value="#00ff44">Vert (Zone Sécurisée)</option>
-              <option value="#bd00ff">Violet (Dark Territory)</option>
-              <option value="#ffffff">Blanc (God Mode)</option>
-            </select>
-          </div>
-          <div class="setting-row">
-            <label>Police du Système (Typographie)</label>
-            <select id="cfg-font" onchange="updateSettings()">
-              <option value="'Orbitron', sans-serif">Orbitron (Mecha)</option>
-              <option value="'Rajdhani', sans-serif">Rajdhani (Tech moderne)</option>
-              <option value="'Share Tech Mono', monospace">Terminal (Code brut)</option>
-            </select>
-          </div>
-        </div>
-        <div class="setting-group">
-          <h3>Rendu Graphique</h3>
-          <div class="setting-row"><label>Opacité de la Fenêtre</label><input type="range" id="cfg-opacity" min="0.3" max="1" step="0.1" onchange="updateSettings()"></div>
-          <div class="setting-row"><label>Intensité du Flou (Glassmorphism)</label><input type="range" id="cfg-blur" min="0" max="30" step="2" onchange="updateSettings()"></div>
-          <div class="setting-row"><label>Vitesse de la Grille Holographique</label><input type="range" id="cfg-grid-speed" min="5" max="40" step="1" dir="rtl" onchange="updateSettings()"></div>
-          <div class="setting-row"><label>Effet Écran Cathodique (CRT)</label><input type="checkbox" id="cfg-crt" onchange="updateSettings()"></div>
-          <div class="setting-row"><label>Intensité du CRT</label><input type="range" id="cfg-crt-op" min="0.1" max="0.8" step="0.1" onchange="updateSettings()"></div>
-        </div>
-      </div>
-
-      <!-- ONGLET AUDIO -->
-      <div id="tab-audio" class="tab-content">
-        <div class="setting-group">
-          <h3>Module Sonore</h3>
-          <div class="setting-row"><label>Activer les Effets Sonores (SFX)</label><input type="checkbox" id="cfg-audio" onchange="updateSettings()"></div>
-          <div class="setting-row"><label>Volume Master</label><input type="range" id="cfg-vol" min="0" max="1" step="0.1" onchange="updateSettings()"></div>
-          <div class="setting-row">
-            <label>Type de son de Survol</label>
-            <select id="cfg-snd-type" onchange="updateSettings()">
-              <option value="sine">Classique (Bip doux)</option>
-              <option value="square">Rétro (8-bit)</option>
-              <option value="sawtooth">Agressif (Cyber)</option>
-            </select>
-          </div>
-        </div>
-      </div>
-
-      <!-- ONGLET INTERFACE (HUD) -->
-      <div id="tab-hud" class="tab-content">
-        <div class="setting-group">
-          <h3>Éléments Flottants</h3>
-          <div class="setting-row"><label>Afficher la Barre de Vie (HP)</label><input type="checkbox" id="cfg-hud-hp" onchange="updateSettings()"></div>
-          <div class="setting-row">
-            <label>Statut de Zone (Badge HP)</label>
-            <select id="cfg-safezone" onchange="updateSettings()">
-              <option value="SAFE">SAFE (Zone protégée)</option>
-              <option value="COMBAT">COMBAT (PvP Actif)</option>
-              <option value="DANGER">DANGER (Zone Boss)</option>
-            </select>
-          </div>
-          <div class="setting-row"><label>Afficher la Console de Debug</label><input type="checkbox" id="cfg-hud-console" onchange="updateSettings()"></div>
-          <div class="setting-row"><label>Taille de l'Interface (Scale)</label><input type="range" id="cfg-scale" min="0.8" max="1.3" step="0.05" onchange="updateSettings()"></div>
-        </div>
-      </div>
-
-      <!-- ONGLET SYSTEME NERVEGEAR (LORE/FAKE IMMERSION) -->
-      <div id="tab-systeme" class="tab-content">
-        <div class="setting-group">
-          <h3>Paramètres Bios / Hardware</h3>
-          <div class="setting-row"><label style="color:#ff3333;">Désactivation de l'Amortisseur de Douleur</label><input type="checkbox" disabled title="Bloqué par le Cardinal System"></div>
-          <div class="setting-row"><label>Déconnexion Automatique</label><select disabled><option>Bouton Manquant</option></select></div>
-          <div class="setting-row"><label>Mode Sécurité Éthique</label><input type="checkbox" checked disabled></div>
-          <div class="setting-row"><label>Filtrage de Langage (Gore/Insultes)</label><input type="checkbox" checked disabled></div>
-          <div class="setting-row"><label>Langue de l'OS</label><select><option>Français (FR)</option><option>Japonais (JP)</option><option>Anglais (EN)</option></select></div>
-          <p style="font-size:10px; color:#666; font-family:monospace; margin-top:20px;">> Erreur système : Certaines permissions administrateur sont introuvables. Contactez Kayaba Akihiko.</p>
-        </div>
-      </div>
-    </div>
-
-    <div class="settings-footer">
-      <button class="close-btn" onclick="toggleSettings()" onmouseenter="playSound('hover')">SAUVEGARDER & FERMER</button>
+    <div class="cfg-footer">
+      <button class="close-btn" onclick="toggleSettings()" onmouseenter="playSound('hover')">CLOSE KERNEL</button>
     </div>
   </div>
 
   <!-- INTERFACE (HUD) -->
   <div id="hud-hp">
-    <div class="avatar-frame"><i class="fa-solid fa-user" style="color:#fff; font-size:26px;"></i></div>
+    <div class="avatar-frame"><i class="fa-solid fa-user-shield" style="color:#fff; font-size:24px;"></i></div>
     <div class="stats-container">
-      <div class="player-name">VISITOR <span style="font-size:12px; color:#aaa; font-weight:normal;">LV. 1</span></div>
+      <div class="player-name" id="hud-name">VISITOR</div>
       <div class="hp-bar-bg"><div class="hp-bar-fill"></div><div class="lvl-badge" id="hud-badge-txt">SAFE</div></div>
     </div>
   </div>
@@ -362,16 +364,12 @@
   <script>
     // --- GESTION DES PARAMÈTRES AVANCÉS ---
     let defaultConf = {
-      color: '#ffaa00', font: "'Orbitron', sans-serif",
-      opacity: 0.85, blur: 12, gridSpeed: 15,
-      crt: true, crtOp: 0.5,
-      audio: true, vol: 0.2, sndType: 'sine',
+      color: '#ffaa00', font: "'Orbitron', sans-serif", opacity: 0.85, blur: 12, gridSpeed: 15,
+      crt: true, crtOp: 0.5, audio: true, vol: 0.2, sndType: 'sine',
       hudHp: true, safeZone: 'SAFE', hudConsole: true, scale: 1
     };
-    
-    let sysConf = JSON.parse(localStorage.getItem('cardinalUltimate')) || defaultConf;
+    let sysConf = JSON.parse(localStorage.getItem('cardinalConfigV3')) || defaultConf;
 
-    // Charger les valeurs dans le HTML
     function loadInputs() {
       document.getElementById('cfg-color').value = sysConf.color;
       document.getElementById('cfg-font').value = sysConf.font;
@@ -379,7 +377,6 @@
       document.getElementById('cfg-blur').value = sysConf.blur;
       document.getElementById('cfg-grid-speed').value = sysConf.gridSpeed;
       document.getElementById('cfg-crt').checked = sysConf.crt;
-      document.getElementById('cfg-crt-op').value = sysConf.crtOp;
       document.getElementById('cfg-audio').checked = sysConf.audio;
       document.getElementById('cfg-vol').value = sysConf.vol;
       document.getElementById('cfg-snd-type').value = sysConf.sndType;
@@ -389,7 +386,6 @@
       document.getElementById('cfg-scale').value = sysConf.scale;
     }
 
-    // Appliquer au CSS / HTML
     function applySettings() {
       const root = document.documentElement;
       root.style.setProperty('--main-color', sysConf.color);
@@ -403,35 +399,35 @@
 
       document.getElementById('hud-hp').style.display = sysConf.hudHp ? 'flex' : 'none';
       document.getElementById('hud-console').style.display = sysConf.hudConsole ? 'block' : 'none';
-      document.getElementById('hud-badge-txt').innerText = sysConf.safeZone;
-      if(sysConf.safeZone === 'DANGER') document.getElementById('hud-badge-txt').style.color = '#ff0000';
-      else document.getElementById('hud-badge-txt').style.color = 'var(--main-color)';
+      
+      // Update badge unless in admin mode
+      if(!document.body.classList.contains('admin-mode')) {
+        document.getElementById('hud-badge-txt').innerText = sysConf.safeZone;
+        document.getElementById('hud-badge-txt').style.color = (sysConf.safeZone === 'DANGER') ? '#ff0000' : 'var(--main-color)';
+        document.getElementById('hud-name').innerText = "VISITOR";
+      }
     }
 
-    // Sauvegarder
     function updateSettings() {
-      sysConf = {
-        color: document.getElementById('cfg-color').value,
-        font: document.getElementById('cfg-font').value,
-        opacity: document.getElementById('cfg-opacity').value,
-        blur: document.getElementById('cfg-blur').value,
-        gridSpeed: document.getElementById('cfg-grid-speed').value,
-        crt: document.getElementById('cfg-crt').checked,
-        crtOp: document.getElementById('cfg-crt-op').value,
-        audio: document.getElementById('cfg-audio').checked,
-        vol: document.getElementById('cfg-vol').value,
-        sndType: document.getElementById('cfg-snd-type').value,
-        hudHp: document.getElementById('cfg-hud-hp').checked,
-        safeZone: document.getElementById('cfg-safezone').value,
-        hudConsole: document.getElementById('cfg-hud-console').checked,
-        scale: document.getElementById('cfg-scale').value
-      };
-      localStorage.setItem('cardinalUltimate', JSON.stringify(sysConf));
-      applySettings();
-      playSound('click');
+      sysConf.color = document.getElementById('cfg-color').value;
+      sysConf.font = document.getElementById('cfg-font').value;
+      sysConf.opacity = document.getElementById('cfg-opacity').value;
+      sysConf.blur = document.getElementById('cfg-blur').value;
+      sysConf.gridSpeed = document.getElementById('cfg-grid-speed').value;
+      sysConf.crt = document.getElementById('cfg-crt').checked;
+      sysConf.audio = document.getElementById('cfg-audio').checked;
+      sysConf.vol = document.getElementById('cfg-vol').value;
+      sysConf.sndType = document.getElementById('cfg-snd-type').value;
+      sysConf.hudHp = document.getElementById('cfg-hud-hp').checked;
+      sysConf.safeZone = document.getElementById('cfg-safezone').value;
+      sysConf.hudConsole = document.getElementById('cfg-hud-console').checked;
+      sysConf.scale = document.getElementById('cfg-scale').value;
+      
+      localStorage.setItem('cardinalConfigV3', JSON.stringify(sysConf));
+      applySettings(); playSound('click');
     }
 
-    // Gestion de la modale et des onglets
+    // Gestion de la modale et onglets
     function toggleSettings() {
       const modal = document.getElementById('settings-modal');
       modal.classList.toggle('active');
@@ -440,10 +436,39 @@
 
     function switchTab(tabId) {
       document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
-      document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+      document.querySelectorAll('.cfg-tab').forEach(el => el.classList.remove('active'));
       document.getElementById(tabId).classList.add('active');
       event.target.classList.add('active');
       playSound('hover');
+    }
+
+    // === SYSTEME DE MOT DE PASSE (ADMIN OVERRIDE) ===
+    function checkAdminPassword() {
+      const pwd = document.getElementById('admin-pwd').value.toUpperCase();
+      const err = document.getElementById('pwd-error');
+      
+      if(pwd === "KAYABA" || pwd === "HEATHCLIFF") {
+        err.style.display = "none";
+        document.body.classList.add('admin-mode');
+        document.getElementById('hud-name').innerText = "GAME MASTER";
+        document.getElementById('hud-badge-txt').innerText = "SYS_ADMIN";
+        document.getElementById('hud-badge-txt').style.color = "#ff0033";
+        addLog("[CRITICAL] ADMIN OVERRIDE ACCEPTED.");
+        addLog("> WELCOME, COMMANDER.");
+        playAdminSound('granted');
+        document.getElementById('admin-pwd').value = "";
+      } else {
+        err.style.display = "block";
+        addLog("[WARNING] INVALID AUTHENTICATION ATTEMPT.");
+        playAdminSound('denied');
+      }
+    }
+
+    function revokeAdmin() {
+      document.body.classList.remove('admin-mode');
+      applySettings(); // Rétablit les couleurs normales
+      addLog("[SYS] ADMIN LOGGED OUT.");
+      playSound('click');
     }
 
     // --- MOTEUR AUDIO JS ---
@@ -454,34 +479,47 @@
       if(!sysConf.audio) return;
       if (!audioCtx) audioCtx = new AudioContext();
       if (audioCtx.state === 'suspended') audioCtx.resume();
-      
-      const osc = audioCtx.createOscillator();
-      const gain = audioCtx.createGain();
+      const osc = audioCtx.createOscillator(); const gain = audioCtx.createGain();
       osc.connect(gain); gain.connect(audioCtx.destination);
-      
       const v = parseFloat(sysConf.vol);
 
       if (type === 'hover') {
-        osc.type = sysConf.sndType;
-        osc.frequency.setValueAtTime(800, audioCtx.currentTime);
+        osc.type = sysConf.sndType; osc.frequency.setValueAtTime(800, audioCtx.currentTime);
         osc.frequency.exponentialRampToValueAtTime(1200, audioCtx.currentTime + 0.05);
-        gain.gain.setValueAtTime(v*0.5, audioCtx.currentTime);
-        gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.05);
+        gain.gain.setValueAtTime(v*0.5, audioCtx.currentTime); gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.05);
         osc.start(); osc.stop(audioCtx.currentTime + 0.05);
       } else if (type === 'click') {
-        osc.type = 'triangle';
-        osc.frequency.setValueAtTime(600, audioCtx.currentTime);
+        osc.type = 'triangle'; osc.frequency.setValueAtTime(600, audioCtx.currentTime);
         osc.frequency.exponentialRampToValueAtTime(300, audioCtx.currentTime + 0.1);
-        gain.gain.setValueAtTime(v, audioCtx.currentTime);
-        gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.15);
+        gain.gain.setValueAtTime(v, audioCtx.currentTime); gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.15);
         osc.start(); osc.stop(audioCtx.currentTime + 0.15);
       } else if (type === 'start') {
-        osc.type = 'sawtooth';
-        osc.frequency.setValueAtTime(100, audioCtx.currentTime);
+        osc.type = 'sawtooth'; osc.frequency.setValueAtTime(100, audioCtx.currentTime);
         osc.frequency.linearRampToValueAtTime(800, audioCtx.currentTime + 1);
-        gain.gain.setValueAtTime(v, audioCtx.currentTime);
-        gain.gain.linearRampToValueAtTime(0, audioCtx.currentTime + 1.5);
+        gain.gain.setValueAtTime(v, audioCtx.currentTime); gain.gain.linearRampToValueAtTime(0, audioCtx.currentTime + 1.5);
         osc.start(); osc.stop(audioCtx.currentTime + 1.5);
+      }
+    }
+
+    function playAdminSound(res) {
+      if(!sysConf.audio) return;
+      if (!audioCtx) audioCtx = new AudioContext();
+      const osc = audioCtx.createOscillator(); const gain = audioCtx.createGain();
+      osc.connect(gain); gain.connect(audioCtx.destination);
+      
+      if(res === 'granted') {
+        osc.type = 'sine'; osc.frequency.setValueAtTime(400, audioCtx.currentTime);
+        osc.frequency.linearRampToValueAtTime(800, audioCtx.currentTime + 0.1);
+        osc.frequency.linearRampToValueAtTime(1200, audioCtx.currentTime + 0.3);
+        gain.gain.setValueAtTime(sysConf.vol, audioCtx.currentTime);
+        gain.gain.linearRampToValueAtTime(0, audioCtx.currentTime + 0.5);
+        osc.start(); osc.stop(audioCtx.currentTime + 0.5);
+      } else {
+        osc.type = 'square'; osc.frequency.setValueAtTime(150, audioCtx.currentTime);
+        osc.frequency.exponentialRampToValueAtTime(100, audioCtx.currentTime + 0.2);
+        gain.gain.setValueAtTime(sysConf.vol, audioCtx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.3);
+        osc.start(); osc.stop(audioCtx.currentTime + 0.3);
       }
     }
 
@@ -490,21 +528,27 @@
       playSound('start');
       const screen = document.getElementById('login-screen');
       screen.classList.add('link-start-active');
-      
-      addLog("[SYS] INITIALIZING NERVEGEAR...");
-      setTimeout(() => addLog("[NET] CONNECTING TO SERVER..."), 400);
-      setTimeout(() => addLog("[AUTH] ACCESS GRANTED."), 800);
-      setTimeout(() => addLog("[SYS] LOADING CARDINAL UI..."), 1200);
-
+      addLog("[SYS] INITIALIZING KERNEL...");
+      setTimeout(() => addLog("[NET] HANDSHAKE ESTABLISHED."), 400);
+      setTimeout(() => addLog("[SYS] RENDERING UI..."), 1000);
       setTimeout(() => {
         screen.style.opacity = '0';
         setTimeout(() => { screen.style.display = 'none'; }, 1000);
-        document.body.classList.add('system-ready'); 
-        startConsoleLoop();
-      }, 2000);
+        document.body.classList.add('system-ready'); startConsoleLoop();
+      }, 1500);
     }
 
-    // --- CONSOLE ---
+    // --- FAKE DIAGNOSTICS (Barres CPU/MEM) ---
+    setInterval(() => {
+      let cpu = Math.floor(Math.random() * 40) + 10;
+      let mem = (Math.random() * 2 + 1).toFixed(1);
+      document.getElementById('diag-cpu').innerText = cpu + "%";
+      document.getElementById('bar-cpu').style.width = cpu + "%";
+      document.getElementById('diag-mem').innerText = mem + "GB";
+      document.getElementById('bar-mem').style.width = (mem/4)*100 + "%";
+    }, 2000);
+
+    // --- CONSOLE LOG ---
     function addLog(text) {
       const consoleDiv = document.getElementById('hud-console');
       const line = document.createElement('div'); line.className = 'log-line';
@@ -514,41 +558,24 @@
     }
 
     function startConsoleLoop() {
-      const messages =["Ping: 18ms", "Updating chunks...", "Protocol Active", "Scanning environment...", "Rendering UI..."];
-      setInterval(() => { if(Math.random() > 0.7 && sysConf.hudConsole) addLog(messages[Math.floor(Math.random() * messages.length)]); }, 2500);
+      const messages =["Ping: 14ms", "Updating sectors...", "Scanning memory blocks...", "Awaiting user input..."];
+      setInterval(() => { if(Math.random() > 0.8 && sysConf.hudConsole) addLog(messages[Math.floor(Math.random() * messages.length)]); }, 3000);
     }
 
-    // --- CONFIGURATION DOCSIFY ---
+    // --- CONFIG DOCSIFY ---
     window.$docsify = {
-      name: 'LifeSteal OS',
-      repo: '',
-      homepage: 'README.md',
-      loadSidebar: true,
-      subMaxLevel: 2,
-      auto2top: true,
-      search: { placeholder: 'SEARCH DATABASE...', noData: 'NO DATA FOUND', },
-      sidebarDisplayLevel: 1,
-      plugins:[
-        function(hook) {
-          hook.doneEach(function() {
-            document.querySelectorAll('.sidebar-nav a, .search input').forEach(el => {
-              el.addEventListener('mouseenter', () => playSound('hover'));
-              if(el.tagName === 'A') el.addEventListener('click', () => playSound('click'));
-            });
-          });
-        }
-      ]
+      name: 'Cardinal OS',
+      repo: '', homepage: 'README.md', loadSidebar: true, subMaxLevel: 2, auto2top: true,
+      search: { placeholder: 'SEARCH...', noData: 'NOT FOUND' }, sidebarDisplayLevel: 1,
+      plugins:[ function(hook) { hook.doneEach(function() { document.querySelectorAll('.sidebar-nav a, .search input').forEach(el => { el.addEventListener('mouseenter', () => playSound('hover')); if(el.tagName === 'A') el.addEventListener('click', () => playSound('click')); }); }); } ]
     };
 
-    // Initialisation
-    loadInputs();
-    applySettings();
+    loadInputs(); applySettings();
   </script>
 
   <script src="//cdn.jsdelivr.net/npm/docsify@4"></script>
   <script src="//cdn.jsdelivr.net/npm/docsify/lib/plugins/search.min.js"></script>
   <script src="//cdn.jsdelivr.net/npm/docsify-copy-code/dist/docsify-copy-code.min.js"></script>
   <script src="//cdn.jsdelivr.net/npm/docsify-sidebar-collapse/dist/docsify-sidebar-collapse.min.js"></script>
-
 </body>
 </html>
