@@ -1,20 +1,4 @@
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-  <meta charset="UTF-8">
-  <title>Cardinal System // CONSOLE</title>
-  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
-  
-  <!-- Polices & Icônes -->
-  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700;900&family=Share+Tech+Mono&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  
-  <!-- Docsify Styles -->
-  <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/docsify@4/lib/themes/dark.css">
-  <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/docsify-sidebar-collapse/dist/sidebar.min.css" />
-
-  <style>
+<style>
     :root {
       --sao-orange: #ffaa00;
       --sao-orange-dim: rgba(255, 170, 0, 0.15);
@@ -24,10 +8,8 @@
       --font-code: 'Share Tech Mono', monospace;
     }
 
-    /* --- RESET & CURSEUR --- */
+    /* --- RESET & GLOBAL --- */
     * { box-sizing: border-box; cursor: default; user-select: none; }
-    
-    /* Le curseur personnalisé (Cible) */
     body {
       background-color: #000;
       font-family: var(--font-ui);
@@ -35,6 +17,8 @@
       overflow: hidden;
       margin: 0;
     }
+    /* Cache le bouton mobile moche par défaut */
+    .sidebar-toggle { display: none !important; }
 
     /* --- FOND 3D ANIMÉ --- */
     #world-bg {
@@ -42,7 +26,6 @@
       background: radial-gradient(circle at 50% 50%, #2a2a2a 0%, #000 100%);
       perspective: 1000px;
       z-index: -10;
-      overflow: hidden;
     }
     .grid-floor {
       position: absolute; bottom: -50%; left: -50%; width: 200%; height: 200%;
@@ -55,7 +38,7 @@
     }
     @keyframes floorMove { from { transform: rotateX(70deg) translateY(0); } to { transform: rotateX(70deg) translateY(60px); } }
 
-    /* --- LOGIN SCREEN (LINK START) --- */
+    /* --- LOGIN SCREEN --- */
     #login-screen {
       position: fixed; top: 0; left: 0; width: 100%; height: 100%;
       background: #000; z-index: 10000;
@@ -74,11 +57,8 @@
       text-transform: uppercase;
       box-shadow: 0 0 15px var(--sao-orange);
       transition: all 0.3s;
-      animation: pulseBtn 2s infinite;
     }
     .start-btn:hover { background: var(--sao-orange); color: #000; }
-    
-    /* Animation Tunnel */
     .tunnel-fx {
       position: absolute; top:0; left:0; width:100%; height:100%;
       background: conic-gradient(from 0deg, transparent, var(--sao-orange), transparent);
@@ -86,42 +66,52 @@
     }
     .link-start-active .tunnel-fx { animation: tunnelZoom 2s forwards; opacity: 1; }
     .link-start-active .start-btn { display: none; }
-
     @keyframes tunnelZoom { 
       0% { transform: scale(1) rotate(0deg); opacity: 0; }
       50% { opacity: 1; }
       100% { transform: scale(20) rotate(180deg); opacity: 0; }
     }
-    @keyframes pulseBtn { 0% { box-shadow: 0 0 10px var(--sao-orange); } 50% { box-shadow: 0 0 30px var(--sao-orange); } 100% { box-shadow: 0 0 10px var(--sao-orange); } }
 
-    /* --- HUD : HP BAR (Top Left) --- */
+    /* --- CORRECTION HUD (Barre de vie) --- */
     #hud-hp {
       position: fixed; top: 20px; left: 20px;
-      width: 350px; height: 80px;
+      min-width: 350px; height: 80px; /* Min-width pour éviter l'écrasement */
       z-index: 500;
-      display: flex; align-items: center;
+      display: flex; align-items: flex-start; /* Aligné en haut */
       opacity: 0; transform: translateX(-100px);
-      transition: all 1s ease 2.5s; /* Apparition retardée */
+      transition: all 1s ease 2.5s;
     }
     .avatar-frame {
-      width: 60px; height: 60px; border-radius: 50%;
+      flex-shrink: 0; /* Empêche l'avatar de s'écraser */
+      width: 50px; height: 50px; border-radius: 50%;
       border: 2px solid var(--sao-orange);
       background: #333; display: flex; align-items: center; justify-content: center;
       box-shadow: 0 0 10px var(--sao-orange);
-      margin-right: 10px;
+      margin-right: 15px; margin-top: 5px;
     }
-    .stats-container { flex: 1; }
-    .player-name { font-size: 18px; color: #fff; letter-spacing: 1px; text-shadow: 0 0 5px var(--sao-orange); }
-    .hp-bar-bg { width: 100%; height: 15px; background: rgba(0,0,0,0.6); border: 1px solid #555; margin-top: 5px; position:relative; transform: skewX(-20deg); }
+    .stats-container { flex: 1; display: flex; flex-direction: column; }
+    .player-name { 
+      font-size: 16px; color: #fff; letter-spacing: 1px; 
+      text-shadow: 0 0 5px var(--sao-orange);
+      margin-bottom: 2px;
+    }
+    .hp-bar-bg { 
+      width: 100%; max-width: 250px; height: 12px; 
+      background: rgba(0,0,0,0.6); border: 1px solid #555; 
+      position:relative; transform: skewX(-20deg); 
+    }
     .hp-bar-fill { 
       width: 85%; height: 100%; 
       background: linear-gradient(90deg, #ffcc00, #ff0000); 
       box-shadow: 0 0 10px #ff0000;
       animation: hpPulse 3s infinite;
     }
-    .lvl-badge { position: absolute; right: -10px; top: -5px; color: var(--sao-orange); font-size: 12px; }
+    .lvl-badge { 
+      position: absolute; right: -25px; top: -3px; 
+      color: var(--sao-orange); font-size: 10px; transform: skewX(20deg); 
+    }
 
-    /* --- HUD : CONSOLE LOG (Bottom Right) --- */
+    /* --- CONSOLE LOG --- */
     #hud-console {
       position: fixed; bottom: 20px; right: 20px;
       width: 300px; height: 150px;
@@ -129,276 +119,117 @@
       border-top: 2px solid var(--sao-orange);
       padding: 10px;
       font-family: var(--font-code);
-      font-size: 10px;
-      color: #0f0; /* Vert Matrix */
-      overflow: hidden;
-      z-index: 500;
-      opacity: 0;
-      transition: opacity 1s ease 3s;
+      font-size: 10px; color: #0f0; overflow: hidden;
+      z-index: 500; opacity: 0; transition: opacity 1s ease 3s;
     }
     .log-line { margin-bottom: 2px; border-bottom: 1px solid rgba(0,255,0,0.1); }
 
-    /* --- SIDEBAR (Menu SAO) --- */
+    /* --- CORRECTION SIDEBAR (Menu) --- */
     .sidebar {
       background: transparent !important;
       border: none !important;
-      width: 260px; padding-top: 120px;
+      width: 300px; /* Plus large pour les boutons */
+      padding-top: 100px; padding-left: 20px;
       opacity: 0; transition: opacity 1s ease 3s;
+      overflow: visible;
     }
-    .app-name { display: none; } /* On cache le titre défaut */
+    .app-name { display: none; } 
     
-    .sidebar-nav li { margin-bottom: 15px; list-style: none; position: relative; }
+    /* Reset des listes Docsify */
+    .sidebar-nav ul { padding: 0; margin: 0; }
+    .sidebar-nav li { list-style: none; margin: 5px 0; }
+
+    /* NIVEAU 1 : Les Dossiers (Staff, Player) */
+    .sidebar-nav > ul > li > strong, 
+    .sidebar-nav > ul > li > span,
+    .sidebar-nav > ul > li > p {
+      color: var(--sao-orange);
+      font-size: 12px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      font-weight: 800;
+      border-bottom: 1px solid rgba(255, 170, 0, 0.3);
+      display: block;
+      margin-top: 25px; margin-bottom: 10px;
+      padding-bottom: 2px;
+      width: 80%;
+    }
     
-    /* Les boutons du menu */
+    /* NIVEAU 2 & 3 : Les Liens (Boutons Pilules) */
+    .sidebar-nav ul ul { padding-left: 10px; } /* Indentation légère */
+    
     .sidebar-nav a {
       display: flex; align-items: center;
-      width: 220px; height: 45px;
-      background: rgba(40, 40, 40, 0.85);
-      border: 1px solid #666;
-      border-radius: 25px; /* Pill shape */
-      padding-left: 20px;
-      color: #ccc !important;
+      width: 90%; /* Largeur relative */
+      height: 40px;
+      background: rgba(30, 30, 35, 0.9);
+      border: 1px solid #555;
+      border-radius: 20px;
+      padding-left: 15px;
+      color: #bbb !important;
       text-decoration: none !important;
-      font-size: 14px;
-      transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-      box-shadow: 3px 3px 10px rgba(0,0,0,0.5);
+      font-size: 13px;
+      transition: all 0.2s ease;
+      position: relative;
     }
     
-    /* Animation Hover Menu */
+    /* Effet Survol Menu */
     .sidebar-nav a:hover, .sidebar-nav li.active > a {
-      background: linear-gradient(90deg, rgba(255, 170, 0, 0.9), rgba(255, 120, 0, 0.8));
+      background: linear-gradient(90deg, rgba(255, 170, 0, 0.8), rgba(255, 100, 0, 0.6));
       color: #000 !important;
       font-weight: bold;
-      width: 250px; /* S'agrandit */
       border-color: #fff;
       box-shadow: 0 0 15px var(--sao-orange);
-      padding-left: 40px;
-      cursor: pointer; /* Curseur main */
+      padding-left: 25px; /* Décalage */
+      width: 95%; /* S'agrandit un peu */
     }
 
-    /* Icône dossier */
-    .sidebar-nav > ul > li > strong {
-      color: var(--sao-orange); font-size: 10px; letter-spacing: 2px;
-      text-transform: uppercase; margin-left: 15px; margin-bottom: 5px; display: block;
-    }
+    /* Icone de dossier (Chevron) automatique via CSS */
+    .folder-icon { display: none; } /* On cache les icônes par défaut du plugin si présentes */
 
-    /* --- CONTENU (Fenêtre Flottante) --- */
+    /* --- FENÊTRE PRINCIPALE --- */
     .content {
-      padding-top: 0; padding-left: 280px; padding-right: 20px;
+      padding-top: 0; padding-left: 320px; padding-right: 20px;
       height: 100vh; display: flex; align-items: center; justify-content: center;
     }
-    
     .markdown-section {
       background: var(--sao-bg);
-      width: 100%; max-width: 1000px; height: 80vh;
+      width: 100%; max-width: 1100px; height: 85vh;
       border: 1px solid rgba(150,150,150,0.3);
       border-radius: 6px;
       position: relative;
       padding: 50px 40px;
       overflow-y: auto;
-      box-shadow: 0 10px 60px rgba(0,0,0,0.9), 0 0 0 1px rgba(255,170,0,0.2);
+      box-shadow: 0 10px 60px rgba(0,0,0,0.9);
       backdrop-filter: blur(8px);
-      opacity: 0; transform: scale(0.9);
-      transition: all 0.4s ease;
+      opacity: 0; transform: scale(0.9); transition: all 0.4s ease;
     }
-    
-    /* Quand le système est chargé */
     .system-ready .markdown-section { opacity: 1; transform: scale(1); }
     .system-ready .sidebar, .system-ready #hud-hp, .system-ready #hud-console { opacity: 1; transform: translateX(0); }
 
-    /* Header de Fenêtre */
+    /* Décoration Fenêtre */
     .markdown-section::before {
       content: "MESSAGE WINDOW // MAIN VISUALIZER";
       position: absolute; top: 0; left: 0; width: 100%; height: 30px;
-      background: rgba(255,255,255,0.05);
-      border-bottom: 1px solid rgba(255,255,255,0.1);
+      background: rgba(255,255,255,0.05); border-bottom: 1px solid rgba(255,255,255,0.1);
       color: var(--sao-orange); font-size: 11px; line-height: 30px;
       padding-left: 15px; font-family: var(--font-code);
     }
     .markdown-section::after {
-      content: "\f00d  \f111"; /* FontAwesome icons unicode (X and Circle) */
-      font-family: "Font Awesome 6 Free"; font-weight: 900;
+      content: "\f00d  \f111"; font-family: "Font Awesome 6 Free"; font-weight: 900;
       position: absolute; top: 8px; right: 15px; color: #888; font-size: 12px; letter-spacing: 8px;
     }
 
-    /* Styles Markdown */
-    h1 { color: #fff; font-size: 2.2em; border-bottom: 2px solid var(--sao-orange); padding-bottom: 5px; text-shadow: 0 0 10px rgba(255,170,0,0.5); }
-    h2 { color: var(--sao-orange); border-left: 4px solid var(--sao-orange); padding-left: 10px; background: linear-gradient(90deg, rgba(255,170,0,0.1), transparent); }
+    /* Styles Contenu */
+    h1 { color: #fff; font-size: 2em; border-bottom: 2px solid var(--sao-orange); padding-bottom: 10px; }
+    h2 { color: var(--sao-orange); margin-top: 30px; border-left: 4px solid var(--sao-orange); padding-left: 10px; }
     a { color: var(--sao-orange); text-decoration: none; font-weight: bold; }
-    code { color: var(--sao-orange) !important; background: rgba(0,0,0,0.6) !important; font-family: var(--font-code); }
-    pre { background: #000 !important; border: 1px solid #444; }
+    code { color: var(--sao-orange) !important; background: rgba(0,0,0,0.6) !important; }
+    .search input { background: rgba(0,0,0,0.5) !important; border-radius: 20px; color: #fff !important; }
     
     /* Scrollbar */
-    ::-webkit-scrollbar { width: 5px; }
+    ::-webkit-scrollbar { width: 6px; }
     ::-webkit-scrollbar-track { background: #111; }
     ::-webkit-scrollbar-thumb { background: #555; }
     ::-webkit-scrollbar-thumb:hover { background: var(--sao-orange); }
-
-    /* Search Box */
-    .search { margin: 20px; }
-    .search input {
-      background: rgba(0,0,0,0.5) !important; border: 1px solid #555 !important;
-      border-radius: 20px; color: #fff !important; font-family: var(--font-ui);
-    }
-
   </style>
-</head>
-<body>
-
-  <!-- 1. LOGIN SCREEN -->
-  <div id="login-screen">
-    <div class="tunnel-fx"></div>
-    <button class="start-btn" onclick="systemStart()">LINK START</button>
-  </div>
-
-  <!-- 2. BACKGROUND WORLD -->
-  <div id="world-bg">
-    <div class="grid-floor"></div>
-  </div>
-
-  <!-- 3. HUD ELEMENTS -->
-  <div id="hud-hp">
-    <div class="avatar-frame"><i class="fa-solid fa-user" style="color:#ccc; font-size:24px;"></i></div>
-    <div class="stats-container">
-      <div class="player-name">VISITOR <span style="font-size:12px; color:#aaa;">LV. 1</span></div>
-      <div class="hp-bar-bg">
-        <div class="hp-bar-fill"></div>
-        <div class="lvl-badge">SAFE</div>
-      </div>
-    </div>
-  </div>
-
-  <div id="hud-console">
-    <!-- Logs générés par JS -->
-  </div>
-
-  <!-- 4. DOCSIFY APP -->
-  <div id="app"></div>
-
-  <!-- SCRIPTS -->
-  <script>
-    // --- AUDIO ENGINE (Sons sans fichiers externes) ---
-    const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-    
-    function playSound(type) {
-      if (audioCtx.state === 'suspended') audioCtx.resume();
-      const osc = audioCtx.createOscillator();
-      const gainNode = audioCtx.createGain();
-      osc.connect(gainNode);
-      gainNode.connect(audioCtx.destination);
-
-      if (type === 'hover') {
-        // Son de survol "Bip" aigu rapide
-        osc.type = 'sine';
-        osc.frequency.setValueAtTime(800, audioCtx.currentTime);
-        osc.frequency.exponentialRampToValueAtTime(1200, audioCtx.currentTime + 0.05);
-        gainNode.gain.setValueAtTime(0.05, audioCtx.currentTime);
-        gainNode.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.05);
-        osc.start();
-        osc.stop(audioCtx.currentTime + 0.05);
-      } else if (type === 'click') {
-        // Son de validation "Crystal"
-        osc.type = 'triangle';
-        osc.frequency.setValueAtTime(600, audioCtx.currentTime);
-        osc.frequency.exponentialRampToValueAtTime(300, audioCtx.currentTime + 0.1);
-        gainNode.gain.setValueAtTime(0.1, audioCtx.currentTime);
-        gainNode.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.15);
-        osc.start();
-        osc.stop(audioCtx.currentTime + 0.15);
-      } else if (type === 'start') {
-        // Son de démarrage puissant
-        osc.type = 'sawtooth';
-        osc.frequency.setValueAtTime(100, audioCtx.currentTime);
-        osc.frequency.linearRampToValueAtTime(800, audioCtx.currentTime + 1);
-        gainNode.gain.setValueAtTime(0.1, audioCtx.currentTime);
-        gainNode.gain.linearRampToValueAtTime(0, audioCtx.currentTime + 1.5);
-        osc.start();
-        osc.stop(audioCtx.currentTime + 1.5);
-      }
-    }
-
-    // --- SYSTEM START SEQUENCE ---
-    function systemStart() {
-      playSound('start');
-      const screen = document.getElementById('login-screen');
-      screen.classList.add('link-start-active');
-      
-      // Console Logs Fake
-      addLog("[SYS] INITIALIZING NERVEGEAR...");
-      setTimeout(() => addLog("[NET] CONNECTING TO LIFESTEAL FR..."), 500);
-      setTimeout(() => addLog("[AUTH] USER ID VERIFIED."), 1000);
-      setTimeout(() => addLog("[SYS] RENDER ENGINE: CARDINAL V4"), 1500);
-      setTimeout(() => addLog("[OK] WELCOME, PLAYER."), 2000);
-
-      // Transition vers le site
-      setTimeout(() => {
-        screen.style.opacity = '0';
-        setTimeout(() => { screen.style.display = 'none'; }, 1000);
-        document.body.classList.add('system-ready');
-        startConsoleLoop(); // Lance les logs infinis
-      }, 2500);
-    }
-
-    // --- CONSOLE LOGIC ---
-    function addLog(text) {
-      const consoleDiv = document.getElementById('hud-console');
-      const line = document.createElement('div');
-      line.className = 'log-line';
-      line.innerHTML = `<span style="opacity:0.6">${new Date().toLocaleTimeString()}</span> > ${text}`;
-      consoleDiv.appendChild(line);
-      consoleDiv.scrollTop = consoleDiv.scrollHeight;
-    }
-
-    function startConsoleLoop() {
-      const messages = [
-        "Scanning nearby chunks...", "Updating player coordinates...", 
-        "Ping: 24ms", "Packet received.", "LifeSteal Protocol Active.",
-        "Checking integrity...", "Syncing world data..."
-      ];
-      setInterval(() => {
-        if(Math.random() > 0.7) {
-          const msg = messages[Math.floor(Math.random() * messages.length)];
-          addLog(msg);
-        }
-      }, 2000);
-    }
-
-    // --- DOCSIFY CONFIG ---
-    window.$docsify = {
-      name: 'LifeSteal FR',
-      repo: '',
-      homepage: 'README.md',
-      loadSidebar: true,
-      subMaxLevel: 3,
-      auto2top: true,
-      search: {
-        placeholder: 'SEARCH DATABASE...',
-        noData: 'ERROR 404: OBJECT NOT FOUND',
-      },
-      plugins: [
-        function(hook) {
-          // Attache les sons aux éléments après chaque chargement de page
-          hook.doneEach(function() {
-            // Sons sur les liens du menu
-            document.querySelectorAll('.sidebar-nav a').forEach(link => {
-              link.addEventListener('mouseenter', () => playSound('hover'));
-              link.addEventListener('click', () => playSound('click'));
-            });
-            // Sons sur les boutons search
-            document.querySelectorAll('.search input').forEach(input => {
-               input.addEventListener('focus', () => playSound('hover'));
-            });
-          });
-        }
-      ]
-    }
-  </script>
-
-  <!-- LIBS -->
-  <script src="//cdn.jsdelivr.net/npm/docsify@4"></script>
-  <script src="//cdn.jsdelivr.net/npm/docsify/lib/plugins/search.min.js"></script>
-  <script src="//cdn.jsdelivr.net/npm/docsify-copy-code/dist/docsify-copy-code.min.js"></script>
-  <script src="//cdn.jsdelivr.net/npm/docsify-sidebar-collapse/dist/docsify-sidebar-collapse.min.js"></script>
-
-</body>
-</html>
