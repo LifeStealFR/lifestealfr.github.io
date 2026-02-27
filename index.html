@@ -2,361 +2,403 @@
 <html lang="fr">
 <head>
   <meta charset="UTF-8">
-  <title>Cardinal System // LOGIN</title>
+  <title>Cardinal System // CONSOLE</title>
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
   
-  <!-- Polices SAO & Icônes -->
-  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700;900&family=Rajdhani:wght@300;500;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <!-- Polices & Icônes -->
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700;900&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   
-  <!-- CSS Base Docsify -->
+  <!-- Docsify Styles -->
   <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/docsify@4/lib/themes/dark.css">
   <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/docsify-sidebar-collapse/dist/sidebar.min.css" />
 
   <style>
     :root {
-      /* Palette SAO UI */
-      --c-orange: #ffb700;
-      --c-orange-dim: rgba(255, 183, 0, 0.2);
-      --c-dark: #121212;
-      --c-panel: rgba(20, 20, 25, 0.90);
-      --c-text: #eaeaea;
-      --c-border: rgba(200, 200, 200, 0.4);
-      --font-tech: 'Orbitron', sans-serif;
-      --font-body: 'Rajdhani', sans-serif;
+      --sao-orange: #ffaa00;
+      --sao-orange-dim: rgba(255, 170, 0, 0.15);
+      --sao-text: #eee;
+      --sao-bg: rgba(20, 20, 25, 0.92);
+      --font-ui: 'Orbitron', sans-serif;
+      --font-code: 'Share Tech Mono', monospace;
     }
 
-    /* --- 0. CURSEUR & BODY --- */
-    * { cursor: crosshair; box-sizing: border-box; }
+    /* --- RESET & CURSEUR --- */
+    * { box-sizing: border-box; cursor: default; user-select: none; }
     
+    /* Le curseur personnalisé (Cible) */
     body {
       background-color: #000;
-      font-family: var(--font-body);
-      overflow: hidden; /* On gère le scroll dans les fenêtres */
-      color: var(--c-text);
+      font-family: var(--font-ui);
+      color: var(--sao-text);
+      overflow: hidden;
+      margin: 0;
     }
 
-    /* Grille de fond animée (Aincrad Sky) */
-    .bg-grid {
+    /* --- FOND 3D ANIMÉ --- */
+    #world-bg {
       position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
-      background: 
-        radial-gradient(circle at 50% 50%, rgba(40, 40, 50, 1) 0%, rgba(0,0,0,1) 100%),
-        linear-gradient(0deg, rgba(255, 183, 0, 0.05) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(255, 183, 0, 0.05) 1px, transparent 1px);
-      background-size: 100% 100%, 40px 40px, 40px 40px;
+      background: radial-gradient(circle at 50% 50%, #2a2a2a 0%, #000 100%);
       perspective: 1000px;
       z-index: -10;
+      overflow: hidden;
     }
-    .floating-particles {
-      position: absolute; top:0; left:0; width:100%; height:100%;
-      background-image: radial-gradient(white 1px, transparent 1px);
+    .grid-floor {
+      position: absolute; bottom: -50%; left: -50%; width: 200%; height: 200%;
+      background-image: 
+        linear-gradient(rgba(255, 170, 0, 0.1) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 170, 0, 0.1) 1px, transparent 1px);
       background-size: 60px 60px;
-      opacity: 0.1;
-      animation: particleFloat 20s linear infinite;
+      transform: rotateX(70deg);
+      animation: floorMove 10s linear infinite;
     }
-    @keyframes particleFloat { from { transform: translateY(0); } to { transform: translateY(100px); } }
+    @keyframes floorMove { from { transform: rotateX(70deg) translateY(0); } to { transform: rotateX(70deg) translateY(60px); } }
 
-    /* --- 1. SÉQUENCE LINK START (Overlay) --- */
-    #link-start {
+    /* --- LOGIN SCREEN (LINK START) --- */
+    #login-screen {
       position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-      background: #000; z-index: 99999;
-      display: flex; flex-direction: column;
-      justify-content: center; align-items: center;
-      animation: fadeOutIntro 1s forwards 3.5s; /* Disparait après 3.5s */
-      pointer-events: none;
+      background: #000; z-index: 10000;
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      transition: opacity 1s;
     }
-    .tunnel {
-      width: 100%; height: 2px; background: var(--c-orange);
-      box-shadow: 0 0 20px var(--c-orange), 0 0 50px var(--c-orange);
-      animation: expandLine 0.5s ease-out forwards;
+    .start-btn {
+      border: 2px solid var(--sao-orange);
+      color: var(--sao-orange);
+      padding: 20px 60px;
+      font-size: 24px;
+      font-family: var(--font-ui);
+      letter-spacing: 5px;
+      background: transparent;
+      cursor: pointer;
+      text-transform: uppercase;
+      box-shadow: 0 0 15px var(--sao-orange);
+      transition: all 0.3s;
+      animation: pulseBtn 2s infinite;
     }
-    .sao-logo {
-      font-family: var(--font-tech); font-size: 4em; color: var(--c-orange);
-      text-shadow: 0 0 20px var(--c-orange);
-      opacity: 0; animation: textAppear 0.5s forwards 0.8s;
+    .start-btn:hover { background: var(--sao-orange); color: #000; }
+    
+    /* Animation Tunnel */
+    .tunnel-fx {
+      position: absolute; top:0; left:0; width:100%; height:100%;
+      background: conic-gradient(from 0deg, transparent, var(--sao-orange), transparent);
+      opacity: 0; pointer-events: none;
     }
-    .check-system {
-      font-family: monospace; color: #fff; margin-top: 20px;
-      opacity: 0; animation: textAppear 0.5s forwards 1.5s;
-    }
-    @keyframes expandLine { 0% { width:0; } 100% { width:100%; } }
-    @keyframes textAppear { 0% { opacity:0; transform:scale(2); } 100% { opacity:1; transform:scale(1); } }
-    @keyframes fadeOutIntro { to { opacity: 0; visibility: hidden; } }
+    .link-start-active .tunnel-fx { animation: tunnelZoom 2s forwards; opacity: 1; }
+    .link-start-active .start-btn { display: none; }
 
-    /* --- 2. SIDEBAR (MENU FLOTTANT) --- */
+    @keyframes tunnelZoom { 
+      0% { transform: scale(1) rotate(0deg); opacity: 0; }
+      50% { opacity: 1; }
+      100% { transform: scale(20) rotate(180deg); opacity: 0; }
+    }
+    @keyframes pulseBtn { 0% { box-shadow: 0 0 10px var(--sao-orange); } 50% { box-shadow: 0 0 30px var(--sao-orange); } 100% { box-shadow: 0 0 10px var(--sao-orange); } }
+
+    /* --- HUD : HP BAR (Top Left) --- */
+    #hud-hp {
+      position: fixed; top: 20px; left: 20px;
+      width: 350px; height: 80px;
+      z-index: 500;
+      display: flex; align-items: center;
+      opacity: 0; transform: translateX(-100px);
+      transition: all 1s ease 2.5s; /* Apparition retardée */
+    }
+    .avatar-frame {
+      width: 60px; height: 60px; border-radius: 50%;
+      border: 2px solid var(--sao-orange);
+      background: #333; display: flex; align-items: center; justify-content: center;
+      box-shadow: 0 0 10px var(--sao-orange);
+      margin-right: 10px;
+    }
+    .stats-container { flex: 1; }
+    .player-name { font-size: 18px; color: #fff; letter-spacing: 1px; text-shadow: 0 0 5px var(--sao-orange); }
+    .hp-bar-bg { width: 100%; height: 15px; background: rgba(0,0,0,0.6); border: 1px solid #555; margin-top: 5px; position:relative; transform: skewX(-20deg); }
+    .hp-bar-fill { 
+      width: 85%; height: 100%; 
+      background: linear-gradient(90deg, #ffcc00, #ff0000); 
+      box-shadow: 0 0 10px #ff0000;
+      animation: hpPulse 3s infinite;
+    }
+    .lvl-badge { position: absolute; right: -10px; top: -5px; color: var(--sao-orange); font-size: 12px; }
+
+    /* --- HUD : CONSOLE LOG (Bottom Right) --- */
+    #hud-console {
+      position: fixed; bottom: 20px; right: 20px;
+      width: 300px; height: 150px;
+      background: rgba(0,0,0,0.8);
+      border-top: 2px solid var(--sao-orange);
+      padding: 10px;
+      font-family: var(--font-code);
+      font-size: 10px;
+      color: #0f0; /* Vert Matrix */
+      overflow: hidden;
+      z-index: 500;
+      opacity: 0;
+      transition: opacity 1s ease 3s;
+    }
+    .log-line { margin-bottom: 2px; border-bottom: 1px solid rgba(0,255,0,0.1); }
+
+    /* --- SIDEBAR (Menu SAO) --- */
     .sidebar {
       background: transparent !important;
       border: none !important;
-      width: 280px;
-      padding-top: 50px;
-      overflow: visible;
+      width: 260px; padding-top: 120px;
+      opacity: 0; transition: opacity 1s ease 3s;
     }
-
-    /* Le menu SAO (icônes flottantes) */
-    .sidebar-nav {
-      margin-left: 20px;
-    }
+    .app-name { display: none; } /* On cache le titre défaut */
     
-    .sidebar-nav ul { padding: 0; }
-    .sidebar-nav li { list-style: none; margin-bottom: 8px; position: relative; }
-
-    /* Liens principaux */
+    .sidebar-nav li { margin-bottom: 15px; list-style: none; position: relative; }
+    
+    /* Les boutons du menu */
     .sidebar-nav a {
-      display: block;
-      background: rgba(30, 30, 30, 0.8);
-      border: 1px solid rgba(255,255,255,0.2);
-      border-radius: 50px; /* Forme de pilule */
-      padding: 10px 20px;
+      display: flex; align-items: center;
+      width: 220px; height: 45px;
+      background: rgba(40, 40, 40, 0.85);
+      border: 1px solid #666;
+      border-radius: 25px; /* Pill shape */
+      padding-left: 20px;
       color: #ccc !important;
       text-decoration: none !important;
-      font-weight: 600;
-      transition: all 0.2s ease;
-      font-family: var(--font-body);
-      font-size: 1.1em;
-      box-shadow: 5px 5px 10px rgba(0,0,0,0.5);
-    }
-
-    /* Hover Effect "Swipe" */
-    .sidebar-nav a:hover, .sidebar-nav li.active > a {
-      background: linear-gradient(90deg, var(--c-orange), #ff8800);
-      color: #000 !important;
-      border-color: #fff;
-      transform: translateX(15px) scale(1.05);
-      box-shadow: 0 0 15px var(--c-orange);
-      padding-left: 30px;
-    }
-
-    /* Titres de dossiers */
-    .sidebar-nav > ul > li > strong {
-      display: block;
-      color: var(--c-orange);
-      font-family: var(--font-tech);
-      font-size: 0.8em;
-      letter-spacing: 2px;
-      margin: 20px 0 5px 10px;
-      text-transform: uppercase;
-      border-bottom: 1px solid rgba(255, 183, 0, 0.3);
-      width: fit-content;
-    }
-
-    /* --- 3. FENÊTRE PRINCIPALE (POPUP) --- */
-    .content {
-      padding-top: 0;
-      padding-left: 320px; /* Espace pour le menu */
-      padding-right: 20px;
-      height: 100vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    /* Le cadre de la fenêtre */
-    .markdown-section {
-      background: var(--c-panel);
-      width: 100%;
-      max-width: 1100px;
-      height: 85vh; /* Fenêtre flottante */
-      border: 1px solid rgba(200,200,200,0.3);
-      border-radius: 8px;
-      box-shadow: 0 0 50px rgba(0,0,0,0.8);
-      position: relative;
-      overflow-y: auto; /* Scroll à l'intérieur de la fenêtre */
-      padding: 60px 40px 40px 40px; /* Espace pour le header */
-      backdrop-filter: blur(10px);
-      animation: windowOpen 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    }
-
-    @keyframes windowOpen {
-      from { transform: scale(0); opacity: 0; }
-      to { transform: scale(1); opacity: 1; }
-    }
-
-    /* Décoration Header de Fenêtre (Faux UI) */
-    .markdown-section::before {
-      content: "MESSAGE // SYSTEM ALERT";
-      position: absolute; top: 0; left: 0; right: 0;
-      height: 35px;
-      background: linear-gradient(90deg, rgba(255,255,255,0.1), transparent);
-      border-bottom: 1px solid rgba(255,255,255,0.2);
-      color: var(--c-orange);
-      font-family: var(--font-tech);
       font-size: 14px;
-      line-height: 35px;
-      padding-left: 20px;
-      letter-spacing: 1px;
+      transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      box-shadow: 3px 3px 10px rgba(0,0,0,0.5);
     }
     
-    /* Boutons décoratifs (X, O) */
-    .markdown-section::after {
-      content: "⬤ ⬤";
-      position: absolute; top: 5px; right: 15px;
-      color: rgba(255,255,255,0.3);
-      font-size: 12px;
-      letter-spacing: 5px;
-    }
-
-    /* --- 4. TYPOGRAPHIE & ÉLÉMENTS INTERNES --- */
-    
-    /* Titres */
-    h1 {
-      font-family: var(--font-tech);
-      color: #fff;
-      font-size: 2.5em;
-      border-bottom: 2px solid var(--c-orange);
-      padding-bottom: 10px;
-      text-shadow: 0 0 10px var(--c-orange-dim);
-    }
-    h2, h3 {
-      color: var(--c-orange);
-      margin-top: 40px;
-    }
-
-    /* Tableaux (Style Inventaire) */
-    table {
-      width: 100%;
-      background: rgba(0,0,0,0.3);
-      border: 1px solid rgba(255,255,255,0.1);
-      border-radius: 4px;
-    }
-    thead tr { background: rgba(255, 183, 0, 0.1); }
-    th { color: var(--c-orange); font-family: var(--font-tech); border: none; }
-    td { border-top: 1px solid rgba(255,255,255,0.05); }
-
-    /* Alertes / Citations (Style Polygone) */
-    blockquote {
-      background: rgba(255, 0, 0, 0.15);
-      border-left: 5px solid #ff0000;
-      color: #ffaaaa;
-      padding: 15px;
-      margin: 20px 0;
-      position: relative;
-    }
-    /* Pour les infos (!>) */
-    .tip {
-      border-left-color: var(--c-orange) !important;
-      background: rgba(255, 183, 0, 0.1) !important;
-      color: #fff !important;
-    }
-    .tip::before { content: "INFO"; font-weight: bold; color: var(--c-orange); display:block; margin-bottom:5px; font-size:0.8em; }
-
-    /* Liens internes */
-    .markdown-section a {
-      color: var(--c-orange);
+    /* Animation Hover Menu */
+    .sidebar-nav a:hover, .sidebar-nav li.active > a {
+      background: linear-gradient(90deg, rgba(255, 170, 0, 0.9), rgba(255, 120, 0, 0.8));
+      color: #000 !important;
       font-weight: bold;
-      text-decoration: none;
-      border-bottom: 1px dotted var(--c-orange);
-    }
-    .markdown-section a:hover {
-      background: var(--c-orange);
-      color: #000;
-      box-shadow: 0 0 10px var(--c-orange);
+      width: 250px; /* S'agrandit */
+      border-color: #fff;
+      box-shadow: 0 0 15px var(--sao-orange);
+      padding-left: 40px;
+      cursor: pointer; /* Curseur main */
     }
 
-    /* Code Blocks */
-    pre {
-      background: #000 !important;
-      border: 1px solid var(--c-orange);
-      box-shadow: inset 0 0 20px rgba(0,0,0,0.8);
+    /* Icône dossier */
+    .sidebar-nav > ul > li > strong {
+      color: var(--sao-orange); font-size: 10px; letter-spacing: 2px;
+      text-transform: uppercase; margin-left: 15px; margin-bottom: 5px; display: block;
     }
-    code { color: var(--c-orange) !important; font-family: monospace; }
 
-    /* --- 5. SEARCH & LOGO --- */
-    .app-name-link { display: none; } /* On cache le titre défaut pour mettre le nôtre */
+    /* --- CONTENU (Fenêtre Flottante) --- */
+    .content {
+      padding-top: 0; padding-left: 280px; padding-right: 20px;
+      height: 100vh; display: flex; align-items: center; justify-content: center;
+    }
     
-    .search {
-      margin: 20px;
+    .markdown-section {
+      background: var(--sao-bg);
+      width: 100%; max-width: 1000px; height: 80vh;
+      border: 1px solid rgba(150,150,150,0.3);
+      border-radius: 6px;
       position: relative;
+      padding: 50px 40px;
+      overflow-y: auto;
+      box-shadow: 0 10px 60px rgba(0,0,0,0.9), 0 0 0 1px rgba(255,170,0,0.2);
+      backdrop-filter: blur(8px);
+      opacity: 0; transform: scale(0.9);
+      transition: all 0.4s ease;
     }
-    .search input {
-      background: rgba(0,0,0,0.5) !important;
-      border: 1px solid #555 !important;
-      border-radius: 20px;
-      color: #fff !important;
-      font-family: var(--font-tech);
-      padding-left: 35px !important;
+    
+    /* Quand le système est chargé */
+    .system-ready .markdown-section { opacity: 1; transform: scale(1); }
+    .system-ready .sidebar, .system-ready #hud-hp, .system-ready #hud-console { opacity: 1; transform: translateX(0); }
+
+    /* Header de Fenêtre */
+    .markdown-section::before {
+      content: "MESSAGE WINDOW // MAIN VISUALIZER";
+      position: absolute; top: 0; left: 0; width: 100%; height: 30px;
+      background: rgba(255,255,255,0.05);
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+      color: var(--sao-orange); font-size: 11px; line-height: 30px;
+      padding-left: 15px; font-family: var(--font-code);
     }
-    .search::before {
-      content: "\f002"; /* FontAwesome Search Icon */
+    .markdown-section::after {
+      content: "\f00d  \f111"; /* FontAwesome icons unicode (X and Circle) */
       font-family: "Font Awesome 6 Free"; font-weight: 900;
-      position: absolute; left: 10px; top: 8px; color: #777; z-index: 2;
+      position: absolute; top: 8px; right: 15px; color: #888; font-size: 12px; letter-spacing: 8px;
     }
 
-    /* --- CUSTOM SCROLLBAR (Fine et Orange) --- */
-    ::-webkit-scrollbar { width: 6px; background: #111; }
-    ::-webkit-scrollbar-thumb { background: #444; border-radius: 3px; }
-    ::-webkit-scrollbar-thumb:hover { background: var(--c-orange); }
+    /* Styles Markdown */
+    h1 { color: #fff; font-size: 2.2em; border-bottom: 2px solid var(--sao-orange); padding-bottom: 5px; text-shadow: 0 0 10px rgba(255,170,0,0.5); }
+    h2 { color: var(--sao-orange); border-left: 4px solid var(--sao-orange); padding-left: 10px; background: linear-gradient(90deg, rgba(255,170,0,0.1), transparent); }
+    a { color: var(--sao-orange); text-decoration: none; font-weight: bold; }
+    code { color: var(--sao-orange) !important; background: rgba(0,0,0,0.6) !important; font-family: var(--font-code); }
+    pre { background: #000 !important; border: 1px solid #444; }
+    
+    /* Scrollbar */
+    ::-webkit-scrollbar { width: 5px; }
+    ::-webkit-scrollbar-track { background: #111; }
+    ::-webkit-scrollbar-thumb { background: #555; }
+    ::-webkit-scrollbar-thumb:hover { background: var(--sao-orange); }
+
+    /* Search Box */
+    .search { margin: 20px; }
+    .search input {
+      background: rgba(0,0,0,0.5) !important; border: 1px solid #555 !important;
+      border-radius: 20px; color: #fff !important; font-family: var(--font-ui);
+    }
 
   </style>
 </head>
 <body>
-  
-  <!-- BACKGROUND LAYERS -->
-  <div class="bg-grid">
-    <div class="floating-particles"></div>
+
+  <!-- 1. LOGIN SCREEN -->
+  <div id="login-screen">
+    <div class="tunnel-fx"></div>
+    <button class="start-btn" onclick="systemStart()">LINK START</button>
   </div>
 
-  <!-- INTRO ANIMATION (LINK START) -->
-  <div id="link-start">
-    <div class="sao-logo">LINK START</div>
-    <div class="tunnel"></div>
-    <div class="check-system">
-      > CHECKING NERVEGEAR STATUS... OK<br>
-      > CONNECTING TO LIFESTEAL SERVER... OK<br>
-      > AUTHENTICATION... SUCCESS
+  <!-- 2. BACKGROUND WORLD -->
+  <div id="world-bg">
+    <div class="grid-floor"></div>
+  </div>
+
+  <!-- 3. HUD ELEMENTS -->
+  <div id="hud-hp">
+    <div class="avatar-frame"><i class="fa-solid fa-user" style="color:#ccc; font-size:24px;"></i></div>
+    <div class="stats-container">
+      <div class="player-name">VISITOR <span style="font-size:12px; color:#aaa;">LV. 1</span></div>
+      <div class="hp-bar-bg">
+        <div class="hp-bar-fill"></div>
+        <div class="lvl-badge">SAFE</div>
+      </div>
     </div>
   </div>
 
-  <!-- DOCSIFY APP -->
+  <div id="hud-console">
+    <!-- Logs générés par JS -->
+  </div>
+
+  <!-- 4. DOCSIFY APP -->
   <div id="app"></div>
 
+  <!-- SCRIPTS -->
   <script>
+    // --- AUDIO ENGINE (Sons sans fichiers externes) ---
+    const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    
+    function playSound(type) {
+      if (audioCtx.state === 'suspended') audioCtx.resume();
+      const osc = audioCtx.createOscillator();
+      const gainNode = audioCtx.createGain();
+      osc.connect(gainNode);
+      gainNode.connect(audioCtx.destination);
+
+      if (type === 'hover') {
+        // Son de survol "Bip" aigu rapide
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(800, audioCtx.currentTime);
+        osc.frequency.exponentialRampToValueAtTime(1200, audioCtx.currentTime + 0.05);
+        gainNode.gain.setValueAtTime(0.05, audioCtx.currentTime);
+        gainNode.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.05);
+        osc.start();
+        osc.stop(audioCtx.currentTime + 0.05);
+      } else if (type === 'click') {
+        // Son de validation "Crystal"
+        osc.type = 'triangle';
+        osc.frequency.setValueAtTime(600, audioCtx.currentTime);
+        osc.frequency.exponentialRampToValueAtTime(300, audioCtx.currentTime + 0.1);
+        gainNode.gain.setValueAtTime(0.1, audioCtx.currentTime);
+        gainNode.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.15);
+        osc.start();
+        osc.stop(audioCtx.currentTime + 0.15);
+      } else if (type === 'start') {
+        // Son de démarrage puissant
+        osc.type = 'sawtooth';
+        osc.frequency.setValueAtTime(100, audioCtx.currentTime);
+        osc.frequency.linearRampToValueAtTime(800, audioCtx.currentTime + 1);
+        gainNode.gain.setValueAtTime(0.1, audioCtx.currentTime);
+        gainNode.gain.linearRampToValueAtTime(0, audioCtx.currentTime + 1.5);
+        osc.start();
+        osc.stop(audioCtx.currentTime + 1.5);
+      }
+    }
+
+    // --- SYSTEM START SEQUENCE ---
+    function systemStart() {
+      playSound('start');
+      const screen = document.getElementById('login-screen');
+      screen.classList.add('link-start-active');
+      
+      // Console Logs Fake
+      addLog("[SYS] INITIALIZING NERVEGEAR...");
+      setTimeout(() => addLog("[NET] CONNECTING TO LIFESTEAL FR..."), 500);
+      setTimeout(() => addLog("[AUTH] USER ID VERIFIED."), 1000);
+      setTimeout(() => addLog("[SYS] RENDER ENGINE: CARDINAL V4"), 1500);
+      setTimeout(() => addLog("[OK] WELCOME, PLAYER."), 2000);
+
+      // Transition vers le site
+      setTimeout(() => {
+        screen.style.opacity = '0';
+        setTimeout(() => { screen.style.display = 'none'; }, 1000);
+        document.body.classList.add('system-ready');
+        startConsoleLoop(); // Lance les logs infinis
+      }, 2500);
+    }
+
+    // --- CONSOLE LOGIC ---
+    function addLog(text) {
+      const consoleDiv = document.getElementById('hud-console');
+      const line = document.createElement('div');
+      line.className = 'log-line';
+      line.innerHTML = `<span style="opacity:0.6">${new Date().toLocaleTimeString()}</span> > ${text}`;
+      consoleDiv.appendChild(line);
+      consoleDiv.scrollTop = consoleDiv.scrollHeight;
+    }
+
+    function startConsoleLoop() {
+      const messages = [
+        "Scanning nearby chunks...", "Updating player coordinates...", 
+        "Ping: 24ms", "Packet received.", "LifeSteal Protocol Active.",
+        "Checking integrity...", "Syncing world data..."
+      ];
+      setInterval(() => {
+        if(Math.random() > 0.7) {
+          const msg = messages[Math.floor(Math.random() * messages.length)];
+          addLog(msg);
+        }
+      }, 2000);
+    }
+
+    // --- DOCSIFY CONFIG ---
     window.$docsify = {
       name: 'LifeSteal FR',
       repo: '',
-      
-      // La page d'accueil
       homepage: 'README.md',
       loadSidebar: true,
-      subMaxLevel: 2,
+      subMaxLevel: 3,
       auto2top: true,
-      
-      // Configuration Recherche
       search: {
-        placeholder: 'SEARCH DATABASE',
-        noData: 'NO DATA FOUND',
-        depth: 6
+        placeholder: 'SEARCH DATABASE...',
+        noData: 'ERROR 404: OBJECT NOT FOUND',
       },
-      
-      sidebarDisplayLevel: 1, // Dossiers fermés par défaut
-
-      // Custom Plugin pour l'immersion
       plugins: [
-        function(hook, vm) {
-          // A chaque changement de page (pour réinitialiser l'animation fenêtre)
+        function(hook) {
+          // Attache les sons aux éléments après chaque chargement de page
           hook.doneEach(function() {
-            // Ajout d'un petit son visuel ou log console
-            console.log("[SYSTEM] Window Refreshed.");
-            
-            // On force le titre à être plus "Tech"
-            const title = document.querySelector('h1');
-            if(title) {
-              title.innerHTML = '<i class="fa-solid fa-terminal" style="font-size:0.7em; margin-right:15px; color:var(--c-orange);"></i>' + title.innerHTML;
-            }
+            // Sons sur les liens du menu
+            document.querySelectorAll('.sidebar-nav a').forEach(link => {
+              link.addEventListener('mouseenter', () => playSound('hover'));
+              link.addEventListener('click', () => playSound('click'));
+            });
+            // Sons sur les boutons search
+            document.querySelectorAll('.search input').forEach(input => {
+               input.addEventListener('focus', () => playSound('hover'));
+            });
           });
         }
       ]
     }
   </script>
 
-  <!-- Scripts Docsify -->
+  <!-- LIBS -->
   <script src="//cdn.jsdelivr.net/npm/docsify@4"></script>
   <script src="//cdn.jsdelivr.net/npm/docsify/lib/plugins/search.min.js"></script>
   <script src="//cdn.jsdelivr.net/npm/docsify-copy-code/dist/docsify-copy-code.min.js"></script>
   <script src="//cdn.jsdelivr.net/npm/docsify-sidebar-collapse/dist/docsify-sidebar-collapse.min.js"></script>
-  
-  <!-- Script pour les icônes (FontAwesome) -->
-  <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
 
 </body>
 </html>
