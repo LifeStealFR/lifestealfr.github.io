@@ -6,47 +6,177 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
   
-  <!-- Thème Vue -->
-  <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/docsify@4/lib/themes/vue.css">
-  <!-- Plugin Sidebar Collapse pour l'effet "Dossier" -->
+  <!-- 1. Police Futuriste (Google Fonts) -->
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
+
+  <!-- 2. Thème de base Docsify (Dark) -->
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/docsify@4/lib/themes/dark.css">
+  
+  <!-- 3. Plugin Sidebar Collapse -->
   <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/docsify-sidebar-collapse/dist/sidebar.min.css" />
 
+  <!-- 4. CSS Personnalisé "FUTURIST / LIFESTEAL" -->
   <style>
-    :root { --theme-color: #42b983; }
-    /* Petite icone de dossier devant les groupes */
-    .folder-icon { margin-right: 5px; }
+    :root {
+      /* Palette de couleurs */
+      --base-bg: #0b0c15;           /* Noir profond bleuté */
+      --sidebar-bg: rgba(11, 12, 21, 0.85); /* Semi-transparent */
+      --accent-color: #ff2a6d;      /* Rouge/Rose Néon (Style LifeSteal) */
+      --accent-glow: #ff2a6d;       /* Couleur de la lueur */
+      --text-color: #e0e6ed;        /* Blanc cassé */
+      --code-bg: #161b22;           /* Fond des blocs de code */
+    }
+
+    /* --- FOND ANIMÉ STYLE CYBERPUNK --- */
+    body {
+      background-color: var(--base-bg);
+      background-image: 
+        linear-gradient(rgba(255, 42, 109, 0.05) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 42, 109, 0.05) 1px, transparent 1px);
+      background-size: 40px 40px; /* Taille de la grille */
+      font-family: 'Roboto', sans-serif;
+      color: var(--text-color);
+    }
+
+    /* --- BARRE LATÉRALE (SIDEBAR) --- */
+    .sidebar {
+      background-color: var(--sidebar-bg);
+      backdrop-filter: blur(10px); /* Effet de flou derrière */
+      border-right: 1px solid rgba(255, 42, 109, 0.2);
+    }
+    
+    .sidebar-nav li { margin: 6px 0; }
+    
+    /* Liens dans la sidebar */
+    .sidebar-nav a {
+      color: #a0aabf !important;
+      transition: all 0.3s ease;
+      text-decoration: none !important;
+    }
+
+    .sidebar-nav a:hover, .sidebar-nav .active {
+      color: var(--accent-color) !important;
+      text-shadow: 0 0 8px var(--accent-glow); /* Lueur au survol */
+      border-right: 2px solid var(--accent-color);
+    }
+
+    /* Titres des dossiers */
+    .sidebar-nav > ul > li > strong {
+      font-family: 'Orbitron', sans-serif; /* Police futuriste */
+      color: #fff;
+      letter-spacing: 1px;
+      margin-top: 15px;
+      display: block;
+    }
+
+    /* --- CONTENU PRINCIPAL --- */
+    .content {
+      padding-top: 20px;
+    }
+
+    /* Titres H1, H2, H3 */
+    .markdown-section h1, .markdown-section h2, .markdown-section h3 {
+      font-family: 'Orbitron', sans-serif;
+      color: #fff;
+      border-bottom: 1px solid rgba(255, 42, 109, 0.3);
+    }
+    
+    .markdown-section h1 {
+      text-shadow: 0 0 10px rgba(255, 42, 109, 0.5); /* Gros titre brillant */
+      font-size: 2.5rem;
+    }
+
+    /* Liens dans le texte */
+    .markdown-section a {
+      color: var(--accent-color);
+      font-weight: bold;
+      text-decoration: none;
+    }
+    .markdown-section a:hover {
+      text-decoration: underline;
+      text-shadow: 0 0 5px var(--accent-glow);
+    }
+
+    /* --- BLOCS DE CODE ET CITATIONS --- */
+    .markdown-section code {
+      background-color: rgba(255, 42, 109, 0.15) !important;
+      color: #ff85a9 !important;
+      border-radius: 4px;
+    }
+
+    .markdown-section pre {
+      background-color: var(--code-bg) !important;
+      border: 1px solid rgba(255, 42, 109, 0.2);
+      box-shadow: 0 0 15px rgba(0,0,0,0.5);
+    }
+
+    .markdown-section blockquote {
+      border-left: 4px solid var(--accent-color);
+      background: rgba(255, 255, 255, 0.05);
+      color: #ccc;
+    }
+
+    /* --- BOUTON DE RECHERCHE --- */
+    .search {
+      border-bottom: 1px solid rgba(255, 42, 109, 0.3) !important;
+    }
+    .search input {
+      background: rgba(0,0,0,0.3) !important;
+      color: #fff !important;
+      border: 1px solid #333 !important;
+    }
+
+    /* --- SCROLLBAR CUSTOM --- */
+    ::-webkit-scrollbar { width: 8px; }
+    ::-webkit-scrollbar-track { background: #0b0c15; }
+    ::-webkit-scrollbar-thumb { 
+      background: #333; 
+      border-radius: 4px; 
+    }
+    ::-webkit-scrollbar-thumb:hover { background: var(--accent-color); }
   </style>
 </head>
 <body>
-  <div id="app">Chargement de l'arborescence...</div>
+  <div id="app">Initialisation du système...</div>
 
   <script>
     window.$docsify = {
-      name: 'LifeSteal FR Wiki',
+      name: '<span style="color:var(--accent-color); font-family:Orbitron;">LIFESTEAL</span> WIKI',
       repo: '',
+      
+      // Configuration Standard
       homepage: 'README.md',
-      loadSidebar: true, // Obligatoire pour lire le fichier généré
-      subMaxLevel: 2,
+      loadSidebar: true, // Lit le _sidebar.md généré par le script Python
+      subMaxLevel: 3,
       auto2top: true,
       
-      // Configuration de la recherche
+      // Configuration Recherche
       search: {
-        placeholder: 'Rechercher un guide...',
-        noData: 'Aucun résultat.',
+        placeholder: 'Rechercher une info...',
+        noData: 'Donnée introuvable.',
         depth: 6
       },
 
-      // Configuration du plugin d'arborescence (Sidebar Collapse)
-      sidebarDisplayLevel: 1, // 1 = Ferme tout sauf le niveau principal par défaut
+      // Configuration Sidebar Collapse (Dossiers)
+      sidebarDisplayLevel: 1, // 0 = tout fermé, 1 = dossiers principaux ouverts
+
+      // Plugin Copy Code
+      copyCode: {
+        buttonText: 'COPIER',
+        errorText: 'ERREUR',
+        successText: 'COPIÉ'
+      }
     }
   </script>
 
   <!-- Scripts Docsify -->
   <script src="//cdn.jsdelivr.net/npm/docsify@4"></script>
+  
+  <!-- Plugins -->
   <script src="//cdn.jsdelivr.net/npm/docsify/lib/plugins/search.min.js"></script>
   <script src="//cdn.jsdelivr.net/npm/docsify-copy-code/dist/docsify-copy-code.min.js"></script>
-  
-  <!-- Plugin indispensable pour l'effet "Arborescence de dossier" -->
+  <script src="//cdn.jsdelivr.net/npm/docsify/lib/plugins/zoom-image.min.js"></script>
   <script src="//cdn.jsdelivr.net/npm/docsify-sidebar-collapse/dist/docsify-sidebar-collapse.min.js"></script>
+
 </body>
 </html>
