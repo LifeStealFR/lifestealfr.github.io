@@ -1,5 +1,3 @@
-* [Accueil](Accueil.md)
-
 * Staff
   * [Introduction](Staff/README.md)
   * [Convocations](Staff/convocations.md)
