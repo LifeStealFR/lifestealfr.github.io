@@ -3,244 +3,494 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Roue du Jugement - Sanctions</title>
+    <title>Grimoire du Jugement</title>
+    <!-- Import des polices Fantasy -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&family=Cormorant+Garamond:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+    
     <style>
+        :root {
+            --gold: #d4af37;
+            --gold-light: #f9d877;
+            --gold-dark: #8a6e1e;
+            --ink: #2b1d0e;
+            --parchment: #f0e6d2;
+            --parchment-dark: #dcd0b3;
+            --magic-glow: rgba(200, 230, 255, 0.4);
+            --danger: #8b0000;
+        }
+
         body {
-            background-color: #1e1e2f;
-            color: #ffffff;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #0f0f13;
+            background-image: 
+                radial-gradient(circle at 50% 50%, #1a1a24 0%, #050505 100%);
+            color: var(--ink);
+            font-family: 'Cormorant Garamond', serif;
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: flex-start;
+            justify-content: center;
             min-height: 100vh;
             margin: 0;
             padding: 20px;
-            box-sizing: border-box;
+            overflow-x: hidden;
+        }
+
+        /* Particules d'ambiance en arrière plan */
+        .background-particles {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            pointer-events: none;
+            z-index: -1;
+            background: 
+                radial-gradient(white, rgba(255,255,255,.2) 2px, transparent 3px),
+                radial-gradient(white, rgba(255,255,255,.15) 1px, transparent 2px),
+                radial-gradient(white, rgba(255,255,255,.1) 2px, transparent 3px);
+            background-size: 550px 550px, 350px 350px, 250px 250px;
+            background-position: 0 0, 40px 60px, 130px 270px;
+            animation: stars 60s linear infinite;
+        }
+
+        @keyframes stars {
+            from { transform: translateY(0); }
+            to { transform: translateY(-550px); }
+        }
+
+        /* Conteneur Principal : Le Grimoire */
+        .grimoire {
+            background: var(--parchment);
+            background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.5' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.08'/%3E%3C/svg%3E"),
+            radial-gradient(circle at center, transparent 40%, var(--parchment-dark) 100%);
+            
+            border: 8px solid var(--ink);
+            border-image: linear-gradient(to bottom right, var(--gold-dark), var(--gold), var(--gold-dark)) 1;
+            box-shadow: 
+                0 0 0 4px #2b1d0e, /* Double bordure */
+                0 20px 50px rgba(0,0,0,0.8),
+                inset 0 0 60px rgba(43, 29, 14, 0.2);
+            
+            padding: 40px;
+            max-width: 900px;
+            width: 95%;
+            position: relative;
+            text-align: center;
+            border-radius: 4px;
+            animation: float 6s ease-in-out infinite;
+        }
+
+        /* Effet coins dorés */
+        .grimoire::before, .grimoire::after {
+            content: "❖";
+            position: absolute;
+            font-size: 40px;
+            color: var(--gold);
+            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+        }
+        .grimoire::before { top: 10px; left: 10px; }
+        .grimoire::after { bottom: 10px; right: 10px; transform: rotate(180deg); }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
         }
 
         h1 {
-            color: #ffcc00;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
-            margin-bottom: 10px;
-        }
-
-        .wheel-container {
+            font-family: 'Cinzel', serif;
+            font-weight: 900;
+            font-size: 3rem;
+            margin-bottom: 20px;
+            margin-top: 0;
+            color: var(--ink);
+            text-transform: uppercase;
+            letter-spacing: 4px;
+            background: linear-gradient(to right, var(--ink), #5a3e1d, var(--ink));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            text-shadow: 0 2px 0 rgba(255,255,255,0.5);
             position: relative;
-            width: 500px;
-            max-width: 90vw;
-            aspect-ratio: 1 / 1;
-            margin: 20px 0;
+            display: inline-block;
         }
 
-        /* Le pointeur de la roue (flèche rouge) */
+        h1::after {
+            content: "";
+            display: block;
+            width: 60%;
+            height: 2px;
+            background: var(--gold);
+            margin: 10px auto;
+            box-shadow: 0 0 10px var(--gold);
+        }
+
+        /* Container de la roue */
+        .wheel-wrapper {
+            position: relative;
+            width: 450px;
+            max-width: 90vw;
+            aspect-ratio: 1/1;
+            margin: 20px auto;
+            filter: drop-shadow(0 10px 20px rgba(0,0,0,0.4));
+        }
+
+        /* Cercle extérieur décoratif (Cercle magique) */
+        .magic-ring {
+            position: absolute;
+            top: -5%; left: -5%;
+            width: 110%; height: 110%;
+            border: 2px dashed rgba(212, 175, 55, 0.3);
+            border-radius: 50%;
+            animation: rotate-slow 60s linear infinite;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        @keyframes rotate-slow { from {transform: rotate(0deg);} to {transform: rotate(360deg);} }
+
+        /* Le curseur (Épée ou Plume) */
         .pointer {
             position: absolute;
-            top: -15px;
+            top: -25px;
             left: 50%;
             transform: translateX(-50%);
-            width: 0;
-            height: 0;
-            border-left: 20px solid transparent;
-            border-right: 20px solid transparent;
-            border-top: 40px solid #ff3333;
             z-index: 10;
-            filter: drop-shadow(0 4px 6px rgba(0,0,0,0.6));
+            width: 40px;
+            height: 60px;
+            background: linear-gradient(to bottom, var(--gold), var(--gold-dark));
+            clip-path: polygon(50% 100%, 0% 0%, 100% 0%);
+            filter: drop-shadow(0 4px 4px rgba(0,0,0,0.5));
+        }
+        
+        .pointer::after {
+            content: "";
+            position: absolute;
+            top: 0; left: 50%; transform: translateX(-50%);
+            width: 10px; height: 10px;
+            background: var(--danger);
+            border-radius: 50%;
+            box-shadow: 0 0 10px var(--danger);
         }
 
         canvas {
             width: 100%;
             height: 100%;
             border-radius: 50%;
-            box-shadow: 0 0 20px rgba(0,0,0,0.8);
+            position: relative;
+            z-index: 1;
             transform-origin: center;
         }
 
-        .btn {
-            background-color: #3498db;
-            border: none;
-            color: white;
-            padding: 15px 40px;
-            text-transform: uppercase;
-            font-size: 20px;
-            margin: 20px;
+        /* Bouton "Invocation" */
+        .btn-invoke {
+            background: transparent;
+            border: 2px solid var(--gold);
+            color: var(--ink);
+            font-family: 'Cinzel', serif;
+            font-size: 1.5rem;
+            font-weight: 700;
+            padding: 15px 50px;
             cursor: pointer;
-            border-radius: 8px;
-            font-weight: bold;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.3);
-            transition: all 0.2s;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            margin-top: 20px;
+            box-shadow: 0 0 15px rgba(212, 175, 55, 0.2);
         }
 
-        .btn:hover { background-color: #2980b9; transform: scale(1.05); }
-        .btn:disabled { background-color: #7f8c8d; cursor: not-allowed; transform: none; }
+        .btn-invoke::before {
+            content: "";
+            position: absolute;
+            top: 0; left: -100%;
+            width: 100%; height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(212, 175, 55, 0.4), transparent);
+            transition: 0.5s;
+        }
 
-        /* Légende en bas de page */
+        .btn-invoke:hover {
+            background: var(--ink);
+            color: var(--gold);
+            box-shadow: 0 0 25px var(--gold);
+            transform: scale(1.05);
+        }
+
+        .btn-invoke:hover::before { left: 100%; }
+        
+        .btn-invoke:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            filter: grayscale(1);
+        }
+
+        /* Légende style manuscrit */
         .legend {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
             gap: 15px;
-            margin-top: 30px;
-            background: #2a2a3c;
-            padding: 20px;
-            border-radius: 12px;
-            width: 100%;
-            max-width: 900px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+            margin-top: 40px;
+            text-align: left;
+            border-top: 1px solid rgba(43, 29, 14, 0.2);
+            padding-top: 20px;
         }
 
-        .legend-item { display: flex; align-items: flex-start; font-size: 14px; line-height: 1.4; }
-        .color-box { width: 18px; height: 18px; margin-right: 12px; border-radius: 4px; flex-shrink: 0; margin-top: 2px;}
+        .legend-item {
+            display: flex;
+            align-items: flex-start;
+            padding: 5px;
+            border-bottom: 1px dashed rgba(43, 29, 14, 0.1);
+        }
 
-        /* Modale (Pop-up) de Résultat */
-        #result-modal {
+        .legend-color {
+            width: 15px; height: 15px;
+            margin-right: 10px;
+            margin-top: 5px;
+            border: 1px solid var(--ink);
+            transform: rotate(45deg);
+            box-shadow: 2px 2px 0 rgba(0,0,0,0.1);
+        }
+
+        .legend-text strong {
+            font-family: 'Cinzel', serif;
+            font-size: 1.1rem;
+            color: var(--danger);
+        }
+        
+        .legend-text i {
+            color: #555;
+            font-size: 0.95rem;
+        }
+
+        /* MODALE (Le Verdict) */
+        #modal-overlay {
             display: none;
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(0,0,0,0.85);
             z-index: 100;
-            align-items: center;
             justify-content: center;
-            animation: fadeIn 0.3s;
+            align-items: center;
+            backdrop-filter: blur(5px);
+            opacity: 0;
+            transition: opacity 0.5s;
         }
 
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-
-        .modal-content {
-            background: #2a2a3c;
-            padding: 40px;
-            border-radius: 12px;
+        .modal-scroll {
+            background: var(--parchment);
+            width: 90%; max-width: 500px;
+            padding: 40px 30px;
             text-align: center;
-            max-width: 500px;
-            width: 90%;
-            box-shadow: 0 0 30px rgba(0,0,0,1);
+            border: 4px solid var(--gold);
+            box-shadow: 0 0 50px var(--gold);
+            transform: scale(0.8);
+            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
         }
 
-        .modal-content h2 { margin-top: 0; font-size: 28px; text-transform: uppercase; }
-        .modal-content p { font-size: 20px; margin: 25px 0; color: #e0e0e0; }
-        
-        .close-btn {
-            background-color: #e74c3c;
-            border: none;
-            color: white;
-            padding: 12px 25px;
-            cursor: pointer;
-            border-radius: 5px;
-            font-size: 16px;
-            font-weight: bold;
+        .modal-scroll h2 {
+            font-family: 'Cinzel', serif;
+            font-size: 2.5rem;
+            color: var(--danger);
+            margin: 0 0 20px 0;
+            border-bottom: 2px solid var(--gold);
+            padding-bottom: 10px;
         }
-        .close-btn:hover { background-color: #c0392b; }
+
+        .modal-scroll p {
+            font-size: 1.4rem;
+            font-style: italic;
+            line-height: 1.6;
+        }
+
+        .close-btn {
+            background: var(--ink);
+            color: var(--parchment);
+            border: 1px solid var(--gold);
+            padding: 10px 30px;
+            font-family: 'Cinzel', serif;
+            font-size: 1.1rem;
+            cursor: pointer;
+            margin-top: 20px;
+            transition: 0.2s;
+        }
+        
+        .close-btn:hover {
+            background: var(--danger);
+            color: white;
+        }
+
+        /* Effet de flash magique */
+        @keyframes magicFlash {
+            0% { box-shadow: 0 0 0 rgba(212, 175, 55, 0); }
+            50% { box-shadow: 0 0 100px rgba(212, 175, 55, 0.8); }
+            100% { box-shadow: 0 0 0 rgba(212, 175, 55, 0); }
+        }
+
+        /* Particules Canvas (pour l'explosion finale) */
+        #particle-canvas {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            pointer-events: none;
+            z-index: 200;
+        }
+        
+        /* Mobile responsive */
+        @media (max-width: 600px) {
+            h1 { font-size: 2rem; }
+            .grimoire { padding: 20px 10px; }
+            .btn-invoke { width: 100%; padding: 15px 0; }
+        }
     </style>
 </head>
 <body>
 
-    <h1>Roue du Jugement</h1>
-    
-    <div class="wheel-container">
-        <div class="pointer"></div>
-        <canvas id="wheel" width="600" height="600"></canvas>
-    </div>
-    
-    <button id="spin-btn" class="btn">Tourner la Roue</button>
+    <div class="background-particles"></div>
 
-    <div class="legend" id="legend"></div>
+    <div class="grimoire">
+        <h1>Roue du Jugement</h1>
+        
+        <div class="wheel-wrapper">
+            <div class="magic-ring"></div>
+            <div class="pointer"></div>
+            <canvas id="wheel" width="800" height="800"></canvas>
+        </div>
 
-    <div id="result-modal">
-        <div class="modal-content">
-            <h2 id="result-title">Résultat</h2>
-            <p id="result-effect">Effet</p>
-            <button class="close-btn" onclick="closeModal()">Accepter la Sentence</button>
+        <button id="spin-btn" class="btn-invoke">Invoquer la Sentence</button>
+
+        <div class="legend" id="legend">
+            <!-- La légende sera générée ici -->
         </div>
     </div>
 
+    <!-- Modale de Résultat -->
+    <div id="modal-overlay">
+        <div class="modal-scroll" id="modal-content">
+            <h2>Verdict</h2>
+            <p id="result-text">...</p>
+            <p id="result-desc" style="font-size: 1rem; color: #555;">...</p>
+            <button class="close-btn" onclick="closeModal()">SCELLER LE DESTIN</button>
+        </div>
+    </div>
+
+    <canvas id="particle-canvas"></canvas>
+
     <script>
-        // --- DONNÉES DE LA ROUE ---
-        const segments =[
-            { name: "MAINTIEN DE LA PEINE", effect: "La sanction initiale reste inchangée.", weight: 12, percent: "48%", color: "#3498db" },
-            { name: "AGGRAVATION x2", effect: "Durée du ban ou du timeout doublée.", weight: 5, percent: "20%", color: "#e67e22" },
-            { name: "AGGRAVATION x4", effect: "Sanction maximale (Ex: 1 sem -> 1 mois).", weight: 3, percent: "12%", color: "#e74c3c" },
-            { name: "BLACKLIST SALONS", effect: "Discord: Accès limité (1 salon). / MC: Interdiction zones.", weight: 2, percent: "8%", color: "#9b59b6" },
-            { name: "RESTRICTION MÉDIAS", effect: "Retrait du droit d'envoyer liens/images/emotes.", weight: 1, percent: "4%", color: "#f1c40f" },
-            { name: "DÉGRADATION RANG", effect: "Suppression définitive des rôles VIP / Grades.", weight: 1, percent: "4%", color: "#7f8c8d" },
-            { name: "ALLÈGEMENT /2", effect: "La durée de la peine est divisée par 2.", weight: 0.5, percent: "2%", color: "#2ecc71" },
-            { name: "ANNULATION DE PEINE", effect: "Retrait immédiat de la sanction.", weight: 0.25, percent: "1%", color: "#1abc9c" },
-            { name: "BLACKLIST DÉFINITIVE", effect: "Ban permanent et irrévocable (IP/ID).", weight: 0.25, percent: "1%", color: "#000000" }
+        // --- DONNÉES DU JUGEMENT ---
+        // Couleurs adaptées au thème "Grimoire" (plus terreux/pastel)
+        const segments = [
+            { name: "MAINTIEN DE LA PEINE", effect: "La sanction initiale reste inchangée.", weight: 12, percent: "48%", color: "#5dade2", textColor: "#fff" }, // Bleu délavé
+            { name: "AGGRAVATION x2", effect: "Durée du ban ou du timeout doublée.", weight: 5, percent: "20%", color: "#e67e22", textColor: "#fff" }, // Ocre
+            { name: "AGGRAVATION x4", effect: "Sanction maximale (Ex: 1 sem -> 1 mois).", weight: 3, percent: "12%", color: "#c0392b", textColor: "#fff" }, // Rouge sang
+            { name: "BLACKLIST SALONS", effect: "Discord: Accès limité. / MC: Interdiction zones.", weight: 2, percent: "8%", color: "#8e44ad", textColor: "#fff" }, // Violet mystique
+            { name: "RESTRICTION MÉDIAS", effect: "Retrait du droit d'envoyer liens/images.", weight: 1, percent: "4%", color: "#f39c12", textColor: "#000" }, // Or jaune
+            { name: "DÉGRADATION RANG", effect: "Suppression définitive des rôles VIP / Grades.", weight: 1, percent: "4%", color: "#7f8c8d", textColor: "#fff" }, // Gris pierre
+            { name: "ALLÈGEMENT /2", effect: "La durée de la peine est divisée par 2.", weight: 0.5, percent: "2%", color: "#27ae60", textColor: "#fff" }, // Vert forêt
+            { name: "ANNULATION", effect: "Retrait immédiat de la sanction.", weight: 0.25, percent: "1%", color: "#16a085", textColor: "#fff" }, // Turquoise
+            { name: "BAN DÉFINITIF", effect: "Ban permanent et irrévocable (IP/ID).", weight: 0.25, percent: "1%", color: "#1a1a1a", textColor: "#ff0000" }  // Noir abyssal
         ];
 
         const canvas = document.getElementById("wheel");
         const ctx = canvas.getContext("2d");
         const totalWeight = segments.reduce((sum, s) => sum + s.weight, 0);
-        let currentRotation = 0; // Rotation cumulée en degrés
-
-        // --- GÉNÉRATION DE LA LÉGENDE ---
-        const legendDiv = document.getElementById("legend");
-        segments.forEach(seg => {
-            let item = document.createElement("div");
-            item.className = "legend-item";
-            item.innerHTML = `<div class="color-box" style="background:${seg.color}; border: ${seg.color === '#000000' ? '1px solid #fff' : 'none'}"></div>
-                              <div><strong>${seg.name} (${seg.percent})</strong><br><i>${seg.effect}</i></div>`;
-            legendDiv.appendChild(item);
-        });
-
-        // --- DESSIN DE LA ROUE ---
+        let currentRotation = 0;
+        
+        // --- TEXTURES ET STYLES ---
         function drawWheel() {
             const centerX = canvas.width / 2;
             const centerY = canvas.height / 2;
-            const radius = centerX;
-            let startAngle = 0; // Commence à droite (0 radian = 3 heures)
+            const radius = centerX - 20; // Marge pour la bordure externe
+            let startAngle = 0;
+
+            // Fond global de la roue (cuir sombre derrière)
+            ctx.beginPath();
+            ctx.arc(centerX, centerY, radius + 15, 0, 2 * Math.PI);
+            ctx.fillStyle = "#2b1d0e";
+            ctx.fill();
 
             segments.forEach((seg) => {
                 let sliceAngle = (seg.weight / totalWeight) * 2 * Math.PI;
-                
-                // Dessin de la part
+
+                // 1. Dessin de la part
                 ctx.beginPath();
                 ctx.moveTo(centerX, centerY);
                 ctx.arc(centerX, centerY, radius, startAngle, startAngle + sliceAngle);
+                ctx.closePath();
                 ctx.fillStyle = seg.color;
                 ctx.fill();
-                ctx.lineWidth = 2;
-                ctx.strokeStyle = "#1e1e2f"; // Bordure entre les parts
+
+                // 2. Texture "bruit" pour effet vieux papier (optionnel mais cool)
+                // On simule une texture via globalCompositeOperation si voulu, 
+                // mais ici on garde simple pour la perf et netteté.
+
+                // 3. Bordures dorées entre les parts
+                ctx.lineWidth = 4;
+                ctx.strokeStyle = "#d4af37"; // Or
                 ctx.stroke();
 
-                // Dessin du texte
+                // 4. Texte
                 ctx.save();
                 ctx.translate(centerX, centerY);
                 ctx.rotate(startAngle + sliceAngle / 2);
                 ctx.textAlign = "right";
-                // Couleur du texte (noir pour le jaune, blanc pour le reste)
-                ctx.fillStyle = seg.color === "#f1c40f" ? "#000000" : "#ffffff"; 
+                ctx.fillStyle = seg.textColor;
                 
-                // Adapter la taille du texte pour les toutes petites parts
-                if (seg.weight <= 0.5) {
-                    ctx.font = "bold 11px 'Segoe UI', sans-serif";
-                } else {
-                    ctx.font = "bold 16px 'Segoe UI', sans-serif";
-                }
+                // Adaptation taille police
+                let fontSize = seg.weight < 1 ? 16 : 24;
+                ctx.font = `bold ${fontSize}px 'Cinzel', serif`;
                 
-                let text = `${seg.name} (${seg.percent})`;
-                // On évite d'écrire sur les toutes petites parts (1%) car le texte déborderait,
-                // L'utilisateur se référera aux couleurs de la légende.
-                if (seg.weight > 0.25) {
-                    ctx.fillText(text, radius - 20, 5);
-                } else {
-                    // Pour 1%, on met juste le pourcentage
-                    ctx.fillText(seg.percent, radius - 20, 4);
-                }
+                let text = seg.weight > 0.5 ? seg.name : seg.percent;
+                
+                // Ombre portée du texte pour lisibilité
+                ctx.shadowColor = "rgba(0,0,0,0.8)";
+                ctx.shadowBlur = 4;
+                ctx.fillText(text, radius - 30, 8);
                 ctx.restore();
 
                 startAngle += sliceAngle;
             });
+
+            // 5. Cercle central (Moyeu de la roue)
+            ctx.beginPath();
+            ctx.arc(centerX, centerY, 50, 0, 2 * Math.PI);
+            ctx.fillStyle = "#2b1d0e"; // Cuir sombre
+            ctx.fill();
+            ctx.lineWidth = 6;
+            ctx.strokeStyle = "#d4af37";
+            ctx.stroke();
+
+            // Gemme au centre
+            ctx.beginPath();
+            ctx.arc(centerX, centerY, 20, 0, 2 * Math.PI);
+            ctx.fillStyle = "#8b0000"; // Rubis
+            ctx.shadowColor = "#ff0000";
+            ctx.shadowBlur = 15;
+            ctx.fill();
+            ctx.shadowBlur = 0; // Reset shadow
         }
 
-        // Initialisation
+        // --- GÉNÉRATION LÉGENDE ---
+        const legendDiv = document.getElementById("legend");
+        segments.forEach(seg => {
+            let item = document.createElement("div");
+            item.className = "legend-item";
+            item.innerHTML = `
+                <div class="legend-color" style="background:${seg.color}"></div>
+                <div class="legend-text">
+                    <strong>${seg.name} (${seg.percent})</strong><br>
+                    <i>${seg.effect}</i>
+                </div>`;
+            legendDiv.appendChild(item);
+        });
+
         drawWheel();
 
-        // --- MÉCANIQUE DE ROTATION ---
+        // --- LOGIQUE DE ROTATION & ANIMATION ---
         const spinBtn = document.getElementById("spin-btn");
-
+        
         spinBtn.addEventListener("click", () => {
             spinBtn.disabled = true;
+            spinBtn.innerText = "Le sort en est jeté...";
 
-            // 1. Détermination du gagnant basée sur les poids (Algorithme "Weighted Random")
+            // Calcul du gagnant pondéré
             let rand = Math.random() * totalWeight;
             let sum = 0;
             let winnerIndex = 0;
@@ -252,53 +502,123 @@
                 }
             }
 
-            // 2. Calcul des angles de la part gagnante (en degrés)
+            // Calcul angle
             let startAngleDeg = 0;
             for (let i = 0; i < winnerIndex; i++) {
                 startAngleDeg += (segments[i].weight / totalWeight) * 360;
             }
             let sliceAngleDeg = (segments[winnerIndex].weight / totalWeight) * 360;
+            // Random dans la part (avec marge de sécurité)
+            let padding = sliceAngleDeg > 5 ? 2 : 0; 
+            let targetInSlice = startAngleDeg + padding + Math.random() * (sliceAngleDeg - 2 * padding);
             
-            // 3. Point d'arrêt aléatoire à l'intérieur de la part gagnante (avec une marge pour éviter les bords)
-            let padding = sliceAngleDeg > 5 ? 2 : 0; // Eviter de s'arrêter pile sur une ligne
-            let targetAngleDeg = startAngleDeg + padding + Math.random() * (sliceAngleDeg - 2 * padding);
-
-            // 4. Calcul de la rotation nécessaire
-            // Le pointeur est en haut (ce qui correspond à 270 degrés sur un cercle trigonométrique standard)
-            let targetModulo = (270 - targetAngleDeg + 360) % 360;
-            let currentModulo = currentRotation % 360;
+            // Ajustement pointeur (270° est le top en CSS transform rotate par défaut si 0 est à droite)
+            // Mais ici, canvas 0 est à droite. Pointeur HTML est en haut.
+            // La rotation CSS tourne tout le canvas.
+            // Pour que le segment X soit en haut (270°), il faut tourner de : (360 - X + 270)
+            let targetRotation = (270 - targetInSlice + 360 * 10) ; // *10 pour faire plein de tours
             
-            let diff = targetModulo - currentModulo;
-            if (diff < 0) diff += 360;
+            // Correction pour rotation continue
+            let currentMod = currentRotation % 360;
+            let finalTarget = currentRotation + (targetRotation - currentMod) + 360 * 5; // 5 tours min
 
-            // Ajout de "tours gratuits" pour l'animation (ex: entre 6 et 10 tours)
-            let extraSpins = 6 + Math.floor(Math.random() * 5);
-            currentRotation += diff + (extraSpins * 360);
+            // Animation CSS
+            canvas.style.transition = "transform 6s cubic-bezier(0.1, 0.95, 0.2, 1)";
+            canvas.style.transform = `rotate(${finalTarget}deg)`;
+            currentRotation = finalTarget;
 
-            // 5. Application de l'animation CSS
-            canvas.style.transition = 'transform 5s cubic-bezier(0.2, 0.8, 0.2, 1)'; // Effet de décélération fluide
-            canvas.style.transform = `rotate(${currentRotation}deg)`;
+            // Son FX (optionnel, visuel ici) : Shake de la page au début
+            document.body.style.animation = "shake 0.5s ease-in-out";
+            setTimeout(() => { document.body.style.animation = ""; }, 500);
 
-            // 6. Affichage du résultat après l'animation (5000 ms = 5 secondes)
+            // Affichage Résultat
             setTimeout(() => {
                 showResult(segments[winnerIndex]);
+                createParticles();
                 spinBtn.disabled = false;
-            }, 5200);
+                spinBtn.innerText = "Invoquer la Sentence";
+            }, 6000);
         });
 
-        // --- GESTION DE LA MODALE (RÉSULTAT) ---
-        function showResult(segment) {
-            const titleEl = document.getElementById("result-title");
-            titleEl.innerText = segment.name;
-            titleEl.style.color = segment.color === "#000000" ? "#ff4444" : segment.color;
+        // --- MODALE & PARTICULES ---
+        const modal = document.getElementById("modal-overlay");
+        const modalContent = document.getElementById("modal-content");
+
+        function showResult(seg) {
+            document.getElementById("result-text").innerHTML = `<span style="color:${seg.color === '#1a1a1a' ? '#000' : seg.color}; text-shadow: 1px 1px 0 #000;">${seg.name}</span>`;
+            document.getElementById("result-desc").innerText = seg.effect;
             
-            document.getElementById("result-effect").innerText = segment.effect;
-            document.getElementById("result-modal").style.display = "flex";
+            modal.style.display = "flex";
+            // Petit delai pour l'opacité transition
+            setTimeout(() => {
+                modal.style.opacity = "1";
+                modalContent.style.transform = "scale(1)";
+            }, 10);
         }
 
         function closeModal() {
-            document.getElementById("result-modal").style.display = "none";
+            modal.style.opacity = "0";
+            modalContent.style.transform = "scale(0.8)";
+            setTimeout(() => {
+                modal.style.display = "none";
+            }, 500);
         }
+
+        // --- SYSTÈME DE PARTICULES MAGIQUES (CANVAS SUPERPOSÉ) ---
+        const pCanvas = document.getElementById("particle-canvas");
+        const pCtx = pCanvas.getContext("2d");
+        let particles = [];
+
+        function resizePCanvas() {
+            pCanvas.width = window.innerWidth;
+            pCanvas.height = window.innerHeight;
+        }
+        window.addEventListener('resize', resizePCanvas);
+        resizePCanvas();
+
+        class Particle {
+            constructor() {
+                this.x = window.innerWidth / 2;
+                this.y = window.innerHeight / 2;
+                this.size = Math.random() * 5 + 2;
+                this.speedX = (Math.random() - 0.5) * 15;
+                this.speedY = (Math.random() - 0.5) * 15;
+                this.color = `hsl(${Math.random() * 50 + 40}, 100%, 70%)`; // Teintes dorées
+                this.life = 100;
+            }
+            update() {
+                this.x += this.speedX;
+                this.y += this.speedY;
+                this.life -= 2;
+                this.size *= 0.95;
+            }
+            draw() {
+                pCtx.fillStyle = this.color;
+                pCtx.globalAlpha = this.life / 100;
+                pCtx.beginPath();
+                pCtx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                pCtx.fill();
+            }
+        }
+
+        function createParticles() {
+            particles = [];
+            for (let i = 0; i < 100; i++) {
+                particles.push(new Particle());
+            }
+            animateParticles();
+        }
+
+        function animateParticles() {
+            pCtx.clearRect(0, 0, pCanvas.width, pCanvas.height);
+            for (let i = 0; i < particles.length; i++) {
+                particles[i].update();
+                particles[i].draw();
+            }
+            particles = particles.filter(p => p.life > 0);
+            if (particles.length > 0) requestAnimationFrame(animateParticles);
+        }
+
     </script>
 </body>
 </html>
