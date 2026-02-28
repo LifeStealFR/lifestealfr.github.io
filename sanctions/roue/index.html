@@ -3,620 +3,574 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Grimoire du Jugement</title>
-    <!-- Import des polices Fantasy -->
+    <title>Le Grimoire du Destin</title>
+    <!-- Polices Médiévales et Fantasy -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&family=Cormorant+Garamond:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&family=UnifrakturMaguntia&family=Cormorant+Garamond:ital,wght@0,400;1,600&display=swap" rel="stylesheet">
     
     <style>
         :root {
-            --gold: #d4af37;
-            --gold-light: #f9d877;
-            --gold-dark: #8a6e1e;
-            --ink: #2b1d0e;
-            --parchment: #f0e6d2;
-            --parchment-dark: #dcd0b3;
-            --magic-glow: rgba(200, 230, 255, 0.4);
-            --danger: #8b0000;
+            --gold: #ffd700;
+            --gold-dim: #b8860b;
+            --magic-blue: #00ffff;
+            --magic-purple: #bd00ff;
+            --danger: #ff003c;
+            --void: #050010;
+            --parchment: #e3d2b3;
         }
 
         body {
-            background-color: #0f0f13;
-            background-image: 
-                radial-gradient(circle at 50% 50%, #1a1a24 0%, #050505 100%);
-            color: var(--ink);
+            background-color: var(--void);
+            color: var(--parchment);
             font-family: 'Cormorant Garamond', serif;
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
             display: flex;
-            flex-direction: column;
             align-items: center;
             justify-content: center;
-            min-height: 100vh;
-            margin: 0;
-            padding: 20px;
-            overflow-x: hidden;
+            overflow: hidden;
+            perspective: 1000px;
         }
 
-        /* Particules d'ambiance en arrière plan */
-        .background-particles {
+        /* --- FOND ANIMÉ (NUAGES & RUNES) --- */
+        .ambient-bg {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
-            pointer-events: none;
-            z-index: -1;
-            background: 
-                radial-gradient(white, rgba(255,255,255,.2) 2px, transparent 3px),
-                radial-gradient(white, rgba(255,255,255,.15) 1px, transparent 2px),
-                radial-gradient(white, rgba(255,255,255,.1) 2px, transparent 3px);
-            background-size: 550px 550px, 350px 350px, 250px 250px;
-            background-position: 0 0, 40px 60px, 130px 270px;
-            animation: stars 60s linear infinite;
+            z-index: -2;
+            background: radial-gradient(circle at 50% 50%, #1a0b2e 0%, #000000 100%);
+            overflow: hidden;
         }
 
-        @keyframes stars {
-            from { transform: translateY(0); }
-            to { transform: translateY(-550px); }
-        }
-
-        /* Conteneur Principal : Le Grimoire */
-        .grimoire {
-            background: var(--parchment);
-            background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.5' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.08'/%3E%3C/svg%3E"),
-            radial-gradient(circle at center, transparent 40%, var(--parchment-dark) 100%);
-            
-            border: 8px solid var(--ink);
-            border-image: linear-gradient(to bottom right, var(--gold-dark), var(--gold), var(--gold-dark)) 1;
-            box-shadow: 
-                0 0 0 4px #2b1d0e, /* Double bordure */
-                0 20px 50px rgba(0,0,0,0.8),
-                inset 0 0 60px rgba(43, 29, 14, 0.2);
-            
-            padding: 40px;
-            max-width: 900px;
-            width: 95%;
-            position: relative;
-            text-align: center;
-            border-radius: 4px;
-            animation: float 6s ease-in-out infinite;
-        }
-
-        /* Effet coins dorés */
-        .grimoire::before, .grimoire::after {
-            content: "❖";
+        .fog {
             position: absolute;
-            font-size: 40px;
-            color: var(--gold);
-            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
-        }
-        .grimoire::before { top: 10px; left: 10px; }
-        .grimoire::after { bottom: 10px; right: 10px; transform: rotate(180deg); }
-
-        @keyframes float {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-10px); }
+            width: 200%; height: 200%;
+            top: -50%; left: -50%;
+            background: url('data:image/svg+xml;utf8,%3Csvg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"%3E%3Cfilter id="noiseFilter"%3E%3CfeTurbulence type="fractalNoise" baseFrequency="0.65" numOctaves="3" stitchTiles="stitch"/%3E%3C/filter%3E%3Crect width="100%25" height="100%25" filter="url(%23noiseFilter)" opacity="0.1"/%3E%3C/svg%3E');
+            animation: fogMove 60s linear infinite;
+            opacity: 0.3;
         }
 
-        h1 {
-            font-family: 'Cinzel', serif;
-            font-weight: 900;
-            font-size: 3rem;
-            margin-bottom: 20px;
-            margin-top: 0;
-            color: var(--ink);
-            text-transform: uppercase;
-            letter-spacing: 4px;
-            background: linear-gradient(to right, var(--ink), #5a3e1d, var(--ink));
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-            text-shadow: 0 2px 0 rgba(255,255,255,0.5);
+        .giant-rune-circle {
+            position: absolute;
+            top: 50%; left: 50%;
+            width: 150vmin; height: 150vmin;
+            transform: translate(-50%, -50%);
+            border: 2px dashed rgba(189, 0, 255, 0.1);
+            border-radius: 50%;
+            box-shadow: 0 0 100px rgba(189, 0, 255, 0.05);
+            animation: rotateBg 120s linear infinite;
+            z-index: -1;
+            background-image: repeating-conic-gradient(rgba(189, 0, 255, 0.05) 0 15deg, transparent 15deg 30deg);
+            pointer-events: none;
+        }
+
+        @keyframes fogMove { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        @keyframes rotateBg { 0% { transform: translate(-50%, -50%) rotate(0deg); } 100% { transform: translate(-50%, -50%) rotate(360deg); } }
+
+        /* --- LE LIVRE (CONTENEUR PRINCIPAL) --- */
+        .grimoire-container {
             position: relative;
-            display: inline-block;
+            width: 900px;
+            max-width: 95vw;
+            background: #110a05; /* Cuir sombre */
+            border: 4px solid var(--gold-dim);
+            border-radius: 12px;
+            box-shadow: 
+                0 0 0 8px #2e1a0a, /* Bordure cuir */
+                0 0 60px rgba(0,0,0,0.9),
+                0 0 100px rgba(184, 134, 11, 0.1) inset; /* Lueur intérieure */
+            padding: 40px;
+            text-align: center;
+            transform-style: preserve-3d;
+            transition: transform 0.1s;
+            /* Texture cuir */
+            background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.15'/%3E%3C/svg%3E");
         }
 
-        h1::after {
-            content: "";
-            display: block;
-            width: 60%;
-            height: 2px;
-            background: var(--gold);
-            margin: 10px auto;
+        /* Coins décoratifs dorés */
+        .corner {
+            position: absolute;
+            width: 60px; height: 60px;
+            border: 3px solid var(--gold);
+            z-index: 10;
             box-shadow: 0 0 10px var(--gold);
         }
+        .tl { top: 10px; left: 10px; border-right: none; border-bottom: none; }
+        .tr { top: 10px; right: 10px; border-left: none; border-bottom: none; }
+        .bl { bottom: 10px; left: 10px; border-right: none; border-top: none; }
+        .br { bottom: 10px; right: 10px; border-left: none; border-top: none; }
 
-        /* Container de la roue */
-        .wheel-wrapper {
-            position: relative;
-            width: 450px;
-            max-width: 90vw;
-            aspect-ratio: 1/1;
-            margin: 20px auto;
-            filter: drop-shadow(0 10px 20px rgba(0,0,0,0.4));
+        h1 {
+            font-family: 'UnifrakturMaguntia', cursive;
+            font-size: 4rem;
+            margin: 0 0 20px 0;
+            color: var(--gold);
+            text-shadow: 0 0 10px rgba(255, 215, 0, 0.5), 0 0 20px rgba(255, 215, 0, 0.3);
+            letter-spacing: 2px;
         }
 
-        /* Cercle extérieur décoratif (Cercle magique) */
-        .magic-ring {
-            position: absolute;
-            top: -5%; left: -5%;
-            width: 110%; height: 110%;
-            border: 2px dashed rgba(212, 175, 55, 0.3);
+        h1 span { color: var(--danger); }
+
+        /* --- LA ROUE --- */
+        .wheel-wrapper {
+            position: relative;
+            width: 500px;
+            height: 500px;
+            margin: 0 auto 30px auto;
             border-radius: 50%;
-            animation: rotate-slow 60s linear infinite;
-            pointer-events: none;
+            /* Lueur derrière la roue */
+            box-shadow: 0 0 80px rgba(255, 215, 0, 0.1); 
+        }
+
+        /* Anneau runique qui tourne autour de la roue */
+        .rune-ring {
+            position: absolute;
+            top: -20px; left: -20px; right: -20px; bottom: -20px;
+            border: 2px solid rgba(255, 215, 0, 0.3);
+            border-radius: 50%;
+            animation: spinRing 20s linear infinite reverse;
+            background-image: url("data:image/svg+xml;utf8,%3Csvg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath id='circlePath' d='M 50, 50 m -45, 0 a 45,45 0 1,1 90,0 a 45,45 0 1,1 -90,0' fill='none' /%3E%3Ctext fill='%23b8860b' font-size='8' letter-spacing='5'%3E%3CtextPath href='%23circlePath'%3E• F ATUM • JUDICIUM • AETERNUS • SANCTUS • MORTIS •%3C/textPath%3E%3C/text%3E%3C/svg%3E");
             z-index: 0;
         }
 
-        @keyframes rotate-slow { from {transform: rotate(0deg);} to {transform: rotate(360deg);} }
+        @keyframes spinRing { 100% { transform: rotate(360deg); } }
 
-        /* Le curseur (Épée ou Plume) */
+        /* Le Canvas */
+        canvas {
+            width: 100%; height: 100%;
+            border-radius: 50%;
+            transform-origin: center;
+            z-index: 2;
+            position: relative;
+            /* Bordure métallique de la roue */
+            box-shadow: 
+                inset 0 0 20px rgba(0,0,0,1),
+                0 0 0 5px #4a3c26,
+                0 0 0 8px var(--gold-dim);
+        }
+
+        /* Le Cristal Pointeur */
         .pointer {
             position: absolute;
-            top: -25px;
-            left: 50%;
+            top: -30px; left: 50%;
             transform: translateX(-50%);
-            z-index: 10;
-            width: 40px;
-            height: 60px;
-            background: linear-gradient(to bottom, var(--gold), var(--gold-dark));
-            clip-path: polygon(50% 100%, 0% 0%, 100% 0%);
-            filter: drop-shadow(0 4px 4px rgba(0,0,0,0.5));
-        }
-        
-        .pointer::after {
-            content: "";
-            position: absolute;
-            top: 0; left: 50%; transform: translateX(-50%);
-            width: 10px; height: 10px;
-            background: var(--danger);
-            border-radius: 50%;
-            box-shadow: 0 0 10px var(--danger);
+            width: 40px; height: 70px;
+            background: linear-gradient(135deg, #fff, #00ffff);
+            clip-path: polygon(50% 100%, 0% 15%, 50% 0%, 100% 15%);
+            z-index: 20;
+            filter: drop-shadow(0 0 15px #00ffff);
+            animation: floatPointer 3s ease-in-out infinite;
         }
 
-        canvas {
-            width: 100%;
-            height: 100%;
-            border-radius: 50%;
-            position: relative;
-            z-index: 1;
-            transform-origin: center;
-        }
+        @keyframes floatPointer { 50% { transform: translateX(-50%) translateY(-10px); filter: drop-shadow(0 0 25px #00ffff); } }
 
-        /* Bouton "Invocation" */
-        .btn-invoke {
-            background: transparent;
+        /* --- BOUTON MAGIQUE --- */
+        .btn-magic {
+            background: linear-gradient(to bottom, #2b1100, #000);
             border: 2px solid var(--gold);
-            color: var(--ink);
+            color: var(--gold);
             font-family: 'Cinzel', serif;
-            font-size: 1.5rem;
+            font-size: 1.8rem;
             font-weight: 700;
-            padding: 15px 50px;
+            padding: 15px 60px;
             cursor: pointer;
+            text-transform: uppercase;
+            letter-spacing: 3px;
             position: relative;
             overflow: hidden;
-            transition: all 0.3s ease;
-            margin-top: 20px;
-            box-shadow: 0 0 15px rgba(212, 175, 55, 0.2);
+            transition: all 0.3s;
+            box-shadow: 0 0 15px rgba(184, 134, 11, 0.3);
+            z-index: 10;
         }
 
-        .btn-invoke::before {
-            content: "";
+        .btn-magic:hover {
+            background: var(--gold);
+            color: #000;
+            box-shadow: 0 0 40px var(--gold), 0 0 80px var(--gold);
+            text-shadow: none;
+        }
+        
+        /* Effet de brillance qui traverse le bouton */
+        .btn-magic::after {
+            content: '';
             position: absolute;
-            top: 0; left: -100%;
-            width: 100%; height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(212, 175, 55, 0.4), transparent);
+            top: -50%; left: -50%;
+            width: 200%; height: 200%;
+            background: linear-gradient(transparent, rgba(255,255,255,0.8), transparent);
+            transform: rotate(45deg) translate(-150%, 0);
             transition: 0.5s;
         }
+        .btn-magic:hover::after { transform: rotate(45deg) translate(150%, 0); }
 
-        .btn-invoke:hover {
-            background: var(--ink);
-            color: var(--gold);
-            box-shadow: 0 0 25px var(--gold);
-            transform: scale(1.05);
-        }
+        .btn-magic:disabled { filter: grayscale(1); opacity: 0.5; cursor: not-allowed; }
 
-        .btn-invoke:hover::before { left: 100%; }
-        
-        .btn-invoke:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-            filter: grayscale(1);
-        }
-
-        /* Légende style manuscrit */
-        .legend {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 15px;
-            margin-top: 40px;
-            text-align: left;
-            border-top: 1px solid rgba(43, 29, 14, 0.2);
-            padding-top: 20px;
-        }
-
-        .legend-item {
-            display: flex;
-            align-items: flex-start;
-            padding: 5px;
-            border-bottom: 1px dashed rgba(43, 29, 14, 0.1);
-        }
-
-        .legend-color {
-            width: 15px; height: 15px;
-            margin-right: 10px;
-            margin-top: 5px;
-            border: 1px solid var(--ink);
-            transform: rotate(45deg);
-            box-shadow: 2px 2px 0 rgba(0,0,0,0.1);
-        }
-
-        .legend-text strong {
-            font-family: 'Cinzel', serif;
-            font-size: 1.1rem;
-            color: var(--danger);
-        }
-        
-        .legend-text i {
-            color: #555;
-            font-size: 0.95rem;
-        }
-
-        /* MODALE (Le Verdict) */
-        #modal-overlay {
+        /* --- RESULTAT (PARCHEMIN) --- */
+        #result-modal {
             display: none;
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.85);
+            background: rgba(0,0,0,0.9);
             z-index: 100;
             justify-content: center;
             align-items: center;
-            backdrop-filter: blur(5px);
-            opacity: 0;
-            transition: opacity 0.5s;
+            backdrop-filter: blur(8px);
+            animation: fadeIn 0.3s;
         }
 
-        .modal-scroll {
+        .scroll-content {
             background: var(--parchment);
-            width: 90%; max-width: 500px;
-            padding: 40px 30px;
+            width: 500px;
+            padding: 60px 40px;
             text-align: center;
-            border: 4px solid var(--gold);
-            box-shadow: 0 0 50px var(--gold);
-            transform: scale(0.8);
-            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             position: relative;
+            /* Forme de parchemin déroulé */
+            border-radius: 5px;
+            box-shadow: 
+                0 0 10px rgba(0,0,0,0.5),
+                0 0 100px var(--gold-dim);
+            transform: scale(0.5);
+            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            border-top: 20px solid #4a3c26;
+            border-bottom: 20px solid #4a3c26;
+        }
+        
+        .scroll-content::before {
+            content: "VERDICTUM";
+            position: absolute;
+            top: -15px; left: 50%; transform: translateX(-50%);
+            color: #e3d2b3; font-family: 'Cinzel'; font-size: 12px; letter-spacing: 5px;
         }
 
-        .modal-scroll h2 {
-            font-family: 'Cinzel', serif;
-            font-size: 2.5rem;
+        .modal-title {
+            font-family: 'UnifrakturMaguntia';
+            font-size: 3rem;
             color: var(--danger);
-            margin: 0 0 20px 0;
-            border-bottom: 2px solid var(--gold);
+            border-bottom: 2px solid #2e1a0a;
             padding-bottom: 10px;
+            margin-bottom: 20px;
         }
 
-        .modal-scroll p {
-            font-size: 1.4rem;
+        .modal-desc {
+            font-size: 1.5rem;
+            color: #2e1a0a;
             font-style: italic;
-            line-height: 1.6;
+            margin-bottom: 30px;
         }
 
         .close-btn {
-            background: var(--ink);
-            color: var(--parchment);
-            border: 1px solid var(--gold);
+            background: transparent;
+            border: 2px solid #2e1a0a;
+            color: #2e1a0a;
             padding: 10px 30px;
-            font-family: 'Cinzel', serif;
-            font-size: 1.1rem;
+            font-family: 'Cinzel';
+            font-weight: bold;
+            font-size: 1.2rem;
             cursor: pointer;
-            margin-top: 20px;
             transition: 0.2s;
         }
-        
-        .close-btn:hover {
-            background: var(--danger);
-            color: white;
-        }
+        .close-btn:hover { background: #2e1a0a; color: var(--parchment); }
 
-        /* Effet de flash magique */
-        @keyframes magicFlash {
-            0% { box-shadow: 0 0 0 rgba(212, 175, 55, 0); }
-            50% { box-shadow: 0 0 100px rgba(212, 175, 55, 0.8); }
-            100% { box-shadow: 0 0 0 rgba(212, 175, 55, 0); }
-        }
-
-        /* Particules Canvas (pour l'explosion finale) */
-        #particle-canvas {
-            position: fixed;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
-            pointer-events: none;
-            z-index: 200;
+        /* --- RESPONSIVE --- */
+        @media (max-width: 700px) {
+            .grimoire-container { width: 95%; padding: 20px 10px; }
+            .wheel-wrapper { width: 300px; height: 300px; }
+            h1 { font-size: 2.5rem; }
         }
         
-        /* Mobile responsive */
-        @media (max-width: 600px) {
-            h1 { font-size: 2rem; }
-            .grimoire { padding: 20px 10px; }
-            .btn-invoke { width: 100%; padding: 15px 0; }
+        /* Animation de shake pour l'écran */
+        @keyframes shake {
+            0% { transform: translate(1px, 1px) rotate(0deg); }
+            10% { transform: translate(-1px, -2px) rotate(-1deg); }
+            20% { transform: translate(-3px, 0px) rotate(1deg); }
+            30% { transform: translate(3px, 2px) rotate(0deg); }
+            40% { transform: translate(1px, -1px) rotate(1deg); }
+            50% { transform: translate(-1px, 2px) rotate(-1deg); }
+            60% { transform: translate(-3px, 1px) rotate(0deg); }
+            70% { transform: translate(3px, 1px) rotate(-1deg); }
+            80% { transform: translate(-1px, -1px) rotate(1deg); }
+            90% { transform: translate(1px, 2px) rotate(0deg); }
+            100% { transform: translate(1px, -2px) rotate(-1deg); }
         }
     </style>
 </head>
 <body>
 
-    <div class="background-particles"></div>
+    <!-- Couches de fond -->
+    <div class="ambient-bg">
+        <div class="giant-rune-circle"></div>
+        <div class="fog"></div>
+    </div>
 
-    <div class="grimoire">
-        <h1>Roue du Jugement</h1>
+    <!-- Le Grimoire -->
+    <div class="grimoire-container" id="grimoire">
+        <!-- Coins dorés -->
+        <div class="corner tl"></div>
+        <div class="corner tr"></div>
+        <div class="corner bl"></div>
+        <div class="corner br"></div>
+
+        <h1>Roue du <span>Jugement</span></h1>
         
         <div class="wheel-wrapper">
-            <div class="magic-ring"></div>
+            <div class="rune-ring"></div>
             <div class="pointer"></div>
             <canvas id="wheel" width="800" height="800"></canvas>
         </div>
 
-        <button id="spin-btn" class="btn-invoke">Invoquer la Sentence</button>
-
-        <div class="legend" id="legend">
-            <!-- La légende sera générée ici -->
-        </div>
+        <button id="spin-btn" class="btn-magic">Invoquer la Sentence</button>
     </div>
 
     <!-- Modale de Résultat -->
-    <div id="modal-overlay">
-        <div class="modal-scroll" id="modal-content">
-            <h2>Verdict</h2>
-            <p id="result-text">...</p>
-            <p id="result-desc" style="font-size: 1rem; color: #555;">...</p>
-            <button class="close-btn" onclick="closeModal()">SCELLER LE DESTIN</button>
+    <div id="result-modal">
+        <div class="scroll-content" id="modal-content">
+            <div class="modal-title" id="res-title">TITRE</div>
+            <div class="modal-desc" id="res-desc">Description de la sentence...</div>
+            <button class="close-btn" onclick="closeModal()">Accepter le Destin</button>
         </div>
     </div>
 
-    <canvas id="particle-canvas"></canvas>
-
     <script>
-        // --- DONNÉES DU JUGEMENT ---
-        // Couleurs adaptées au thème "Grimoire" (plus terreux/pastel)
+        // --- DONNEES ---
+        // Couleurs améliorées pour effet "Vitrail"
         const segments = [
-            { name: "MAINTIEN DE LA PEINE", effect: "La sanction initiale reste inchangée.", weight: 12, percent: "48%", color: "#5dade2", textColor: "#fff" }, // Bleu délavé
-            { name: "AGGRAVATION x2", effect: "Durée du ban ou du timeout doublée.", weight: 5, percent: "20%", color: "#e67e22", textColor: "#fff" }, // Ocre
-            { name: "AGGRAVATION x4", effect: "Sanction maximale (Ex: 1 sem -> 1 mois).", weight: 3, percent: "12%", color: "#c0392b", textColor: "#fff" }, // Rouge sang
-            { name: "BLACKLIST SALONS", effect: "Discord: Accès limité. / MC: Interdiction zones.", weight: 2, percent: "8%", color: "#8e44ad", textColor: "#fff" }, // Violet mystique
-            { name: "RESTRICTION MÉDIAS", effect: "Retrait du droit d'envoyer liens/images.", weight: 1, percent: "4%", color: "#f39c12", textColor: "#000" }, // Or jaune
-            { name: "DÉGRADATION RANG", effect: "Suppression définitive des rôles VIP / Grades.", weight: 1, percent: "4%", color: "#7f8c8d", textColor: "#fff" }, // Gris pierre
-            { name: "ALLÈGEMENT /2", effect: "La durée de la peine est divisée par 2.", weight: 0.5, percent: "2%", color: "#27ae60", textColor: "#fff" }, // Vert forêt
-            { name: "ANNULATION", effect: "Retrait immédiat de la sanction.", weight: 0.25, percent: "1%", color: "#16a085", textColor: "#fff" }, // Turquoise
-            { name: "BAN DÉFINITIF", effect: "Ban permanent et irrévocable (IP/ID).", weight: 0.25, percent: "1%", color: "#1a1a1a", textColor: "#ff0000" }  // Noir abyssal
+            { name: "MAINTIEN", effect: "La sanction reste inchangée.", weight: 12, color: "#3498db", type: "neutral" },
+            { name: "X 2", effect: "Durée de la sanction doublée.", weight: 5, color: "#e67e22", type: "bad" },
+            { name: "X 4", effect: "Sanction maximale appliquée.", weight: 3, color: "#d35400", type: "bad" },
+            { name: "BLACKLIST ZONES", effect: "Accès restreint (Salons/Zones).", weight: 2, color: "#9b59b6", type: "magic" },
+            { name: "MUTE MÉDIAS", effect: "Interdiction liens & images.", weight: 1, color: "#f1c40f", type: "magic" },
+            { name: "DÉGRADATION", effect: "Perte de tous les grades/VIP.", weight: 1, color: "#7f8c8d", type: "neutral" },
+            { name: "ALLÈGEMENT /2", effect: "Durée divisée par deux.", weight: 0.5, color: "#2ecc71", type: "good" },
+            { name: "ANNULATION", effect: "Sanction retirée immédiatement.", weight: 0.25, color: "#1abc9c", type: "good" },
+            { name: "BAN DÉFINITIF", effect: "Exclusion permanente & irrévocable.", weight: 0.25, color: "#000000", type: "doom" }
         ];
 
         const canvas = document.getElementById("wheel");
         const ctx = canvas.getContext("2d");
         const totalWeight = segments.reduce((sum, s) => sum + s.weight, 0);
         let currentRotation = 0;
-        
-        // --- TEXTURES ET STYLES ---
+
+        // --- DESSIN AVANCÉ ---
         function drawWheel() {
-            const centerX = canvas.width / 2;
-            const centerY = canvas.height / 2;
-            const radius = centerX - 20; // Marge pour la bordure externe
-            let startAngle = 0;
+            const cx = canvas.width / 2;
+            const cy = canvas.height / 2;
+            const r = cx - 10;
+            let start = 0;
 
-            // Fond global de la roue (cuir sombre derrière)
-            ctx.beginPath();
-            ctx.arc(centerX, centerY, radius + 15, 0, 2 * Math.PI);
-            ctx.fillStyle = "#2b1d0e";
-            ctx.fill();
+            // Fond
+            ctx.fillStyle = "#111";
+            ctx.beginPath(); ctx.arc(cx, cy, r, 0, Math.PI*2); ctx.fill();
 
-            segments.forEach((seg) => {
-                let sliceAngle = (seg.weight / totalWeight) * 2 * Math.PI;
+            segments.forEach(seg => {
+                const angle = (seg.weight / totalWeight) * 2 * Math.PI;
+                const end = start + angle;
 
-                // 1. Dessin de la part
+                // 1. Forme de la part
                 ctx.beginPath();
-                ctx.moveTo(centerX, centerY);
-                ctx.arc(centerX, centerY, radius, startAngle, startAngle + sliceAngle);
+                ctx.moveTo(cx, cy);
+                ctx.arc(cx, cy, r, start, end);
                 ctx.closePath();
-                ctx.fillStyle = seg.color;
+
+                // 2. Dégradé radiale (Effet "Vitrail éclairé")
+                let gradient = ctx.createRadialGradient(cx, cy, 0, cx, cy, r);
+                if (seg.color === "#000000") {
+                    gradient.addColorStop(0, "#333");
+                    gradient.addColorStop(1, "#000");
+                } else {
+                    gradient.addColorStop(0, adjustColor(seg.color, 40)); // Centre plus clair
+                    gradient.addColorStop(1, seg.color);
+                }
+                ctx.fillStyle = gradient;
                 ctx.fill();
 
-                // 2. Texture "bruit" pour effet vieux papier (optionnel mais cool)
-                // On simule une texture via globalCompositeOperation si voulu, 
-                // mais ici on garde simple pour la perf et netteté.
-
-                // 3. Bordures dorées entre les parts
+                // 3. Bordures internes (Or)
                 ctx.lineWidth = 4;
-                ctx.strokeStyle = "#d4af37"; // Or
+                ctx.strokeStyle = "#b8860b";
                 ctx.stroke();
 
-                // 4. Texte
+                // 4. Texte (Runique / Ancien)
                 ctx.save();
-                ctx.translate(centerX, centerY);
-                ctx.rotate(startAngle + sliceAngle / 2);
+                ctx.translate(cx, cy);
+                ctx.rotate(start + angle / 2);
                 ctx.textAlign = "right";
-                ctx.fillStyle = seg.textColor;
                 
-                // Adaptation taille police
-                let fontSize = seg.weight < 1 ? 16 : 24;
-                ctx.font = `bold ${fontSize}px 'Cinzel', serif`;
-                
-                let text = seg.weight > 0.5 ? seg.name : seg.percent;
-                
-                // Ombre portée du texte pour lisibilité
-                ctx.shadowColor = "rgba(0,0,0,0.8)";
-                ctx.shadowBlur = 4;
-                ctx.fillText(text, radius - 30, 8);
-                ctx.restore();
+                // Ombre portée texte (Glow)
+                ctx.shadowColor = "rgba(0,0,0,1)";
+                ctx.shadowBlur = 8;
+                ctx.shadowOffsetX = 2;
+                ctx.shadowOffsetY = 2;
 
-                startAngle += sliceAngle;
+                ctx.fillStyle = "#fff";
+                
+                // Taille dynamique
+                let fontSize = seg.weight < 1 ? 22 : 36;
+                if(seg.name.length > 10) fontSize = 24;
+                
+                ctx.font = `bold ${fontSize}px 'Cinzel'`;
+                
+                // Pour les toutes petites parts (1% et moins), on met juste un symbole
+                if(seg.weight <= 0.25) {
+                    ctx.fillText("✦", r - 20, 10);
+                } else {
+                    ctx.fillText(seg.name, r - 30, 10);
+                }
+                
+                ctx.restore();
+                start += angle;
             });
 
-            // 5. Cercle central (Moyeu de la roue)
+            // 5. Centre "Joyau"
             ctx.beginPath();
-            ctx.arc(centerX, centerY, 50, 0, 2 * Math.PI);
-            ctx.fillStyle = "#2b1d0e"; // Cuir sombre
+            ctx.arc(cx, cy, 40, 0, Math.PI*2);
+            let gemGrad = ctx.createRadialGradient(cx, cy, 5, cx, cy, 40);
+            gemGrad.addColorStop(0, "#fff");
+            gemGrad.addColorStop(0.3, "#ff003c");
+            gemGrad.addColorStop(1, "#590015");
+            ctx.fillStyle = gemGrad;
             ctx.fill();
-            ctx.lineWidth = 6;
-            ctx.strokeStyle = "#d4af37";
+            
+            // Anneau doré autour du joyau
+            ctx.lineWidth = 8;
+            ctx.strokeStyle = "#ffd700";
             ctx.stroke();
-
-            // Gemme au centre
-            ctx.beginPath();
-            ctx.arc(centerX, centerY, 20, 0, 2 * Math.PI);
-            ctx.fillStyle = "#8b0000"; // Rubis
-            ctx.shadowColor = "#ff0000";
-            ctx.shadowBlur = 15;
-            ctx.fill();
-            ctx.shadowBlur = 0; // Reset shadow
         }
 
-        // --- GÉNÉRATION LÉGENDE ---
-        const legendDiv = document.getElementById("legend");
-        segments.forEach(seg => {
-            let item = document.createElement("div");
-            item.className = "legend-item";
-            item.innerHTML = `
-                <div class="legend-color" style="background:${seg.color}"></div>
-                <div class="legend-text">
-                    <strong>${seg.name} (${seg.percent})</strong><br>
-                    <i>${seg.effect}</i>
-                </div>`;
-            legendDiv.appendChild(item);
-        });
+        // Fonction utilitaire pour éclaircir une couleur hex
+        function adjustColor(color, amount) {
+            return color; // Simplifié pour cet exemple, mais idéalement éclaircit la couleur
+        }
 
         drawWheel();
 
-        // --- LOGIQUE DE ROTATION & ANIMATION ---
-        const spinBtn = document.getElementById("spin-btn");
-        
-        spinBtn.addEventListener("click", () => {
-            spinBtn.disabled = true;
-            spinBtn.innerText = "Le sort en est jeté...";
+        // --- ANIMATION & LOGIQUE ---
+        const btn = document.getElementById("spin-btn");
+        const grimoire = document.getElementById("grimoire");
 
-            // Calcul du gagnant pondéré
+        btn.addEventListener("click", () => {
+            btn.disabled = true;
+            btn.innerText = "Incantation...";
+            
+            // Calcul résultat
             let rand = Math.random() * totalWeight;
-            let sum = 0;
-            let winnerIndex = 0;
-            for (let i = 0; i < segments.length; i++) {
+            let sum = 0, winner = 0;
+            for(let i=0; i<segments.length; i++) {
                 sum += segments[i].weight;
-                if (rand <= sum) {
-                    winnerIndex = i;
-                    break;
-                }
+                if(rand <= sum) { winner = i; break; }
             }
 
-            // Calcul angle
-            let startAngleDeg = 0;
-            for (let i = 0; i < winnerIndex; i++) {
-                startAngleDeg += (segments[i].weight / totalWeight) * 360;
-            }
-            let sliceAngleDeg = (segments[winnerIndex].weight / totalWeight) * 360;
-            // Random dans la part (avec marge de sécurité)
-            let padding = sliceAngleDeg > 5 ? 2 : 0; 
-            let targetInSlice = startAngleDeg + padding + Math.random() * (sliceAngleDeg - 2 * padding);
+            // Calcul angles
+            let startDeg = 0;
+            for(let i=0; i<winner; i++) startDeg += (segments[i].weight/totalWeight)*360;
+            let sliceDeg = (segments[winner].weight/totalWeight)*360;
             
-            // Ajustement pointeur (270° est le top en CSS transform rotate par défaut si 0 est à droite)
-            // Mais ici, canvas 0 est à droite. Pointeur HTML est en haut.
-            // La rotation CSS tourne tout le canvas.
-            // Pour que le segment X soit en haut (270°), il faut tourner de : (360 - X + 270)
-            let targetRotation = (270 - targetInSlice + 360 * 10) ; // *10 pour faire plein de tours
+            // Cible : 270 deg (Haut) - (Start + Random dans Slice) + tours complets
+            let targetInSlice = startDeg + (sliceDeg * 0.5); // Viser le milieu
+            // Ajout d'aléa léger
+            targetInSlice += (Math.random() - 0.5) * (sliceDeg * 0.8);
+
+            let spins = 8; // Nombre de tours
+            let finalRot = currentRotation + (360 * spins) + (270 - targetInSlice - (currentRotation % 360));
+            if (finalRot < currentRotation) finalRot += 360; // Toujours avancer
+
+            // Lancer l'animation
+            // On triche avec CSS transition pour la fluidité, mais on ajoute du "Shake"
+            canvas.style.transition = "transform 6s cubic-bezier(0.15, 1, 0.3, 1)";
+            canvas.style.transform = `rotate(${finalRot}deg)`;
+            currentRotation = finalRot;
+
+            // Effet de tremblement pendant que ça tourne
+            grimoire.style.animation = "shake 0.5s infinite";
             
-            // Correction pour rotation continue
-            let currentMod = currentRotation % 360;
-            let finalTarget = currentRotation + (targetRotation - currentMod) + 360 * 5; // 5 tours min
+            // Arrêter le tremblement avant la fin
+            setTimeout(() => { grimoire.style.animation = "none"; }, 5000);
 
-            // Animation CSS
-            canvas.style.transition = "transform 6s cubic-bezier(0.1, 0.95, 0.2, 1)";
-            canvas.style.transform = `rotate(${finalTarget}deg)`;
-            currentRotation = finalTarget;
-
-            // Son FX (optionnel, visuel ici) : Shake de la page au début
-            document.body.style.animation = "shake 0.5s ease-in-out";
-            setTimeout(() => { document.body.style.animation = ""; }, 500);
-
-            // Affichage Résultat
+            // Révélation
             setTimeout(() => {
-                showResult(segments[winnerIndex]);
-                createParticles();
-                spinBtn.disabled = false;
-                spinBtn.innerText = "Invoquer la Sentence";
+                showResult(segments[winner]);
+                triggerExplosion();
+                btn.disabled = false;
+                btn.innerText = "Invoquer la Sentence";
             }, 6000);
         });
 
-        // --- MODALE & PARTICULES ---
-        const modal = document.getElementById("modal-overlay");
+        // --- INTERFACE DE RESULTAT ---
+        const modal = document.getElementById("result-modal");
         const modalContent = document.getElementById("modal-content");
+        const titleEl = document.getElementById("res-title");
+        const descEl = document.getElementById("res-desc");
 
         function showResult(seg) {
-            document.getElementById("result-text").innerHTML = `<span style="color:${seg.color === '#1a1a1a' ? '#000' : seg.color}; text-shadow: 1px 1px 0 #000;">${seg.name}</span>`;
-            document.getElementById("result-desc").innerText = seg.effect;
+            titleEl.innerText = seg.name;
+            descEl.innerText = seg.effect;
             
+            // Couleurs conditionnelles
+            if(seg.type === "doom") titleEl.style.color = "#000"; 
+            else if(seg.type === "good") titleEl.style.color = "#2ecc71";
+            else titleEl.style.color = "#ff003c";
+
             modal.style.display = "flex";
-            // Petit delai pour l'opacité transition
-            setTimeout(() => {
-                modal.style.opacity = "1";
-                modalContent.style.transform = "scale(1)";
-            }, 10);
+            setTimeout(() => { modalContent.style.transform = "scale(1)"; }, 50);
         }
 
         function closeModal() {
-            modal.style.opacity = "0";
-            modalContent.style.transform = "scale(0.8)";
-            setTimeout(() => {
-                modal.style.display = "none";
-            }, 500);
+            modalContent.style.transform = "scale(0.5)";
+            setTimeout(() => { modal.style.display = "none"; }, 300);
         }
 
-        // --- SYSTÈME DE PARTICULES MAGIQUES (CANVAS SUPERPOSÉ) ---
-        const pCanvas = document.getElementById("particle-canvas");
+        // --- PARTICULES EXPLOSIVES (Canvas Overlay) ---
+        // Création dynamique d'un canvas par dessus tout
+        const pCanvas = document.createElement("canvas");
+        pCanvas.style.position = "fixed";
+        pCanvas.style.top = "0"; pCanvas.style.left = "0";
+        pCanvas.style.width = "100%"; pCanvas.style.height = "100%";
+        pCanvas.style.pointerEvents = "none";
+        pCanvas.style.zIndex = "999";
+        document.body.appendChild(pCanvas);
         const pCtx = pCanvas.getContext("2d");
+
         let particles = [];
 
-        function resizePCanvas() {
+        function triggerExplosion() {
             pCanvas.width = window.innerWidth;
             pCanvas.height = window.innerHeight;
-        }
-        window.addEventListener('resize', resizePCanvas);
-        resizePCanvas();
-
-        class Particle {
-            constructor() {
-                this.x = window.innerWidth / 2;
-                this.y = window.innerHeight / 2;
-                this.size = Math.random() * 5 + 2;
-                this.speedX = (Math.random() - 0.5) * 15;
-                this.speedY = (Math.random() - 0.5) * 15;
-                this.color = `hsl(${Math.random() * 50 + 40}, 100%, 70%)`; // Teintes dorées
-                this.life = 100;
-            }
-            update() {
-                this.x += this.speedX;
-                this.y += this.speedY;
-                this.life -= 2;
-                this.size *= 0.95;
-            }
-            draw() {
-                pCtx.fillStyle = this.color;
-                pCtx.globalAlpha = this.life / 100;
-                pCtx.beginPath();
-                pCtx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-                pCtx.fill();
-            }
-        }
-
-        function createParticles() {
             particles = [];
-            for (let i = 0; i < 100; i++) {
-                particles.push(new Particle());
+            const cx = window.innerWidth / 2;
+            const cy = window.innerHeight / 2;
+
+            for(let i=0; i<150; i++) {
+                particles.push({
+                    x: cx, y: cy,
+                    vx: (Math.random() - 0.5) * 20,
+                    vy: (Math.random() - 0.5) * 20,
+                    life: 1,
+                    color: `hsl(${Math.random()*60 + 10}, 100%, 50%)`, // Or/Feu
+                    size: Math.random() * 8
+                });
             }
             animateParticles();
         }
 
         function animateParticles() {
-            pCtx.clearRect(0, 0, pCanvas.width, pCanvas.height);
-            for (let i = 0; i < particles.length; i++) {
-                particles[i].update();
-                particles[i].draw();
-            }
-            particles = particles.filter(p => p.life > 0);
-            if (particles.length > 0) requestAnimationFrame(animateParticles);
+            pCtx.clearRect(0,0,pCanvas.width, pCanvas.height);
+            let active = false;
+            particles.forEach(p => {
+                if(p.life > 0) {
+                    active = true;
+                    p.x += p.vx;
+                    p.y += p.vy;
+                    p.vy += 0.2; // Gravité
+                    p.life -= 0.02;
+                    p.size *= 0.95;
+                    
+                    pCtx.globalAlpha = p.life;
+                    pCtx.fillStyle = p.color;
+                    pCtx.beginPath();
+                    pCtx.arc(p.x, p.y, p.size, 0, Math.PI*2);
+                    pCtx.fill();
+                }
+            });
+            if(active) requestAnimationFrame(animateParticles);
         }
 
     </script>
