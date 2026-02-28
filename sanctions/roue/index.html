@@ -3,361 +3,394 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cardinal System - Divine Wheel</title>
-    <!-- Polices Tech & Gaming -->
+    <title>System Call: Generate Luminous Element</title>
+    
+    <!-- Polices : Cinzel pour le côté Divin/Fantasy, Orbitron pour la Tech subtile -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@500;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Cinzel:wght@400;600&family=Rajdhani:wght@300;500;700&display=swap" rel="stylesheet">
     
     <style>
         :root {
-            --sao-blue: #00f0ff;
-            --sao-blue-dim: #007c85;
-            --sao-gold: #ffd700;
-            --sao-orange: #ffaa00;
-            --sao-red: #ff3333;
-            --sao-dark: #0a0a10;
-            --glass-bg: rgba(10, 15, 30, 0.85);
+            --god-gold: #ffd700;
+            --god-gold-light: #fffec4;
+            --god-glow: rgba(255, 215, 0, 0.6);
+            --stacia-pink: #ffb7b2;
+            --vector-red: #ff003c;
+            --void-bg: #030005;
+            --glass: rgba(20, 10, 30, 0.65);
         }
 
         body {
-            background-color: #050508;
+            background-color: var(--void-bg);
             color: #fff;
-            font-family: 'Rajdhani', sans-serif;
+            font-family: 'Cinzel', serif;
             margin: 0;
+            height: 100vh;
             overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            perspective: 1200px;
+        }
+
+        /* --- FOND COSMIQUE (WORLD END ALTAR) --- */
+        .universe {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: radial-gradient(circle at 50% 120%, #2a0a3d 0%, #000000 70%);
+            z-index: -3;
+        }
+        
+        .stars {
+            position: absolute;
+            width: 100%; height: 100%;
+            background-image: 
+                radial-gradient(white, rgba(255,255,255,.2) 2px, transparent 2px),
+                radial-gradient(white, rgba(255,255,255,.15) 1px, transparent 2px);
+            background-size: 550px 550px, 350px 350px;
+            opacity: 0.6;
+            animation: starMove 100s linear infinite;
+        }
+
+        /* Lignes de flux de données (Aurora) */
+        .aurora {
+            position: absolute;
+            top: -50%; left: -50%; width: 200%; height: 200%;
+            background: conic-gradient(from 180deg at 50% 50%, transparent 0deg, rgba(255, 0, 200, 0.05) 60deg, transparent 120deg, rgba(0, 200, 255, 0.05) 280deg, transparent 360deg);
+            animation: rotateAurora 60s linear infinite;
+            z-index: -2;
+            filter: blur(50px);
+        }
+
+        @keyframes starMove { from { transform: translateY(0); } to { transform: translateY(-200px); } }
+        @keyframes rotateAurora { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+
+        /* --- INTERFACE PRINCIPALE --- */
+        .interface-container {
+            position: relative;
+            z-index: 10;
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: center;
-            min-height: 100vh;
+            /* Entrance */
+            opacity: 0;
+            animation: divineEntrance 2s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
         }
 
-        /* --- FOND MATRICE (HEXAGONES) --- */
-        .hex-bg {
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background-image: 
-                linear-gradient(30deg, #0d121f 12%, transparent 12.5%, transparent 87%, #0d121f 87.5%, #0d121f),
-                linear-gradient(150deg, #0d121f 12%, transparent 12.5%, transparent 87%, #0d121f 87.5%, #0d121f),
-                linear-gradient(30deg, #0d121f 12%, transparent 12.5%, transparent 87%, #0d121f 87.5%, #0d121f),
-                linear-gradient(150deg, #0d121f 12%, transparent 12.5%, transparent 87%, #0d121f 87.5%, #0d121f),
-                linear-gradient(60deg, #131b2e 25%, transparent 25.5%, transparent 75%, #131b2e 75%, #131b2e),
-                linear-gradient(60deg, #131b2e 25%, transparent 25.5%, transparent 75%, #131b2e 75%, #131b2e);
-            background-size: 80px 140px;
-            background-position: 0 0, 0 0, 40px 70px, 40px 70px, 0 0, 40px 70px;
-            opacity: 0.4;
-            z-index: -2;
-            animation: slideBg 20s linear infinite;
+        @keyframes divineEntrance {
+            0% { opacity: 0; transform: scale(1.2) translateY(50px); filter: blur(10px); }
+            100% { opacity: 1; transform: scale(1) translateY(0); filter: blur(0); }
         }
 
-        @keyframes slideBg { 0% { background-position: 0 0; } 100% { background-position: 0 140px; } }
-
-        /* Lignes de scan (Effet écran) */
-        .scanlines {
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: linear-gradient(to bottom, rgba(255,255,255,0), rgba(255,255,255,0) 50%, rgba(0,0,0,0.1) 50%, rgba(0,0,0,0.1));
-            background-size: 100% 4px;
-            z-index: 90;
-            pointer-events: none;
-        }
-
-        /* --- UI PRINCIPALE --- */
-        .system-container {
-            position: relative;
-            z-index: 10;
-            text-align: center;
-            /* Entrance Animation */
-            animation: materialize 1s cubic-bezier(0.19, 1, 0.22, 1) forwards;
-            opacity: 0; transform: scale(0.8);
-        }
-
-        @keyframes materialize {
-            to { opacity: 1; transform: scale(1); }
+        .system-text {
+            font-family: 'Rajdhani', sans-serif;
+            color: var(--god-gold-light);
+            font-size: 14px;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            opacity: 0.7;
+            margin-bottom: 5px;
+            text-shadow: 0 0 10px var(--god-glow);
         }
 
         h1 {
-            font-family: 'Orbitron', sans-serif;
-            font-weight: 900;
-            text-transform: uppercase;
-            letter-spacing: 6px;
-            font-size: 3rem;
-            margin-bottom: 10px;
-            background: linear-gradient(to bottom, #fff, var(--sao-blue));
+            font-family: 'Cinzel Decorative', cursive;
+            font-size: 3.5rem;
+            margin: 0 0 40px 0;
+            background: linear-gradient(to bottom, #fff, var(--god-gold));
             -webkit-background-clip: text;
             color: transparent;
-            text-shadow: 0 0 20px var(--sao-blue);
-        }
-
-        .subtitle {
-            color: var(--sao-blue-dim);
-            font-family: 'Share Tech Mono', monospace;
-            font-size: 1.2rem;
-            letter-spacing: 2px;
-            margin-bottom: 40px;
-        }
-        .subtitle::before, .subtitle::after { content: "- SYSTEM CALL -"; opacity: 0.5; margin: 0 10px; }
-
-        /* --- LA ROUE HOLOGRAPHIQUE --- */
-        .holo-ring-container {
+            text-shadow: 0 0 30px rgba(255, 215, 0, 0.5);
             position: relative;
-            width: 500px;
-            height: 500px;
-            margin: 0 auto;
         }
-
-        /* Cercles rotatifs décoratifs */
-        .data-ring {
+        
+        h1::after {
+            content: "";
             position: absolute;
-            top: 50%; left: 50%;
-            border-radius: 50%;
-            border: 1px solid var(--sao-blue);
-            transform: translate(-50%, -50%);
-            box-shadow: 0 0 10px var(--sao-blue);
-            pointer-events: none;
+            bottom: -10px; left: 50%; transform: translateX(-50%);
+            width: 150px; height: 2px;
+            background: linear-gradient(90deg, transparent, var(--god-gold), transparent);
+            box-shadow: 0 0 10px var(--god-gold);
         }
-        .r1 { width: 100%; height: 100%; border-style: dashed; animation: spin 20s linear infinite; opacity: 0.5; }
-        .r2 { width: 110%; height: 110%; border-left-color: transparent; border-right-color: transparent; animation: spin 15s linear infinite reverse; opacity: 0.3; }
-        .r3 { width: 85%; height: 85%; border: 2px solid var(--sao-orange); opacity: 0.2; animation: pulseRing 2s infinite; }
 
-        @keyframes spin { 100% { transform: translate(-50%, -50%) rotate(360deg); } }
-        @keyframes pulseRing { 0%, 100% { transform: translate(-50%, -50%) scale(1); opacity: 0.2; } 50% { transform: translate(-50%, -50%) scale(1.02); opacity: 0.5; } }
+        /* --- CERCLES MAGIQUES (Sacred Arts) --- */
+        .sacred-circle-container {
+            position: relative;
+            width: 550px;
+            height: 550px;
+            display: flex;
+            align-items: center; justify-content: center;
+        }
 
-        /* Canvas Roue */
+        .ring {
+            position: absolute;
+            border-radius: 50%;
+            pointer-events: none;
+            box-shadow: 0 0 15px rgba(255, 215, 0, 0.1);
+        }
+
+        /* Anneau Extérieur (Runes) */
+        .ring-outer {
+            width: 100%; height: 100%;
+            border: 1px solid rgba(255, 215, 0, 0.3);
+            animation: spinRight 60s linear infinite;
+        }
+        .ring-outer::before {
+            content: "";
+            position: absolute; top: -5px; left: -5px; right: -5px; bottom: -5px;
+            border: 1px dashed rgba(255, 215, 0, 0.2);
+            border-radius: 50%;
+        }
+
+        /* Anneau Médian (Complexe) */
+        .ring-mid {
+            width: 85%; height: 85%;
+            border: 2px solid var(--god-gold);
+            opacity: 0.4;
+            animation: spinLeft 40s linear infinite;
+            border-left: 2px solid transparent;
+            border-right: 2px solid transparent;
+        }
+
+        /* Anneau Intérieur (Focus) */
+        .ring-inner {
+            width: 65%; height: 65%;
+            border: 1px solid var(--stacia-pink);
+            box-shadow: 0 0 20px rgba(255, 183, 178, 0.2);
+            animation: pulseRing 4s ease-in-out infinite;
+        }
+
+        @keyframes spinRight { 100% { transform: rotate(360deg); } }
+        @keyframes spinLeft { 100% { transform: rotate(-360deg); } }
+        @keyframes pulseRing { 0%, 100% { transform: scale(1); opacity: 0.5; } 50% { transform: scale(1.02); opacity: 0.9; } }
+
+        /* --- LE CANVAS (La Roue Divine) --- */
         canvas {
             position: relative;
-            z-index: 2;
-            width: 100%; height: 100%;
-            filter: drop-shadow(0 0 15px rgba(0, 240, 255, 0.4));
+            z-index: 5;
+            width: 500px;
+            height: 500px;
+            /* Mode de fusion pour effet lumière */
+            mix-blend-mode: screen; 
+            filter: drop-shadow(0 0 10px var(--god-gold));
             transform-origin: center;
         }
 
-        /* Pointeur (Flèche Système) */
-        .pointer {
+        /* Pointeur (Épée Verticale) */
+        .divine-pointer {
             position: absolute;
-            top: -20px; left: 50%;
+            top: -40px; left: 50%;
             transform: translateX(-50%);
-            width: 0; height: 0;
-            border-left: 15px solid transparent;
-            border-right: 15px solid transparent;
-            border-top: 30px solid #fff;
+            width: 2px; height: 100px;
+            background: #fff;
             z-index: 20;
-            filter: drop-shadow(0 0 10px #fff);
+            box-shadow: 0 0 20px #fff, 0 0 40px var(--god-gold);
         }
-        .pointer::after {
+        .divine-pointer::before {
+            content: "▼";
+            position: absolute; bottom: -10px; left: -7px;
+            color: #fff; font-size: 14px;
+            text-shadow: 0 0 10px var(--god-gold);
+        }
+
+        /* --- BOUTON RELEASE RECOLLECTION --- */
+        .btn-release {
+            margin-top: 50px;
+            background: transparent;
+            color: var(--god-gold);
+            font-family: 'Cinzel', serif;
+            font-size: 1.4rem;
+            font-weight: 700;
+            letter-spacing: 5px;
+            padding: 18px 60px;
+            border: 1px solid var(--god-gold);
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.4s;
+            text-shadow: 0 0 5px var(--god-gold);
+            box-shadow: inset 0 0 20px rgba(255, 215, 0, 0.1);
+        }
+
+        /* Effet de remplissage lumière */
+        .btn-release::before {
             content: "";
             position: absolute;
-            top: -35px; left: -15px;
-            width: 30px; height: 10px;
-            background: var(--sao-red);
-            box-shadow: 0 0 10px var(--sao-red);
+            top: 0; left: -100%; width: 100%; height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 215, 0, 0.4), transparent);
+            transition: 0.5s;
         }
 
-        /* --- BOUTON DE COMMANDE --- */
-        .btn-link-start {
-            margin-top: 40px;
-            background: linear-gradient(90deg, transparent 5%, var(--sao-blue-dim) 5%, var(--sao-blue-dim) 95%, transparent 95%);
-            border: none;
-            color: #fff;
-            font-family: 'Orbitron', sans-serif;
-            font-size: 1.5rem;
-            padding: 15px 60px;
-            cursor: pointer;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            position: relative;
-            clip-path: polygon(10% 0, 100% 0, 90% 100%, 0% 100%);
-            transition: 0.3s;
-            box-shadow: 0 0 20px rgba(0, 240, 255, 0.2);
-        }
-        
-        .btn-link-start:hover {
-            background: linear-gradient(90deg, transparent 5%, var(--sao-blue) 5%, var(--sao-blue) 95%, transparent 95%);
-            text-shadow: 0 0 10px #fff;
+        .btn-release:hover {
+            background: rgba(255, 215, 0, 0.1);
+            box-shadow: 0 0 30px var(--god-gold), inset 0 0 10px var(--god-gold);
             transform: scale(1.05);
-            box-shadow: 0 0 40px var(--sao-blue);
         }
+        .btn-release:hover::before { left: 100%; }
 
-        .btn-link-start:disabled {
-            background: #333;
-            color: #777;
+        .btn-release:disabled {
+            filter: grayscale(1);
+            opacity: 0.5;
             cursor: not-allowed;
-            box-shadow: none;
         }
 
-        /* --- MODALE "ITEM GET" (Style SAO Popup) --- */
-        #modal-overlay {
+        /* --- FENETRE RESULTAT (Window Object Stacia) --- */
+        #result-overlay {
             display: none;
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.6);
-            backdrop-filter: blur(5px);
             z-index: 100;
-            justify-content: center;
-            align-items: center;
+            background: rgba(0,0,0,0.6);
+            backdrop-filter: blur(8px);
+            align-items: center; justify-content: center;
         }
 
-        .sao-window {
-            width: 450px;
-            background: rgba(220, 220, 225, 0.95);
-            border: 2px solid #fff;
-            border-radius: 8px;
-            padding: 0;
-            box-shadow: 
-                0 0 0 1px #999,
-                0 5px 20px rgba(0,0,0,0.5);
+        .stacia-window {
+            width: 500px;
+            background: rgba(20, 15, 25, 0.9);
+            border: 1px solid var(--god-gold);
+            padding: 3px; /* Double border effect */
+            box-shadow: 0 0 50px rgba(255, 215, 0, 0.2);
+            transform: scale(0.8);
+            opacity: 0;
+            animation: openWindow 0.5s cubic-bezier(0.19, 1, 0.22, 1) forwards;
             position: relative;
-            transform-origin: center;
-            animation: popWindow 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            overflow: hidden;
         }
 
-        @keyframes popWindow {
-            from { transform: scale(0); opacity: 0; }
+        .window-inner {
+            border: 1px solid rgba(255, 215, 0, 0.3);
+            padding: 30px;
+            text-align: center;
+            background: linear-gradient(to bottom, rgba(255,215,0,0.05), transparent);
+        }
+
+        @keyframes openWindow {
             to { transform: scale(1); opacity: 1; }
         }
 
-        .sao-header {
-            background: linear-gradient(to right, #ffaa00, #ffcc00);
-            padding: 10px 20px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            border-bottom: 2px solid #fff;
-        }
-        
-        .sao-icon {
-            width: 24px; height: 24px;
-            background: #fff;
-            border-radius: 50%;
-            display: flex;
-            align-items: center; justify-content: center;
-            font-weight: bold; color: #ffaa00;
-            font-size: 16px;
-        }
-
-        .sao-title {
-            color: #fff;
-            font-family: 'Orbitron';
-            font-weight: bold;
-            font-size: 1.2rem;
-            text-shadow: 0 1px 2px rgba(0,0,0,0.3);
-        }
-
-        .sao-body {
-            padding: 20px;
-            text-align: center;
-            color: #444;
-        }
-
-        .item-name {
-            font-size: 1.8rem;
-            font-weight: 800;
-            margin: 10px 0;
-            color: #333;
-            text-transform: uppercase;
-        }
-
-        .item-desc {
-            font-family: 'Share Tech Mono';
-            background: #eee;
-            padding: 10px;
-            border-radius: 4px;
-            border-left: 4px solid #999;
-            text-align: left;
+        .win-header {
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 14px;
+            color: var(--god-gold);
+            letter-spacing: 2px;
             margin-bottom: 20px;
-            font-size: 0.9rem;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            padding-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
         }
 
-        .sao-btn {
-            background: linear-gradient(to bottom, #4facfe 0%, #00f2fe 100%);
-            border: 1px solid #fff;
-            padding: 10px 40px;
-            border-radius: 20px;
-            color: white;
-            font-family: 'Orbitron';
-            font-weight: bold;
-            cursor: pointer;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-            transition: 0.2s;
+        .win-title {
+            font-family: 'Cinzel Decorative', cursive;
+            font-size: 2.5rem;
+            color: #fff;
+            margin: 10px 0;
+            text-shadow: 0 0 15px rgba(255, 255, 255, 0.8);
         }
-        .sao-btn:hover { filter: brightness(1.1); transform: translateY(-2px); }
-
-        /* Types de fenêtres selon rareté (via JS) */
-        .sao-window.danger .sao-header { background: linear-gradient(to right, #d31027, #ea384d); }
-        .sao-window.danger .sao-icon { color: #d31027; }
         
-        .sao-window.divine .sao-header { background: linear-gradient(to right, #FDC830, #F37335); }
+        .win-desc {
+            font-size: 1.2rem;
+            line-height: 1.6;
+            color: #ddd;
+            font-style: italic;
+            margin-bottom: 30px;
+        }
 
-        /* --- PARTICULES POLYGONES --- */
-        #particle-canvas {
+        .btn-accept {
+            background: transparent;
+            border: 1px solid #fff;
+            color: #fff;
+            padding: 10px 40px;
+            font-family: 'Cinzel', serif;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        .btn-accept:hover {
+            background: #fff; color: #000;
+            box-shadow: 0 0 20px #fff;
+        }
+
+        /* Warning Style (Vector Account) */
+        .stacia-window.dark {
+            border-color: var(--vector-red);
+            box-shadow: 0 0 50px rgba(255, 0, 60, 0.3);
+        }
+        .stacia-window.dark .window-inner {
+            background: linear-gradient(to bottom, rgba(255, 0, 60, 0.1), transparent);
+            border-color: rgba(255, 0, 60, 0.3);
+        }
+        .stacia-window.dark .win-title {
+            color: var(--vector-red);
+            text-shadow: 0 0 15px var(--vector-red);
+        }
+        .stacia-window.dark .win-header { color: var(--vector-red); }
+
+        /* Canvas Particules */
+        #particles {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
             pointer-events: none;
-            z-index: 99;
+            z-index: 50;
         }
-
     </style>
 </head>
 <body>
-    
-    <div class="scanlines"></div>
-    <div class="hex-bg"></div>
 
-    <div class="system-container">
-        <h1>Roulette Système</h1>
-        <div class="subtitle">PROJECT ALICIZATION // ADMIN ACCESS</div>
+    <div class="universe">
+        <div class="stars"></div>
+        <div class="aurora"></div>
+    </div>
 
-        <div class="holo-ring-container">
-            <!-- Cercles déco -->
-            <div class="data-ring r1"></div>
-            <div class="data-ring r2"></div>
-            <div class="data-ring r3"></div>
+    <div class="interface-container" id="main-ui">
+        <div class="system-text">System Call . . . Inspect Entire Command List</div>
+        <h1>Divine Authority</h1>
+        
+        <div class="sacred-circle-container">
+            <!-- Cercles Magiques -->
+            <div class="ring ring-outer"></div>
+            <div class="ring ring-mid"></div>
+            <div class="ring ring-inner"></div>
             
-            <div class="pointer"></div>
+            <div class="divine-pointer"></div>
             <canvas id="wheel" width="800" height="800"></canvas>
         </div>
 
-        <button id="spin-btn" class="btn-link-start">GENERATE LOOT</button>
+        <button id="spin-btn" class="btn-release">ENHANCE ARMAMENT</button>
     </div>
 
-    <!-- Modale Resultat -->
-    <div id="modal-overlay">
-        <div class="sao-window" id="result-window">
-            <div class="sao-header">
-                <div class="sao-icon">!</div>
-                <div class="sao-title" id="res-type">CONGRATULATIONS</div>
-            </div>
-            <div class="sao-body">
-                <div style="font-size: 12px; color:#888; letter-spacing:1px; margin-bottom:5px;">ITEM NAME</div>
-                <div class="item-name" id="res-name">DIVINE OBJECT</div>
-                
-                <div style="font-size: 12px; color:#888; letter-spacing:1px; margin: 15px 0 5px 0; text-align:left;">EFFECT_PROPERTIES:</div>
-                <div class="item-desc" id="res-desc">
-                    System.out.println("No Effect");
+    <!-- Fenêtre "Window Object" -->
+    <div id="result-overlay">
+        <div class="stacia-window" id="win-obj">
+            <div class="window-inner">
+                <div class="win-header">
+                    <span>UNIT ID: ADMIN_001</span>
+                    <span id="durability">DURABILITY: 100%</span>
                 </div>
-
-                <button class="sao-btn" onclick="closeModal()">ACCEPT</button>
+                
+                <div class="win-title" id="res-title">TITLE</div>
+                <div class="win-desc" id="res-desc">Description text...</div>
+                
+                <button class="btn-accept" onclick="closeModal()">DISCHARGE</button>
             </div>
         </div>
     </div>
 
-    <canvas id="particle-canvas"></canvas>
+    <canvas id="particles"></canvas>
 
     <script>
-        // --- DONNÉES DU JUGEMENT (THEME SAO) ---
-        // type: 'divine' (Or), 'rare' (Bleu/Violet), 'common' (Vert), 'danger' (Rouge)
+        // --- DONNÉES DU JUGEMENT (THEME ALICIZATION) ---
+        // Types: 'light' (Stacia/Solus), 'dark' (Vector/Dark Territory), 'neutral' (Human Empire)
         const segments = [
-            { name: "MAINTIEN PEINE", effect: "Status: Unchanged. No modification applied.", weight: 12, color: "#4deeea", type: "common" }, // Cyan
-            { name: "DURÉE x2", effect: "Time Dilation. Punishment duration doubled.", weight: 5, color: "#ffe700", type: "danger" }, // Jaune alerte
-            { name: "CRITICAL x4", effect: "Critical Hit. Max duration applied.", weight: 3, color: "#ff0000", type: "danger" }, // Rouge
-            { name: "ZONE LOCK", effect: "Area Restriction applied to player ID.", weight: 2, color: "#7400e8", type: "rare" }, // Violet
-            { name: "SILENCE MOD", effect: "Voice/Chat module disabled.", weight: 1, color: "#ff9100", type: "rare" }, // Orange
-            { name: "RANK DOWN", effect: "Permission Level Reduced.", weight: 1, color: "#555555", type: "danger" }, // Gris foncé
-            { name: "REDUCE 50%", effect: "Mercy protocol. Duration halved.", weight: 0.5, color: "#00ff6a", type: "divine" }, // Vert Matrix
-            { name: "DISPEL", effect: "All active debuffs removed.", weight: 0.25, color: "#ffffff", type: "divine" }, // Blanc Pur
-            { name: "PERMA-BAN", effect: "Account deletion. ID Erased.", weight: 0.25, color: "#000000", type: "danger" }  // Noir
+            { name: "MAINTIEN", desc: "La Volonté reste inchangée.", weight: 12, color: "#aaddff", type: "neutral" },
+            { name: "DURÉE x2", desc: "Fluctlight Acceleration: Punishment doubled.", weight: 5, color: "#ffaa00", type: "dark" },
+            { name: "CRITICAL x4", desc: "Maximum Load. Sanction quadrupled.", weight: 3, color: "#ff003c", type: "dark" },
+            { name: "ZONE LOCK", desc: "Spatial Barrier: Area restriction applied.", weight: 2, color: "#d4af37", type: "light" },
+            { name: "SILENCE", desc: "Voice Command Module: Disabled.", weight: 1, color: "#b19cd9", type: "neutral" },
+            { name: "DEMOTION", desc: "Authority Level Reduced.", weight: 1, color: "#777777", type: "neutral" },
+            { name: "MERCY /2", desc: "Solus Blessing: Duration halved.", weight: 0.5, color: "#00ffaa", type: "light" },
+            { name: "ABSOLUTION", desc: "Stacia Miracle: Sanction removed.", weight: 0.25, color: "#ffffff", type: "light" },
+            { name: "BANISHMENT", desc: "System Alert: Account deletion (Permanent).", weight: 0.25, color: "#000000", type: "dark" }
         ];
 
         const canvas = document.getElementById("wheel");
@@ -365,114 +398,101 @@
         const totalWeight = segments.reduce((sum, s) => sum + s.weight, 0);
         let currentRotation = 0;
 
-        // --- DESSIN DU CERCLE DE DONNÉES ---
+        // --- DESSIN DU CERCLE DIVIN ---
         function drawWheel() {
             const cx = canvas.width / 2;
             const cy = canvas.height / 2;
-            const r = cx - 20;
+            const r = cx - 40; // Rayon
             let start = 0;
 
-            // Clear
             ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-            // Fond tech
-            ctx.beginPath();
-            ctx.arc(cx, cy, r + 10, 0, Math.PI * 2);
-            ctx.fillStyle = "rgba(0, 20, 40, 0.8)";
-            ctx.fill();
-
-            segments.forEach((seg, i) => {
+            segments.forEach((seg) => {
                 const angle = (seg.weight / totalWeight) * 2 * Math.PI;
                 const end = start + angle;
 
-                // 1. Segment (Data Block)
+                // 1. Les Segments (Effet faisceau de lumière)
                 ctx.beginPath();
                 ctx.moveTo(cx, cy);
                 ctx.arc(cx, cy, r, start, end);
                 ctx.closePath();
-                
-                // Style Holographique : Dégradé radiale + Transparence
-                let grad = ctx.createRadialGradient(cx, cy, 50, cx, cy, r);
-                grad.addColorStop(0, "rgba(0,0,0,0)"); // Centre transparent
-                grad.addColorStop(0.5, seg.color + "44"); // Couleur semi-transparente (hex + 44 alpha)
-                grad.addColorStop(0.9, seg.color + "aa"); // Bordure intense
-                grad.addColorStop(1, seg.color);
-                
+
+                // Dégradé radial complexe (Centre brillant -> Couleur -> Transparent)
+                let grad = ctx.createRadialGradient(cx, cy, 20, cx, cy, r);
+                if (seg.color === "#000000") {
+                    grad.addColorStop(0, "#333");
+                    grad.addColorStop(0.8, "#000");
+                    grad.addColorStop(1, "rgba(0,0,0,0.8)");
+                } else {
+                    grad.addColorStop(0, "rgba(255,255,255,0.1)"); // Centre clair
+                    grad.addColorStop(0.6, seg.color); // Couleur principale
+                    grad.addColorStop(1, adjustAlpha(seg.color, 0.4)); // Bordure semi-transparente
+                }
+
                 ctx.fillStyle = grad;
                 ctx.fill();
 
-                // 2. Séparateur Tech (Ligne blanche fine)
+                // 2. Lignes de séparation (Filigranes dorés fins)
                 ctx.beginPath();
                 ctx.moveTo(cx, cy);
-                ctx.lineTo(cx + Math.cos(end) * r, cy + Math.sin(end) * r);
-                ctx.strokeStyle = "rgba(255,255,255,0.3)";
-                ctx.lineWidth = 2;
+                let x = cx + Math.cos(end) * (r + 10);
+                let y = cy + Math.sin(end) * (r + 10);
+                ctx.lineTo(x, y);
+                ctx.strokeStyle = "rgba(255, 215, 0, 0.4)";
+                ctx.lineWidth = 1;
                 ctx.stroke();
 
-                // 3. Texte (Aligné sur le rayon)
+                // 3. Texte (Arts Sacrés)
                 ctx.save();
                 ctx.translate(cx, cy);
                 ctx.rotate(start + angle / 2);
                 ctx.textAlign = "right";
                 
-                // Effet néon texte
+                // Effet de brillance texte
                 ctx.shadowColor = seg.color;
-                ctx.shadowBlur = 10;
+                ctx.shadowBlur = 15;
                 ctx.fillStyle = "#fff";
-                ctx.font = "bold 28px 'Rajdhani'";
                 
-                let label = seg.weight <= 0.25 ? "⚠" : seg.name;
+                // Adaptation police
+                let fontSize = seg.weight < 1 ? 20 : 28;
+                ctx.font = `600 ${fontSize}px 'Cinzel'`;
+                
+                let label = seg.weight <= 0.25 ? "Ω" : seg.name; // Omega pour les très petits
                 ctx.fillText(label, r - 30, 8);
                 
-                // Petit indicateur pourcentage
-                if (seg.weight > 1) {
-                    ctx.font = "14px 'Share Tech Mono'";
-                    ctx.fillStyle = "rgba(255,255,255,0.7)";
-                    ctx.fillText(((seg.weight/totalWeight)*100).toFixed(0)+"%", r - 30, 25);
-                }
-
                 ctx.restore();
                 start += angle;
             });
 
-            // Centre Core (Réacteur)
+            // Centre (Source de lumière / Light Cube)
             ctx.beginPath();
-            ctx.arc(cx, cy, 60, 0, Math.PI * 2);
-            ctx.fillStyle = "#000";
+            ctx.arc(cx, cy, 50, 0, Math.PI * 2);
+            let coreGrad = ctx.createRadialGradient(cx, cy, 5, cx, cy, 50);
+            coreGrad.addColorStop(0, "#fff");
+            coreGrad.addColorStop(0.5, "#ffd700");
+            coreGrad.addColorStop(1, "rgba(255, 215, 0, 0)");
+            ctx.fillStyle = coreGrad;
             ctx.fill();
-            
-            // Anneau lumineux central
-            ctx.beginPath();
-            ctx.arc(cx, cy, 55, 0, Math.PI * 2);
-            ctx.lineWidth = 4;
-            ctx.strokeStyle = "#00f0ff";
-            ctx.shadowColor = "#00f0ff";
-            ctx.shadowBlur = 20;
-            ctx.stroke();
-            
-            // Texte central
-            ctx.font = "bold 20px 'Orbitron'";
-            ctx.fillStyle = "#00f0ff";
-            ctx.textAlign = "center";
-            ctx.textBaseline = "middle";
-            ctx.shadowBlur = 0;
-            ctx.fillText("SYS", cx, cy);
+        }
+
+        function adjustAlpha(color, opacity) {
+            // Fonction simple pour ajouter alpha à un hex (approximatif pour demo)
+            return color; 
         }
 
         drawWheel();
 
-        // --- ANIMATION SPIN ---
+        // --- ANIMATION "RELEASE RECOLLECTION" ---
         const btn = document.getElementById("spin-btn");
-        const modal = document.getElementById("modal-overlay");
-        const winEl = document.getElementById("result-window");
-        const particlesCanvas = document.getElementById("particle-canvas");
-        const pCtx = particlesCanvas.getContext("2d");
+        const uiContainer = document.getElementById("main-ui");
+        const winEl = document.getElementById("win-obj");
+        const overlay = document.getElementById("result-overlay");
 
         btn.addEventListener("click", () => {
             btn.disabled = true;
-            btn.innerHTML = "PROCESSING...";
+            btn.innerHTML = "GENERATING...";
             
-            // Weighted Random
+            // Logique de sélection
             let rand = Math.random() * totalWeight;
             let sum = 0, winner = 0;
             for(let i=0; i<segments.length; i++) {
@@ -484,96 +504,91 @@
             let startDeg = 0;
             for(let i=0; i<winner; i++) startDeg += (segments[i].weight/totalWeight)*360;
             let sliceDeg = (segments[winner].weight/totalWeight)*360;
-            let targetInSlice = startDeg + sliceDeg / 2; // Viser le centre pile pour effet précis
+            let target = startDeg + sliceDeg / 2;
+            let rng = (Math.random() - 0.5) * (sliceDeg * 0.5); // Randomisation légère
             
-            // Ajouter un peu de RNG visuel
-            let noise = (Math.random() - 0.5) * (sliceDeg * 0.6);
-            targetInSlice += noise;
+            // Rotation (Viser 270°)
+            let spins = 6; 
+            let finalRot = currentRotation + (360 * spins) + (270 - (target + rng) - (currentRotation % 360));
+            // Correction pour éviter recul
+            if(finalRot < currentRotation) finalRot += 360;
 
-            // Rotation (Pointeur en haut = 270deg)
-            // On veut atterrir sur 270
-            let spins = 5 + Math.floor(Math.random() * 3); // 5 à 8 tours
-            let finalRot = currentRotation + (360 * spins) + (270 - targetInSlice - (currentRotation % 360));
-            // Assurer rotation positive
-            if((finalRot - currentRotation) < 360*5) finalRot += 360;
-
-            // CSS Transition pour le mouvement "Machine"
-            // Cubic-bezier personnalisé pour effet "moteur qui démarre et freine sec"
-            canvas.style.transition = "transform 5s cubic-bezier(0.25, 1, 0.5, 1)";
+            // Lancement Animation CSS
+            canvas.style.transition = "transform 6s cubic-bezier(0.1, 0.9, 0.3, 1)"; // Courbe "Heavy"
             canvas.style.transform = `rotate(${finalRot}deg)`;
             currentRotation = finalRot;
 
-            // Son de charge (Visuel) - L'anneau pulse
-            document.querySelector('.r3').style.animationDuration = "0.2s";
+            // Effet visuel pendant le spin (Cercles accélèrent)
+            document.querySelector('.ring-outer').style.animationDuration = "2s";
+            document.querySelector('.ring-mid').style.animationDuration = "2s";
+            
+            // Shake screen
+            uiContainer.style.animation = "shake 0.5s ease-in-out infinite";
 
             setTimeout(() => {
-                showResult(segments[winner]);
-                spawnPolygons(segments[winner].color);
+                // Arrêt
+                uiContainer.style.animation = "";
+                document.querySelector('.ring-outer').style.animationDuration = "60s";
+                document.querySelector('.ring-mid').style.animationDuration = "40s";
                 
+                showResult(segments[winner]);
+                explodeParticles(segments[winner].color, segments[winner].type);
+
                 btn.disabled = false;
-                btn.innerHTML = "GENERATE LOOT";
-                document.querySelector('.r3').style.animationDuration = "2s";
-            }, 5000);
+                btn.innerHTML = "ENHANCE ARMAMENT";
+            }, 6000);
         });
 
-        // --- RESULT MODAL ---
+        // --- FENETRE DE RESULTAT ---
         function showResult(seg) {
-            // Configurer le style de la fenêtre
-            winEl.className = "sao-window"; // Reset
-            if(seg.type === 'danger') winEl.classList.add('danger');
-            if(seg.type === 'divine') winEl.classList.add('divine');
+            winEl.className = "stacia-window"; // Reset
+            if(seg.type === 'dark') winEl.classList.add('dark');
 
-            // Textes
-            document.getElementById('res-type').innerText = seg.type === 'divine' ? 'DIVINE OBJECT' : (seg.type === 'danger' ? 'SYSTEM ALERT' : 'ITEM GET');
-            document.getElementById('res-name').innerText = seg.name;
-            document.getElementById('res-name').style.color = seg.color === '#ffffff' ? '#333' : seg.color;
+            document.getElementById("res-title").innerText = seg.name;
+            document.getElementById("res-desc").innerText = seg.desc;
             
-            // Description "Code style"
-            document.getElementById('res-desc').innerHTML = 
-                `<span style="color:#007c85">class</span> <span style="color:#a800e8">Effect</span> {<br>` +
-                `&nbsp;&nbsp;target: <span style="color:#d31027">PlayerID</span>;<br>` +
-                `&nbsp;&nbsp;action: "<span style="color:#333">${seg.effect}</span>";<br>` +
-                `}`;
-
-            modal.style.display = "flex";
+            // Fluctlight ID random
+            document.getElementById("durability").innerText = "LIFE: " + Math.floor(Math.random() * 100000) + "/" + Math.floor(Math.random() * 100000);
+            
+            overlay.style.display = "flex";
         }
 
         function closeModal() {
-            modal.style.display = "none";
+            overlay.style.display = "none";
         }
 
-        // --- PARTICULES SAO (Polygones qui éclatent) ---
-        let particles = [];
+        // --- PARTICULES (Memory Fragments) ---
+        const pCanvas = document.getElementById("particles");
+        const pCtx = pCanvas.getContext("2d");
         
-        function resizeCanvas() {
-            particlesCanvas.width = window.innerWidth;
-            particlesCanvas.height = window.innerHeight;
-        }
-        window.onresize = resizeCanvas;
-        resizeCanvas();
+        function resizeP() { pCanvas.width = window.innerWidth; pCanvas.height = window.innerHeight; }
+        window.onresize = resizeP;
+        resizeP();
 
-        function spawnPolygons(color) {
+        let particles = [];
+
+        function explodeParticles(color, type) {
             particles = [];
             const cx = window.innerWidth / 2;
             const cy = window.innerHeight / 2;
+            const count = 100;
             
-            for(let i=0; i<60; i++) {
+            for(let i=0; i<count; i++) {
                 particles.push({
                     x: cx, y: cy,
-                    vx: (Math.random() - 0.5) * 25,
-                    vy: (Math.random() - 0.5) * 25,
-                    size: Math.random() * 15 + 5,
-                    color: color,
+                    vx: (Math.random() - 0.5) * 20,
+                    vy: (Math.random() - 0.5) * 20,
                     life: 1.0,
-                    rotation: Math.random() * Math.PI,
-                    rotSpeed: (Math.random() - 0.5) * 0.2
+                    color: color,
+                    size: Math.random() * 6 + 2,
+                    type: type // 'dark' ou 'light'
                 });
             }
-            animateParticles();
+            loopParticles();
         }
 
-        function animateParticles() {
-            pCtx.clearRect(0, 0, particlesCanvas.width, particlesCanvas.height);
+        function loopParticles() {
+            pCtx.clearRect(0,0,pCanvas.width, pCanvas.height);
             let active = false;
 
             particles.forEach(p => {
@@ -581,33 +596,52 @@
                     active = true;
                     p.x += p.vx;
                     p.y += p.vy;
-                    p.vx *= 0.95; // Friction
-                    p.vy *= 0.95;
-                    p.life -= 0.02;
-                    p.rotation += p.rotSpeed;
+                    p.vx *= 0.96; // Air resistance
+                    p.vy *= 0.96;
+                    p.life -= 0.015;
 
                     pCtx.save();
-                    pCtx.translate(p.x, p.y);
-                    pCtx.rotate(p.rotation);
                     pCtx.globalAlpha = p.life;
                     pCtx.fillStyle = p.color;
-
-                    // Dessiner un triangle ou carré (glitch style)
-                    if(Math.random() > 0.5) {
-                        pCtx.fillRect(-p.size/2, -p.size/2, p.size, p.size);
+                    pCtx.translate(p.x, p.y);
+                    
+                    // Formes : Carrés (Dark) vs Éclats (Light)
+                    if(p.type === 'dark') {
+                        // Glitch cubes
+                        pCtx.fillRect(-p.size, -p.size, p.size*2, p.size*2);
                     } else {
+                        // Diamond shape (Stacia style)
                         pCtx.beginPath();
-                        pCtx.moveTo(0, -p.size);
-                        pCtx.lineTo(p.size, p.size);
-                        pCtx.lineTo(-p.size, p.size);
+                        pCtx.rotate(Math.PI / 4);
+                        pCtx.rect(-p.size/2, -p.size/2, p.size, p.size);
                         pCtx.fill();
                     }
+                    
                     pCtx.restore();
                 }
             });
 
-            if(active) requestAnimationFrame(animateParticles);
+            if(active) requestAnimationFrame(loopParticles);
         }
+
+        /* Animation Shake CSS */
+        const styleSheet = document.createElement("style");
+        styleSheet.innerText = `
+            @keyframes shake {
+                0% { transform: translate(1px, 1px) rotate(0deg); }
+                10% { transform: translate(-1px, -2px) rotate(-1deg); }
+                20% { transform: translate(-3px, 0px) rotate(1deg); }
+                30% { transform: translate(3px, 2px) rotate(0deg); }
+                40% { transform: translate(1px, -1px) rotate(1deg); }
+                50% { transform: translate(-1px, 2px) rotate(-1deg); }
+                60% { transform: translate(-3px, 1px) rotate(0deg); }
+                70% { transform: translate(3px, 1px) rotate(-1deg); }
+                80% { transform: translate(-1px, -1px) rotate(1deg); }
+                90% { transform: translate(1px, 2px) rotate(0deg); }
+                100% { transform: translate(1px, -2px) rotate(-1deg); }
+            }
+        `;
+        document.head.appendChild(styleSheet);
 
     </script>
 </body>
