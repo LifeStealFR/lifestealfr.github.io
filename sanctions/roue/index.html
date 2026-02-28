@@ -3,347 +3,361 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Le Grimoire du Destin</title>
-    <!-- Polices Médiévales et Fantasy -->
+    <title>Cardinal System - Divine Wheel</title>
+    <!-- Polices Tech & Gaming -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&family=UnifrakturMaguntia&family=Cormorant+Garamond:ital,wght@0,400;1,600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@500;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
     
     <style>
         :root {
-            --gold: #ffd700;
-            --gold-dim: #b8860b;
-            --magic-blue: #00ffff;
-            --magic-purple: #bd00ff;
-            --danger: #ff003c;
-            --void: #050010;
-            --parchment: #e3d2b3;
+            --sao-blue: #00f0ff;
+            --sao-blue-dim: #007c85;
+            --sao-gold: #ffd700;
+            --sao-orange: #ffaa00;
+            --sao-red: #ff3333;
+            --sao-dark: #0a0a10;
+            --glass-bg: rgba(10, 15, 30, 0.85);
         }
 
         body {
-            background-color: var(--void);
-            color: var(--parchment);
-            font-family: 'Cormorant Garamond', serif;
+            background-color: #050508;
+            color: #fff;
+            font-family: 'Rajdhani', sans-serif;
             margin: 0;
-            padding: 0;
-            min-height: 100vh;
+            overflow: hidden;
             display: flex;
+            flex-direction: column;
             align-items: center;
             justify-content: center;
-            overflow: hidden;
-            perspective: 1000px;
+            min-height: 100vh;
         }
 
-        /* --- FOND ANIMÉ (NUAGES & RUNES) --- */
-        .ambient-bg {
+        /* --- FOND MATRICE (HEXAGONES) --- */
+        .hex-bg {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
+            background-image: 
+                linear-gradient(30deg, #0d121f 12%, transparent 12.5%, transparent 87%, #0d121f 87.5%, #0d121f),
+                linear-gradient(150deg, #0d121f 12%, transparent 12.5%, transparent 87%, #0d121f 87.5%, #0d121f),
+                linear-gradient(30deg, #0d121f 12%, transparent 12.5%, transparent 87%, #0d121f 87.5%, #0d121f),
+                linear-gradient(150deg, #0d121f 12%, transparent 12.5%, transparent 87%, #0d121f 87.5%, #0d121f),
+                linear-gradient(60deg, #131b2e 25%, transparent 25.5%, transparent 75%, #131b2e 75%, #131b2e),
+                linear-gradient(60deg, #131b2e 25%, transparent 25.5%, transparent 75%, #131b2e 75%, #131b2e);
+            background-size: 80px 140px;
+            background-position: 0 0, 0 0, 40px 70px, 40px 70px, 0 0, 40px 70px;
+            opacity: 0.4;
             z-index: -2;
-            background: radial-gradient(circle at 50% 50%, #1a0b2e 0%, #000000 100%);
-            overflow: hidden;
+            animation: slideBg 20s linear infinite;
         }
 
-        .fog {
-            position: absolute;
-            width: 200%; height: 200%;
-            top: -50%; left: -50%;
-            background: url('data:image/svg+xml;utf8,%3Csvg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"%3E%3Cfilter id="noiseFilter"%3E%3CfeTurbulence type="fractalNoise" baseFrequency="0.65" numOctaves="3" stitchTiles="stitch"/%3E%3C/filter%3E%3Crect width="100%25" height="100%25" filter="url(%23noiseFilter)" opacity="0.1"/%3E%3C/svg%3E');
-            animation: fogMove 60s linear infinite;
-            opacity: 0.3;
-        }
+        @keyframes slideBg { 0% { background-position: 0 0; } 100% { background-position: 0 140px; } }
 
-        .giant-rune-circle {
-            position: absolute;
-            top: 50%; left: 50%;
-            width: 150vmin; height: 150vmin;
-            transform: translate(-50%, -50%);
-            border: 2px dashed rgba(189, 0, 255, 0.1);
-            border-radius: 50%;
-            box-shadow: 0 0 100px rgba(189, 0, 255, 0.05);
-            animation: rotateBg 120s linear infinite;
-            z-index: -1;
-            background-image: repeating-conic-gradient(rgba(189, 0, 255, 0.05) 0 15deg, transparent 15deg 30deg);
+        /* Lignes de scan (Effet écran) */
+        .scanlines {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(to bottom, rgba(255,255,255,0), rgba(255,255,255,0) 50%, rgba(0,0,0,0.1) 50%, rgba(0,0,0,0.1));
+            background-size: 100% 4px;
+            z-index: 90;
             pointer-events: none;
         }
 
-        @keyframes fogMove { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-        @keyframes rotateBg { 0% { transform: translate(-50%, -50%) rotate(0deg); } 100% { transform: translate(-50%, -50%) rotate(360deg); } }
-
-        /* --- LE LIVRE (CONTENEUR PRINCIPAL) --- */
-        .grimoire-container {
+        /* --- UI PRINCIPALE --- */
+        .system-container {
             position: relative;
-            width: 900px;
-            max-width: 95vw;
-            background: #110a05; /* Cuir sombre */
-            border: 4px solid var(--gold-dim);
-            border-radius: 12px;
-            box-shadow: 
-                0 0 0 8px #2e1a0a, /* Bordure cuir */
-                0 0 60px rgba(0,0,0,0.9),
-                0 0 100px rgba(184, 134, 11, 0.1) inset; /* Lueur intérieure */
-            padding: 40px;
+            z-index: 10;
             text-align: center;
-            transform-style: preserve-3d;
-            transition: transform 0.1s;
-            /* Texture cuir */
-            background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.15'/%3E%3C/svg%3E");
+            /* Entrance Animation */
+            animation: materialize 1s cubic-bezier(0.19, 1, 0.22, 1) forwards;
+            opacity: 0; transform: scale(0.8);
         }
 
-        /* Coins décoratifs dorés */
-        .corner {
-            position: absolute;
-            width: 60px; height: 60px;
-            border: 3px solid var(--gold);
-            z-index: 10;
-            box-shadow: 0 0 10px var(--gold);
+        @keyframes materialize {
+            to { opacity: 1; transform: scale(1); }
         }
-        .tl { top: 10px; left: 10px; border-right: none; border-bottom: none; }
-        .tr { top: 10px; right: 10px; border-left: none; border-bottom: none; }
-        .bl { bottom: 10px; left: 10px; border-right: none; border-top: none; }
-        .br { bottom: 10px; right: 10px; border-left: none; border-top: none; }
 
         h1 {
-            font-family: 'UnifrakturMaguntia', cursive;
-            font-size: 4rem;
-            margin: 0 0 20px 0;
-            color: var(--gold);
-            text-shadow: 0 0 10px rgba(255, 215, 0, 0.5), 0 0 20px rgba(255, 215, 0, 0.3);
-            letter-spacing: 2px;
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: 6px;
+            font-size: 3rem;
+            margin-bottom: 10px;
+            background: linear-gradient(to bottom, #fff, var(--sao-blue));
+            -webkit-background-clip: text;
+            color: transparent;
+            text-shadow: 0 0 20px var(--sao-blue);
         }
 
-        h1 span { color: var(--danger); }
+        .subtitle {
+            color: var(--sao-blue-dim);
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 1.2rem;
+            letter-spacing: 2px;
+            margin-bottom: 40px;
+        }
+        .subtitle::before, .subtitle::after { content: "- SYSTEM CALL -"; opacity: 0.5; margin: 0 10px; }
 
-        /* --- LA ROUE --- */
-        .wheel-wrapper {
+        /* --- LA ROUE HOLOGRAPHIQUE --- */
+        .holo-ring-container {
             position: relative;
             width: 500px;
             height: 500px;
-            margin: 0 auto 30px auto;
-            border-radius: 50%;
-            /* Lueur derrière la roue */
-            box-shadow: 0 0 80px rgba(255, 215, 0, 0.1); 
+            margin: 0 auto;
         }
 
-        /* Anneau runique qui tourne autour de la roue */
-        .rune-ring {
+        /* Cercles rotatifs décoratifs */
+        .data-ring {
             position: absolute;
-            top: -20px; left: -20px; right: -20px; bottom: -20px;
-            border: 2px solid rgba(255, 215, 0, 0.3);
+            top: 50%; left: 50%;
             border-radius: 50%;
-            animation: spinRing 20s linear infinite reverse;
-            background-image: url("data:image/svg+xml;utf8,%3Csvg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath id='circlePath' d='M 50, 50 m -45, 0 a 45,45 0 1,1 90,0 a 45,45 0 1,1 -90,0' fill='none' /%3E%3Ctext fill='%23b8860b' font-size='8' letter-spacing='5'%3E%3CtextPath href='%23circlePath'%3E• F ATUM • JUDICIUM • AETERNUS • SANCTUS • MORTIS •%3C/textPath%3E%3C/text%3E%3C/svg%3E");
-            z-index: 0;
+            border: 1px solid var(--sao-blue);
+            transform: translate(-50%, -50%);
+            box-shadow: 0 0 10px var(--sao-blue);
+            pointer-events: none;
         }
+        .r1 { width: 100%; height: 100%; border-style: dashed; animation: spin 20s linear infinite; opacity: 0.5; }
+        .r2 { width: 110%; height: 110%; border-left-color: transparent; border-right-color: transparent; animation: spin 15s linear infinite reverse; opacity: 0.3; }
+        .r3 { width: 85%; height: 85%; border: 2px solid var(--sao-orange); opacity: 0.2; animation: pulseRing 2s infinite; }
 
-        @keyframes spinRing { 100% { transform: rotate(360deg); } }
+        @keyframes spin { 100% { transform: translate(-50%, -50%) rotate(360deg); } }
+        @keyframes pulseRing { 0%, 100% { transform: translate(-50%, -50%) scale(1); opacity: 0.2; } 50% { transform: translate(-50%, -50%) scale(1.02); opacity: 0.5; } }
 
-        /* Le Canvas */
+        /* Canvas Roue */
         canvas {
-            width: 100%; height: 100%;
-            border-radius: 50%;
-            transform-origin: center;
-            z-index: 2;
             position: relative;
-            /* Bordure métallique de la roue */
-            box-shadow: 
-                inset 0 0 20px rgba(0,0,0,1),
-                0 0 0 5px #4a3c26,
-                0 0 0 8px var(--gold-dim);
+            z-index: 2;
+            width: 100%; height: 100%;
+            filter: drop-shadow(0 0 15px rgba(0, 240, 255, 0.4));
+            transform-origin: center;
         }
 
-        /* Le Cristal Pointeur */
+        /* Pointeur (Flèche Système) */
         .pointer {
             position: absolute;
-            top: -30px; left: 50%;
+            top: -20px; left: 50%;
             transform: translateX(-50%);
-            width: 40px; height: 70px;
-            background: linear-gradient(135deg, #fff, #00ffff);
-            clip-path: polygon(50% 100%, 0% 15%, 50% 0%, 100% 15%);
+            width: 0; height: 0;
+            border-left: 15px solid transparent;
+            border-right: 15px solid transparent;
+            border-top: 30px solid #fff;
             z-index: 20;
-            filter: drop-shadow(0 0 15px #00ffff);
-            animation: floatPointer 3s ease-in-out infinite;
+            filter: drop-shadow(0 0 10px #fff);
+        }
+        .pointer::after {
+            content: "";
+            position: absolute;
+            top: -35px; left: -15px;
+            width: 30px; height: 10px;
+            background: var(--sao-red);
+            box-shadow: 0 0 10px var(--sao-red);
         }
 
-        @keyframes floatPointer { 50% { transform: translateX(-50%) translateY(-10px); filter: drop-shadow(0 0 25px #00ffff); } }
-
-        /* --- BOUTON MAGIQUE --- */
-        .btn-magic {
-            background: linear-gradient(to bottom, #2b1100, #000);
-            border: 2px solid var(--gold);
-            color: var(--gold);
-            font-family: 'Cinzel', serif;
-            font-size: 1.8rem;
-            font-weight: 700;
+        /* --- BOUTON DE COMMANDE --- */
+        .btn-link-start {
+            margin-top: 40px;
+            background: linear-gradient(90deg, transparent 5%, var(--sao-blue-dim) 5%, var(--sao-blue-dim) 95%, transparent 95%);
+            border: none;
+            color: #fff;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.5rem;
             padding: 15px 60px;
             cursor: pointer;
             text-transform: uppercase;
-            letter-spacing: 3px;
+            letter-spacing: 2px;
             position: relative;
-            overflow: hidden;
-            transition: all 0.3s;
-            box-shadow: 0 0 15px rgba(184, 134, 11, 0.3);
-            z-index: 10;
-        }
-
-        .btn-magic:hover {
-            background: var(--gold);
-            color: #000;
-            box-shadow: 0 0 40px var(--gold), 0 0 80px var(--gold);
-            text-shadow: none;
+            clip-path: polygon(10% 0, 100% 0, 90% 100%, 0% 100%);
+            transition: 0.3s;
+            box-shadow: 0 0 20px rgba(0, 240, 255, 0.2);
         }
         
-        /* Effet de brillance qui traverse le bouton */
-        .btn-magic::after {
-            content: '';
-            position: absolute;
-            top: -50%; left: -50%;
-            width: 200%; height: 200%;
-            background: linear-gradient(transparent, rgba(255,255,255,0.8), transparent);
-            transform: rotate(45deg) translate(-150%, 0);
-            transition: 0.5s;
+        .btn-link-start:hover {
+            background: linear-gradient(90deg, transparent 5%, var(--sao-blue) 5%, var(--sao-blue) 95%, transparent 95%);
+            text-shadow: 0 0 10px #fff;
+            transform: scale(1.05);
+            box-shadow: 0 0 40px var(--sao-blue);
         }
-        .btn-magic:hover::after { transform: rotate(45deg) translate(150%, 0); }
 
-        .btn-magic:disabled { filter: grayscale(1); opacity: 0.5; cursor: not-allowed; }
+        .btn-link-start:disabled {
+            background: #333;
+            color: #777;
+            cursor: not-allowed;
+            box-shadow: none;
+        }
 
-        /* --- RESULTAT (PARCHEMIN) --- */
-        #result-modal {
+        /* --- MODALE "ITEM GET" (Style SAO Popup) --- */
+        #modal-overlay {
             display: none;
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.9);
+            background: rgba(0,0,0,0.6);
+            backdrop-filter: blur(5px);
             z-index: 100;
             justify-content: center;
             align-items: center;
-            backdrop-filter: blur(8px);
-            animation: fadeIn 0.3s;
         }
 
-        .scroll-content {
-            background: var(--parchment);
-            width: 500px;
-            padding: 60px 40px;
-            text-align: center;
-            position: relative;
-            /* Forme de parchemin déroulé */
-            border-radius: 5px;
+        .sao-window {
+            width: 450px;
+            background: rgba(220, 220, 225, 0.95);
+            border: 2px solid #fff;
+            border-radius: 8px;
+            padding: 0;
             box-shadow: 
-                0 0 10px rgba(0,0,0,0.5),
-                0 0 100px var(--gold-dim);
-            transform: scale(0.5);
-            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            border-top: 20px solid #4a3c26;
-            border-bottom: 20px solid #4a3c26;
+                0 0 0 1px #999,
+                0 5px 20px rgba(0,0,0,0.5);
+            position: relative;
+            transform-origin: center;
+            animation: popWindow 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            overflow: hidden;
+        }
+
+        @keyframes popWindow {
+            from { transform: scale(0); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+
+        .sao-header {
+            background: linear-gradient(to right, #ffaa00, #ffcc00);
+            padding: 10px 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            border-bottom: 2px solid #fff;
         }
         
-        .scroll-content::before {
-            content: "VERDICTUM";
-            position: absolute;
-            top: -15px; left: 50%; transform: translateX(-50%);
-            color: #e3d2b3; font-family: 'Cinzel'; font-size: 12px; letter-spacing: 5px;
+        .sao-icon {
+            width: 24px; height: 24px;
+            background: #fff;
+            border-radius: 50%;
+            display: flex;
+            align-items: center; justify-content: center;
+            font-weight: bold; color: #ffaa00;
+            font-size: 16px;
         }
 
-        .modal-title {
-            font-family: 'UnifrakturMaguntia';
-            font-size: 3rem;
-            color: var(--danger);
-            border-bottom: 2px solid #2e1a0a;
-            padding-bottom: 10px;
-            margin-bottom: 20px;
-        }
-
-        .modal-desc {
-            font-size: 1.5rem;
-            color: #2e1a0a;
-            font-style: italic;
-            margin-bottom: 30px;
-        }
-
-        .close-btn {
-            background: transparent;
-            border: 2px solid #2e1a0a;
-            color: #2e1a0a;
-            padding: 10px 30px;
-            font-family: 'Cinzel';
+        .sao-title {
+            color: #fff;
+            font-family: 'Orbitron';
             font-weight: bold;
             font-size: 1.2rem;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.3);
+        }
+
+        .sao-body {
+            padding: 20px;
+            text-align: center;
+            color: #444;
+        }
+
+        .item-name {
+            font-size: 1.8rem;
+            font-weight: 800;
+            margin: 10px 0;
+            color: #333;
+            text-transform: uppercase;
+        }
+
+        .item-desc {
+            font-family: 'Share Tech Mono';
+            background: #eee;
+            padding: 10px;
+            border-radius: 4px;
+            border-left: 4px solid #999;
+            text-align: left;
+            margin-bottom: 20px;
+            font-size: 0.9rem;
+        }
+
+        .sao-btn {
+            background: linear-gradient(to bottom, #4facfe 0%, #00f2fe 100%);
+            border: 1px solid #fff;
+            padding: 10px 40px;
+            border-radius: 20px;
+            color: white;
+            font-family: 'Orbitron';
+            font-weight: bold;
             cursor: pointer;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
             transition: 0.2s;
         }
-        .close-btn:hover { background: #2e1a0a; color: var(--parchment); }
+        .sao-btn:hover { filter: brightness(1.1); transform: translateY(-2px); }
 
-        /* --- RESPONSIVE --- */
-        @media (max-width: 700px) {
-            .grimoire-container { width: 95%; padding: 20px 10px; }
-            .wheel-wrapper { width: 300px; height: 300px; }
-            h1 { font-size: 2.5rem; }
-        }
+        /* Types de fenêtres selon rareté (via JS) */
+        .sao-window.danger .sao-header { background: linear-gradient(to right, #d31027, #ea384d); }
+        .sao-window.danger .sao-icon { color: #d31027; }
         
-        /* Animation de shake pour l'écran */
-        @keyframes shake {
-            0% { transform: translate(1px, 1px) rotate(0deg); }
-            10% { transform: translate(-1px, -2px) rotate(-1deg); }
-            20% { transform: translate(-3px, 0px) rotate(1deg); }
-            30% { transform: translate(3px, 2px) rotate(0deg); }
-            40% { transform: translate(1px, -1px) rotate(1deg); }
-            50% { transform: translate(-1px, 2px) rotate(-1deg); }
-            60% { transform: translate(-3px, 1px) rotate(0deg); }
-            70% { transform: translate(3px, 1px) rotate(-1deg); }
-            80% { transform: translate(-1px, -1px) rotate(1deg); }
-            90% { transform: translate(1px, 2px) rotate(0deg); }
-            100% { transform: translate(1px, -2px) rotate(-1deg); }
+        .sao-window.divine .sao-header { background: linear-gradient(to right, #FDC830, #F37335); }
+
+        /* --- PARTICULES POLYGONES --- */
+        #particle-canvas {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            pointer-events: none;
+            z-index: 99;
         }
+
     </style>
 </head>
 <body>
+    
+    <div class="scanlines"></div>
+    <div class="hex-bg"></div>
 
-    <!-- Couches de fond -->
-    <div class="ambient-bg">
-        <div class="giant-rune-circle"></div>
-        <div class="fog"></div>
-    </div>
+    <div class="system-container">
+        <h1>Roulette Système</h1>
+        <div class="subtitle">PROJECT ALICIZATION // ADMIN ACCESS</div>
 
-    <!-- Le Grimoire -->
-    <div class="grimoire-container" id="grimoire">
-        <!-- Coins dorés -->
-        <div class="corner tl"></div>
-        <div class="corner tr"></div>
-        <div class="corner bl"></div>
-        <div class="corner br"></div>
-
-        <h1>Roue du <span>Jugement</span></h1>
-        
-        <div class="wheel-wrapper">
-            <div class="rune-ring"></div>
+        <div class="holo-ring-container">
+            <!-- Cercles déco -->
+            <div class="data-ring r1"></div>
+            <div class="data-ring r2"></div>
+            <div class="data-ring r3"></div>
+            
             <div class="pointer"></div>
             <canvas id="wheel" width="800" height="800"></canvas>
         </div>
 
-        <button id="spin-btn" class="btn-magic">Invoquer la Sentence</button>
+        <button id="spin-btn" class="btn-link-start">GENERATE LOOT</button>
     </div>
 
-    <!-- Modale de Résultat -->
-    <div id="result-modal">
-        <div class="scroll-content" id="modal-content">
-            <div class="modal-title" id="res-title">TITRE</div>
-            <div class="modal-desc" id="res-desc">Description de la sentence...</div>
-            <button class="close-btn" onclick="closeModal()">Accepter le Destin</button>
+    <!-- Modale Resultat -->
+    <div id="modal-overlay">
+        <div class="sao-window" id="result-window">
+            <div class="sao-header">
+                <div class="sao-icon">!</div>
+                <div class="sao-title" id="res-type">CONGRATULATIONS</div>
+            </div>
+            <div class="sao-body">
+                <div style="font-size: 12px; color:#888; letter-spacing:1px; margin-bottom:5px;">ITEM NAME</div>
+                <div class="item-name" id="res-name">DIVINE OBJECT</div>
+                
+                <div style="font-size: 12px; color:#888; letter-spacing:1px; margin: 15px 0 5px 0; text-align:left;">EFFECT_PROPERTIES:</div>
+                <div class="item-desc" id="res-desc">
+                    System.out.println("No Effect");
+                </div>
+
+                <button class="sao-btn" onclick="closeModal()">ACCEPT</button>
+            </div>
         </div>
     </div>
 
+    <canvas id="particle-canvas"></canvas>
+
     <script>
-        // --- DONNEES ---
-        // Couleurs améliorées pour effet "Vitrail"
+        // --- DONNÉES DU JUGEMENT (THEME SAO) ---
+        // type: 'divine' (Or), 'rare' (Bleu/Violet), 'common' (Vert), 'danger' (Rouge)
         const segments = [
-            { name: "MAINTIEN", effect: "La sanction reste inchangée.", weight: 12, color: "#3498db", type: "neutral" },
-            { name: "X 2", effect: "Durée de la sanction doublée.", weight: 5, color: "#e67e22", type: "bad" },
-            { name: "X 4", effect: "Sanction maximale appliquée.", weight: 3, color: "#d35400", type: "bad" },
-            { name: "BLACKLIST ZONES", effect: "Accès restreint (Salons/Zones).", weight: 2, color: "#9b59b6", type: "magic" },
-            { name: "MUTE MÉDIAS", effect: "Interdiction liens & images.", weight: 1, color: "#f1c40f", type: "magic" },
-            { name: "DÉGRADATION", effect: "Perte de tous les grades/VIP.", weight: 1, color: "#7f8c8d", type: "neutral" },
-            { name: "ALLÈGEMENT /2", effect: "Durée divisée par deux.", weight: 0.5, color: "#2ecc71", type: "good" },
-            { name: "ANNULATION", effect: "Sanction retirée immédiatement.", weight: 0.25, color: "#1abc9c", type: "good" },
-            { name: "BAN DÉFINITIF", effect: "Exclusion permanente & irrévocable.", weight: 0.25, color: "#000000", type: "doom" }
+            { name: "MAINTIEN PEINE", effect: "Status: Unchanged. No modification applied.", weight: 12, color: "#4deeea", type: "common" }, // Cyan
+            { name: "DURÉE x2", effect: "Time Dilation. Punishment duration doubled.", weight: 5, color: "#ffe700", type: "danger" }, // Jaune alerte
+            { name: "CRITICAL x4", effect: "Critical Hit. Max duration applied.", weight: 3, color: "#ff0000", type: "danger" }, // Rouge
+            { name: "ZONE LOCK", effect: "Area Restriction applied to player ID.", weight: 2, color: "#7400e8", type: "rare" }, // Violet
+            { name: "SILENCE MOD", effect: "Voice/Chat module disabled.", weight: 1, color: "#ff9100", type: "rare" }, // Orange
+            { name: "RANK DOWN", effect: "Permission Level Reduced.", weight: 1, color: "#555555", type: "danger" }, // Gris foncé
+            { name: "REDUCE 50%", effect: "Mercy protocol. Duration halved.", weight: 0.5, color: "#00ff6a", type: "divine" }, // Vert Matrix
+            { name: "DISPEL", effect: "All active debuffs removed.", weight: 0.25, color: "#ffffff", type: "divine" }, // Blanc Pur
+            { name: "PERMA-BAN", effect: "Account deletion. ID Erased.", weight: 0.25, color: "#000000", type: "danger" }  // Noir
         ];
 
         const canvas = document.getElementById("wheel");
@@ -351,107 +365,114 @@
         const totalWeight = segments.reduce((sum, s) => sum + s.weight, 0);
         let currentRotation = 0;
 
-        // --- DESSIN AVANCÉ ---
+        // --- DESSIN DU CERCLE DE DONNÉES ---
         function drawWheel() {
             const cx = canvas.width / 2;
             const cy = canvas.height / 2;
-            const r = cx - 10;
+            const r = cx - 20;
             let start = 0;
 
-            // Fond
-            ctx.fillStyle = "#111";
-            ctx.beginPath(); ctx.arc(cx, cy, r, 0, Math.PI*2); ctx.fill();
+            // Clear
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-            segments.forEach(seg => {
+            // Fond tech
+            ctx.beginPath();
+            ctx.arc(cx, cy, r + 10, 0, Math.PI * 2);
+            ctx.fillStyle = "rgba(0, 20, 40, 0.8)";
+            ctx.fill();
+
+            segments.forEach((seg, i) => {
                 const angle = (seg.weight / totalWeight) * 2 * Math.PI;
                 const end = start + angle;
 
-                // 1. Forme de la part
+                // 1. Segment (Data Block)
                 ctx.beginPath();
                 ctx.moveTo(cx, cy);
                 ctx.arc(cx, cy, r, start, end);
                 ctx.closePath();
-
-                // 2. Dégradé radiale (Effet "Vitrail éclairé")
-                let gradient = ctx.createRadialGradient(cx, cy, 0, cx, cy, r);
-                if (seg.color === "#000000") {
-                    gradient.addColorStop(0, "#333");
-                    gradient.addColorStop(1, "#000");
-                } else {
-                    gradient.addColorStop(0, adjustColor(seg.color, 40)); // Centre plus clair
-                    gradient.addColorStop(1, seg.color);
-                }
-                ctx.fillStyle = gradient;
+                
+                // Style Holographique : Dégradé radiale + Transparence
+                let grad = ctx.createRadialGradient(cx, cy, 50, cx, cy, r);
+                grad.addColorStop(0, "rgba(0,0,0,0)"); // Centre transparent
+                grad.addColorStop(0.5, seg.color + "44"); // Couleur semi-transparente (hex + 44 alpha)
+                grad.addColorStop(0.9, seg.color + "aa"); // Bordure intense
+                grad.addColorStop(1, seg.color);
+                
+                ctx.fillStyle = grad;
                 ctx.fill();
 
-                // 3. Bordures internes (Or)
-                ctx.lineWidth = 4;
-                ctx.strokeStyle = "#b8860b";
+                // 2. Séparateur Tech (Ligne blanche fine)
+                ctx.beginPath();
+                ctx.moveTo(cx, cy);
+                ctx.lineTo(cx + Math.cos(end) * r, cy + Math.sin(end) * r);
+                ctx.strokeStyle = "rgba(255,255,255,0.3)";
+                ctx.lineWidth = 2;
                 ctx.stroke();
 
-                // 4. Texte (Runique / Ancien)
+                // 3. Texte (Aligné sur le rayon)
                 ctx.save();
                 ctx.translate(cx, cy);
                 ctx.rotate(start + angle / 2);
                 ctx.textAlign = "right";
                 
-                // Ombre portée texte (Glow)
-                ctx.shadowColor = "rgba(0,0,0,1)";
-                ctx.shadowBlur = 8;
-                ctx.shadowOffsetX = 2;
-                ctx.shadowOffsetY = 2;
-
+                // Effet néon texte
+                ctx.shadowColor = seg.color;
+                ctx.shadowBlur = 10;
                 ctx.fillStyle = "#fff";
+                ctx.font = "bold 28px 'Rajdhani'";
                 
-                // Taille dynamique
-                let fontSize = seg.weight < 1 ? 22 : 36;
-                if(seg.name.length > 10) fontSize = 24;
+                let label = seg.weight <= 0.25 ? "⚠" : seg.name;
+                ctx.fillText(label, r - 30, 8);
                 
-                ctx.font = `bold ${fontSize}px 'Cinzel'`;
-                
-                // Pour les toutes petites parts (1% et moins), on met juste un symbole
-                if(seg.weight <= 0.25) {
-                    ctx.fillText("✦", r - 20, 10);
-                } else {
-                    ctx.fillText(seg.name, r - 30, 10);
+                // Petit indicateur pourcentage
+                if (seg.weight > 1) {
+                    ctx.font = "14px 'Share Tech Mono'";
+                    ctx.fillStyle = "rgba(255,255,255,0.7)";
+                    ctx.fillText(((seg.weight/totalWeight)*100).toFixed(0)+"%", r - 30, 25);
                 }
-                
+
                 ctx.restore();
                 start += angle;
             });
 
-            // 5. Centre "Joyau"
+            // Centre Core (Réacteur)
             ctx.beginPath();
-            ctx.arc(cx, cy, 40, 0, Math.PI*2);
-            let gemGrad = ctx.createRadialGradient(cx, cy, 5, cx, cy, 40);
-            gemGrad.addColorStop(0, "#fff");
-            gemGrad.addColorStop(0.3, "#ff003c");
-            gemGrad.addColorStop(1, "#590015");
-            ctx.fillStyle = gemGrad;
+            ctx.arc(cx, cy, 60, 0, Math.PI * 2);
+            ctx.fillStyle = "#000";
             ctx.fill();
             
-            // Anneau doré autour du joyau
-            ctx.lineWidth = 8;
-            ctx.strokeStyle = "#ffd700";
+            // Anneau lumineux central
+            ctx.beginPath();
+            ctx.arc(cx, cy, 55, 0, Math.PI * 2);
+            ctx.lineWidth = 4;
+            ctx.strokeStyle = "#00f0ff";
+            ctx.shadowColor = "#00f0ff";
+            ctx.shadowBlur = 20;
             ctx.stroke();
-        }
-
-        // Fonction utilitaire pour éclaircir une couleur hex
-        function adjustColor(color, amount) {
-            return color; // Simplifié pour cet exemple, mais idéalement éclaircit la couleur
+            
+            // Texte central
+            ctx.font = "bold 20px 'Orbitron'";
+            ctx.fillStyle = "#00f0ff";
+            ctx.textAlign = "center";
+            ctx.textBaseline = "middle";
+            ctx.shadowBlur = 0;
+            ctx.fillText("SYS", cx, cy);
         }
 
         drawWheel();
 
-        // --- ANIMATION & LOGIQUE ---
+        // --- ANIMATION SPIN ---
         const btn = document.getElementById("spin-btn");
-        const grimoire = document.getElementById("grimoire");
+        const modal = document.getElementById("modal-overlay");
+        const winEl = document.getElementById("result-window");
+        const particlesCanvas = document.getElementById("particle-canvas");
+        const pCtx = particlesCanvas.getContext("2d");
 
         btn.addEventListener("click", () => {
             btn.disabled = true;
-            btn.innerText = "Incantation...";
+            btn.innerHTML = "PROCESSING...";
             
-            // Calcul résultat
+            // Weighted Random
             let rand = Math.random() * totalWeight;
             let sum = 0, winner = 0;
             for(let i=0; i<segments.length; i++) {
@@ -463,113 +484,128 @@
             let startDeg = 0;
             for(let i=0; i<winner; i++) startDeg += (segments[i].weight/totalWeight)*360;
             let sliceDeg = (segments[winner].weight/totalWeight)*360;
+            let targetInSlice = startDeg + sliceDeg / 2; // Viser le centre pile pour effet précis
             
-            // Cible : 270 deg (Haut) - (Start + Random dans Slice) + tours complets
-            let targetInSlice = startDeg + (sliceDeg * 0.5); // Viser le milieu
-            // Ajout d'aléa léger
-            targetInSlice += (Math.random() - 0.5) * (sliceDeg * 0.8);
+            // Ajouter un peu de RNG visuel
+            let noise = (Math.random() - 0.5) * (sliceDeg * 0.6);
+            targetInSlice += noise;
 
-            let spins = 8; // Nombre de tours
+            // Rotation (Pointeur en haut = 270deg)
+            // On veut atterrir sur 270
+            let spins = 5 + Math.floor(Math.random() * 3); // 5 à 8 tours
             let finalRot = currentRotation + (360 * spins) + (270 - targetInSlice - (currentRotation % 360));
-            if (finalRot < currentRotation) finalRot += 360; // Toujours avancer
+            // Assurer rotation positive
+            if((finalRot - currentRotation) < 360*5) finalRot += 360;
 
-            // Lancer l'animation
-            // On triche avec CSS transition pour la fluidité, mais on ajoute du "Shake"
-            canvas.style.transition = "transform 6s cubic-bezier(0.15, 1, 0.3, 1)";
+            // CSS Transition pour le mouvement "Machine"
+            // Cubic-bezier personnalisé pour effet "moteur qui démarre et freine sec"
+            canvas.style.transition = "transform 5s cubic-bezier(0.25, 1, 0.5, 1)";
             canvas.style.transform = `rotate(${finalRot}deg)`;
             currentRotation = finalRot;
 
-            // Effet de tremblement pendant que ça tourne
-            grimoire.style.animation = "shake 0.5s infinite";
-            
-            // Arrêter le tremblement avant la fin
-            setTimeout(() => { grimoire.style.animation = "none"; }, 5000);
+            // Son de charge (Visuel) - L'anneau pulse
+            document.querySelector('.r3').style.animationDuration = "0.2s";
 
-            // Révélation
             setTimeout(() => {
                 showResult(segments[winner]);
-                triggerExplosion();
+                spawnPolygons(segments[winner].color);
+                
                 btn.disabled = false;
-                btn.innerText = "Invoquer la Sentence";
-            }, 6000);
+                btn.innerHTML = "GENERATE LOOT";
+                document.querySelector('.r3').style.animationDuration = "2s";
+            }, 5000);
         });
 
-        // --- INTERFACE DE RESULTAT ---
-        const modal = document.getElementById("result-modal");
-        const modalContent = document.getElementById("modal-content");
-        const titleEl = document.getElementById("res-title");
-        const descEl = document.getElementById("res-desc");
-
+        // --- RESULT MODAL ---
         function showResult(seg) {
-            titleEl.innerText = seg.name;
-            descEl.innerText = seg.effect;
+            // Configurer le style de la fenêtre
+            winEl.className = "sao-window"; // Reset
+            if(seg.type === 'danger') winEl.classList.add('danger');
+            if(seg.type === 'divine') winEl.classList.add('divine');
+
+            // Textes
+            document.getElementById('res-type').innerText = seg.type === 'divine' ? 'DIVINE OBJECT' : (seg.type === 'danger' ? 'SYSTEM ALERT' : 'ITEM GET');
+            document.getElementById('res-name').innerText = seg.name;
+            document.getElementById('res-name').style.color = seg.color === '#ffffff' ? '#333' : seg.color;
             
-            // Couleurs conditionnelles
-            if(seg.type === "doom") titleEl.style.color = "#000"; 
-            else if(seg.type === "good") titleEl.style.color = "#2ecc71";
-            else titleEl.style.color = "#ff003c";
+            // Description "Code style"
+            document.getElementById('res-desc').innerHTML = 
+                `<span style="color:#007c85">class</span> <span style="color:#a800e8">Effect</span> {<br>` +
+                `&nbsp;&nbsp;target: <span style="color:#d31027">PlayerID</span>;<br>` +
+                `&nbsp;&nbsp;action: "<span style="color:#333">${seg.effect}</span>";<br>` +
+                `}`;
 
             modal.style.display = "flex";
-            setTimeout(() => { modalContent.style.transform = "scale(1)"; }, 50);
         }
 
         function closeModal() {
-            modalContent.style.transform = "scale(0.5)";
-            setTimeout(() => { modal.style.display = "none"; }, 300);
+            modal.style.display = "none";
         }
 
-        // --- PARTICULES EXPLOSIVES (Canvas Overlay) ---
-        // Création dynamique d'un canvas par dessus tout
-        const pCanvas = document.createElement("canvas");
-        pCanvas.style.position = "fixed";
-        pCanvas.style.top = "0"; pCanvas.style.left = "0";
-        pCanvas.style.width = "100%"; pCanvas.style.height = "100%";
-        pCanvas.style.pointerEvents = "none";
-        pCanvas.style.zIndex = "999";
-        document.body.appendChild(pCanvas);
-        const pCtx = pCanvas.getContext("2d");
-
+        // --- PARTICULES SAO (Polygones qui éclatent) ---
         let particles = [];
+        
+        function resizeCanvas() {
+            particlesCanvas.width = window.innerWidth;
+            particlesCanvas.height = window.innerHeight;
+        }
+        window.onresize = resizeCanvas;
+        resizeCanvas();
 
-        function triggerExplosion() {
-            pCanvas.width = window.innerWidth;
-            pCanvas.height = window.innerHeight;
+        function spawnPolygons(color) {
             particles = [];
             const cx = window.innerWidth / 2;
             const cy = window.innerHeight / 2;
-
-            for(let i=0; i<150; i++) {
+            
+            for(let i=0; i<60; i++) {
                 particles.push({
                     x: cx, y: cy,
-                    vx: (Math.random() - 0.5) * 20,
-                    vy: (Math.random() - 0.5) * 20,
-                    life: 1,
-                    color: `hsl(${Math.random()*60 + 10}, 100%, 50%)`, // Or/Feu
-                    size: Math.random() * 8
+                    vx: (Math.random() - 0.5) * 25,
+                    vy: (Math.random() - 0.5) * 25,
+                    size: Math.random() * 15 + 5,
+                    color: color,
+                    life: 1.0,
+                    rotation: Math.random() * Math.PI,
+                    rotSpeed: (Math.random() - 0.5) * 0.2
                 });
             }
             animateParticles();
         }
 
         function animateParticles() {
-            pCtx.clearRect(0,0,pCanvas.width, pCanvas.height);
+            pCtx.clearRect(0, 0, particlesCanvas.width, particlesCanvas.height);
             let active = false;
+
             particles.forEach(p => {
                 if(p.life > 0) {
                     active = true;
                     p.x += p.vx;
                     p.y += p.vy;
-                    p.vy += 0.2; // Gravité
+                    p.vx *= 0.95; // Friction
+                    p.vy *= 0.95;
                     p.life -= 0.02;
-                    p.size *= 0.95;
-                    
+                    p.rotation += p.rotSpeed;
+
+                    pCtx.save();
+                    pCtx.translate(p.x, p.y);
+                    pCtx.rotate(p.rotation);
                     pCtx.globalAlpha = p.life;
                     pCtx.fillStyle = p.color;
-                    pCtx.beginPath();
-                    pCtx.arc(p.x, p.y, p.size, 0, Math.PI*2);
-                    pCtx.fill();
+
+                    // Dessiner un triangle ou carré (glitch style)
+                    if(Math.random() > 0.5) {
+                        pCtx.fillRect(-p.size/2, -p.size/2, p.size, p.size);
+                    } else {
+                        pCtx.beginPath();
+                        pCtx.moveTo(0, -p.size);
+                        pCtx.lineTo(p.size, p.size);
+                        pCtx.lineTo(-p.size, p.size);
+                        pCtx.fill();
+                    }
+                    pCtx.restore();
                 }
             });
+
             if(active) requestAnimationFrame(animateParticles);
         }
 
