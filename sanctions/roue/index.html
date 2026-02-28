@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>System Call: Generate Luminous Element</title>
     
-    <!-- Polices : Cinzel pour le côté Divin/Fantasy, Orbitron pour la Tech subtile -->
+    <!-- Polices SAO Alicization -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Cinzel:wght@400;600&family=Rajdhani:wght@300;500;700&display=swap" rel="stylesheet">
@@ -18,7 +18,6 @@
             --stacia-pink: #ffb7b2;
             --vector-red: #ff003c;
             --void-bg: #030005;
-            --glass: rgba(20, 10, 30, 0.65);
         }
 
         body {
@@ -31,10 +30,9 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            perspective: 1200px;
         }
 
-        /* --- FOND COSMIQUE (WORLD END ALTAR) --- */
+        /* --- FOND COSMIQUE STABLE --- */
         .universe {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
@@ -46,25 +44,13 @@
             position: absolute;
             width: 100%; height: 100%;
             background-image: 
-                radial-gradient(white, rgba(255,255,255,.2) 2px, transparent 2px),
-                radial-gradient(white, rgba(255,255,255,.15) 1px, transparent 2px);
-            background-size: 550px 550px, 350px 350px;
+                radial-gradient(white, rgba(255,255,255,.2) 2px, transparent 2px);
+            background-size: 550px 550px;
             opacity: 0.6;
             animation: starMove 100s linear infinite;
         }
 
-        /* Lignes de flux de données (Aurora) */
-        .aurora {
-            position: absolute;
-            top: -50%; left: -50%; width: 200%; height: 200%;
-            background: conic-gradient(from 180deg at 50% 50%, transparent 0deg, rgba(255, 0, 200, 0.05) 60deg, transparent 120deg, rgba(0, 200, 255, 0.05) 280deg, transparent 360deg);
-            animation: rotateAurora 60s linear infinite;
-            z-index: -2;
-            filter: blur(50px);
-        }
-
         @keyframes starMove { from { transform: translateY(0); } to { transform: translateY(-200px); } }
-        @keyframes rotateAurora { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
 
         /* --- INTERFACE PRINCIPALE --- */
         .interface-container {
@@ -73,14 +59,13 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            /* Entrance */
-            opacity: 0;
-            animation: divineEntrance 2s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+            /* Animation d'entrée douce */
+            animation: fadeIn 2s ease-out forwards;
         }
 
-        @keyframes divineEntrance {
-            0% { opacity: 0; transform: scale(1.2) translateY(50px); filter: blur(10px); }
-            100% { opacity: 1; transform: scale(1) translateY(0); filter: blur(0); }
+        @keyframes fadeIn {
+            0% { opacity: 0; transform: translateY(20px); }
+            100% { opacity: 1; transform: translateY(0); }
         }
 
         .system-text {
@@ -104,17 +89,8 @@
             text-shadow: 0 0 30px rgba(255, 215, 0, 0.5);
             position: relative;
         }
-        
-        h1::after {
-            content: "";
-            position: absolute;
-            bottom: -10px; left: 50%; transform: translateX(-50%);
-            width: 150px; height: 2px;
-            background: linear-gradient(90deg, transparent, var(--god-gold), transparent);
-            box-shadow: 0 0 10px var(--god-gold);
-        }
 
-        /* --- CERCLES MAGIQUES (Sacred Arts) --- */
+        /* --- CERCLES MAGIQUES --- */
         .sacred-circle-container {
             position: relative;
             width: 550px;
@@ -127,23 +103,14 @@
             position: absolute;
             border-radius: 50%;
             pointer-events: none;
-            box-shadow: 0 0 15px rgba(255, 215, 0, 0.1);
         }
 
-        /* Anneau Extérieur (Runes) */
         .ring-outer {
             width: 100%; height: 100%;
             border: 1px solid rgba(255, 215, 0, 0.3);
             animation: spinRight 60s linear infinite;
         }
-        .ring-outer::before {
-            content: "";
-            position: absolute; top: -5px; left: -5px; right: -5px; bottom: -5px;
-            border: 1px dashed rgba(255, 215, 0, 0.2);
-            border-radius: 50%;
-        }
 
-        /* Anneau Médian (Complexe) */
         .ring-mid {
             width: 85%; height: 85%;
             border: 2px solid var(--god-gold);
@@ -153,7 +120,6 @@
             border-right: 2px solid transparent;
         }
 
-        /* Anneau Intérieur (Focus) */
         .ring-inner {
             width: 65%; height: 65%;
             border: 1px solid var(--stacia-pink);
@@ -165,19 +131,20 @@
         @keyframes spinLeft { 100% { transform: rotate(-360deg); } }
         @keyframes pulseRing { 0%, 100% { transform: scale(1); opacity: 0.5; } 50% { transform: scale(1.02); opacity: 0.9; } }
 
-        /* --- LE CANVAS (La Roue Divine) --- */
+        /* --- CANVAS ROUE (FIXÉ) --- */
+        /* Note: mix-blend-mode supprimé pour éviter le bug de disparition */
         canvas {
             position: relative;
             z-index: 5;
             width: 500px;
             height: 500px;
-            /* Mode de fusion pour effet lumière */
-            mix-blend-mode: screen; 
             filter: drop-shadow(0 0 10px var(--god-gold));
             transform-origin: center;
+            /* Will-change aide le navigateur à ne pas faire disparaitre l'élément */
+            will-change: transform; 
         }
 
-        /* Pointeur (Épée Verticale) */
+        /* Pointeur */
         .divine-pointer {
             position: absolute;
             top: -40px; left: 50%;
@@ -194,7 +161,7 @@
             text-shadow: 0 0 10px var(--god-gold);
         }
 
-        /* --- BOUTON RELEASE RECOLLECTION --- */
+        /* --- BOUTON --- */
         .btn-release {
             margin-top: 50px;
             background: transparent;
@@ -213,21 +180,11 @@
             box-shadow: inset 0 0 20px rgba(255, 215, 0, 0.1);
         }
 
-        /* Effet de remplissage lumière */
-        .btn-release::before {
-            content: "";
-            position: absolute;
-            top: 0; left: -100%; width: 100%; height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255, 215, 0, 0.4), transparent);
-            transition: 0.5s;
-        }
-
         .btn-release:hover {
             background: rgba(255, 215, 0, 0.1);
-            box-shadow: 0 0 30px var(--god-gold), inset 0 0 10px var(--god-gold);
+            box-shadow: 0 0 30px var(--god-gold);
             transform: scale(1.05);
         }
-        .btn-release:hover::before { left: 100%; }
 
         .btn-release:disabled {
             filter: grayscale(1);
@@ -235,50 +192,34 @@
             cursor: not-allowed;
         }
 
-        /* --- FENETRE RESULTAT (Window Object Stacia) --- */
+        /* --- FENETRE RESULTAT --- */
         #result-overlay {
             display: none;
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
             z-index: 100;
-            background: rgba(0,0,0,0.6);
-            backdrop-filter: blur(8px);
+            background: rgba(0,0,0,0.7);
+            backdrop-filter: blur(5px);
             align-items: center; justify-content: center;
         }
 
         .stacia-window {
             width: 500px;
-            background: rgba(20, 15, 25, 0.9);
+            background: rgba(20, 15, 25, 0.95);
             border: 1px solid var(--god-gold);
-            padding: 3px; /* Double border effect */
+            padding: 4px;
             box-shadow: 0 0 50px rgba(255, 215, 0, 0.2);
             transform: scale(0.8);
             opacity: 0;
-            animation: openWindow 0.5s cubic-bezier(0.19, 1, 0.22, 1) forwards;
-            position: relative;
+            animation: openWindow 0.4s cubic-bezier(0.19, 1, 0.22, 1) forwards;
         }
+
+        @keyframes openWindow { to { transform: scale(1); opacity: 1; } }
 
         .window-inner {
             border: 1px solid rgba(255, 215, 0, 0.3);
             padding: 30px;
             text-align: center;
-            background: linear-gradient(to bottom, rgba(255,215,0,0.05), transparent);
-        }
-
-        @keyframes openWindow {
-            to { transform: scale(1); opacity: 1; }
-        }
-
-        .win-header {
-            font-family: 'Rajdhani', sans-serif;
-            font-size: 14px;
-            color: var(--god-gold);
-            letter-spacing: 2px;
-            margin-bottom: 20px;
-            border-bottom: 1px solid rgba(255,255,255,0.1);
-            padding-bottom: 10px;
-            display: flex;
-            justify-content: space-between;
         }
 
         .win-title {
@@ -291,9 +232,7 @@
         
         .win-desc {
             font-size: 1.2rem;
-            line-height: 1.6;
             color: #ddd;
-            font-style: italic;
             margin-bottom: 30px;
         }
 
@@ -306,40 +245,18 @@
             cursor: pointer;
             transition: 0.3s;
         }
-        .btn-accept:hover {
-            background: #fff; color: #000;
-            box-shadow: 0 0 20px #fff;
-        }
+        .btn-accept:hover { background: #fff; color: #000; }
 
-        /* Warning Style (Vector Account) */
-        .stacia-window.dark {
-            border-color: var(--vector-red);
-            box-shadow: 0 0 50px rgba(255, 0, 60, 0.3);
-        }
-        .stacia-window.dark .window-inner {
-            background: linear-gradient(to bottom, rgba(255, 0, 60, 0.1), transparent);
-            border-color: rgba(255, 0, 60, 0.3);
-        }
-        .stacia-window.dark .win-title {
-            color: var(--vector-red);
-            text-shadow: 0 0 15px var(--vector-red);
-        }
-        .stacia-window.dark .win-header { color: var(--vector-red); }
+        .stacia-window.dark { border-color: var(--vector-red); }
+        .stacia-window.dark .win-title { color: var(--vector-red); text-shadow: 0 0 15px var(--vector-red); }
 
-        /* Canvas Particules */
-        #particles {
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            pointer-events: none;
-            z-index: 50;
-        }
+        #particles { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 50; }
     </style>
 </head>
 <body>
 
     <div class="universe">
         <div class="stars"></div>
-        <div class="aurora"></div>
     </div>
 
     <div class="interface-container" id="main-ui">
@@ -347,30 +264,24 @@
         <h1>Divine Authority</h1>
         
         <div class="sacred-circle-container">
-            <!-- Cercles Magiques -->
             <div class="ring ring-outer"></div>
             <div class="ring ring-mid"></div>
             <div class="ring ring-inner"></div>
             
             <div class="divine-pointer"></div>
+            <!-- Canvas avec dimensions fixes pour éviter le flou/disparition -->
             <canvas id="wheel" width="800" height="800"></canvas>
         </div>
 
         <button id="spin-btn" class="btn-release">ENHANCE ARMAMENT</button>
     </div>
 
-    <!-- Fenêtre "Window Object" -->
     <div id="result-overlay">
         <div class="stacia-window" id="win-obj">
             <div class="window-inner">
-                <div class="win-header">
-                    <span>UNIT ID: ADMIN_001</span>
-                    <span id="durability">DURABILITY: 100%</span>
-                </div>
-                
+                <div class="system-text">UNIT ID: ADMIN_001</div>
                 <div class="win-title" id="res-title">TITLE</div>
                 <div class="win-desc" id="res-desc">Description text...</div>
-                
                 <button class="btn-accept" onclick="closeModal()">DISCHARGE</button>
             </div>
         </div>
@@ -379,8 +290,6 @@
     <canvas id="particles"></canvas>
 
     <script>
-        // --- DONNÉES DU JUGEMENT (THEME ALICIZATION) ---
-        // Types: 'light' (Stacia/Solus), 'dark' (Vector/Dark Territory), 'neutral' (Human Empire)
         const segments = [
             { name: "MAINTIEN", desc: "La Volonté reste inchangée.", weight: 12, color: "#aaddff", type: "neutral" },
             { name: "DURÉE x2", desc: "Fluctlight Acceleration: Punishment doubled.", weight: 5, color: "#ffaa00", type: "dark" },
@@ -390,7 +299,7 @@
             { name: "DEMOTION", desc: "Authority Level Reduced.", weight: 1, color: "#777777", type: "neutral" },
             { name: "MERCY /2", desc: "Solus Blessing: Duration halved.", weight: 0.5, color: "#00ffaa", type: "light" },
             { name: "ABSOLUTION", desc: "Stacia Miracle: Sanction removed.", weight: 0.25, color: "#ffffff", type: "light" },
-            { name: "BANISHMENT", desc: "System Alert: Account deletion (Permanent).", weight: 0.25, color: "#000000", type: "dark" }
+            { name: "BANISHMENT", desc: "System Alert: Account deletion.", weight: 0.25, color: "#000000", type: "dark" }
         ];
 
         const canvas = document.getElementById("wheel");
@@ -398,101 +307,85 @@
         const totalWeight = segments.reduce((sum, s) => sum + s.weight, 0);
         let currentRotation = 0;
 
-        // --- DESSIN DU CERCLE DIVIN ---
         function drawWheel() {
+            // Nettoyage complet
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
             const cx = canvas.width / 2;
             const cy = canvas.height / 2;
-            const r = cx - 40; // Rayon
+            const r = cx - 40;
             let start = 0;
-
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
 
             segments.forEach((seg) => {
                 const angle = (seg.weight / totalWeight) * 2 * Math.PI;
                 const end = start + angle;
 
-                // 1. Les Segments (Effet faisceau de lumière)
                 ctx.beginPath();
                 ctx.moveTo(cx, cy);
                 ctx.arc(cx, cy, r, start, end);
                 ctx.closePath();
 
-                // Dégradé radial complexe (Centre brillant -> Couleur -> Transparent)
+                // Dégradé solide (pas de transparence excessive)
                 let grad = ctx.createRadialGradient(cx, cy, 20, cx, cy, r);
                 if (seg.color === "#000000") {
                     grad.addColorStop(0, "#333");
-                    grad.addColorStop(0.8, "#000");
-                    grad.addColorStop(1, "rgba(0,0,0,0.8)");
+                    grad.addColorStop(1, "#000");
                 } else {
-                    grad.addColorStop(0, "rgba(255,255,255,0.1)"); // Centre clair
-                    grad.addColorStop(0.6, seg.color); // Couleur principale
-                    grad.addColorStop(1, adjustAlpha(seg.color, 0.4)); // Bordure semi-transparente
+                    grad.addColorStop(0, "rgba(255,255,255,0.2)");
+                    grad.addColorStop(0.6, seg.color);
+                    grad.addColorStop(1, seg.color); // Couleur pleine à la fin
                 }
 
                 ctx.fillStyle = grad;
                 ctx.fill();
 
-                // 2. Lignes de séparation (Filigranes dorés fins)
+                // Lignes dorées
                 ctx.beginPath();
                 ctx.moveTo(cx, cy);
-                let x = cx + Math.cos(end) * (r + 10);
-                let y = cy + Math.sin(end) * (r + 10);
-                ctx.lineTo(x, y);
-                ctx.strokeStyle = "rgba(255, 215, 0, 0.4)";
-                ctx.lineWidth = 1;
+                ctx.lineTo(cx + Math.cos(end) * (r + 10), cy + Math.sin(end) * (r + 10));
+                ctx.strokeStyle = "rgba(255, 215, 0, 0.6)";
+                ctx.lineWidth = 2;
                 ctx.stroke();
 
-                // 3. Texte (Arts Sacrés)
+                // Texte
                 ctx.save();
                 ctx.translate(cx, cy);
                 ctx.rotate(start + angle / 2);
                 ctx.textAlign = "right";
-                
-                // Effet de brillance texte
-                ctx.shadowColor = seg.color;
-                ctx.shadowBlur = 15;
+                ctx.shadowColor = "rgba(0,0,0,0.8)"; // Ombre noire pour lisibilité
+                ctx.shadowBlur = 4;
                 ctx.fillStyle = "#fff";
-                
-                // Adaptation police
-                let fontSize = seg.weight < 1 ? 20 : 28;
+                let fontSize = seg.weight < 1 ? 24 : 32;
                 ctx.font = `600 ${fontSize}px 'Cinzel'`;
-                
-                let label = seg.weight <= 0.25 ? "Ω" : seg.name; // Omega pour les très petits
-                ctx.fillText(label, r - 30, 8);
-                
+                let label = seg.weight <= 0.25 ? "Ω" : seg.name;
+                ctx.fillText(label, r - 30, 10);
                 ctx.restore();
+
                 start += angle;
             });
 
-            // Centre (Source de lumière / Light Cube)
+            // Centre
             ctx.beginPath();
             ctx.arc(cx, cy, 50, 0, Math.PI * 2);
-            let coreGrad = ctx.createRadialGradient(cx, cy, 5, cx, cy, 50);
-            coreGrad.addColorStop(0, "#fff");
-            coreGrad.addColorStop(0.5, "#ffd700");
-            coreGrad.addColorStop(1, "rgba(255, 215, 0, 0)");
-            ctx.fillStyle = coreGrad;
+            ctx.fillStyle = "#ffd700";
             ctx.fill();
-        }
-
-        function adjustAlpha(color, opacity) {
-            // Fonction simple pour ajouter alpha à un hex (approximatif pour demo)
-            return color; 
+            ctx.beginPath();
+            ctx.arc(cx, cy, 45, 0, Math.PI * 2);
+            ctx.fillStyle = "#fff";
+            ctx.fill();
         }
 
         drawWheel();
 
-        // --- ANIMATION "RELEASE RECOLLECTION" ---
+        // --- ANIMATION STABLE ---
         const btn = document.getElementById("spin-btn");
         const uiContainer = document.getElementById("main-ui");
-        const winEl = document.getElementById("win-obj");
-        const overlay = document.getElementById("result-overlay");
 
         btn.addEventListener("click", () => {
+            if(btn.disabled) return;
             btn.disabled = true;
             btn.innerHTML = "GENERATING...";
             
-            // Logique de sélection
             let rand = Math.random() * totalWeight;
             let sum = 0, winner = 0;
             for(let i=0; i<segments.length; i++) {
@@ -500,56 +393,45 @@
                 if(rand <= sum) { winner = i; break; }
             }
 
-            // Calcul angles
             let startDeg = 0;
             for(let i=0; i<winner; i++) startDeg += (segments[i].weight/totalWeight)*360;
             let sliceDeg = (segments[winner].weight/totalWeight)*360;
             let target = startDeg + sliceDeg / 2;
-            let rng = (Math.random() - 0.5) * (sliceDeg * 0.5); // Randomisation légère
+            let rng = (Math.random() - 0.5) * (sliceDeg * 0.5);
             
-            // Rotation (Viser 270°)
-            let spins = 6; 
+            let spins = 8; 
             let finalRot = currentRotation + (360 * spins) + (270 - (target + rng) - (currentRotation % 360));
-            // Correction pour éviter recul
             if(finalRot < currentRotation) finalRot += 360;
 
-            // Lancement Animation CSS
-            canvas.style.transition = "transform 6s cubic-bezier(0.1, 0.9, 0.3, 1)"; // Courbe "Heavy"
+            // Application de la rotation
+            // Note: J'ai retiré l'animation de "shake" sur le container parent
+            // car c'est souvent ça qui fait disparaitre le canvas enfant pendant la rotation.
+            canvas.style.transition = "transform 6s cubic-bezier(0.1, 0.9, 0.3, 1)";
             canvas.style.transform = `rotate(${finalRot}deg)`;
             currentRotation = finalRot;
 
-            // Effet visuel pendant le spin (Cercles accélèrent)
-            document.querySelector('.ring-outer').style.animationDuration = "2s";
-            document.querySelector('.ring-mid').style.animationDuration = "2s";
+            // Accélération visuelle des anneaux
+            document.querySelector('.ring-outer').style.animationDuration = "1s";
             
-            // Shake screen
-            uiContainer.style.animation = "shake 0.5s ease-in-out infinite";
-
             setTimeout(() => {
-                // Arrêt
-                uiContainer.style.animation = "";
                 document.querySelector('.ring-outer').style.animationDuration = "60s";
-                document.querySelector('.ring-mid').style.animationDuration = "40s";
-                
                 showResult(segments[winner]);
-                explodeParticles(segments[winner].color, segments[winner].type);
-
+                explodeParticles(segments[winner].color);
                 btn.disabled = false;
                 btn.innerHTML = "ENHANCE ARMAMENT";
             }, 6000);
         });
 
-        // --- FENETRE DE RESULTAT ---
+        // --- RESULTATS ---
+        const winEl = document.getElementById("win-obj");
+        const overlay = document.getElementById("result-overlay");
+
         function showResult(seg) {
-            winEl.className = "stacia-window"; // Reset
+            winEl.className = "stacia-window"; 
             if(seg.type === 'dark') winEl.classList.add('dark');
 
             document.getElementById("res-title").innerText = seg.name;
             document.getElementById("res-desc").innerText = seg.desc;
-            
-            // Fluctlight ID random
-            document.getElementById("durability").innerText = "LIFE: " + Math.floor(Math.random() * 100000) + "/" + Math.floor(Math.random() * 100000);
-            
             overlay.style.display = "flex";
         }
 
@@ -557,31 +439,29 @@
             overlay.style.display = "none";
         }
 
-        // --- PARTICULES (Memory Fragments) ---
+        // --- PARTICULES ---
         const pCanvas = document.getElementById("particles");
         const pCtx = pCanvas.getContext("2d");
         
         function resizeP() { pCanvas.width = window.innerWidth; pCanvas.height = window.innerHeight; }
-        window.onresize = resizeP;
+        window.addEventListener('resize', resizeP);
         resizeP();
 
         let particles = [];
 
-        function explodeParticles(color, type) {
+        function explodeParticles(color) {
             particles = [];
             const cx = window.innerWidth / 2;
             const cy = window.innerHeight / 2;
-            const count = 100;
             
-            for(let i=0; i<count; i++) {
+            for(let i=0; i<80; i++) {
                 particles.push({
                     x: cx, y: cy,
-                    vx: (Math.random() - 0.5) * 20,
-                    vy: (Math.random() - 0.5) * 20,
+                    vx: (Math.random() - 0.5) * 15,
+                    vy: (Math.random() - 0.5) * 15,
                     life: 1.0,
                     color: color,
-                    size: Math.random() * 6 + 2,
-                    type: type // 'dark' ou 'light'
+                    size: Math.random() * 5 + 2
                 });
             }
             loopParticles();
@@ -590,59 +470,22 @@
         function loopParticles() {
             pCtx.clearRect(0,0,pCanvas.width, pCanvas.height);
             let active = false;
-
             particles.forEach(p => {
                 if(p.life > 0) {
                     active = true;
                     p.x += p.vx;
                     p.y += p.vy;
-                    p.vx *= 0.96; // Air resistance
-                    p.vy *= 0.96;
-                    p.life -= 0.015;
-
-                    pCtx.save();
+                    p.vx *= 0.95; p.vy *= 0.95;
+                    p.life -= 0.02;
                     pCtx.globalAlpha = p.life;
                     pCtx.fillStyle = p.color;
-                    pCtx.translate(p.x, p.y);
-                    
-                    // Formes : Carrés (Dark) vs Éclats (Light)
-                    if(p.type === 'dark') {
-                        // Glitch cubes
-                        pCtx.fillRect(-p.size, -p.size, p.size*2, p.size*2);
-                    } else {
-                        // Diamond shape (Stacia style)
-                        pCtx.beginPath();
-                        pCtx.rotate(Math.PI / 4);
-                        pCtx.rect(-p.size/2, -p.size/2, p.size, p.size);
-                        pCtx.fill();
-                    }
-                    
-                    pCtx.restore();
+                    pCtx.beginPath();
+                    pCtx.rect(p.x, p.y, p.size, p.size);
+                    pCtx.fill();
                 }
             });
-
             if(active) requestAnimationFrame(loopParticles);
         }
-
-        /* Animation Shake CSS */
-        const styleSheet = document.createElement("style");
-        styleSheet.innerText = `
-            @keyframes shake {
-                0% { transform: translate(1px, 1px) rotate(0deg); }
-                10% { transform: translate(-1px, -2px) rotate(-1deg); }
-                20% { transform: translate(-3px, 0px) rotate(1deg); }
-                30% { transform: translate(3px, 2px) rotate(0deg); }
-                40% { transform: translate(1px, -1px) rotate(1deg); }
-                50% { transform: translate(-1px, 2px) rotate(-1deg); }
-                60% { transform: translate(-3px, 1px) rotate(0deg); }
-                70% { transform: translate(3px, 1px) rotate(-1deg); }
-                80% { transform: translate(-1px, -1px) rotate(1deg); }
-                90% { transform: translate(1px, 2px) rotate(0deg); }
-                100% { transform: translate(1px, -2px) rotate(-1deg); }
-            }
-        `;
-        document.head.appendChild(styleSheet);
-
     </script>
 </body>
 </html>
