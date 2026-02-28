@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Roue du Jugement - Sanctions</title>
+    <style>
+        body {
+            background-color: #1e1e2f;
+            color: #ffffff;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        h1 {
+            color: #ffcc00;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+            margin-bottom: 10px;
+        }
+
+        .wheel-container {
+            position: relative;
+            width: 500px;
+            max-width: 90vw;
+            aspect-ratio: 1 / 1;
+            margin: 20px 0;
+        }
+
+        /* Le pointeur de la roue (flèche rouge) */
+        .pointer {
+            position: absolute;
+            top: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 0;
+            border-left: 20px solid transparent;
+            border-right: 20px solid transparent;
+            border-top: 40px solid #ff3333;
+            z-index: 10;
+            filter: drop-shadow(0 4px 6px rgba(0,0,0,0.6));
+        }
+
+        canvas {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            box-shadow: 0 0 20px rgba(0,0,0,0.8);
+            transform-origin: center;
+        }
+
+        .btn {
+            background-color: #3498db;
+            border: none;
+            color: white;
+            padding: 15px 40px;
+            text-transform: uppercase;
+            font-size: 20px;
+            margin: 20px;
+            cursor: pointer;
+            border-radius: 8px;
+            font-weight: bold;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+            transition: all 0.2s;
+        }
+
+        .btn:hover { background-color: #2980b9; transform: scale(1.05); }
+        .btn:disabled { background-color: #7f8c8d; cursor: not-allowed; transform: none; }
+
+        /* Légende en bas de page */
+        .legend {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 15px;
+            margin-top: 30px;
+            background: #2a2a3c;
+            padding: 20px;
+            border-radius: 12px;
+            width: 100%;
+            max-width: 900px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+        }
+
+        .legend-item { display: flex; align-items: flex-start; font-size: 14px; line-height: 1.4; }
+        .color-box { width: 18px; height: 18px; margin-right: 12px; border-radius: 4px; flex-shrink: 0; margin-top: 2px;}
+
+        /* Modale (Pop-up) de Résultat */
+        #result-modal {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.85);
+            z-index: 100;
+            align-items: center;
+            justify-content: center;
+            animation: fadeIn 0.3s;
+        }
+
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+        .modal-content {
+            background: #2a2a3c;
+            padding: 40px;
+            border-radius: 12px;
+            text-align: center;
+            max-width: 500px;
+            width: 90%;
+            box-shadow: 0 0 30px rgba(0,0,0,1);
+        }
+
+        .modal-content h2 { margin-top: 0; font-size: 28px; text-transform: uppercase; }
+        .modal-content p { font-size: 20px; margin: 25px 0; color: #e0e0e0; }
+        
+        .close-btn {
+            background-color: #e74c3c;
+            border: none;
+            color: white;
+            padding: 12px 25px;
+            cursor: pointer;
+            border-radius: 5px;
+            font-size: 16px;
+            font-weight: bold;
+        }
+        .close-btn:hover { background-color: #c0392b; }
+    </style>
+</head>
+<body>
+
+    <h1>Roue du Jugement</h1>
+    
+    <div class="wheel-container">
+        <div class="pointer"></div>
+        <canvas id="wheel" width="600" height="600"></canvas>
+    </div>
+    
+    <button id="spin-btn" class="btn">Tourner la Roue</button>
+
+    <div class="legend" id="legend"></div>
+
+    <div id="result-modal">
+        <div class="modal-content">
+            <h2 id="result-title">Résultat</h2>
+            <p id="result-effect">Effet</p>
+            <button class="close-btn" onclick="closeModal()">Accepter la Sentence</button>
+        </div>
+    </div>
+
+    <script>
+        // --- DONNÉES DE LA ROUE ---
+        const segments =[
+            { name: "MAINTIEN DE LA PEINE", effect: "La sanction initiale reste inchangée.", weight: 12, percent: "48%", color: "#3498db" },
+            { name: "AGGRAVATION x2", effect: "Durée du ban ou du timeout doublée.", weight: 5, percent: "20%", color: "#e67e22" },
+            { name: "AGGRAVATION x4", effect: "Sanction maximale (Ex: 1 sem -> 1 mois).", weight: 3, percent: "12%", color: "#e74c3c" },
+            { name: "BLACKLIST SALONS", effect: "Discord: Accès limité (1 salon). / MC: Interdiction zones.", weight: 2, percent: "8%", color: "#9b59b6" },
+            { name: "RESTRICTION MÉDIAS", effect: "Retrait du droit d'envoyer liens/images/emotes.", weight: 1, percent: "4%", color: "#f1c40f" },
+            { name: "DÉGRADATION RANG", effect: "Suppression définitive des rôles VIP / Grades.", weight: 1, percent: "4%", color: "#7f8c8d" },
+            { name: "ALLÈGEMENT /2", effect: "La durée de la peine est divisée par 2.", weight: 0.5, percent: "2%", color: "#2ecc71" },
+            { name: "ANNULATION DE PEINE", effect: "Retrait immédiat de la sanction.", weight: 0.25, percent: "1%", color: "#1abc9c" },
+            { name: "BLACKLIST DÉFINITIVE", effect: "Ban permanent et irrévocable (IP/ID).", weight: 0.25, percent: "1%", color: "#000000" }
+        ];
+
+        const canvas = document.getElementById("wheel");
+        const ctx = canvas.getContext("2d");
+        const totalWeight = segments.reduce((sum, s) => sum + s.weight, 0);
+        let currentRotation = 0; // Rotation cumulée en degrés
+
+        // --- GÉNÉRATION DE LA LÉGENDE ---
+        const legendDiv = document.getElementById("legend");
+        segments.forEach(seg => {
+            let item = document.createElement("div");
+            item.className = "legend-item";
+            item.innerHTML = `<div class="color-box" style="background:${seg.color}; border: ${seg.color === '#000000' ? '1px solid #fff' : 'none'}"></div>
+                              <div><strong>${seg.name} (${seg.percent})</strong><br><i>${seg.effect}</i></div>`;
+            legendDiv.appendChild(item);
+        });
+
+        // --- DESSIN DE LA ROUE ---
+        function drawWheel() {
+            const centerX = canvas.width / 2;
+            const centerY = canvas.height / 2;
+            const radius = centerX;
+            let startAngle = 0; // Commence à droite (0 radian = 3 heures)
+
+            segments.forEach((seg) => {
+                let sliceAngle = (seg.weight / totalWeight) * 2 * Math.PI;
+                
+                // Dessin de la part
+                ctx.beginPath();
+                ctx.moveTo(centerX, centerY);
+                ctx.arc(centerX, centerY, radius, startAngle, startAngle + sliceAngle);
+                ctx.fillStyle = seg.color;
+                ctx.fill();
+                ctx.lineWidth = 2;
+                ctx.strokeStyle = "#1e1e2f"; // Bordure entre les parts
+                ctx.stroke();
+
+                // Dessin du texte
+                ctx.save();
+                ctx.translate(centerX, centerY);
+                ctx.rotate(startAngle + sliceAngle / 2);
+                ctx.textAlign = "right";
+                // Couleur du texte (noir pour le jaune, blanc pour le reste)
+                ctx.fillStyle = seg.color === "#f1c40f" ? "#000000" : "#ffffff"; 
+                
+                // Adapter la taille du texte pour les toutes petites parts
+                if (seg.weight <= 0.5) {
+                    ctx.font = "bold 11px 'Segoe UI', sans-serif";
+                } else {
+                    ctx.font = "bold 16px 'Segoe UI', sans-serif";
+                }
+                
+                let text = `${seg.name} (${seg.percent})`;
+                // On évite d'écrire sur les toutes petites parts (1%) car le texte déborderait,
+                // L'utilisateur se référera aux couleurs de la légende.
+                if (seg.weight > 0.25) {
+                    ctx.fillText(text, radius - 20, 5);
+                } else {
+                    // Pour 1%, on met juste le pourcentage
+                    ctx.fillText(seg.percent, radius - 20, 4);
+                }
+                ctx.restore();
+
+                startAngle += sliceAngle;
+            });
+        }
+
+        // Initialisation
+        drawWheel();
+
+        // --- MÉCANIQUE DE ROTATION ---
+        const spinBtn = document.getElementById("spin-btn");
+
+        spinBtn.addEventListener("click", () => {
+            spinBtn.disabled = true;
+
+            // 1. Détermination du gagnant basée sur les poids (Algorithme "Weighted Random")
+            let rand = Math.random() * totalWeight;
+            let sum = 0;
+            let winnerIndex = 0;
+            for (let i = 0; i < segments.length; i++) {
+                sum += segments[i].weight;
+                if (rand <= sum) {
+                    winnerIndex = i;
+                    break;
+                }
+            }
+
+            // 2. Calcul des angles de la part gagnante (en degrés)
+            let startAngleDeg = 0;
+            for (let i = 0; i < winnerIndex; i++) {
+                startAngleDeg += (segments[i].weight / totalWeight) * 360;
+            }
+            let sliceAngleDeg = (segments[winnerIndex].weight / totalWeight) * 360;
+            
+            // 3. Point d'arrêt aléatoire à l'intérieur de la part gagnante (avec une marge pour éviter les bords)
+            let padding = sliceAngleDeg > 5 ? 2 : 0; // Eviter de s'arrêter pile sur une ligne
+            let targetAngleDeg = startAngleDeg + padding + Math.random() * (sliceAngleDeg - 2 * padding);
+
+            // 4. Calcul de la rotation nécessaire
+            // Le pointeur est en haut (ce qui correspond à 270 degrés sur un cercle trigonométrique standard)
+            let targetModulo = (270 - targetAngleDeg + 360) % 360;
+            let currentModulo = currentRotation % 360;
+            
+            let diff = targetModulo - currentModulo;
+            if (diff < 0) diff += 360;
+
+            // Ajout de "tours gratuits" pour l'animation (ex: entre 6 et 10 tours)
+            let extraSpins = 6 + Math.floor(Math.random() * 5);
+            currentRotation += diff + (extraSpins * 360);
+
+            // 5. Application de l'animation CSS
+            canvas.style.transition = 'transform 5s cubic-bezier(0.2, 0.8, 0.2, 1)'; // Effet de décélération fluide
+            canvas.style.transform = `rotate(${currentRotation}deg)`;
+
+            // 6. Affichage du résultat après l'animation (5000 ms = 5 secondes)
+            setTimeout(() => {
+                showResult(segments[winnerIndex]);
+                spinBtn.disabled = false;
+            }, 5200);
+        });
+
+        // --- GESTION DE LA MODALE (RÉSULTAT) ---
+        function showResult(segment) {
+            const titleEl = document.getElementById("result-title");
+            titleEl.innerText = segment.name;
+            titleEl.style.color = segment.color === "#000000" ? "#ff4444" : segment.color;
+            
+            document.getElementById("result-effect").innerText = segment.effect;
+            document.getElementById("result-modal").style.display = "flex";
+        }
+
+        function closeModal() {
+            document.getElementById("result-modal").style.display = "none";
+        }
+    </script>
+</body>
+</html>
