@@ -4,7 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>VIP-Land | Ultimate Stage</title>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;900&display=swap" rel="stylesheet">
+    <!-- Ajout de la police Mochiy Pop One (Style Anime/Idol) et conservation de Montserrat pour les petits textes -->
+    <link href="https://fonts.googleapis.com/css2?family=Mochiy+Pop+One&family=Montserrat:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
         :root {
             --c-pink: #ff0099;
@@ -89,25 +90,22 @@
             position: relative;
         }
 
-        /* --- TITRE ANIMÉ (CORRIGÉ POUR LE CYCLE PARFAIT) --- */
+        /* --- TITRE ANIMÉ --- */
         h1 {
+            /* Application de la police Oshi no Ko */
+            font-family: 'Mochiy Pop One', sans-serif;
             font-size: clamp(2rem, 5vw, 4rem);
             text-transform: uppercase;
             margin: 0 0 10px 0;
-            font-weight: 900;
             
-            /* Le dégradé commence et finit par #fff */
+            /* Animation Dégradé fluide */
             background: linear-gradient(90deg, #fff, var(--c-pink), var(--c-purple), var(--c-cyan), var(--c-gold), #fff);
-            
-            /* Taille à 200% pour permettre un déplacement complet fluide */
             background-size: 200% auto;
-            
             -webkit-background-clip: text; 
             background-clip: text; 
             color: transparent;
             
             filter: drop-shadow(0 0 10px var(--c-purple));
-            /* Durée de 3s pour un effet visible et fluide */
             animation: textFlow 3s linear infinite;
         }
 
@@ -167,7 +165,8 @@
             background: transparent; color: white;
             border: 2px solid rgba(255,255,255,0.3);
             padding: 15px 50px;
-            font-family: 'Montserrat', sans-serif; font-weight: 900; font-size: 1.2rem;
+            font-family: 'Mochiy Pop One', sans-serif; /* Police Oshi no Ko */
+            font-size: 1.1rem;
             text-transform: uppercase; cursor: pointer;
             border-radius: 50px;
             transition: 0.3s;
@@ -185,6 +184,7 @@
             display: flex; gap: 10px; justify-content: center; flex-wrap: wrap;
         }
         .stat-tag {
+            font-family: 'Montserrat', sans-serif; /* Reste lisible pour les stats */
             font-size: 0.8rem; background: rgba(0,0,0,0.5); border: 1px solid #444;
             padding: 5px 10px; border-radius: 5px; color: #ccc;
         }
@@ -210,14 +210,20 @@
         }
         #modal.active .modal-content { transform: scale(1); }
 
-        .win-txt { font-size: 3rem; font-weight: 900; color: var(--c-gold); text-shadow: 0 0 20px var(--c-gold); margin: 20px 0; }
-        .close-btn { background: transparent; border: 1px solid white; color: white; padding: 10px 30px; cursor: pointer; }
+        .win-txt { 
+            font-family: 'Mochiy Pop One', sans-serif; /* Police Oshi no Ko */
+            font-size: 2.5rem; color: var(--c-gold); text-shadow: 0 0 20px var(--c-gold); margin: 20px 0; 
+        }
+        .close-btn { 
+            font-family: 'Mochiy Pop One', sans-serif;
+            background: transparent; border: 1px solid white; color: white; padding: 10px 30px; cursor: pointer; 
+        }
         .close-btn:hover { background: white; color: black; }
 
         /* Media Queries pour petits écrans */
         @media (max-height: 600px) {
             h1 { font-size: 1.5rem; margin-bottom: 5px; }
-            #spin-btn { padding: 10px 30px; font-size: 1rem; }
+            #spin-btn { padding: 10px 30px; font-size: 0.9rem; }
             .stats-box { display: none; } /* On cache les stats si l'écran est trop petit en hauteur */
         }
     </style>
@@ -257,21 +263,22 @@
     <!-- MODAL -->
     <div id="modal">
         <div class="modal-content">
-            <h2 id="m-title" style="color:var(--c-cyan); margin:0;">RÉSULTAT</h2>
+            <h2 id="m-title" style="font-family:'Mochiy Pop One', sans-serif; color:var(--c-cyan); margin:0;">RÉSULTAT</h2>
             <div class="win-txt" id="m-amount">...</div>
-            <p id="m-msg" style="color:#aaa;">...</p>
+            <p id="m-msg" style="color:#aaa; font-family:'Montserrat', sans-serif;">...</p>
             <button class="close-btn" onclick="closeModal()">Fermer</button>
         </div>
     </div>
 
     <script>
-        // Charger la page proprement
+        // Charger la page proprement et attendre que la police soit chargée pour dessiner le canvas
         window.addEventListener('load', () => {
-            setTimeout(() => {
-                document.body.classList.add('loaded');
-                // Dessiner la roue une fois que tout est prêt
-                drawWheel(); 
-            }, 800);
+            document.fonts.ready.then(() => {
+                setTimeout(() => {
+                    document.body.classList.add('loaded');
+                    drawWheel(); 
+                }, 800);
+            });
         });
 
         const canvas = document.getElementById('wheel');
@@ -281,7 +288,7 @@
         const statsList = document.getElementById('stats-list');
 
         // Config 50/50
-        const segments = [
+        const segments =[
             { text: "80k", color: "#ffd700", type: "win", msg: "JACKPOT !", weight: 1 }, 
             { text: "PERDU", color: "#240046", type: "lose", msg: "Rien...", weight: 32 },
             { text: "40k", color: "#ff0099", type: "win", msg: "Incroyable !", weight: 5 }, 
@@ -304,8 +311,6 @@
             const cx = 250, cy = 250, r = 250;
             
             // On décale le dessin pour que le segment 0 soit en HAUT (Midi)
-            // Dessin standard = 0rad à droite (3h).
-            // Donc offset = -PI/2 - (arc/2).
             const offset = -Math.PI/2 - (arc/2);
 
             segments.forEach((seg, i) => {
@@ -331,13 +336,13 @@
                 ctx.fill();
                 ctx.stroke();
 
-                // Texte
+                // Texte avec la police Oshi no Ko
                 ctx.save();
                 ctx.translate(cx, cy);
                 ctx.rotate(angle + arc / 2);
                 ctx.textAlign = "right";
                 ctx.fillStyle = "white";
-                ctx.font = "bold 24px Montserrat";
+                ctx.font = "20px 'Mochiy Pop One'"; // Police appliquée au Canvas
                 ctx.shadowColor = "black"; ctx.shadowBlur = 4;
                 ctx.fillText(seg.text, r - 30, 8);
                 ctx.restore();
@@ -358,11 +363,7 @@
             }
 
             // Calcul angle
-            // Le segment winIdx doit arriver en haut (Midi).
-            // Comme on a dessiné avec offset, la position de base du winIdx est (winIdx * 360 / nbSegments).
-            // Pour le mettre à 0, il faut tourner de - (cette position).
             const segAngle = 360 / segments.length;
-            // On ajoute de l'aléatoire dans le segment (+/- 40% de la largeur)
             const randomOffset = (Math.random() - 0.5) * (segAngle * 0.8);
             
             const targetRotation = -(winIdx * segAngle) + randomOffset;
@@ -402,7 +403,7 @@
                 amt.style.textShadow = "none";
             }
             msg.innerText = winner.msg;
-            modal.classList.add('active'); // Utilise la classe active pour flex
+            modal.classList.add('active');
         }
 
         function closeModal() {
@@ -433,7 +434,6 @@
         // Init Events
         spinBtn.addEventListener('click', spin);
         initStats();
-        // Le drawWheel est aussi appelé dans le window load pour être sûr
 
     </script>
 </body>
