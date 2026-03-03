@@ -3,21 +3,22 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>VIP-Land | Star Stage</title>
+    <title>VIP-Land | The Idol Stage</title>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
         :root {
-            --ai-pink: #ff0095;
-            --ai-purple: #44008b;
-            --ai-dark: #0a001a;
+            --ai-pink: #ff006e;
+            --ai-magenta: #8338ec;
+            --ai-violet: #3a86ff;
             --ai-cyan: #00f2ff;
-            --ai-gold: #ffd700;
+            --ai-gold: #ffbe0b;
+            --deep-space: #050110;
         }
 
         body {
             margin: 0;
             padding: 0;
-            background-color: var(--ai-dark);
+            background-color: var(--deep-space);
             color: white;
             font-family: 'Montserrat', sans-serif;
             overflow: hidden;
@@ -26,427 +27,430 @@
             align-items: center;
             justify-content: center;
             height: 100vh;
-            position: relative;
+            perspective: 1000px;
         }
 
-        /* --- BACKGROUND ANIMÉ (SPOTLIGHTS) --- */
-        .stage-lights {
+        /* --- BACKGROUND IMMERSIF (NEBULEUSE) --- */
+        .nebula-bg {
             position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: conic-gradient(
-                from 0deg,
-                transparent 0deg,
-                rgba(68, 0, 139, 0.3) 20deg,
-                transparent 40deg,
-                rgba(255, 0, 149, 0.2) 60deg,
-                transparent 80deg,
-                rgba(0, 242, 255, 0.2) 120deg,
-                transparent 150deg
-            );
-            animation: rotateLights 20s linear infinite;
+            top: -50%; left: -50%; width: 200%; height: 200%;
+            background: 
+                radial-gradient(circle at 50% 50%, rgba(131, 56, 236, 0.2), transparent 50%),
+                radial-gradient(circle at 20% 80%, rgba(255, 0, 110, 0.15), transparent 40%),
+                radial-gradient(circle at 80% 20%, rgba(0, 242, 255, 0.15), transparent 40%);
+            animation: nebulaMove 20s infinite alternate ease-in-out;
             z-index: 0;
-            pointer-events: none;
+            filter: blur(40px);
+        }
+        
+        @keyframes nebulaMove {
+            0% { transform: scale(1) rotate(0deg); }
+            100% { transform: scale(1.1) rotate(5deg); }
         }
 
-        @keyframes rotateLights {
-            from { transform: rotate(0deg); }
-            to { transform: rotate(360deg); }
+        /* --- INTRO CLIN D'OEIL (WINK ANIMATION) --- */
+        .eyelid {
+            position: fixed;
+            left: 0;
+            width: 100%;
+            height: 50vh;
+            background: #000;
+            z-index: 9999;
+            transition: all 1.5s cubic-bezier(0.77, 0, 0.175, 1);
         }
+        .eyelid-top { top: 0; border-bottom: 5px solid var(--ai-pink); }
+        .eyelid-bottom { bottom: 0; border-top: 5px solid var(--ai-pink); }
+        
+        body.loaded .eyelid-top { transform: translateY(-100%); }
+        body.loaded .eyelid-bottom { transform: translateY(100%); }
 
-        /* --- PARTICULES (ETOILES FLOTTANTES) --- */
-        .star-particle {
+        /* --- PARTICULES D'ÉTOILES --- */
+        .star {
             position: absolute;
             background: white;
             border-radius: 50%;
+            animation: twinkle var(--duration) infinite ease-in-out;
             opacity: 0;
-            animation: floatUp linear forwards;
-            z-index: 1;
+        }
+        @keyframes twinkle {
+            0% { transform: scale(0); opacity: 0; }
+            50% { opacity: 1; transform: scale(1); box-shadow: 0 0 10px white; }
+            100% { transform: scale(0); opacity: 0; }
         }
 
-        @keyframes floatUp {
-            0% { transform: translateY(100vh) scale(0); opacity: 0; }
-            50% { opacity: 1; }
-            100% { transform: translateY(-10vh) scale(1.5); opacity: 0; }
-        }
-
-        /* --- INTERFACE PRINCIPALE --- */
-        .main-container {
+        /* --- CONTENEUR PRINCIPAL --- */
+        .main-stage {
             z-index: 10;
+            position: relative;
             display: flex;
             flex-direction: column;
             align-items: center;
-            position: relative;
+            transform-style: preserve-3d;
         }
 
         h1 {
-            font-size: 4rem;
-            text-transform: uppercase;
-            letter-spacing: -2px;
+            font-size: 3.5rem;
             margin: 0;
-            background: linear-gradient(to right, #fff, var(--ai-cyan), var(--ai-pink));
+            text-transform: uppercase;
+            font-weight: 900;
+            letter-spacing: -2px;
+            background: linear-gradient(to right, #fff, var(--ai-pink), var(--ai-magenta));
             -webkit-background-clip: text;
             background-clip: text;
             color: transparent;
-            text-shadow: 0 0 30px rgba(255, 0, 149, 0.6);
-            animation: pulseTitle 3s infinite ease-in-out;
+            filter: drop-shadow(0 0 20px rgba(255, 0, 110, 0.6));
+            animation: textGlow 3s infinite alternate;
         }
 
-        @keyframes pulseTitle {
-            0%, 100% { filter: drop-shadow(0 0 10px var(--ai-pink)); }
-            50% { filter: drop-shadow(0 0 25px var(--ai-cyan)); }
+        @keyframes textGlow {
+            from { filter: drop-shadow(0 0 10px rgba(255, 0, 110, 0.4)); }
+            to { filter: drop-shadow(0 0 30px rgba(255, 0, 110, 0.9)); }
         }
 
         .subtitle {
-            font-size: 1rem;
-            letter-spacing: 5px;
+            font-size: 0.9rem;
             color: var(--ai-cyan);
+            letter-spacing: 6px;
             margin-bottom: 30px;
             text-shadow: 0 0 10px var(--ai-cyan);
+            text-transform: uppercase;
         }
 
-        /* --- L'OEIL (LA ROUE) --- */
-        .eye-wrapper {
-            position: relative;
-            width: 450px;
-            height: 450px;
+        /* --- L'OEIL D'IDOLE (ROUE) --- */
+        .eye-frame {
+            width: 420px;
+            height: 420px;
             border-radius: 50%;
-            padding: 10px;
-            background: linear-gradient(135deg, var(--ai-pink), var(--ai-purple));
+            padding: 8px;
+            /* Bordure dégradée brillante */
+            background: conic-gradient(from 0deg, var(--ai-pink), var(--ai-magenta), var(--ai-cyan), var(--ai-magenta), var(--ai-pink));
             box-shadow: 
-                0 0 50px var(--ai-purple),
-                0 0 100px rgba(255, 0, 149, 0.4);
+                0 0 60px rgba(131, 56, 236, 0.5),
+                inset 0 0 40px rgba(0, 0, 0, 0.8);
             display: flex;
             justify-content: center;
             align-items: center;
+            position: relative;
         }
 
-        /* Le container clippé en rond */
-        .wheel-mask {
+        .wheel-container {
             width: 100%;
             height: 100%;
             border-radius: 50%;
             overflow: hidden;
-            position: relative;
             background: #000;
-            box-shadow: inset 0 0 60px #000; /* Profondeur */
+            position: relative;
+            /* Masque pour rendre l'image nette */
+            -webkit-mask-image: -webkit-radial-gradient(white, black);
         }
 
         canvas {
             display: block;
             width: 100%;
             height: 100%;
-            transform: rotate(-90deg); /* Start at 12:00 */
         }
 
-        /* Reflet Glossy (L'effet mouillé de l'oeil d'anime) */
-        .eye-gloss {
-            position: absolute;
-            top: 15%;
-            left: 12%;
-            width: 80px;
-            height: 40px;
-            background: rgba(255, 255, 255, 0.9);
-            border-radius: 50%;
-            transform: rotate(-35deg);
-            filter: blur(2px);
-            z-index: 20;
-            pointer-events: none;
-        }
-        .eye-gloss-small {
-            position: absolute;
-            bottom: 20%;
-            right: 20%;
-            width: 20px;
-            height: 20px;
-            background: rgba(255, 255, 255, 0.7);
-            border-radius: 50%;
-            filter: blur(1px);
-            z-index: 20;
-            pointer-events: none;
-        }
-
-        /* PUPILLE (ETOILE D'AI) */
+        /* Pupille Étoile */
         .pupil-star {
             position: absolute;
             top: 50%; left: 50%;
             transform: translate(-50%, -50%);
-            width: 100px;
-            height: 100px;
+            width: 80px; height: 80px;
             background: white;
-            /* Forme d'étoile à 6 branches précise */
+            /* Forme exacte de l'étoile d'Ai */
             clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
-            z-index: 15;
-            box-shadow: 0 0 30px white;
-            animation: breathe 4s infinite ease-in-out;
+            z-index: 20;
+            box-shadow: 0 0 40px white;
+            animation: breathe 3s infinite ease-in-out;
         }
         
-        .pupil-center {
-            position: absolute;
-            top: 50%; left: 50%;
-            transform: translate(-50%, -50%);
-            width: 15px; height: 15px;
-            background: var(--ai-dark);
-            border-radius: 50%;
-            z-index: 16;
-        }
-
         @keyframes breathe {
-            0%, 100% { transform: translate(-50%, -50%) scale(1); box-shadow: 0 0 30px white; }
-            50% { transform: translate(-50%, -50%) scale(1.1); box-shadow: 0 0 60px var(--ai-pink); }
+            0%, 100% { transform: translate(-50%, -50%) scale(1); filter: drop-shadow(0 0 10px var(--ai-pink)); }
+            50% { transform: translate(-50%, -50%) scale(1.15); filter: drop-shadow(0 0 30px var(--ai-magenta)); }
         }
 
-        /* POINTEUR */
-        .pointer-marker {
+        /* Reflets de verre (Glossy) */
+        .gloss-reflection {
             position: absolute;
-            top: -20px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 40px;
-            height: 50px;
-            /* Forme d'un cristal */
-            clip-path: polygon(50% 100%, 0 0, 100% 0);
-            background: linear-gradient(to bottom, #fff, var(--ai-cyan));
+            top: 15%; left: 15%;
+            width: 60px; height: 30px;
+            background: rgba(255,255,255,0.7);
+            border-radius: 50%;
+            transform: rotate(-45deg);
+            filter: blur(3px);
             z-index: 25;
-            filter: drop-shadow(0 0 10px var(--ai-cyan));
+            pointer-events: none;
+        }
+        
+        /* Cils / Pointeur */
+        .lash-pointer {
+            position: absolute;
+            top: -25px;
+            z-index: 30;
+            width: 40px;
+            height: 60px;
+            background: linear-gradient(to bottom, #fff, var(--ai-cyan));
+            clip-path: polygon(50% 100%, 0 0, 100% 0);
+            filter: drop-shadow(0 0 15px var(--ai-cyan));
         }
 
-        /* BOUTON */
+        /* --- BOUTON DE LANCEMENT --- */
         .spin-btn {
             margin-top: 50px;
-            padding: 15px 60px;
-            font-size: 1.5rem;
+            padding: 18px 70px;
+            font-size: 1.3rem;
             font-weight: 900;
             font-family: 'Montserrat', sans-serif;
             text-transform: uppercase;
-            color: var(--ai-dark);
-            background: white;
-            border: none;
-            cursor: pointer;
-            /* Forme biseautée */
-            clip-path: polygon(10% 0, 100% 0, 90% 100%, 0% 100%);
-            transition: all 0.2s;
+            color: white;
+            background: transparent;
+            border: 2px solid rgba(255,255,255,0.2);
             position: relative;
             overflow: hidden;
-            box-shadow: 0 0 20px rgba(255,255,255,0.5);
+            cursor: pointer;
+            transition: 0.3s;
+            box-shadow: 0 0 20px rgba(0,0,0,0.5);
+            border-radius: 5px;
         }
-
+        
         .spin-btn::before {
-            content: "";
+            content: '';
             position: absolute;
-            top: 0; left: -100%;
-            width: 100%; height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.8), transparent);
-            transition: 0.5s;
+            top:0; left:0; width: 100%; height: 100%;
+            background: linear-gradient(90deg, var(--ai-pink), var(--ai-magenta));
+            z-index: -1;
+            transform: skewX(-20deg) scaleX(0);
+            transform-origin: left;
+            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
-
-        .spin-btn:hover {
-            background: var(--ai-pink);
-            color: white;
-            transform: scale(1.05);
-            box-shadow: 0 0 50px var(--ai-pink);
-        }
-
+        
         .spin-btn:hover::before {
-            left: 100%;
+            transform: skewX(-20deg) scaleX(1);
         }
-
+        .spin-btn:hover {
+            border-color: transparent;
+            box-shadow: 0 0 40px var(--ai-pink);
+            letter-spacing: 2px;
+        }
         .spin-btn:disabled {
-            background: #555;
+            filter: grayscale(1);
             cursor: not-allowed;
-            transform: scale(1);
-            color: #888;
+            transform: none !important;
         }
 
-        /* STATS PANEL */
-        .stats-panel {
-            margin-top: 20px;
-            background: rgba(0, 0, 0, 0.5);
-            padding: 10px 20px;
-            border-left: 3px solid var(--ai-pink);
-            border-right: 3px solid var(--ai-cyan);
-            backdrop-filter: blur(5px);
+        /* --- TABLEAU DES RECOMPENSES (SANS LES PERDANTS) --- */
+        .rewards-panel {
+            margin-top: 30px;
+            width: 100%;
+            max-width: 500px;
+            background: rgba(0,0,0,0.6);
+            border-top: 1px solid var(--ai-cyan);
+            border-bottom: 1px solid var(--ai-pink);
+            padding: 15px;
+            backdrop-filter: blur(10px);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            transform: skewX(-10deg);
+        }
+        
+        .rewards-title {
+            color: var(--ai-cyan);
             font-size: 0.8rem;
-            text-align: center;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            transform: skewX(10deg); /* Counter skew */
         }
-        .stats-panel span { display: block; margin: 3px 0; color: #ccc; }
-        .win-rate { color: var(--ai-gold) !important; font-weight: bold; }
+        
+        .rewards-grid {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 15px;
+            transform: skewX(10deg);
+        }
+        
+        .reward-tag {
+            font-size: 0.8rem;
+            padding: 5px 10px;
+            border-radius: 4px;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+        .reward-tag b { color: white; margin-left: 5px; }
 
-        /* MODAL */
+        /* --- MODAL RESULTAT --- */
         .modal-overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(10, 0, 26, 0.95);
+            background: rgba(5, 1, 16, 0.95);
             display: flex; justify-content: center; align-items: center;
-            opacity: 0; pointer-events: none; transition: 0.4s; z-index: 100;
+            opacity: 0; pointer-events: none; transition: 0.5s; z-index: 1000;
         }
         .modal-overlay.active { opacity: 1; pointer-events: all; }
-
-        .modal-box {
-            background: linear-gradient(180deg, #1a0b2e, #000);
-            border: 2px solid var(--ai-pink);
+        
+        .modal-content {
+            background: linear-gradient(135deg, #150029, #000);
             padding: 50px;
-            text-align: center;
-            position: relative;
-            transform: scale(0.5);
-            transition: cubic-bezier(0.175, 0.885, 0.32, 1.275) 0.4s;
+            border: 1px solid var(--ai-cyan);
             box-shadow: 0 0 100px var(--ai-pink);
+            text-align: center;
+            transform: scale(0.8) translateY(50px);
+            transition: 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            max-width: 90%;
         }
-        .modal-overlay.active .modal-box { transform: scale(1); }
-
-        .modal-title { font-size: 2rem; margin: 0; text-transform: uppercase; color: white; }
-        .modal-win-amount { font-size: 4rem; margin: 20px 0; font-weight: 900; color: var(--ai-gold); text-shadow: 0 0 20px var(--ai-gold); }
-        .modal-close {
-            background: transparent; border: 1px solid white; color: white;
-            padding: 10px 30px; font-family: 'Montserrat', sans-serif; cursor: pointer;
-            text-transform: uppercase; font-weight: bold; transition: 0.2s;
+        .modal-overlay.active .modal-content { transform: scale(1) translateY(0); }
+        
+        .modal-win-text {
+            font-size: 4rem; margin: 20px 0;
+            font-weight: 900;
+            background: linear-gradient(to bottom, #fff, var(--ai-gold));
+            -webkit-background-clip: text; background-clip: text; color: transparent;
+            filter: drop-shadow(0 0 20px var(--ai-gold));
         }
-        .modal-close:hover { background: white; color: black; box-shadow: 0 0 20px white; }
 
         @media (max-width: 600px) {
-            .eye-wrapper { width: 320px; height: 320px; }
-            h1 { font-size: 2.5rem; }
-            .pupil-star { width: 70px; height: 70px; }
+            .eye-frame { width: 320px; height: 320px; }
+            h1 { font-size: 2.2rem; }
+            .rewards-panel { width: 90%; }
         }
     </style>
 </head>
 <body>
 
+    <!-- Animation d'ouverture des yeux -->
+    <div class="eyelid eyelid-top"></div>
+    <div class="eyelid eyelid-bottom"></div>
+
     <!-- Fond animé -->
-    <div class="stage-lights"></div>
-    <!-- Conteneur pour les particules JS -->
-    <div id="particles-container"></div>
+    <div class="nebula-bg"></div>
+    <!-- Script étoiles JS en bas -->
+    <div id="stars-container"></div>
 
-    <div class="main-container">
+    <div class="main-stage">
         <h1>VIP-Land</h1>
-        <div class="subtitle">✧ STAR TICKET SYSTEM ✧</div>
+        <div class="subtitle">✧ STAR IDOL STAGE ✧</div>
 
-        <div class="eye-wrapper">
-            <div class="pointer-marker"></div>
+        <div class="eye-frame">
+            <div class="lash-pointer"></div>
             
-            <div class="wheel-mask">
+            <div class="wheel-container">
                 <canvas id="wheel" width="500" height="500"></canvas>
             </div>
             
-            <!-- La pupille d'Ai -->
+            <!-- Pupille (l'étoile) -->
             <div class="pupil-star"></div>
-            <div class="pupil-center"></div>
-
-            <!-- Reflets glossy -->
-            <div class="eye-gloss"></div>
-            <div class="eye-gloss-small"></div>
+            <!-- Reflet -->
+            <div class="gloss-reflection"></div>
         </div>
 
-        <button class="spin-btn" id="spin-btn">LANCER LE SHOW</button>
+        <button class="spin-btn" id="spin-btn">LANCER LE SHOW (1 TICKET)</button>
 
-        <div class="stats-panel">
-            <span class="win-rate">Chance de Gain : 50%</span>
-            <span>Jackpot : 80,000 (0.2%)</span>
-            <span style="font-size:0.7rem; margin-top:5px; opacity:0.6;">Monnaie DraftBot uniquement</span>
+        <div class="rewards-panel">
+            <div class="rewards-title">Taux de Drop (Rareté)</div>
+            <div class="rewards-grid" id="rewards-list">
+                <!-- Rempli par JS (Sans les perdants) -->
+            </div>
+            <div style="font-size:0.6rem; color:#666; margin-top:10px; transform: skewX(10deg);">
+                Monnaie virtuelle (DraftBot). Chances réelles.
+            </div>
         </div>
     </div>
 
-    <!-- Modal de Résultat -->
+    <!-- Modal -->
     <div class="modal-overlay" id="modal">
-        <div class="modal-box">
-            <h2 class="modal-title" id="m-title">Félicitations</h2>
-            <div class="modal-win-amount" id="m-amount">80k</div>
-            <p id="m-msg" style="color:#ccc; margin-bottom:30px;">Tu es une star née !</p>
-            <button class="modal-close" onclick="closeModal()">Fermer</button>
+        <div class="modal-content">
+            <h2 id="m-title" style="color:var(--ai-pink); margin:0; text-transform:uppercase; letter-spacing:4px;">Résultat</h2>
+            <div class="modal-win-text" id="m-amount">...</div>
+            <p id="m-msg" style="color:#aaa; font-style:italic;">...</p>
+            <button onclick="closeModal()" style="margin-top:20px; background:transparent; border:1px solid white; color:white; padding:10px 20px; cursor:pointer;">FERMER</button>
         </div>
     </div>
 
     <script>
-        // --- PARTICULES (Étoiles montantes) ---
-        function createParticles() {
-            const container = document.getElementById('particles-container');
-            const starCount = 30; // Nombre d'étoiles simultanées
+        // --- ANIMATION D'OUVERTURE (WINK) ---
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                document.body.classList.add('loaded');
+            }, 500); // Petit délai pour laisser charger
+        });
 
-            setInterval(() => {
-                const star = document.createElement('div');
-                star.classList.add('star-particle');
-                
-                // Position aléatoire horizontale
-                star.style.left = Math.random() * 100 + 'vw';
-                
-                // Taille aléatoire
-                const size = Math.random() * 3 + 2 + 'px';
-                star.style.width = size;
-                star.style.height = size;
-                
-                // Durée d'animation aléatoire
-                star.style.animationDuration = Math.random() * 3 + 4 + 's';
-                
-                container.appendChild(star);
-
-                // Nettoyage après l'animation
-                setTimeout(() => {
-                    star.remove();
-                }, 8000);
-            }, 300);
+        // --- GÉNÉRATEUR D'ÉTOILES ---
+        const starsContainer = document.getElementById('stars-container');
+        for(let i=0; i<50; i++) {
+            const star = document.createElement('div');
+            star.classList.add('star');
+            const xy = Math.random() * 100;
+            const duration = Math.random() * 3 + 2;
+            const size = Math.random() * 3;
+            star.style.left = Math.random() * 100 + 'vw';
+            star.style.top = Math.random() * 100 + 'vh';
+            star.style.width = size + 'px';
+            star.style.height = size + 'px';
+            star.style.setProperty('--duration', duration + 's');
+            star.style.animationDelay = Math.random() * 5 + 's';
+            starsContainer.appendChild(star);
         }
-        createParticles();
 
-        // --- LA ROUE ---
+        // --- LOGIQUE ROUE ---
         const canvas = document.getElementById('wheel');
         const ctx = canvas.getContext('2d');
-        const btn = document.getElementById('spin-btn');
+        const spinBtn = document.getElementById('spin-btn');
         const modal = document.getElementById('modal');
+        const rewardsList = document.getElementById('rewards-list');
 
-        // Configuration PONDÉRÉE (50% Perte Exacte)
-        // Total Poids Gagnant = 1 + 5 + 10 + 25 + 50 + 100 = 191 points
-        // Total Poids Perdant = 32 * 6 cases = 192 points
-        // Total = 383 points (~50.1% perte)
-        
+        // Poids pour ~50% de Win / 50% de Lose
+        // Total Win: 1 + 5 + 10 + 25 + 50 + 100 = 191
+        // Total Lose: 32 * 6 = 192
         const segments = [
-            { text: "80k", colorStart: "#ffd700", colorEnd: "#bf9b30", type: "win", msg: "JACKPOT LÉGENDAIRE !", weight: 1 }, 
-            { text: "PERDU", colorStart: "#1a0b2e", colorEnd: "#240046", type: "lose", msg: "Tu feras mieux la prochaine fois.", weight: 32 },
-            { text: "40k", colorStart: "#ff0095", colorEnd: "#b5179e", type: "win", msg: "Performance Incroyable !", weight: 5 }, 
-            { text: "PERDU", colorStart: "#0a001a", colorEnd: "#1a0b2e", type: "lose", msg: "Le public n'a pas suivi...", weight: 32 },
-            { text: "20k", colorStart: "#00f2ff", colorEnd: "#00b4d8", type: "win", msg: "Superbe Show !", weight: 10 }, 
-            { text: "PERDU", colorStart: "#1a0b2e", colorEnd: "#240046", type: "lose", msg: "Rien...", weight: 32 },
-            { text: "10k", colorStart: "#7209b7", colorEnd: "#560bad", type: "win", msg: "Joli !", weight: 25 }, 
-            { text: "PERDU", colorStart: "#0a001a", colorEnd: "#1a0b2e", type: "lose", msg: "Aïe...", weight: 32 },
-            { text: "5k", colorStart: "#f72585", colorEnd: "#b5179e", type: "win", msg: "C'est cool.", weight: 50 }, 
-            { text: "PERDU", colorStart: "#1a0b2e", colorEnd: "#240046", type: "lose", msg: "Perdu.", weight: 32 },
-            { text: "1k", colorStart: "#4361ee", colorEnd: "#3a0ca3", type: "win", msg: "Un début prometteur.", weight: 100 }, 
-            { text: "PERDU", colorStart: "#0a001a", colorEnd: "#1a0b2e", type: "lose", msg: "Retente ta chance.", weight: 32 }
+            { text: "80k", color: "#ffbe0b", type: "win", msg: "UNE PERFORMANCE LÉGENDAIRE !", weight: 1 }, 
+            { text: "PERDU", color: "#1a0030", type: "lose", msg: "L'étoile n'a pas brillé...", weight: 32 },
+            { text: "40k", color: "#ff006e", type: "win", msg: "INCROYABLE !", weight: 5 }, 
+            { text: "PERDU", color: "#240046", type: "lose", msg: "Rien pour cette fois.", weight: 32 },
+            { text: "20k", color: "#00f2ff", type: "win", msg: "Superbe !", weight: 10 }, 
+            { text: "PERDU", color: "#1a0030", type: "lose", msg: "Le public est silencieux...", weight: 32 },
+            { text: "10k", color: "#8338ec", type: "win", msg: "Joli gain !", weight: 25 }, 
+            { text: "PERDU", color: "#240046", type: "lose", msg: "Dommage.", weight: 32 },
+            { text: "5k", color: "#fb5607", type: "win", msg: "C'est cool.", weight: 50 }, 
+            { text: "PERDU", color: "#1a0030", type: "lose", msg: "Aïe...", weight: 32 },
+            { text: "1k", color: "#3a86ff", type: "win", msg: "Un bon début.", weight: 100 }, 
+            { text: "PERDU", color: "#240046", type: "lose", msg: "Retente ta chance !", weight: 32 }
         ];
 
-        const len = segments.length;
-        const arc = (2 * Math.PI) / len;
+        const arc = (2 * Math.PI) / segments.length;
         let isSpinning = false;
 
+        // --- DESSINER LA ROUE (IRIS) ---
         function drawWheel() {
-            const cx = canvas.width / 2;
-            const cy = canvas.height / 2;
-            const radius = canvas.width / 2;
+            ctx.clearRect(0,0,500,500);
+            const cx = 250, cy = 250, r = 250;
 
-            // Décalage pour aligner le premier segment en haut (Midi) avec la rotation CSS 0
-            // Sans rotation canvas, 0 est à 3h (droite).
-            // On dessine normalement, mais on fera tourner le canvas avec CSS.
+            // Décalage pour que l'index 0 soit visuellement en haut après rotation CSS
+            // Ici on dessine "droit" (0 à droite), mais on fera tourner le canvas.
             
             segments.forEach((seg, i) => {
                 const angle = i * arc;
-                
                 ctx.beginPath();
                 ctx.moveTo(cx, cy);
-                ctx.arc(cx, cy, radius, angle, angle + arc);
+                ctx.arc(cx, cy, r, angle, angle + arc);
                 ctx.lineTo(cx, cy);
                 
-                // Dégradé pour l'effet "Iris"
-                // On crée un dégradé radial qui suit l'angle du segment (approximatif pour la perf)
-                const grad = ctx.createRadialGradient(cx, cy, 20, cx, cy, radius);
-                grad.addColorStop(0, seg.colorEnd); // Centre sombre
-                grad.addColorStop(0.6, seg.colorStart); // Milieu vibrant
-                grad.addColorStop(1, "#000"); // Bordure externe noire (limbe)
+                // Dégradé radiale (Oeil)
+                const grd = ctx.createRadialGradient(cx, cy, 20, cx, cy, r);
+                if(seg.type === 'win') {
+                    grd.addColorStop(0, seg.color);
+                    grd.addColorStop(0.7, seg.color); 
+                    grd.addColorStop(1, "#000"); // Bordure sombre
+                } else {
+                    grd.addColorStop(0, "#000");
+                    grd.addColorStop(1, seg.color);
+                }
                 
-                ctx.fillStyle = grad;
+                ctx.fillStyle = grd;
                 ctx.fill();
                 
-                // Bordure fine entre les segments
-                ctx.strokeStyle = "rgba(0,0,0,0.5)";
+                // Séparateur
+                ctx.strokeStyle = "rgba(0,0,0,0.3)";
                 ctx.lineWidth = 1;
                 ctx.stroke();
 
@@ -456,70 +460,91 @@
                 ctx.rotate(angle + arc / 2);
                 ctx.textAlign = "right";
                 ctx.fillStyle = "white";
-                ctx.font = "bold 24px Montserrat";
-                ctx.shadowColor = "black";
-                ctx.shadowBlur = 5;
-                ctx.fillText(seg.text, radius - 25, 8);
+                ctx.font = "bold 22px Montserrat";
+                ctx.shadowColor = "black"; 
+                ctx.shadowBlur = 4;
+                ctx.fillText(seg.text, r - 30, 8);
                 ctx.restore();
             });
         }
 
-        function spin() {
-            if (isSpinning) return;
-            isSpinning = true;
-            btn.disabled = true;
-            btn.innerHTML = "SPECTACLE EN COURS...";
+        // --- AFFICHER LES STATS (SANS PERDANTS) ---
+        function generateStats() {
+            const totalWeight = segments.reduce((a,b)=>a+b.weight,0);
+            const uniqueWins = {}; // Pour éviter les doublons dans l'affichage si besoin
 
-            // Logique de Poids
-            const totalWeight = segments.reduce((acc, s) => acc + s.weight, 0);
-            let r = Math.random() * totalWeight;
+            segments.forEach(seg => {
+                if(seg.type === 'lose') return; // ON IGNORE LES PERDANTS
+                
+                // On regroupe par montant
+                if(!uniqueWins[seg.text]) {
+                    uniqueWins[seg.text] = { weight: 0, color: seg.color };
+                }
+                uniqueWins[seg.text].weight += seg.weight;
+            });
+
+            // Trier et afficher
+            const sortedKeys = Object.keys(uniqueWins).sort((a,b) => uniqueWins[a].weight - uniqueWins[b].weight); // Du plus rare au plus commun
+
+            sortedKeys.forEach(key => {
+                const item = uniqueWins[key];
+                const percent = (item.weight / totalWeight * 100).toFixed(1) + "%";
+                
+                const tag = document.createElement('div');
+                tag.className = 'reward-tag';
+                tag.style.color = item.color;
+                tag.style.borderColor = item.color;
+                tag.innerHTML = `${key} : <b>${percent}</b>`;
+                
+                rewardsList.appendChild(tag);
+            });
+        }
+
+        // --- LANCER LA ROUE ---
+        function spin() {
+            if(isSpinning) return;
+            isSpinning = true;
+            spinBtn.disabled = true;
+            spinBtn.innerText = "CAPTIVATION EN COURS...";
+
+            // Calcul du gagnant
+            const totalWeight = segments.reduce((a,b)=>a+b.weight,0);
+            let random = Math.random() * totalWeight;
             let winnerIndex = 0;
             for(let i=0; i<segments.length; i++){
-                if(r < segments[i].weight){
+                if(random < segments[i].weight){
                     winnerIndex = i;
                     break;
                 }
-                r -= segments[i].weight;
+                random -= segments[i].weight;
             }
 
-            // Calcul Animation
-            // On veut que l'index gagnant finisse en HAUT (Midi).
+            // Calcul angles
+            // On veut que winnerIndex soit en HAUT (Midi).
             // Le pointeur est physique en haut.
-            // Le canvas a une rotation initiale de -90deg (Midi = 0rad dans le dessin).
-            // Angle du segment : i * arc.
-            // Rotation nécessaire : -(i * arc).
+            // Canvas Rotate initial: -90deg.
             
-            // Randomisation dans le segment
             const randomOffset = (Math.random() - 0.5) * (arc * 0.8);
-            
             const segmentAngle = winnerIndex * arc;
             const targetRotation = (360 - (segmentAngle * 180 / Math.PI)) + (randomOffset * 180 / Math.PI);
-            
-            // Tours
-            const spins = (8 + Math.floor(Math.random() * 4)) * 360; 
+            const spins = (8 + Math.floor(Math.random() * 5)) * 360; // Beaucoup de tours
             const finalDeg = spins + targetRotation;
 
             // Application CSS
-            // Utilisation de canvas.style.transform
-            // Mais attention, drawWheel dessine 0 à 3h. 
-            // On a mis `transform: rotate(-90deg)` en CSS initial.
-            // On ajoute finalDeg à ça.
-            
-            canvas.style.transition = "transform 8s cubic-bezier(0.1, 1, 0.3, 1)";
-            // Le -90 initial + la rotation
-            canvas.style.transform = `rotate(${finalDeg - 90}deg)`;
+            canvas.style.transition = "transform 6s cubic-bezier(0.1, 1, 0.3, 1)";
+            canvas.style.transform = `rotate(${finalDeg - 90}deg)`; // -90 pour caler le départ
 
             setTimeout(() => {
                 showResult(segments[winnerIndex]);
                 isSpinning = false;
-                btn.disabled = false;
-                btn.innerHTML = "RELANCER LE SHOW";
+                spinBtn.disabled = false;
+                spinBtn.innerText = "RELANCER LE SHOW";
                 
                 // Reset silencieux
                 canvas.style.transition = "none";
                 const resetDeg = (finalDeg - 90) % 360;
                 canvas.style.transform = `rotate(${resetDeg}deg)`;
-            }, 8000);
+            }, 6000);
         }
 
         function showResult(winner) {
@@ -528,17 +553,17 @@
             const mMsg = document.getElementById('m-msg');
 
             if(winner.type === 'win') {
-                mTitle.innerText = "FÉLICITATIONS !";
-                mTitle.style.color = "#fff";
+                mTitle.innerText = "SUCCÈS !";
                 mAmount.innerText = winner.text;
-                mAmount.style.color = winner.colorStart;
-                mAmount.style.textShadow = `0 0 30px ${winner.colorStart}`;
+                mAmount.style.background = `linear-gradient(to bottom, #fff, ${winner.color})`;
+                mAmount.style.webkitBackgroundClip = "text";
+                mAmount.style.filter = `drop-shadow(0 0 20px ${winner.color})`;
             } else {
-                mTitle.innerText = "DOMMAGE...";
-                mTitle.style.color = "#888";
+                mTitle.innerText = "ÉCHEC";
                 mAmount.innerText = "PERDU";
-                mAmount.style.color = "#555";
-                mAmount.style.textShadow = "none";
+                mAmount.style.background = "#555";
+                mAmount.style.webkitBackgroundClip = "text";
+                mAmount.style.filter = "none";
             }
             mMsg.innerText = winner.msg;
             modal.classList.add('active');
@@ -548,8 +573,9 @@
             modal.classList.remove('active');
         }
 
+        // Init
         drawWheel();
-        btn.addEventListener('click', spin);
+        generateStats();
 
     </script>
 </body>
