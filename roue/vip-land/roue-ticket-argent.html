@@ -2,445 +2,421 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>VIP-Land | The Idol Stage</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>VIP-Land | Idol Stage</title>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
         :root {
-            --ai-pink: #ff006e;
-            --ai-magenta: #8338ec;
-            --ai-violet: #3a86ff;
-            --ai-cyan: #00f2ff;
-            --ai-gold: #ffbe0b;
-            --deep-space: #050110;
+            --ai-pink: #ff009d;
+            --ai-dark-pink: #b5179e;
+            --ai-purple: #7209b7;
+            --ai-deep-blue: #3a0ca3;
+            --ai-cyan: #4cc9f0;
+            --ai-gold: #ffd60a;
+            --bg-dark: #10002b;
         }
 
+        * { box-sizing: border-box; user-select: none; }
+
         body {
-            margin: 0;
-            padding: 0;
-            background-color: var(--deep-space);
+            margin: 0; padding: 0;
+            background-color: var(--bg-dark);
             color: white;
             font-family: 'Montserrat', sans-serif;
-            overflow: hidden;
+            height: 100vh;
+            width: 100vw;
+            overflow: hidden; /* Empêche tout scroll */
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            height: 100vh;
-            perspective: 1000px;
-        }
-
-        /* --- BACKGROUND IMMERSIF (NEBULEUSE) --- */
-        .nebula-bg {
-            position: absolute;
-            top: -50%; left: -50%; width: 200%; height: 200%;
-            background: 
-                radial-gradient(circle at 50% 50%, rgba(131, 56, 236, 0.2), transparent 50%),
-                radial-gradient(circle at 20% 80%, rgba(255, 0, 110, 0.15), transparent 40%),
-                radial-gradient(circle at 80% 20%, rgba(0, 242, 255, 0.15), transparent 40%);
-            animation: nebulaMove 20s infinite alternate ease-in-out;
-            z-index: 0;
-            filter: blur(40px);
-        }
-        
-        @keyframes nebulaMove {
-            0% { transform: scale(1) rotate(0deg); }
-            100% { transform: scale(1.1) rotate(5deg); }
-        }
-
-        /* --- INTRO CLIN D'OEIL (WINK ANIMATION) --- */
-        .eyelid {
-            position: fixed;
-            left: 0;
-            width: 100%;
-            height: 50vh;
-            background: #000;
-            z-index: 9999;
-            transition: all 1.5s cubic-bezier(0.77, 0, 0.175, 1);
-        }
-        .eyelid-top { top: 0; border-bottom: 5px solid var(--ai-pink); }
-        .eyelid-bottom { bottom: 0; border-top: 5px solid var(--ai-pink); }
-        
-        body.loaded .eyelid-top { transform: translateY(-100%); }
-        body.loaded .eyelid-bottom { transform: translateY(100%); }
-
-        /* --- PARTICULES D'ÉTOILES --- */
-        .star {
-            position: absolute;
-            background: white;
-            border-radius: 50%;
-            animation: twinkle var(--duration) infinite ease-in-out;
-            opacity: 0;
-        }
-        @keyframes twinkle {
-            0% { transform: scale(0); opacity: 0; }
-            50% { opacity: 1; transform: scale(1); box-shadow: 0 0 10px white; }
-            100% { transform: scale(0); opacity: 0; }
-        }
-
-        /* --- CONTENEUR PRINCIPAL --- */
-        .main-stage {
-            z-index: 10;
             position: relative;
+        }
+
+        /* --- DÉCORS (SCÈNE) --- */
+        
+        /* 1. Les Rideaux */
+        .curtain {
+            position: absolute;
+            top: 0; bottom: 0;
+            width: 15vw;
+            background: linear-gradient(90deg, #3a0ca3, #000);
+            z-index: 5;
+            box-shadow: 10px 0 20px rgba(0,0,0,0.8);
+        }
+        .curtain-left { left: 0; background: linear-gradient(90deg, #240046, #000); border-right: 2px solid var(--ai-purple); }
+        .curtain-right { right: 0; background: linear-gradient(-90deg, #240046, #000); border-left: 2px solid var(--ai-purple); }
+
+        /* 2. Le Public (Glow Sticks) */
+        .audience-glow {
+            position: absolute;
+            bottom: -50px;
+            left: 0; width: 100%;
+            height: 150px;
+            background: transparent;
+            z-index: 4;
+            filter: blur(20px);
+            opacity: 0.8;
+            animation: glowStickMove 3s infinite alternate;
+        }
+        
+        /* On crée des ombres portées colorées pour simuler les glowsticks */
+        .audience-glow::after {
+            content: '';
+            position: absolute;
+            bottom: 0; left: 10%;
+            width: 10px; height: 10px;
+            box-shadow: 
+                10vw -20px 40px var(--ai-pink),
+                20vw -50px 50px var(--ai-cyan),
+                30vw -10px 40px white,
+                50vw -30px 60px var(--ai-purple),
+                70vw -20px 50px var(--ai-pink),
+                80vw -40px 40px var(--ai-cyan);
+            border-radius: 50%;
+        }
+
+        @keyframes glowStickMove {
+            0% { transform: translateY(0) scale(1); }
+            100% { transform: translateY(-20px) scale(1.1); }
+        }
+
+        /* 3. Projecteurs (Spotlights) */
+        .spotlight {
+            position: absolute;
+            top: -50%; left: 50%;
+            width: 200px; height: 200vh;
+            background: linear-gradient(to bottom, rgba(255,255,255,0.1), transparent);
+            transform-origin: top center;
+            z-index: 1;
+            pointer-events: none;
+        }
+        .spot-1 { animation: spotRotate 8s infinite alternate ease-in-out; transform: rotate(-30deg); }
+        .spot-2 { animation: spotRotate2 10s infinite alternate ease-in-out; transform: rotate(30deg); }
+
+        @keyframes spotRotate { from { transform: rotate(-45deg) translateX(-50%); } to { transform: rotate(-15deg) translateX(-50%); } }
+        @keyframes spotRotate2 { from { transform: rotate(45deg) translateX(-50%); } to { transform: rotate(15deg) translateX(-50%); } }
+
+        /* --- UI PRINCIPALE --- */
+        .stage-center {
+            z-index: 10;
             display: flex;
             flex-direction: column;
             align-items: center;
-            transform-style: preserve-3d;
+            justify-content: center;
+            height: 100%;
+            width: 100%;
+            padding: 20px;
         }
 
+        /* Titre Néon */
         h1 {
-            font-size: 3.5rem;
+            font-size: clamp(1.5rem, 5vw, 3rem); /* Taille adaptative */
             margin: 0;
             text-transform: uppercase;
             font-weight: 900;
-            letter-spacing: -2px;
-            background: linear-gradient(to right, #fff, var(--ai-pink), var(--ai-magenta));
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-            filter: drop-shadow(0 0 20px rgba(255, 0, 110, 0.6));
-            animation: textGlow 3s infinite alternate;
+            letter-spacing: -1px;
+            color: white;
+            text-shadow: 
+                0 0 10px var(--ai-pink),
+                0 0 20px var(--ai-purple),
+                0 0 40px var(--ai-dark-pink);
+            animation: neonPulse 2s infinite alternate;
         }
-
-        @keyframes textGlow {
-            from { filter: drop-shadow(0 0 10px rgba(255, 0, 110, 0.4)); }
-            to { filter: drop-shadow(0 0 30px rgba(255, 0, 110, 0.9)); }
+        
+        @keyframes neonPulse {
+            from { text-shadow: 0 0 10px var(--ai-pink), 0 0 20px var(--ai-purple); }
+            to { text-shadow: 0 0 20px var(--ai-pink), 0 0 40px var(--ai-cyan), 0 0 60px var(--ai-purple); }
         }
 
         .subtitle {
-            font-size: 0.9rem;
+            font-size: 0.8rem;
+            letter-spacing: 4px;
             color: var(--ai-cyan);
-            letter-spacing: 6px;
-            margin-bottom: 30px;
-            text-shadow: 0 0 10px var(--ai-cyan);
-            text-transform: uppercase;
+            margin-bottom: 2vh;
+            text-shadow: 0 0 5px var(--ai-cyan);
         }
 
-        /* --- L'OEIL D'IDOLE (ROUE) --- */
-        .eye-frame {
-            width: 420px;
-            height: 420px;
-            border-radius: 50%;
-            padding: 8px;
-            /* Bordure dégradée brillante */
-            background: conic-gradient(from 0deg, var(--ai-pink), var(--ai-magenta), var(--ai-cyan), var(--ai-magenta), var(--ai-pink));
-            box-shadow: 
-                0 0 60px rgba(131, 56, 236, 0.5),
-                inset 0 0 40px rgba(0, 0, 0, 0.8);
-            display: flex;
-            justify-content: center;
-            align-items: center;
+        /* --- LA ROUE RESPONSIVE --- */
+        .wheel-wrapper {
             position: relative;
+            /* La clé de la responsivité : vmin prend la plus petite dimension entre hauteur et largeur */
+            width: 80vmin; 
+            height: 80vmin;
+            max-width: 450px;
+            max-height: 450px;
+            border-radius: 50%;
+            padding: 10px;
+            /* Bordure Oeil Galaxy */
+            background: conic-gradient(from 0deg, var(--ai-deep-blue), var(--ai-pink), var(--ai-cyan), var(--ai-purple), var(--ai-deep-blue));
+            box-shadow: 0 0 50px rgba(181, 23, 158, 0.5);
+            display: flex; justify-content: center; align-items: center;
         }
 
-        .wheel-container {
-            width: 100%;
-            height: 100%;
+        .wheel-inner {
+            width: 100%; height: 100%;
             border-radius: 50%;
             overflow: hidden;
             background: #000;
             position: relative;
-            /* Masque pour rendre l'image nette */
-            -webkit-mask-image: -webkit-radial-gradient(white, black);
+            box-shadow: inset 0 0 50px #000;
         }
 
-        canvas {
-            display: block;
-            width: 100%;
-            height: 100%;
-        }
+        canvas { width: 100%; height: 100%; display: block; }
 
         /* Pupille Étoile */
-        .pupil-star {
+        .pupil {
             position: absolute;
             top: 50%; left: 50%;
             transform: translate(-50%, -50%);
-            width: 80px; height: 80px;
+            width: 25%; height: 25%; /* Taille relative à la roue */
             background: white;
-            /* Forme exacte de l'étoile d'Ai */
             clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
             z-index: 20;
-            box-shadow: 0 0 40px white;
-            animation: breathe 3s infinite ease-in-out;
+            box-shadow: 0 0 30px white;
+            animation: breathe 4s ease-in-out infinite;
         }
         
-        @keyframes breathe {
-            0%, 100% { transform: translate(-50%, -50%) scale(1); filter: drop-shadow(0 0 10px var(--ai-pink)); }
-            50% { transform: translate(-50%, -50%) scale(1.15); filter: drop-shadow(0 0 30px var(--ai-magenta)); }
-        }
-
-        /* Reflets de verre (Glossy) */
-        .gloss-reflection {
+        /* Reflet Glossy */
+        .gloss {
             position: absolute;
             top: 15%; left: 15%;
-            width: 60px; height: 30px;
-            background: rgba(255,255,255,0.7);
+            width: 20%; height: 10%;
+            background: rgba(255,255,255,0.8);
             border-radius: 50%;
             transform: rotate(-45deg);
-            filter: blur(3px);
-            z-index: 25;
-            pointer-events: none;
+            filter: blur(4px);
+            z-index: 25; pointer-events: none;
         }
-        
-        /* Cils / Pointeur */
-        .lash-pointer {
+
+        /* Pointeur */
+        .pointer {
             position: absolute;
-            top: -25px;
-            z-index: 30;
-            width: 40px;
-            height: 60px;
-            background: linear-gradient(to bottom, #fff, var(--ai-cyan));
+            top: -5%;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 10%; height: 15%;
+            background: linear-gradient(to bottom, white, var(--ai-cyan));
             clip-path: polygon(50% 100%, 0 0, 100% 0);
-            filter: drop-shadow(0 0 15px var(--ai-cyan));
+            z-index: 30;
+            filter: drop-shadow(0 0 10px var(--ai-cyan));
         }
 
-        /* --- BOUTON DE LANCEMENT --- */
-        .spin-btn {
-            margin-top: 50px;
-            padding: 18px 70px;
-            font-size: 1.3rem;
-            font-weight: 900;
-            font-family: 'Montserrat', sans-serif;
-            text-transform: uppercase;
-            color: white;
-            background: transparent;
-            border: 2px solid rgba(255,255,255,0.2);
-            position: relative;
-            overflow: hidden;
-            cursor: pointer;
-            transition: 0.3s;
-            box-shadow: 0 0 20px rgba(0,0,0,0.5);
-            border-radius: 5px;
-        }
-        
-        .spin-btn::before {
-            content: '';
-            position: absolute;
-            top:0; left:0; width: 100%; height: 100%;
-            background: linear-gradient(90deg, var(--ai-pink), var(--ai-magenta));
-            z-index: -1;
-            transform: skewX(-20deg) scaleX(0);
-            transform-origin: left;
-            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        }
-        
-        .spin-btn:hover::before {
-            transform: skewX(-20deg) scaleX(1);
-        }
-        .spin-btn:hover {
-            border-color: transparent;
-            box-shadow: 0 0 40px var(--ai-pink);
-            letter-spacing: 2px;
-        }
-        .spin-btn:disabled {
-            filter: grayscale(1);
-            cursor: not-allowed;
-            transform: none !important;
+        @keyframes breathe {
+            0%, 100% { transform: translate(-50%, -50%) scale(1); box-shadow: 0 0 20px white; }
+            50% { transform: translate(-50%, -50%) scale(1.1); box-shadow: 0 0 50px var(--ai-pink); }
         }
 
-        /* --- TABLEAU DES RECOMPENSES (SANS LES PERDANTS) --- */
-        .rewards-panel {
-            margin-top: 30px;
-            width: 100%;
-            max-width: 500px;
-            background: rgba(0,0,0,0.6);
-            border-top: 1px solid var(--ai-cyan);
-            border-bottom: 1px solid var(--ai-pink);
-            padding: 15px;
-            backdrop-filter: blur(10px);
+        /* --- CONTROLES & STATS --- */
+        .controls-area {
+            margin-top: 3vh;
             display: flex;
             flex-direction: column;
             align-items: center;
-            transform: skewX(-10deg);
+            width: 100%;
         }
-        
-        .rewards-title {
-            color: var(--ai-cyan);
-            font-size: 0.8rem;
-            margin-bottom: 10px;
+
+        .spin-btn {
+            background: transparent;
+            color: white;
+            border: 2px solid rgba(255,255,255,0.2);
+            padding: 12px 40px;
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 900;
+            font-size: 1rem;
             text-transform: uppercase;
-            letter-spacing: 2px;
-            transform: skewX(10deg); /* Counter skew */
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            transition: 0.3s;
+            box-shadow: 0 0 15px rgba(0,0,0,0.5);
+            border-radius: 50px;
         }
         
-        .rewards-grid {
+        .spin-btn::after {
+            content: ''; position: absolute; top:0; left:0; width:100%; height:100%;
+            background: linear-gradient(90deg, var(--ai-pink), var(--ai-purple));
+            z-index: -1; transform: scaleX(0); transform-origin: left; transition: transform 0.3s;
+        }
+        .spin-btn:hover { border-color: transparent; box-shadow: 0 0 30px var(--ai-pink); }
+        .spin-btn:hover::after { transform: scaleX(1); }
+        .spin-btn:disabled { filter: grayscale(1); cursor: not-allowed; }
+
+        .stats-row {
             display: flex;
             flex-wrap: wrap;
             justify-content: center;
-            gap: 15px;
-            transform: skewX(10deg);
+            gap: 10px;
+            margin-top: 2vh;
+            max-width: 90vw;
         }
         
-        .reward-tag {
-            font-size: 0.8rem;
+        .stat-badge {
+            font-size: 0.75rem;
+            background: rgba(0,0,0,0.6);
+            border: 1px solid rgba(255,255,255,0.15);
             padding: 5px 10px;
-            border-radius: 4px;
-            background: rgba(255,255,255,0.05);
-            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 5px;
+            color: #ddd;
+            backdrop-filter: blur(5px);
         }
-        .reward-tag b { color: white; margin-left: 5px; }
+        .stat-badge b { color: white; margin-left: 3px; }
 
-        /* --- MODAL RESULTAT --- */
-        .modal-overlay {
+        /* --- MODAL --- */
+        .modal {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(5, 1, 16, 0.95);
+            background: rgba(16, 0, 43, 0.95);
             display: flex; justify-content: center; align-items: center;
-            opacity: 0; pointer-events: none; transition: 0.5s; z-index: 1000;
+            opacity: 0; pointer-events: none; transition: 0.3s; z-index: 100;
         }
-        .modal-overlay.active { opacity: 1; pointer-events: all; }
+        .modal.active { opacity: 1; pointer-events: all; }
         
-        .modal-content {
-            background: linear-gradient(135deg, #150029, #000);
-            padding: 50px;
-            border: 1px solid var(--ai-cyan);
-            box-shadow: 0 0 100px var(--ai-pink);
+        .modal-box {
+            background: linear-gradient(135deg, #240046, #000);
+            padding: 40px;
+            border: 2px solid var(--ai-pink);
+            box-shadow: 0 0 80px var(--ai-pink);
             text-align: center;
-            transform: scale(0.8) translateY(50px);
-            transition: 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            max-width: 90%;
+            width: 80%; max-width: 400px;
+            transform: scale(0.8); transition: 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
-        .modal-overlay.active .modal-content { transform: scale(1) translateY(0); }
+        .modal.active .modal-box { transform: scale(1); }
         
-        .modal-win-text {
-            font-size: 4rem; margin: 20px 0;
-            font-weight: 900;
+        .win-amount {
+            font-size: 3rem; font-weight: 900; margin: 15px 0;
             background: linear-gradient(to bottom, #fff, var(--ai-gold));
-            -webkit-background-clip: text; background-clip: text; color: transparent;
-            filter: drop-shadow(0 0 20px var(--ai-gold));
+            -webkit-background-clip: text; color: transparent;
+            filter: drop-shadow(0 0 15px var(--ai-gold));
         }
 
-        @media (max-width: 600px) {
-            .eye-frame { width: 320px; height: 320px; }
-            h1 { font-size: 2.2rem; }
-            .rewards-panel { width: 90%; }
+        /* --- PARTICULES FLOTTANTES (CSS PURE) --- */
+        .particle {
+            position: absolute;
+            bottom: -10vh;
+            background: white;
+            border-radius: 50%;
+            animation: floatUp linear infinite;
+            z-index: 2;
+        }
+        /* On en crée quelques uns via CSS pour la perf */
+        .p1 { left: 10%; width: 4px; height: 4px; animation-duration: 7s; opacity: 0.5; }
+        .p2 { left: 30%; width: 6px; height: 6px; animation-duration: 5s; opacity: 0.7; box-shadow: 0 0 10px var(--ai-cyan); }
+        .p3 { left: 70%; width: 3px; height: 3px; animation-duration: 9s; opacity: 0.4; }
+        .p4 { left: 85%; width: 5px; height: 5px; animation-duration: 6s; opacity: 0.6; box-shadow: 0 0 10px var(--ai-pink); }
+
+        @keyframes floatUp { to { transform: translateY(-110vh); } }
+
+        /* Media Queries pour petits écrans */
+        @media (max-height: 600px) {
+            .subtitle { display: none; }
+            .stats-row { display: none; } /* Cache les stats sur très petit écran height pour laisser place à la roue */
+            h1 { font-size: 1.5rem; margin-top: 10px; }
+            .spin-btn { padding: 8px 20px; font-size: 0.8rem; }
         }
     </style>
 </head>
 <body>
 
-    <!-- Animation d'ouverture des yeux -->
-    <div class="eyelid eyelid-top"></div>
-    <div class="eyelid eyelid-bottom"></div>
+    <!-- DECOR -->
+    <div class="spotlight spot-1"></div>
+    <div class="spotlight spot-2"></div>
+    <div class="curtain curtain-left"></div>
+    <div class="curtain curtain-right"></div>
+    <div class="audience-glow"></div>
+    
+    <!-- Particules -->
+    <div class="particle p1"></div>
+    <div class="particle p2"></div>
+    <div class="particle p3"></div>
+    <div class="particle p4"></div>
 
-    <!-- Fond animé -->
-    <div class="nebula-bg"></div>
-    <!-- Script étoiles JS en bas -->
-    <div id="stars-container"></div>
-
-    <div class="main-stage">
+    <!-- UI -->
+    <div class="stage-center">
         <h1>VIP-Land</h1>
-        <div class="subtitle">✧ STAR IDOL STAGE ✧</div>
+        <div class="subtitle">✧ IDOL STAGE ✧</div>
 
-        <div class="eye-frame">
-            <div class="lash-pointer"></div>
-            
-            <div class="wheel-container">
+        <div class="wheel-wrapper">
+            <div class="pointer"></div>
+            <div class="wheel-inner">
                 <canvas id="wheel" width="500" height="500"></canvas>
             </div>
-            
-            <!-- Pupille (l'étoile) -->
-            <div class="pupil-star"></div>
-            <!-- Reflet -->
-            <div class="gloss-reflection"></div>
+            <div class="pupil"></div>
+            <div class="gloss"></div>
         </div>
 
-        <button class="spin-btn" id="spin-btn">LANCER LE SHOW (1 TICKET)</button>
-
-        <div class="rewards-panel">
-            <div class="rewards-title">Taux de Drop (Rareté)</div>
-            <div class="rewards-grid" id="rewards-list">
-                <!-- Rempli par JS (Sans les perdants) -->
-            </div>
-            <div style="font-size:0.6rem; color:#666; margin-top:10px; transform: skewX(10deg);">
-                Monnaie virtuelle (DraftBot). Chances réelles.
+        <div class="controls-area">
+            <button class="spin-btn" id="spin-btn">LANCER (1 TICKET)</button>
+            
+            <div class="stats-row" id="stats-container">
+                <!-- Rempli par JS -->
             </div>
         </div>
     </div>
 
-    <!-- Modal -->
-    <div class="modal-overlay" id="modal">
-        <div class="modal-content">
-            <h2 id="m-title" style="color:var(--ai-pink); margin:0; text-transform:uppercase; letter-spacing:4px;">Résultat</h2>
-            <div class="modal-win-text" id="m-amount">...</div>
-            <p id="m-msg" style="color:#aaa; font-style:italic;">...</p>
-            <button onclick="closeModal()" style="margin-top:20px; background:transparent; border:1px solid white; color:white; padding:10px 20px; cursor:pointer;">FERMER</button>
+    <!-- MODAL -->
+    <div class="modal" id="modal">
+        <div class="modal-box">
+            <h2 id="m-title" style="color:var(--ai-cyan); margin:0;">RÉSULTAT</h2>
+            <div class="win-amount" id="m-amount">...</div>
+            <p id="m-msg" style="color:#aaa; font-size:0.9rem;">...</p>
+            <button onclick="closeModal()" style="background:transparent; border:1px solid white; color:white; padding:8px 20px; cursor:pointer; margin-top:10px;">FERMER</button>
         </div>
     </div>
 
     <script>
-        // --- ANIMATION D'OUVERTURE (WINK) ---
-        window.addEventListener('load', () => {
-            setTimeout(() => {
-                document.body.classList.add('loaded');
-            }, 500); // Petit délai pour laisser charger
-        });
-
-        // --- GÉNÉRATEUR D'ÉTOILES ---
-        const starsContainer = document.getElementById('stars-container');
-        for(let i=0; i<50; i++) {
-            const star = document.createElement('div');
-            star.classList.add('star');
-            const xy = Math.random() * 100;
-            const duration = Math.random() * 3 + 2;
-            const size = Math.random() * 3;
-            star.style.left = Math.random() * 100 + 'vw';
-            star.style.top = Math.random() * 100 + 'vh';
-            star.style.width = size + 'px';
-            star.style.height = size + 'px';
-            star.style.setProperty('--duration', duration + 's');
-            star.style.animationDelay = Math.random() * 5 + 's';
-            starsContainer.appendChild(star);
-        }
-
-        // --- LOGIQUE ROUE ---
         const canvas = document.getElementById('wheel');
         const ctx = canvas.getContext('2d');
-        const spinBtn = document.getElementById('spin-btn');
+        const btn = document.getElementById('spin-btn');
         const modal = document.getElementById('modal');
-        const rewardsList = document.getElementById('rewards-list');
+        const statsContainer = document.getElementById('stats-container');
 
-        // Poids pour ~50% de Win / 50% de Lose
-        // Total Win: 1 + 5 + 10 + 25 + 50 + 100 = 191
-        // Total Lose: 32 * 6 = 192
+        // Configuration 50% Win / 50% Lose
+        // Total Win points: 1+5+10+25+50+100 = 191
+        // Total Lose points: 32 * 6 = 192
         const segments = [
-            { text: "80k", color: "#ffbe0b", type: "win", msg: "UNE PERFORMANCE LÉGENDAIRE !", weight: 1 }, 
-            { text: "PERDU", color: "#1a0030", type: "lose", msg: "L'étoile n'a pas brillé...", weight: 32 },
-            { text: "40k", color: "#ff006e", type: "win", msg: "INCROYABLE !", weight: 5 }, 
-            { text: "PERDU", color: "#240046", type: "lose", msg: "Rien pour cette fois.", weight: 32 },
-            { text: "20k", color: "#00f2ff", type: "win", msg: "Superbe !", weight: 10 }, 
-            { text: "PERDU", color: "#1a0030", type: "lose", msg: "Le public est silencieux...", weight: 32 },
-            { text: "10k", color: "#8338ec", type: "win", msg: "Joli gain !", weight: 25 }, 
-            { text: "PERDU", color: "#240046", type: "lose", msg: "Dommage.", weight: 32 },
-            { text: "5k", color: "#fb5607", type: "win", msg: "C'est cool.", weight: 50 }, 
-            { text: "PERDU", color: "#1a0030", type: "lose", msg: "Aïe...", weight: 32 },
-            { text: "1k", color: "#3a86ff", type: "win", msg: "Un bon début.", weight: 100 }, 
-            { text: "PERDU", color: "#240046", type: "lose", msg: "Retente ta chance !", weight: 32 }
+            { text: "80k", color: "#ffd60a", type: "win", msg: "JACKPOT LÉGENDAIRE !", weight: 1 }, 
+            { text: "PERDU", color: "#240046", type: "lose", msg: "Pas cette fois.", weight: 32 },
+            { text: "40k", color: "#f72585", type: "win", msg: "INCROYABLE !", weight: 5 }, 
+            { text: "PERDU", color: "#3c096c", type: "lose", msg: "Rien...", weight: 32 },
+            { text: "20k", color: "#4cc9f0", type: "win", msg: "Superbe !", weight: 10 }, 
+            { text: "PERDU", color: "#240046", type: "lose", msg: "Aïe...", weight: 32 },
+            { text: "10k", color: "#7209b7", type: "win", msg: "Joli !", weight: 25 }, 
+            { text: "PERDU", color: "#3c096c", type: "lose", msg: "Dommage.", weight: 32 },
+            { text: "5k", color: "#b5179e", type: "win", msg: "Cool !", weight: 50 }, 
+            { text: "PERDU", color: "#240046", type: "lose", msg: "Perdu...", weight: 32 },
+            { text: "1k", color: "#480ca8", type: "win", msg: "Un début.", weight: 100 }, 
+            { text: "PERDU", color: "#3c096c", type: "lose", msg: "Retente !", weight: 32 }
         ];
 
         const arc = (2 * Math.PI) / segments.length;
         let isSpinning = false;
 
-        // --- DESSINER LA ROUE (IRIS) ---
         function drawWheel() {
+            // Dessin haute résolution
             ctx.clearRect(0,0,500,500);
             const cx = 250, cy = 250, r = 250;
-
-            // Décalage pour que l'index 0 soit visuellement en haut après rotation CSS
-            // Ici on dessine "droit" (0 à droite), mais on fera tourner le canvas.
             
+            // Offset pour dessiner le segment 0 à midi
+            // CSS rotate start = 0deg. 
+            // On veut que le premier segment (index 0) soit en haut.
+            // Le dessin standard canvas commence à 3h (0 rad).
+            // Donc on décale de -PI/2 - (arc/2) pour centrer le segment 0 en haut.
+            const offset = -Math.PI/2 - (arc/2);
+
             segments.forEach((seg, i) => {
-                const angle = i * arc;
+                const angle = i * arc + offset;
+                
                 ctx.beginPath();
                 ctx.moveTo(cx, cy);
                 ctx.arc(cx, cy, r, angle, angle + arc);
                 ctx.lineTo(cx, cy);
                 
-                // Dégradé radiale (Oeil)
-                const grd = ctx.createRadialGradient(cx, cy, 20, cx, cy, r);
+                // Dégradé Oshi no Ko Iris
+                const grd = ctx.createRadialGradient(cx, cy, 30, cx, cy, r);
                 if(seg.type === 'win') {
                     grd.addColorStop(0, seg.color);
-                    grd.addColorStop(0.7, seg.color); 
-                    grd.addColorStop(1, "#000"); // Bordure sombre
+                    grd.addColorStop(0.5, seg.color);
+                    grd.addColorStop(1, "#10002b"); 
                 } else {
                     grd.addColorStop(0, "#000");
                     grd.addColorStop(1, seg.color);
@@ -449,8 +425,8 @@
                 ctx.fillStyle = grd;
                 ctx.fill();
                 
-                // Séparateur
-                ctx.strokeStyle = "rgba(0,0,0,0.3)";
+                // Bordure
+                ctx.strokeStyle = "rgba(0,0,0,0.2)";
                 ctx.lineWidth = 1;
                 ctx.stroke();
 
@@ -460,110 +436,100 @@
                 ctx.rotate(angle + arc / 2);
                 ctx.textAlign = "right";
                 ctx.fillStyle = "white";
-                ctx.font = "bold 22px Montserrat";
-                ctx.shadowColor = "black"; 
-                ctx.shadowBlur = 4;
+                ctx.font = "bold 24px Montserrat";
+                ctx.shadowColor = "black"; ctx.shadowBlur = 4;
                 ctx.fillText(seg.text, r - 30, 8);
                 ctx.restore();
             });
         }
 
-        // --- AFFICHER LES STATS (SANS PERDANTS) ---
         function generateStats() {
-            const totalWeight = segments.reduce((a,b)=>a+b.weight,0);
-            const uniqueWins = {}; // Pour éviter les doublons dans l'affichage si besoin
-
-            segments.forEach(seg => {
-                if(seg.type === 'lose') return; // ON IGNORE LES PERDANTS
-                
-                // On regroupe par montant
-                if(!uniqueWins[seg.text]) {
-                    uniqueWins[seg.text] = { weight: 0, color: seg.color };
-                }
-                uniqueWins[seg.text].weight += seg.weight;
+            const total = segments.reduce((a,b)=>a+b.weight,0);
+            const wins = {};
+            
+            segments.forEach(s => {
+                if(s.type === 'lose') return;
+                if(!wins[s.text]) wins[s.text] = { w: 0, c: s.color };
+                wins[s.text].w += s.weight;
             });
-
-            // Trier et afficher
-            const sortedKeys = Object.keys(uniqueWins).sort((a,b) => uniqueWins[a].weight - uniqueWins[b].weight); // Du plus rare au plus commun
-
-            sortedKeys.forEach(key => {
-                const item = uniqueWins[key];
-                const percent = (item.weight / totalWeight * 100).toFixed(1) + "%";
-                
-                const tag = document.createElement('div');
-                tag.className = 'reward-tag';
-                tag.style.color = item.color;
-                tag.style.borderColor = item.color;
-                tag.innerHTML = `${key} : <b>${percent}</b>`;
-                
-                rewardsList.appendChild(tag);
+            
+            // Trier (Rare -> Commun)
+            Object.keys(wins).sort((a,b) => wins[a].w - wins[b].w).forEach(k => {
+                const p = ((wins[k].w / total) * 100).toFixed(1) + "%";
+                const badge = document.createElement('div');
+                badge.className = 'stat-badge';
+                badge.style.borderColor = wins[k].c;
+                badge.innerHTML = `<span style="color:${wins[k].c}">${k}</span>: <b>${p}</b>`;
+                statsContainer.appendChild(badge);
             });
         }
 
-        // --- LANCER LA ROUE ---
         function spin() {
             if(isSpinning) return;
             isSpinning = true;
-            spinBtn.disabled = true;
-            spinBtn.innerText = "CAPTIVATION EN COURS...";
-
-            // Calcul du gagnant
-            const totalWeight = segments.reduce((a,b)=>a+b.weight,0);
-            let random = Math.random() * totalWeight;
-            let winnerIndex = 0;
+            btn.disabled = true;
+            
+            const total = segments.reduce((a,b)=>a+b.weight,0);
+            let r = Math.random() * total;
+            let winIdx = 0;
             for(let i=0; i<segments.length; i++){
-                if(random < segments[i].weight){
-                    winnerIndex = i;
-                    break;
-                }
-                random -= segments[i].weight;
+                if(r < segments[i].weight) { winIdx = i; break; }
+                r -= segments[i].weight;
             }
 
-            // Calcul angles
-            // On veut que winnerIndex soit en HAUT (Midi).
-            // Le pointeur est physique en haut.
-            // Canvas Rotate initial: -90deg.
+            // Calcul Angle
+            // Le segment 0 est dessiné en HAUT (Midi) grâce à l'offset dans drawWheel.
+            // Si on veut que le segment X soit en haut, il faut tourner la roue de X segments dans le sens inverse
+            // Ou tourner dans le sens horaire jusqu'à ce que X arrive en haut.
+            // Position actuelle de X = X * arc.
+            // On veut qu'il soit à 0 (Midi).
+            // Rotation Cible = - (Index * arc).
             
+            // Petite variation aléatoire
             const randomOffset = (Math.random() - 0.5) * (arc * 0.8);
-            const segmentAngle = winnerIndex * arc;
-            const targetRotation = (360 - (segmentAngle * 180 / Math.PI)) + (randomOffset * 180 / Math.PI);
-            const spins = (8 + Math.floor(Math.random() * 5)) * 360; // Beaucoup de tours
+            
+            // Conversion en degrés
+            // Comme on a déjà dessiné avec un offset pour caler le 0 en haut,
+            // 0 deg de rotation CSS = Index 0 gagnant.
+            // -30 deg (si 12 segments) = Index 1 gagnant.
+            const anglePerSegDeg = 360 / segments.length;
+            const targetRotation = -(winIdx * anglePerSegDeg) + (randomOffset * 180 / Math.PI);
+            
+            // Nombre de tours
+            const spins = (5 + Math.floor(Math.random() * 5)) * 360;
             const finalDeg = spins + targetRotation;
 
-            // Application CSS
             canvas.style.transition = "transform 6s cubic-bezier(0.1, 1, 0.3, 1)";
-            canvas.style.transform = `rotate(${finalDeg - 90}deg)`; // -90 pour caler le départ
+            canvas.style.transform = `rotate(${finalDeg}deg)`;
 
             setTimeout(() => {
-                showResult(segments[winnerIndex]);
+                showResult(segments[winIdx]);
                 isSpinning = false;
-                spinBtn.disabled = false;
-                spinBtn.innerText = "RELANCER LE SHOW";
+                btn.disabled = false;
                 
                 // Reset silencieux
                 canvas.style.transition = "none";
-                const resetDeg = (finalDeg - 90) % 360;
-                canvas.style.transform = `rotate(${resetDeg}deg)`;
+                const reset = finalDeg % 360;
+                canvas.style.transform = `rotate(${reset}deg)`;
             }, 6000);
         }
 
         function showResult(winner) {
             const mTitle = document.getElementById('m-title');
-            const mAmount = document.getElementById('m-amount');
+            const mAmt = document.getElementById('m-amount');
             const mMsg = document.getElementById('m-msg');
 
             if(winner.type === 'win') {
-                mTitle.innerText = "SUCCÈS !";
-                mAmount.innerText = winner.text;
-                mAmount.style.background = `linear-gradient(to bottom, #fff, ${winner.color})`;
-                mAmount.style.webkitBackgroundClip = "text";
-                mAmount.style.filter = `drop-shadow(0 0 20px ${winner.color})`;
+                mTitle.innerText = "FÉLICITATIONS !";
+                mAmt.innerText = winner.text;
+                mAmt.style.background = `linear-gradient(to bottom, #fff, ${winner.color})`;
+                mAmt.style.webkitBackgroundClip = "text";
+                // Confettis simplifiés (visuel)
             } else {
-                mTitle.innerText = "ÉCHEC";
-                mAmount.innerText = "PERDU";
-                mAmount.style.background = "#555";
-                mAmount.style.webkitBackgroundClip = "text";
-                mAmount.style.filter = "none";
+                mTitle.innerText = "DOMMAGE...";
+                mAmt.innerText = "PERDU";
+                mAmt.style.background = "#555";
+                mAmt.style.webkitBackgroundClip = "text";
             }
             mMsg.innerText = winner.msg;
             modal.classList.add('active');
