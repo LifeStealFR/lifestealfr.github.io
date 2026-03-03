@@ -191,11 +191,6 @@
             border-bottom: 1px solid rgba(255,255,255,0.1);
         }
 
-        .stats-table th {
-            color: #aaa;
-            font-weight: normal;
-        }
-
         .stats-table td.percent {
             text-align: right;
             font-family: monospace;
@@ -278,7 +273,7 @@
             <h2 id="result-title" style="color:var(--aqua-blue); text-transform:uppercase;">Résultat</h2>
             <div class="modal-amount" id="result-amount">...</div>
             <p id="result-message" style="color:#ccc;">...</p>
-            <button onclick="closeModal()" style="margin-top:20px; padding:10px 30px; font-size:1rem;">Fermer</button>
+            <button onclick="closeModal()" style="margin-top:20px; padding:10px 30px; font-size:1rem; cursor:pointer; background:var(--ai-pink); color:white; border:none; border-radius:5px;">Fermer</button>
         </div>
     </div>
 
@@ -289,24 +284,25 @@
         const modal = document.getElementById('result-modal');
         const tableBody = document.getElementById('probs-table');
 
-        // --- CONFIGURATION HARDCORE ---
-        // Poids (Weight) : Plus c'est haut, plus ça tombe.
-        // J'ai mis "Perdu" à 600 pour chaque slot (x6 slots) = 3600 de poids total pour la perte.
-        // Le 80k a un poids de 1.
+        // --- CONFIGURATION BALANCÉE (70% PERDANT) ---
+        // Poids gagnants totaux : 1 + 5 + 10 + 25 + 60 + 150 = 251 points
+        // Poids perdants totaux : 100 * 6 cases = 600 points
+        // Total = 851 points
+        // % Perte = 600/851 = 70.5%
         
         const segments = [
             { text: "80k", color: "#ffd700", type: "win", message: "JACKPOT ABSOLU !!", weight: 1 }, 
-            { text: "Perdu", color: "#240046", type: "lose", message: "Dommage...", weight: 600 },
+            { text: "Perdu", color: "#240046", type: "lose", message: "Dommage...", weight: 100 },
             { text: "40k", color: "#ff0080", type: "win", message: "Incroyable !", weight: 5 }, 
-            { text: "Perdu", color: "#3a0ca3", type: "lose", message: "Rien...", weight: 600 },
+            { text: "Perdu", color: "#3a0ca3", type: "lose", message: "Rien...", weight: 100 },
             { text: "20k", color: "#00ffff", type: "win", message: "Super gain !", weight: 10 }, 
-            { text: "Perdu", color: "#240046", type: "lose", message: "Aïe...", weight: 600 },
+            { text: "Perdu", color: "#240046", type: "lose", message: "Aïe...", weight: 100 },
             { text: "10k", color: "#4cc9f0", type: "win", message: "Joli !", weight: 25 }, 
-            { text: "Perdu", color: "#3a0ca3", type: "lose", message: "Pas de chance.", weight: 600 },
+            { text: "Perdu", color: "#3a0ca3", type: "lose", message: "Pas de chance.", weight: 100 },
             { text: "5k", color: "#f72585", type: "win", message: "C'est cool.", weight: 60 }, 
-            { text: "Perdu", color: "#240046", type: "lose", message: "Perdu...", weight: 600 },
+            { text: "Perdu", color: "#240046", type: "lose", message: "Perdu...", weight: 100 },
             { text: "1k", color: "#7209b7", type: "win", message: "Un début.", weight: 150 }, 
-            { text: "Perdu", color: "#3a0ca3", type: "lose", message: "Essaie encore.", weight: 600 }
+            { text: "Perdu", color: "#3a0ca3", type: "lose", message: "Essaie encore.", weight: 100 }
         ];
 
         const totalSegments = segments.length;
@@ -316,8 +312,6 @@
         // --- 1. Génération du Tableau des Probabilités ---
         function generateProbabilities() {
             const totalWeight = segments.reduce((acc, seg) => acc + seg.weight, 0);
-            
-            // On regroupe les items par nom pour le tableau (sinon on a 6 fois "Perdu")
             const groups = {};
             
             segments.forEach(seg => {
@@ -327,11 +321,9 @@
                 groups[seg.text].weight += seg.weight;
             });
 
-            // Conversion en tableau pour trier
             const sortedStats = Object.keys(groups).map(key => {
                 const percent = (groups[key].weight / totalWeight) * 100;
-                // Si c'est < 0.01, on affiche "< 0.01%"
-                let percentDisplay = percent < 0.01 ? "< 0.01%" : percent.toFixed(2) + "%";
+                let percentDisplay = percent < 0.01 ? "< 0.01%" : percent.toFixed(1) + "%";
                 return { 
                     name: key, 
                     percent: percentDisplay, 
@@ -340,16 +332,13 @@
                     isWin: groups[key].isWin
                 };
             }).sort((a, b) => {
-                // Tri : Gagnants d'abord (du plus gros au plus petit), puis Perdants
                 if (a.name === "Perdu") return 1; 
                 if (b.name === "Perdu") return -1;
-                return a.rawPercent - b.rawPercent; // Les plus rares en haut
+                return a.rawPercent - b.rawPercent;
             });
 
-            // Injection HTML
             sortedStats.forEach(stat => {
                 const tr = document.createElement('tr');
-                // Style spécial pour le nom
                 const colorStyle = stat.isWin ? `color: ${stat.color}; text-shadow: 0 0 5px ${stat.color}` : `color: #888`;
                 const nameDisplay = stat.name === "Perdu" ? "RIEN (PERDU)" : `MONNAIE : ${stat.name}`;
                 
@@ -367,27 +356,22 @@
             const centerX = canvas.width / 2;
             const centerY = canvas.height / 2;
             const radius = canvas.width / 2;
-            
-            // Offset pour que le trait ne soit pas sous le pointeur au start
             const initialOffset = -arc / 2;
 
             segments.forEach((segment, i) => {
                 const angle = i * arc + initialOffset;
                 
                 ctx.beginPath();
-                // Alternance subtile pour les cases "Perdu" pour esthétique
                 ctx.fillStyle = segment.color;
                 ctx.moveTo(centerX, centerY);
                 ctx.arc(centerX, centerY, radius, angle, angle + arc);
                 ctx.lineTo(centerX, centerY);
                 ctx.fill();
                 
-                // Bordure fine
                 ctx.strokeStyle = "rgba(0,0,0,0.2)";
                 ctx.lineWidth = 2;
                 ctx.stroke();
 
-                // Texte
                 ctx.save();
                 ctx.translate(centerX, centerY);
                 ctx.rotate(angle + arc / 2);
@@ -395,7 +379,6 @@
                 ctx.fillStyle = segment.type === 'win' ? "#fff" : "rgba(255,255,255,0.3)";
                 ctx.font = segment.type === 'win' ? "bold 22px Montserrat" : "16px Montserrat";
                 
-                // Glow sur le texte gagnant
                 if (segment.type === 'win') {
                     ctx.shadowColor = segment.color;
                     ctx.shadowBlur = 10;
@@ -412,7 +395,6 @@
             isSpinning = true;
             spinBtn.disabled = true;
 
-            // Sélection pondérée (Weighted Random)
             const totalWeight = segments.reduce((acc, seg) => acc + seg.weight, 0);
             let random = Math.random() * totalWeight;
             let winningIndex = 0;
@@ -425,31 +407,21 @@
                 random -= segments[i].weight;
             }
 
-            // Calcul de l'angle
-            // Le pointeur est à droite (0°), mais le canvas commence le dessin à 0°.
-            // Index 0 est entre -arc/2 et +arc/2.
-            // On ajoute de l'aléatoire dans le segment pour ne pas toujours atterrir au centre
             const randomOffset = (Math.random() - 0.5) * (arc * 0.8);
-            
-            // L'angle cible (inversé car on tourne le canvas)
             const segmentAngle = winningIndex * arc;
             const targetRotation = (360 - (segmentAngle * 180 / Math.PI)) + (randomOffset * 180 / Math.PI);
             
-            // + Tours complets (entre 8 et 12 tours pour le suspense)
             const spins = (8 + Math.floor(Math.random() * 4)) * 360;
             const finalDeg = spins + targetRotation;
 
-            // Animation
-            canvas.style.transition = "transform 8s cubic-bezier(0.1, 1, 0.3, 1)"; // Effet Oshi no Ko : Très rapide puis très lent
+            canvas.style.transition = "transform 8s cubic-bezier(0.1, 1, 0.3, 1)";
             canvas.style.transform = `rotate(${finalDeg}deg)`;
 
-            // Fin
             setTimeout(() => {
                 isSpinning = false;
                 spinBtn.disabled = false;
                 showResult(segments[winningIndex]);
                 
-                // Reset silencieux de la rotation pour éviter les bugs sur spams futurs
                 canvas.style.transition = "none";
                 canvas.style.transform = `rotate(${finalDeg % 360}deg)`;
             }, 8000);
@@ -483,10 +455,8 @@
             modal.classList.remove('active');
         }
 
-        // Init
         drawWheel();
         generateProbabilities();
-        // Petit ajustement visuel initial
         canvas.style.transform = `rotate(${arc/2 * 180/Math.PI}deg)`;
         
         spinBtn.addEventListener('click', spin);
