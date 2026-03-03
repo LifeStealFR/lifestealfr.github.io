@@ -3,404 +3,291 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>VIP-Land | Idol Stage</title>
+    <title>VIP-Land | Ultimate Stage</title>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
         :root {
-            --ai-pink: #ff009d;
-            --ai-dark-pink: #b5179e;
-            --ai-purple: #7209b7;
-            --ai-deep-blue: #3a0ca3;
-            --ai-cyan: #4cc9f0;
-            --ai-gold: #ffd60a;
-            --bg-dark: #10002b;
+            --c-pink: #ff0099;
+            --c-purple: #7000ff;
+            --c-cyan: #00f7ff;
+            --c-gold: #ffd700;
+            --c-dark: #0a0015;
         }
 
-        * { box-sizing: border-box; user-select: none; }
+        * { box-sizing: border-box; outline: none; -webkit-tap-highlight-color: transparent; }
 
         body {
             margin: 0; padding: 0;
-            background-color: var(--bg-dark);
+            background-color: var(--c-dark);
             color: white;
             font-family: 'Montserrat', sans-serif;
             height: 100vh;
             width: 100vw;
-            overflow: hidden; /* Empêche tout scroll */
+            overflow: hidden; /* Important : empêche le scroll */
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            position: relative;
         }
 
-        /* --- DÉCORS (SCÈNE) --- */
-        
-        /* 1. Les Rideaux */
-        .curtain {
-            position: absolute;
-            top: 0; bottom: 0;
-            width: 15vw;
-            background: linear-gradient(90deg, #3a0ca3, #000);
-            z-index: 5;
-            box-shadow: 10px 0 20px rgba(0,0,0,0.8);
+        /* --- LOADER (Écran de chargement) --- */
+        #loader {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: #000;
+            z-index: 9999;
+            display: flex; justify-content: center; align-items: center;
+            transition: opacity 0.5s ease-out;
         }
-        .curtain-left { left: 0; background: linear-gradient(90deg, #240046, #000); border-right: 2px solid var(--ai-purple); }
-        .curtain-right { right: 0; background: linear-gradient(-90deg, #240046, #000); border-left: 2px solid var(--ai-purple); }
+        .loader-star {
+            font-size: 50px; color: var(--c-pink);
+            animation: pulseStar 0.5s infinite alternate;
+        }
+        body.loaded #loader { opacity: 0; pointer-events: none; }
 
-        /* 2. Le Public (Glow Sticks) */
-        .audience-glow {
-            position: absolute;
-            bottom: -50px;
-            left: 0; width: 100%;
-            height: 150px;
-            background: transparent;
-            z-index: 4;
-            filter: blur(20px);
-            opacity: 0.8;
-            animation: glowStickMove 3s infinite alternate;
-        }
-        
-        /* On crée des ombres portées colorées pour simuler les glowsticks */
-        .audience-glow::after {
-            content: '';
-            position: absolute;
-            bottom: 0; left: 10%;
-            width: 10px; height: 10px;
-            box-shadow: 
-                10vw -20px 40px var(--ai-pink),
-                20vw -50px 50px var(--ai-cyan),
-                30vw -10px 40px white,
-                50vw -30px 60px var(--ai-purple),
-                70vw -20px 50px var(--ai-pink),
-                80vw -40px 40px var(--ai-cyan);
-            border-radius: 50%;
-        }
+        @keyframes pulseStar { from { transform: scale(1); text-shadow: 0 0 10px var(--c-pink); } to { transform: scale(1.5); text-shadow: 0 0 30px var(--c-purple); } }
 
-        @keyframes glowStickMove {
-            0% { transform: translateY(0) scale(1); }
-            100% { transform: translateY(-20px) scale(1.1); }
-        }
-
-        /* 3. Projecteurs (Spotlights) */
-        .spotlight {
-            position: absolute;
-            top: -50%; left: 50%;
-            width: 200px; height: 200vh;
-            background: linear-gradient(to bottom, rgba(255,255,255,0.1), transparent);
-            transform-origin: top center;
-            z-index: 1;
+        /* --- ARRIÈRE PLAN ANIMÉ (Projecteurs & Particules) --- */
+        .background-layer {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
             pointer-events: none;
-        }
-        .spot-1 { animation: spotRotate 8s infinite alternate ease-in-out; transform: rotate(-30deg); }
-        .spot-2 { animation: spotRotate2 10s infinite alternate ease-in-out; transform: rotate(30deg); }
-
-        @keyframes spotRotate { from { transform: rotate(-45deg) translateX(-50%); } to { transform: rotate(-15deg) translateX(-50%); } }
-        @keyframes spotRotate2 { from { transform: rotate(45deg) translateX(-50%); } to { transform: rotate(15deg) translateX(-50%); } }
-
-        /* --- UI PRINCIPALE --- */
-        .stage-center {
-            z-index: 10;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            height: 100%;
-            width: 100%;
-            padding: 20px;
+            overflow: hidden;
+            z-index: 1; /* Derrière tout */
         }
 
-        /* Titre Néon */
-        h1 {
-            font-size: clamp(1.5rem, 5vw, 3rem); /* Taille adaptative */
-            margin: 0;
-            text-transform: uppercase;
-            font-weight: 900;
-            letter-spacing: -1px;
-            color: white;
-            text-shadow: 
-                0 0 10px var(--ai-pink),
-                0 0 20px var(--ai-purple),
-                0 0 40px var(--ai-dark-pink);
-            animation: neonPulse 2s infinite alternate;
+        /* Projecteurs */
+        .spotlight {
+            position: absolute; top: -20%; left: 50%;
+            width: 100px; height: 150%;
+            background: linear-gradient(to bottom, rgba(255,255,255,0.15), transparent);
+            transform-origin: top center;
+            filter: blur(10px);
         }
-        
-        @keyframes neonPulse {
-            from { text-shadow: 0 0 10px var(--ai-pink), 0 0 20px var(--ai-purple); }
-            to { text-shadow: 0 0 20px var(--ai-pink), 0 0 40px var(--ai-cyan), 0 0 60px var(--ai-purple); }
-        }
+        .spot-left { animation: swingLeft 4s infinite ease-in-out alternate; }
+        .spot-right { animation: swingRight 5s infinite ease-in-out alternate; }
 
-        .subtitle {
-            font-size: 0.8rem;
-            letter-spacing: 4px;
-            color: var(--ai-cyan);
-            margin-bottom: 2vh;
-            text-shadow: 0 0 5px var(--ai-cyan);
-        }
+        @keyframes swingLeft { from { transform: rotate(-30deg); } to { transform: rotate(-10deg); } }
+        @keyframes swingRight { from { transform: rotate(30deg); } to { transform: rotate(10deg); } }
 
-        /* --- LA ROUE RESPONSIVE --- */
-        .wheel-wrapper {
+        /* Public (Lueurs en bas) */
+        .glow-sticks {
+            position: absolute; bottom: -50px; left: 0; width: 100%; height: 150px;
+            background: 
+                radial-gradient(circle at 20% 50%, var(--c-pink) 0%, transparent 40%),
+                radial-gradient(circle at 80% 60%, var(--c-cyan) 0%, transparent 40%),
+                radial-gradient(circle at 50% 80%, var(--c-purple) 0%, transparent 50%);
+            opacity: 0.6;
+            filter: blur(30px);
+            animation: crowdMove 2s infinite alternate;
+        }
+        @keyframes crowdMove { from { opacity: 0.5; transform: translateY(0); } to { opacity: 0.8; transform: translateY(-10px); } }
+
+        /* --- CONTENU PRINCIPAL --- */
+        .main-content {
+            z-index: 10; /* Devant le fond */
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            width: 100%; height: 100%;
             position: relative;
-            /* La clé de la responsivité : vmin prend la plus petite dimension entre hauteur et largeur */
-            width: 80vmin; 
-            height: 80vmin;
-            max-width: 450px;
-            max-height: 450px;
+        }
+
+        h1 {
+            font-size: clamp(2rem, 5vw, 4rem);
+            text-transform: uppercase;
+            margin: 0 0 10px 0;
+            background: linear-gradient(to right, #fff, var(--c-pink), var(--c-cyan));
+            -webkit-background-clip: text; background-clip: text; color: transparent;
+            filter: drop-shadow(0 0 10px var(--c-purple));
+        }
+
+        /* --- LA ROUE (RESPONSIVE) --- */
+        .wheel-container {
+            position: relative;
+            /* La magie : vmin = pourcentage de la largeur OU hauteur (le plus petit des deux) */
+            width: 85vmin; height: 85vmin;
+            max-width: 500px; max-height: 500px; /* Limite sur PC */
             border-radius: 50%;
             padding: 10px;
-            /* Bordure Oeil Galaxy */
-            background: conic-gradient(from 0deg, var(--ai-deep-blue), var(--ai-pink), var(--ai-cyan), var(--ai-purple), var(--ai-deep-blue));
-            box-shadow: 0 0 50px rgba(181, 23, 158, 0.5);
+            background: conic-gradient(from 0deg, var(--c-purple), var(--c-pink), var(--c-cyan), var(--c-purple));
+            box-shadow: 0 0 50px rgba(255, 0, 153, 0.4);
             display: flex; justify-content: center; align-items: center;
         }
 
-        .wheel-inner {
+        .wheel-mask {
             width: 100%; height: 100%;
             border-radius: 50%;
             overflow: hidden;
-            background: #000;
             position: relative;
-            box-shadow: inset 0 0 50px #000;
+            background: #000;
         }
 
         canvas { width: 100%; height: 100%; display: block; }
 
-        /* Pupille Étoile */
-        .pupil {
-            position: absolute;
-            top: 50%; left: 50%;
-            transform: translate(-50%, -50%);
-            width: 25%; height: 25%; /* Taille relative à la roue */
+        /* Éléments par dessus la roue */
+        .pointer {
+            position: absolute; top: -20px; left: 50%; transform: translateX(-50%);
+            width: 0; height: 0;
+            border-left: 20px solid transparent; border-right: 20px solid transparent;
+            border-top: 40px solid white;
+            filter: drop-shadow(0 0 10px var(--c-cyan));
+            z-index: 20;
+        }
+
+        .pupil-star {
+            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            width: 20%; height: 20%;
             background: white;
             clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
-            z-index: 20;
-            box-shadow: 0 0 30px white;
-            animation: breathe 4s ease-in-out infinite;
+            box-shadow: 0 0 20px white;
+            z-index: 15;
+            animation: breathe 3s infinite ease-in-out;
         }
-        
-        /* Reflet Glossy */
-        .gloss {
-            position: absolute;
-            top: 15%; left: 15%;
-            width: 20%; height: 10%;
-            background: rgba(255,255,255,0.8);
-            border-radius: 50%;
-            transform: rotate(-45deg);
-            filter: blur(4px);
-            z-index: 25; pointer-events: none;
-        }
+        @keyframes breathe { 50% { transform: translate(-50%, -50%) scale(1.1); box-shadow: 0 0 50px var(--c-pink); } }
 
-        /* Pointeur */
-        .pointer {
-            position: absolute;
-            top: -5%;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 10%; height: 15%;
-            background: linear-gradient(to bottom, white, var(--ai-cyan));
-            clip-path: polygon(50% 100%, 0 0, 100% 0);
-            z-index: 30;
-            filter: drop-shadow(0 0 10px var(--ai-cyan));
-        }
+        /* --- CONTROLES --- */
+        .btn-container { margin-top: 20px; z-index: 20; text-align: center; }
 
-        @keyframes breathe {
-            0%, 100% { transform: translate(-50%, -50%) scale(1); box-shadow: 0 0 20px white; }
-            50% { transform: translate(-50%, -50%) scale(1.1); box-shadow: 0 0 50px var(--ai-pink); }
-        }
-
-        /* --- CONTROLES & STATS --- */
-        .controls-area {
-            margin-top: 3vh;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            width: 100%;
-        }
-
-        .spin-btn {
-            background: transparent;
-            color: white;
-            border: 2px solid rgba(255,255,255,0.2);
-            padding: 12px 40px;
-            font-family: 'Montserrat', sans-serif;
-            font-weight: 900;
-            font-size: 1rem;
-            text-transform: uppercase;
-            cursor: pointer;
-            position: relative;
-            overflow: hidden;
-            transition: 0.3s;
-            box-shadow: 0 0 15px rgba(0,0,0,0.5);
+        #spin-btn {
+            background: transparent; color: white;
+            border: 2px solid rgba(255,255,255,0.3);
+            padding: 15px 50px;
+            font-family: 'Montserrat', sans-serif; font-weight: 900; font-size: 1.2rem;
+            text-transform: uppercase; cursor: pointer;
             border-radius: 50px;
+            transition: 0.3s;
+            box-shadow: 0 0 20px rgba(0,0,0,0.5);
         }
-        
-        .spin-btn::after {
-            content: ''; position: absolute; top:0; left:0; width:100%; height:100%;
-            background: linear-gradient(90deg, var(--ai-pink), var(--ai-purple));
-            z-index: -1; transform: scaleX(0); transform-origin: left; transition: transform 0.3s;
+        #spin-btn:hover {
+            background: var(--c-pink); border-color: var(--c-pink);
+            box-shadow: 0 0 40px var(--c-pink);
+            transform: scale(1.05);
         }
-        .spin-btn:hover { border-color: transparent; box-shadow: 0 0 30px var(--ai-pink); }
-        .spin-btn:hover::after { transform: scaleX(1); }
-        .spin-btn:disabled { filter: grayscale(1); cursor: not-allowed; }
+        #spin-btn:disabled { background: #333; border-color: #333; color: #777; cursor: not-allowed; transform: none; box-shadow: none; }
 
-        .stats-row {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            gap: 10px;
-            margin-top: 2vh;
-            max-width: 90vw;
+        .stats-box {
+            margin-top: 15px;
+            display: flex; gap: 10px; justify-content: center; flex-wrap: wrap;
         }
-        
-        .stat-badge {
-            font-size: 0.75rem;
-            background: rgba(0,0,0,0.6);
-            border: 1px solid rgba(255,255,255,0.15);
-            padding: 5px 10px;
-            border-radius: 5px;
-            color: #ddd;
-            backdrop-filter: blur(5px);
+        .stat-tag {
+            font-size: 0.8rem; background: rgba(0,0,0,0.5); border: 1px solid #444;
+            padding: 5px 10px; border-radius: 5px; color: #ccc;
         }
-        .stat-badge b { color: white; margin-left: 3px; }
+        .stat-tag b { color: var(--c-gold); margin-left: 5px; }
 
         /* --- MODAL --- */
-        .modal {
+        #modal {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(16, 0, 43, 0.95);
-            display: flex; justify-content: center; align-items: center;
-            opacity: 0; pointer-events: none; transition: 0.3s; z-index: 100;
+            background: rgba(0,0,0,0.9);
+            display: none; /* Caché par défaut via CSS */
+            justify-content: center; align-items: center;
+            z-index: 100; opacity: 0; transition: opacity 0.3s;
         }
-        .modal.active { opacity: 1; pointer-events: all; }
-        
-        .modal-box {
+        #modal.active { display: flex; opacity: 1; }
+
+        .modal-content {
             background: linear-gradient(135deg, #240046, #000);
-            padding: 40px;
-            border: 2px solid var(--ai-pink);
-            box-shadow: 0 0 80px var(--ai-pink);
-            text-align: center;
-            width: 80%; max-width: 400px;
-            transform: scale(0.8); transition: 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            border: 2px solid var(--c-pink);
+            padding: 40px; text-align: center;
+            box-shadow: 0 0 60px var(--c-pink);
+            transform: scale(0.8); transition: 0.3s;
+            width: 90%; max-width: 400px;
         }
-        .modal.active .modal-box { transform: scale(1); }
-        
-        .win-amount {
-            font-size: 3rem; font-weight: 900; margin: 15px 0;
-            background: linear-gradient(to bottom, #fff, var(--ai-gold));
-            -webkit-background-clip: text; color: transparent;
-            filter: drop-shadow(0 0 15px var(--ai-gold));
-        }
+        #modal.active .modal-content { transform: scale(1); }
 
-        /* --- PARTICULES FLOTTANTES (CSS PURE) --- */
-        .particle {
-            position: absolute;
-            bottom: -10vh;
-            background: white;
-            border-radius: 50%;
-            animation: floatUp linear infinite;
-            z-index: 2;
-        }
-        /* On en crée quelques uns via CSS pour la perf */
-        .p1 { left: 10%; width: 4px; height: 4px; animation-duration: 7s; opacity: 0.5; }
-        .p2 { left: 30%; width: 6px; height: 6px; animation-duration: 5s; opacity: 0.7; box-shadow: 0 0 10px var(--ai-cyan); }
-        .p3 { left: 70%; width: 3px; height: 3px; animation-duration: 9s; opacity: 0.4; }
-        .p4 { left: 85%; width: 5px; height: 5px; animation-duration: 6s; opacity: 0.6; box-shadow: 0 0 10px var(--ai-pink); }
-
-        @keyframes floatUp { to { transform: translateY(-110vh); } }
+        .win-txt { font-size: 3rem; font-weight: 900; color: var(--c-gold); text-shadow: 0 0 20px var(--c-gold); margin: 20px 0; }
+        .close-btn { background: transparent; border: 1px solid white; color: white; padding: 10px 30px; cursor: pointer; }
+        .close-btn:hover { background: white; color: black; }
 
         /* Media Queries pour petits écrans */
         @media (max-height: 600px) {
-            .subtitle { display: none; }
-            .stats-row { display: none; } /* Cache les stats sur très petit écran height pour laisser place à la roue */
-            h1 { font-size: 1.5rem; margin-top: 10px; }
-            .spin-btn { padding: 8px 20px; font-size: 0.8rem; }
+            h1 { font-size: 1.5rem; margin-bottom: 5px; }
+            #spin-btn { padding: 10px 30px; font-size: 1rem; }
+            .stats-box { display: none; } /* On cache les stats si l'écran est trop petit en hauteur */
         }
     </style>
 </head>
 <body>
 
-    <!-- DECOR -->
-    <div class="spotlight spot-1"></div>
-    <div class="spotlight spot-2"></div>
-    <div class="curtain curtain-left"></div>
-    <div class="curtain curtain-right"></div>
-    <div class="audience-glow"></div>
-    
-    <!-- Particules -->
-    <div class="particle p1"></div>
-    <div class="particle p2"></div>
-    <div class="particle p3"></div>
-    <div class="particle p4"></div>
+    <!-- LOADER -->
+    <div id="loader"><div class="loader-star">★</div></div>
 
-    <!-- UI -->
-    <div class="stage-center">
+    <!-- FOND ANIMÉ -->
+    <div class="background-layer">
+        <div class="spotlight spot-left"></div>
+        <div class="spotlight spot-right"></div>
+        <div class="glow-sticks"></div>
+    </div>
+
+    <!-- CONTENU -->
+    <div class="main-content">
         <h1>VIP-Land</h1>
-        <div class="subtitle">✧ IDOL STAGE ✧</div>
-
-        <div class="wheel-wrapper">
+        
+        <div class="wheel-container">
             <div class="pointer"></div>
-            <div class="wheel-inner">
+            <div class="wheel-mask">
                 <canvas id="wheel" width="500" height="500"></canvas>
             </div>
-            <div class="pupil"></div>
-            <div class="gloss"></div>
+            <div class="pupil-star"></div>
         </div>
 
-        <div class="controls-area">
-            <button class="spin-btn" id="spin-btn">LANCER (1 TICKET)</button>
-            
-            <div class="stats-row" id="stats-container">
-                <!-- Rempli par JS -->
+        <div class="btn-container">
+            <button id="spin-btn">LANCER (1 TICKET)</button>
+            <div class="stats-box" id="stats-list">
+                <!-- JS va mettre les % ici -->
             </div>
         </div>
     </div>
 
     <!-- MODAL -->
-    <div class="modal" id="modal">
-        <div class="modal-box">
-            <h2 id="m-title" style="color:var(--ai-cyan); margin:0;">RÉSULTAT</h2>
-            <div class="win-amount" id="m-amount">...</div>
-            <p id="m-msg" style="color:#aaa; font-size:0.9rem;">...</p>
-            <button onclick="closeModal()" style="background:transparent; border:1px solid white; color:white; padding:8px 20px; cursor:pointer; margin-top:10px;">FERMER</button>
+    <div id="modal">
+        <div class="modal-content">
+            <h2 id="m-title" style="color:var(--c-cyan); margin:0;">RÉSULTAT</h2>
+            <div class="win-txt" id="m-amount">...</div>
+            <p id="m-msg" style="color:#aaa;">...</p>
+            <button class="close-btn" onclick="closeModal()">Fermer</button>
         </div>
     </div>
 
     <script>
+        // Charger la page proprement
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                document.body.classList.add('loaded');
+                // Dessiner la roue une fois que tout est prêt
+                drawWheel(); 
+            }, 800);
+        });
+
         const canvas = document.getElementById('wheel');
         const ctx = canvas.getContext('2d');
-        const btn = document.getElementById('spin-btn');
+        const spinBtn = document.getElementById('spin-btn');
         const modal = document.getElementById('modal');
-        const statsContainer = document.getElementById('stats-container');
+        const statsList = document.getElementById('stats-list');
 
-        // Configuration 50% Win / 50% Lose
-        // Total Win points: 1+5+10+25+50+100 = 191
-        // Total Lose points: 32 * 6 = 192
+        // Config 50/50
         const segments = [
-            { text: "80k", color: "#ffd60a", type: "win", msg: "JACKPOT LÉGENDAIRE !", weight: 1 }, 
-            { text: "PERDU", color: "#240046", type: "lose", msg: "Pas cette fois.", weight: 32 },
-            { text: "40k", color: "#f72585", type: "win", msg: "INCROYABLE !", weight: 5 }, 
-            { text: "PERDU", color: "#3c096c", type: "lose", msg: "Rien...", weight: 32 },
-            { text: "20k", color: "#4cc9f0", type: "win", msg: "Superbe !", weight: 10 }, 
-            { text: "PERDU", color: "#240046", type: "lose", msg: "Aïe...", weight: 32 },
-            { text: "10k", color: "#7209b7", type: "win", msg: "Joli !", weight: 25 }, 
-            { text: "PERDU", color: "#3c096c", type: "lose", msg: "Dommage.", weight: 32 },
-            { text: "5k", color: "#b5179e", type: "win", msg: "Cool !", weight: 50 }, 
-            { text: "PERDU", color: "#240046", type: "lose", msg: "Perdu...", weight: 32 },
-            { text: "1k", color: "#480ca8", type: "win", msg: "Un début.", weight: 100 }, 
-            { text: "PERDU", color: "#3c096c", type: "lose", msg: "Retente !", weight: 32 }
+            { text: "80k", color: "#ffd700", type: "win", msg: "JACKPOT !", weight: 1 }, 
+            { text: "PERDU", color: "#240046", type: "lose", msg: "Rien...", weight: 32 },
+            { text: "40k", color: "#ff0099", type: "win", msg: "Incroyable !", weight: 5 }, 
+            { text: "PERDU", color: "#3a0ca3", type: "lose", msg: "Rien...", weight: 32 },
+            { text: "20k", color: "#00f7ff", type: "win", msg: "Super !", weight: 10 }, 
+            { text: "PERDU", color: "#240046", type: "lose", msg: "Rien...", weight: 32 },
+            { text: "10k", color: "#7000ff", type: "win", msg: "Joli !", weight: 25 }, 
+            { text: "PERDU", color: "#3a0ca3", type: "lose", msg: "Rien...", weight: 32 },
+            { text: "5k", color: "#b5179e", type: "win", msg: "Cool.", weight: 50 }, 
+            { text: "PERDU", color: "#240046", type: "lose", msg: "Rien...", weight: 32 },
+            { text: "1k", color: "#4cc9f0", type: "win", msg: "Un début.", weight: 100 }, 
+            { text: "PERDU", color: "#3a0ca3", type: "lose", msg: "Rien...", weight: 32 }
         ];
 
         const arc = (2 * Math.PI) / segments.length;
         let isSpinning = false;
 
         function drawWheel() {
-            // Dessin haute résolution
             ctx.clearRect(0,0,500,500);
             const cx = 250, cy = 250, r = 250;
             
-            // Offset pour dessiner le segment 0 à midi
-            // CSS rotate start = 0deg. 
-            // On veut que le premier segment (index 0) soit en haut.
-            // Le dessin standard canvas commence à 3h (0 rad).
-            // Donc on décale de -PI/2 - (arc/2) pour centrer le segment 0 en haut.
+            // On décale le dessin pour que le segment 0 soit en HAUT (Midi)
+            // Dessin standard = 0rad à droite (3h).
+            // Donc offset = -PI/2 - (arc/2).
             const offset = -Math.PI/2 - (arc/2);
 
             segments.forEach((seg, i) => {
@@ -411,12 +298,12 @@
                 ctx.arc(cx, cy, r, angle, angle + arc);
                 ctx.lineTo(cx, cy);
                 
-                // Dégradé Oshi no Ko Iris
-                const grd = ctx.createRadialGradient(cx, cy, 30, cx, cy, r);
+                // Dégradé Oeil
+                const grd = ctx.createRadialGradient(cx, cy, 40, cx, cy, r);
                 if(seg.type === 'win') {
                     grd.addColorStop(0, seg.color);
-                    grd.addColorStop(0.5, seg.color);
-                    grd.addColorStop(1, "#10002b"); 
+                    grd.addColorStop(0.6, seg.color);
+                    grd.addColorStop(1, "#10002b");
                 } else {
                     grd.addColorStop(0, "#000");
                     grd.addColorStop(1, seg.color);
@@ -424,10 +311,6 @@
                 
                 ctx.fillStyle = grd;
                 ctx.fill();
-                
-                // Bordure
-                ctx.strokeStyle = "rgba(0,0,0,0.2)";
-                ctx.lineWidth = 1;
                 ctx.stroke();
 
                 // Texte
@@ -443,105 +326,96 @@
             });
         }
 
-        function generateStats() {
-            const total = segments.reduce((a,b)=>a+b.weight,0);
-            const wins = {};
-            
-            segments.forEach(s => {
-                if(s.type === 'lose') return;
-                if(!wins[s.text]) wins[s.text] = { w: 0, c: s.color };
-                wins[s.text].w += s.weight;
-            });
-            
-            // Trier (Rare -> Commun)
-            Object.keys(wins).sort((a,b) => wins[a].w - wins[b].w).forEach(k => {
-                const p = ((wins[k].w / total) * 100).toFixed(1) + "%";
-                const badge = document.createElement('div');
-                badge.className = 'stat-badge';
-                badge.style.borderColor = wins[k].c;
-                badge.innerHTML = `<span style="color:${wins[k].c}">${k}</span>: <b>${p}</b>`;
-                statsContainer.appendChild(badge);
-            });
-        }
-
         function spin() {
             if(isSpinning) return;
             isSpinning = true;
-            btn.disabled = true;
-            
+            spinBtn.disabled = true;
+
             const total = segments.reduce((a,b)=>a+b.weight,0);
             let r = Math.random() * total;
             let winIdx = 0;
-            for(let i=0; i<segments.length; i++){
+            for(let i=0; i<segments.length; i++) {
                 if(r < segments[i].weight) { winIdx = i; break; }
                 r -= segments[i].weight;
             }
 
-            // Calcul Angle
-            // Le segment 0 est dessiné en HAUT (Midi) grâce à l'offset dans drawWheel.
-            // Si on veut que le segment X soit en haut, il faut tourner la roue de X segments dans le sens inverse
-            // Ou tourner dans le sens horaire jusqu'à ce que X arrive en haut.
-            // Position actuelle de X = X * arc.
-            // On veut qu'il soit à 0 (Midi).
-            // Rotation Cible = - (Index * arc).
+            // Calcul angle
+            // Le segment winIdx doit arriver en haut (Midi).
+            // Comme on a dessiné avec offset, la position de base du winIdx est (winIdx * 360 / nbSegments).
+            // Pour le mettre à 0, il faut tourner de - (cette position).
+            const segAngle = 360 / segments.length;
+            // On ajoute de l'aléatoire dans le segment (+/- 40% de la largeur)
+            const randomOffset = (Math.random() - 0.5) * (segAngle * 0.8);
             
-            // Petite variation aléatoire
-            const randomOffset = (Math.random() - 0.5) * (arc * 0.8);
-            
-            // Conversion en degrés
-            // Comme on a déjà dessiné avec un offset pour caler le 0 en haut,
-            // 0 deg de rotation CSS = Index 0 gagnant.
-            // -30 deg (si 12 segments) = Index 1 gagnant.
-            const anglePerSegDeg = 360 / segments.length;
-            const targetRotation = -(winIdx * anglePerSegDeg) + (randomOffset * 180 / Math.PI);
-            
-            // Nombre de tours
-            const spins = (5 + Math.floor(Math.random() * 5)) * 360;
+            const targetRotation = -(winIdx * segAngle) + randomOffset;
+            const spins = (5 + Math.floor(Math.random() * 5)) * 360; // 5 à 10 tours
             const finalDeg = spins + targetRotation;
 
-            canvas.style.transition = "transform 6s cubic-bezier(0.1, 1, 0.3, 1)";
+            // Application CSS
+            canvas.style.transition = "transform 5s cubic-bezier(0.1, 1, 0.3, 1)";
             canvas.style.transform = `rotate(${finalDeg}deg)`;
 
             setTimeout(() => {
                 showResult(segments[winIdx]);
                 isSpinning = false;
-                btn.disabled = false;
+                spinBtn.disabled = false;
                 
                 // Reset silencieux
                 canvas.style.transition = "none";
                 const reset = finalDeg % 360;
                 canvas.style.transform = `rotate(${reset}deg)`;
-            }, 6000);
+            }, 5000);
         }
 
         function showResult(winner) {
-            const mTitle = document.getElementById('m-title');
-            const mAmt = document.getElementById('m-amount');
-            const mMsg = document.getElementById('m-msg');
+            const title = document.getElementById('m-title');
+            const amt = document.getElementById('m-amount');
+            const msg = document.getElementById('m-msg');
 
             if(winner.type === 'win') {
-                mTitle.innerText = "FÉLICITATIONS !";
-                mAmt.innerText = winner.text;
-                mAmt.style.background = `linear-gradient(to bottom, #fff, ${winner.color})`;
-                mAmt.style.webkitBackgroundClip = "text";
-                // Confettis simplifiés (visuel)
+                title.innerText = "FÉLICITATIONS !";
+                amt.innerText = winner.text;
+                amt.style.color = winner.color;
+                amt.style.textShadow = `0 0 20px ${winner.color}`;
             } else {
-                mTitle.innerText = "DOMMAGE...";
-                mAmt.innerText = "PERDU";
-                mAmt.style.background = "#555";
-                mAmt.style.webkitBackgroundClip = "text";
+                title.innerText = "DOMMAGE...";
+                amt.innerText = "PERDU";
+                amt.style.color = "#555";
+                amt.style.textShadow = "none";
             }
-            mMsg.innerText = winner.msg;
-            modal.classList.add('active');
+            msg.innerText = winner.msg;
+            modal.classList.add('active'); // Utilise la classe active pour flex
         }
 
         function closeModal() {
             modal.classList.remove('active');
         }
 
-        // Init
-        drawWheel();
-        generateStats();
+        // Stats (seulement les gains)
+        function initStats() {
+            const total = segments.reduce((a,b)=>a+b.weight,0);
+            const wins = {};
+            segments.forEach(s => {
+                if(s.type === 'lose') return;
+                if(!wins[s.text]) wins[s.text] = { w:0, c:s.color };
+                wins[s.text].w += s.weight;
+            });
+            
+            // Tri
+            const sorted = Object.keys(wins).sort((a,b) => wins[a].w - wins[b].w);
+            sorted.forEach(k => {
+                const p = ((wins[k].w / total) * 100).toFixed(1) + "%";
+                const el = document.createElement('div');
+                el.className = 'stat-tag';
+                el.innerHTML = `<span style="color:${wins[k].c}">${k}</span>: <b>${p}</b>`;
+                statsList.appendChild(el);
+            });
+        }
+
+        // Init Events
+        spinBtn.addEventListener('click', spin);
+        initStats();
+        // Le drawWheel est aussi appelé dans le window load pour être sûr
 
     </script>
 </body>
