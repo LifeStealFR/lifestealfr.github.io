@@ -44,7 +44,7 @@
         body.loaded #loader { opacity: 0; pointer-events: none; }
         @keyframes pulseStar { from { transform: scale(1); text-shadow: 0 0 10px var(--c-pink); } to { transform: scale(1.5); text-shadow: 0 0 30px var(--c-purple); } }
 
-        /* --- LECTEUR DE MUSIQUE (NOUVEAU) --- */
+        /* --- LECTEUR DE MUSIQUE --- */
         .music-player {
             position: absolute;
             top: 20px; right: 20px;
@@ -69,9 +69,7 @@
         }
         .music-btn:hover { color: var(--c-pink); transform: scale(1.2); }
         
-        .track-info {
-            display: flex; flex-direction: column; align-items: flex-end;
-        }
+        .track-info { display: flex; flex-direction: column; align-items: flex-end; }
         .track-label { font-size: 0.5rem; color: #aaa; text-transform: uppercase; letter-spacing: 1px; }
         .track-name {
             font-family: 'Mochiy Pop One', sans-serif;
@@ -205,7 +203,7 @@
 </head>
 <body>
 
-    <!-- LECTEUR AUDIO HTML (Caché) -->
+    <!-- LECTEUR AUDIO HTML5 (Invisible) -->
     <audio id="bg-audio" loop></audio>
 
     <!-- LOADER -->
@@ -226,7 +224,7 @@
             <button class="music-btn" id="play-pause-btn">▶</button>
             <div class="track-info">
                 <span class="track-label">NOW PLAYING</span>
-                <span class="track-name" id="track-name">YOASOBI - Idol</span>
+                <span class="track-name" id="track-name">Chargement...</span>
             </div>
             <button class="music-btn" id="next-track-btn">⏭</button>
         </div>
@@ -256,11 +254,11 @@
     </div>
 
     <script>
-        /* --- GESTION MUSIQUE --- */
-        // Mets les vrais noms de tes fichiers mp3 ici !
+        /* --- GESTION MUSIQUE (AUDIO DIRECT SANS PUB) --- */
+        // ⚠️ REMPLACE CES LIENS PAR TES LIENS DISCORD OU TES FICHIERS LOCAUX ⚠️
         const tracks =[
-            { name: "YOASOBI - Idol", src: "idol.mp3" },
-            { name: "GEMN - Fatal", src: "fatal.mp3" }
+            { name: "YOASOBI - Idol", src: "LIEN_AUDIO_IDOL_ICI" },
+            { name: "GEMN - Fatal", src: "LIEN_AUDIO_FATAL_ICI" }
         ];
         
         let currentTrackIndex = 0;
@@ -273,30 +271,37 @@
         function loadTrack(index) {
             audioEl.src = tracks[index].src;
             trackNameEl.innerText = tracks[index].name;
-            audioEl.volume = 0.3; // Volume par défaut à 30%
+            audioEl.volume = 0.3; // Volume à 30%
         }
 
         function togglePlay() {
             if(isPlaying) {
                 audioEl.pause();
                 playBtn.innerText = "▶";
+                isPlaying = false;
             } else {
-                audioEl.play().catch(e => console.log("Attente d'interaction utilisateur"));
-                playBtn.innerText = "⏸";
+                // Essayer de lancer (les navigateurs bloquent si l'utilisateur n'a cliqué nulle part)
+                audioEl.play().then(() => {
+                    playBtn.innerText = "⏸";
+                    isPlaying = true;
+                }).catch(e => {
+                    console.log("Lecture auto bloquée, attente d'un clic.");
+                });
             }
-            isPlaying = !isPlaying;
         }
 
         function nextTrack() {
             currentTrackIndex = (currentTrackIndex + 1) % tracks.length;
             loadTrack(currentTrackIndex);
-            if(isPlaying) audioEl.play();
+            if(isPlaying) {
+                audioEl.play();
+            }
         }
 
         playBtn.addEventListener('click', togglePlay);
         nextBtn.addEventListener('click', nextTrack);
         
-        // Charger la première musique en mémoire
+        // Charge la première musique en mémoire
         loadTrack(0);
 
         /* --- CHARGEMENT ROUE --- */
@@ -371,7 +376,7 @@
             isSpinning = true;
             spinBtn.disabled = true;
 
-            // Démarre la musique automatiquement si ce n'est pas déjà fait
+            // Démarre la musique au premier clic sur la roue si elle n'est pas allumée !
             if(!isPlaying) { togglePlay(); }
 
             const total = segments.reduce((a,b)=>a+b.weight,0);
