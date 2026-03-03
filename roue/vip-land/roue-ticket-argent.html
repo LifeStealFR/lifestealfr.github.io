@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Roue de la Chance - VIP-Land</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap');
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #2c2f33; /* Couleur Discord sombre */
+            color: white;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            margin: 0;
+            overflow: hidden;
+        }
+
+        h1 {
+            color: #f1c40f; /* Or */
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 10px;
+            text-shadow: 0 0 10px rgba(241, 196, 15, 0.5);
+        }
+
+        .subtitle {
+            font-size: 1.2rem;
+            margin-bottom: 30px;
+            color: #99aab5;
+        }
+
+        .wheel-container {
+            position: relative;
+            width: 400px;
+            height: 400px;
+            margin-bottom: 30px;
+        }
+
+        canvas {
+            display: block;
+            width: 100%;
+            height: 100%;
+            transform: rotate(-90deg); /* Démarrer à midi */
+        }
+
+        #pointer {
+            position: absolute;
+            top: 50%;
+            right: -20px;
+            transform: translateY(-50%);
+            width: 0;
+            height: 0;
+            border-top: 15px solid transparent;
+            border-bottom: 15px solid transparent;
+            border-right: 30px solid white;
+            z-index: 10;
+        }
+
+        button {
+            padding: 15px 40px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            background: linear-gradient(45deg, #f1c40f, #d4ac0d);
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            color: #2c2f33;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 20px rgba(241, 196, 15, 0.6);
+        }
+
+        button:disabled {
+            background: #72767d;
+            cursor: not-allowed;
+            box-shadow: none;
+        }
+
+        /* Modal Resultat */
+        #result-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.85);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s;
+            z-index: 100;
+        }
+
+        #result-modal.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .modal-content {
+            background: #23272a;
+            padding: 40px;
+            border-radius: 20px;
+            text-align: center;
+            border: 2px solid #f1c40f;
+            max-width: 90%;
+            width: 350px;
+            transform: scale(0.8);
+            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        #result-modal.active .modal-content {
+            transform: scale(1);
+        }
+
+        .modal-content h2 {
+            margin-top: 0;
+            color: #f1c40f;
+        }
+
+        .modal-content p {
+            font-size: 1.5rem;
+            margin: 20px 0;
+        }
+
+        .close-btn {
+            background: #7289da;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 5px;
+            text-decoration: none;
+            display: inline-block;
+            margin-top: 10px;
+            font-size: 1rem;
+        }
+
+        /* Mobile Responsive */
+        @media (max-width: 500px) {
+            .wheel-container {
+                width: 300px;
+                height: 300px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <h1>VIP-Land</h1>
+    <div class="subtitle">1 Ticket = 1 Essai</div>
+
+    <div class="wheel-container">
+        <canvas id="wheel" width="500" height="500"></canvas>
+        <div id="pointer"></div>
+    </div>
+
+    <button id="spin-btn">LANCER LA ROUE</button>
+
+    <!-- Modal Résultat -->
+    <div id="result-modal">
+        <div class="modal-content">
+            <h2 id="result-title">Résultat</h2>
+            <p id="result-message">...</p>
+            <button class="close-btn" onclick="closeModal()">Fermer</button>
+        </div>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('wheel');
+        const ctx = canvas.getContext('2d');
+        const spinBtn = document.getElementById('spin-btn');
+        const modal = document.getElementById('result-modal');
+        const resultTitle = document.getElementById('result-title');
+        const resultMessage = document.getElementById('result-message');
+
+        // Configuration des segments (Lots et Perdants)
+        // Tu peux modifier les valeurs ici. "text" est ce qui s'affiche, "value" est pour le message final.
+        const segments = [
+            { text: "80k", color: "#FFD700", type: "win", message: "Jackpot ! Tu gagnes 80 000 !" }, // Or
+            { text: "Perdu", color: "#e74c3c", type: "lose", message: "Dommage, retente ta chance !" }, // Rouge
+            { text: "10k", color: "#3498db", type: "win", message: "Bravo ! Tu gagnes 10 000 !" }, // Bleu
+            { text: "5k", color: "#2ecc71", type: "win", message: "Cool ! Tu gagnes 5 000 !" }, // Vert
+            { text: "Perdu", color: "#e74c3c", type: "lose", message: "Aïe... Perdu !" }, // Rouge
+            { text: "40k", color: "#9b59b6", type: "win", message: "Super ! Tu gagnes 40 000 !" }, // Violet
+            { text: "1k", color: "#95a5a6", type: "win", message: "C'est un début ! Tu gagnes 1 000 !" }, // Gris clair
+            { text: "Perdu", color: "#e74c3c", type: "lose", message: "Pas de chance cette fois..." } // Rouge
+        ];
+
+        const totalSegments = segments.length;
+        const arc = (2 * Math.PI) / totalSegments;
+        let currentAngle = 0; // Angle actuel de la roue
+        let isSpinning = false;
+
+        // Fonction pour dessiner la roue
+        function drawWheel() {
+            // Nettoyer le canvas
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            const centerX = canvas.width / 2;
+            const centerY = canvas.height / 2;
+            const radius = canvas.width / 2;
+
+            segments.forEach((segment, i) => {
+                const angle = i * arc;
+                
+                // Dessiner le quartier
+                ctx.beginPath();
+                ctx.fillStyle = segment.color;
+                ctx.moveTo(centerX, centerY);
+                ctx.arc(centerX, centerY, radius, angle, angle + arc);
+                ctx.lineTo(centerX, centerY);
+                ctx.fill();
+
+                // Ajouter le texte
+                ctx.save();
+                ctx.translate(centerX, centerY);
+                ctx.rotate(angle + arc / 2);
+                ctx.textAlign = "right";
+                ctx.fillStyle = "#fff";
+                ctx.font = "bold 24px Poppins";
+                ctx.fillText(segment.text, radius - 20, 10);
+                ctx.restore();
+            });
+        }
+
+        // Fonction de rotation et de calcul
+        function rotateWheel() {
+            if (isSpinning) return;
+            isSpinning = true;
+            spinBtn.disabled = true;
+
+            // La roue va tourner au moins 5 tours complets (360 * 5) + un aléatoire
+            const randomSpin = Math.floor(Math.random() * 360) + (360 * 5); 
+            
+            // Calculer l'angle final pour l'animation CSS ou JS
+            // Ici on utilise une simulation frame par frame pour plus de contrôle
+            let currentRotation = 0;
+            const targetRotation = randomSpin;
+            const duration = 5000; // 5 secondes
+            const startTime = performance.now();
+
+            function animate(time) {
+                const elapsed = time - startTime;
+                const progress = Math.min(elapsed / duration, 1);
+                
+                // Fonction d'assouplissement (Ease Out Cubic) pour ralentir à la fin
+                const easeOut = 1 - Math.pow(1 - progress, 3);
+                
+                currentRotation = targetRotation * easeOut;
+                
+                // Appliquer la rotation au canvas via CSS est plus fluide, mais ici on redessine 
+                // Pour simplifier, on tourne le canvas context
+                // Mais pour garder le texte lisible, on va faire tourner l'angle de départ du dessin
+                
+                // Pour simplifier l'approche canvas pur :
+                // On va utiliser le style transform du canvas CSS pour la rotation visuelle
+                canvas.style.transition = `transform ${duration}ms cubic-bezier(0.25, 0.1, 0.25, 1)`;
+                canvas.style.transform = `rotate(-90deg) rotate(-${targetRotation}deg)`; // -90 pour caler le départ, -target pour tourner horaire
+                
+                // Attendre la fin de l'animation
+                if (progress < 1) {
+                    requestAnimationFrame(animate);
+                } else {
+                    setTimeout(() => {
+                        calculateResult(targetRotation);
+                        isSpinning = false;
+                        spinBtn.disabled = false;
+                        
+                        // Reset visuel pour pouvoir relancer sans souci (remise à 0 modulo 360)
+                        // Note: Pour une vraie roue infinie, il faudrait gérer l'angle cumulé.
+                        // Ici on simplifie : on laisse la roue sur sa position finale.
+                        const finalAngle = targetRotation % 360;
+                        canvas.style.transition = 'none';
+                        canvas.style.transform = `rotate(-90deg) rotate(-${finalAngle}deg)`;
+                        
+                    }, 100);
+                }
+            }
+            
+            requestAnimationFrame(animate);
+        }
+
+        // Calculer qui a gagné
+        function calculateResult(rotationTotal) {
+            // Normaliser l'angle entre 0 et 360
+            const actualRotation = rotationTotal % 360;
+            
+            // Le pointeur est à droite (0 radians dans le dessin canvas standard, mais visuellement à droite)
+            // Avec notre rotation CSS initiale de -90deg, le 0 du canvas est en haut.
+            // La roue tourne dans le sens horaire (valeurs négatives en CSS rotate).
+            
+            // Calcul de l'index gagnant
+            // L'angle du segment gagnant est celui qui se retrouve sous le pointeur (à droite, soit 0°)
+            // Mais attention à la rotation du canvas.
+            
+            // Méthode simplifiée : 
+            // 1 tour complet = 360. 
+            // Si la roue tourne de X degrés, l'index est :
+            const degreesPerSegment = 360 / totalSegments;
+            
+            // Index = (Rotation totale / taille segment) % nb segments
+            // Comme la roue tourne vers la droite, les index défilent à l'envers ou il faut inverser.
+            // Index pointé = (TotalSegments - (Rotation / DegParSeg) % TotalSegments) % TotalSegments
+            
+            const index = Math.floor((360 - actualRotation + degreesPerSegment / 2) / degreesPerSegment) % totalSegments;
+            
+            // Ajustement car le pointeur est physique à droite
+            // Dans le dessin `drawWheel`, l'index 0 commence à 3h (droite).
+            // Donc si rotation = 0, index 0 est gagnant. C'est bon.
+            
+            const winner = segments[index];
+            showResult(winner);
+        }
+
+        function showResult(winner) {
+            resultTitle.innerText = winner.type === 'win' ? "FÉLICITATIONS !" : "DOMMAGE...";
+            resultTitle.style.color = winner.type === 'win' ? "#f1c40f" : "#e74c3c";
+            resultMessage.innerText = winner.message;
+            modal.classList.add('active');
+            
+            // Confettis si gagné (optionnel, simple effet visuel CSS ici)
+            if(winner.type === 'win') {
+                // Tu pourrais ajouter une librairie de confettis ici si tu veux
+            }
+        }
+
+        function closeModal() {
+            modal.classList.remove('active');
+        }
+
+        // Initialisation
+        drawWheel();
+        spinBtn.addEventListener('click', rotateWheel);
+
+    </script>
+</body>
+</html>
