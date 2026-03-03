@@ -89,13 +89,31 @@
             position: relative;
         }
 
+        /* --- TITRE ANIMÉ (CORRIGÉ POUR LE CYCLE PARFAIT) --- */
         h1 {
             font-size: clamp(2rem, 5vw, 4rem);
             text-transform: uppercase;
             margin: 0 0 10px 0;
-            background: linear-gradient(to right, #fff, var(--c-pink), var(--c-cyan));
-            -webkit-background-clip: text; background-clip: text; color: transparent;
+            font-weight: 900;
+            
+            /* Le dégradé commence et finit par #fff */
+            background: linear-gradient(90deg, #fff, var(--c-pink), var(--c-purple), var(--c-cyan), var(--c-gold), #fff);
+            
+            /* Taille à 200% pour permettre un déplacement complet fluide */
+            background-size: 200% auto;
+            
+            -webkit-background-clip: text; 
+            background-clip: text; 
+            color: transparent;
+            
             filter: drop-shadow(0 0 10px var(--c-purple));
+            /* Durée de 3s pour un effet visible et fluide */
+            animation: textFlow 3s linear infinite;
+        }
+
+        @keyframes textFlow {
+            0% { background-position: 0% center; }
+            100% { background-position: 200% center; }
         }
 
         /* --- LA ROUE (RESPONSIVE) --- */
