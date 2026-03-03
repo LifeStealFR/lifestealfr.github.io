@@ -3,50 +3,90 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Roue VIP-Land - Hard Mode</title>
+    <title>VIP-Land | Star Stage</title>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;900&display=swap');
+
+        :root {
+            --ai-pink: #ff0080;
+            --aqua-blue: #00ffff;
+            --deep-purple: #1a0b2e;
+            --gold: #ffd700;
+            --glow: 0 0 10px var(--ai-pink), 0 0 20px var(--ai-pink);
+        }
 
         body {
-            font-family: 'Poppins', sans-serif;
-            background-color: #2c2f33;
+            font-family: 'Montserrat', sans-serif;
+            background: radial-gradient(circle at center, #2e1045 0%, #05000a 100%);
             color: white;
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: center;
             min-height: 100vh;
             margin: 0;
-            overflow: hidden;
+            padding: 20px;
+            overflow-x: hidden;
+        }
+
+        /* Effet d'étoiles en arrière-plan (CSS pur) */
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background-image: 
+                radial-gradient(white 1px, transparent 1px),
+                radial-gradient(white 1px, transparent 1px);
+            background-size: 50px 50px, 100px 100px;
+            background-position: 0 0, 25px 25px;
+            opacity: 0.1;
+            z-index: -1;
         }
 
         h1 {
-            color: #f1c40f;
+            font-size: 3rem;
             text-transform: uppercase;
-            letter-spacing: 2px;
             margin-bottom: 5px;
-            text-shadow: 0 0 15px rgba(241, 196, 15, 0.4);
+            background: linear-gradient(to right, var(--ai-pink), var(--aqua-blue));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            text-shadow: 0 0 30px rgba(255, 0, 128, 0.5);
+            font-weight: 900;
+            letter-spacing: -2px;
+            text-align: center;
         }
 
         .subtitle {
-            font-size: 1rem;
-            margin-bottom: 20px;
-            color: #99aab5;
+            color: #ccc;
+            margin-bottom: 40px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            font-size: 0.9rem;
         }
 
-        .wheel-wrapper {
+        /* Conteneur Roue */
+        .stage-container {
             position: relative;
-            padding: 10px;
-            background: #23272a;
+            padding: 15px;
             border-radius: 50%;
-            box-shadow: 0 0 20px rgba(0,0,0,0.5);
-            margin-bottom: 20px;
+            background: conic-gradient(from 0deg, var(--ai-pink), var(--deep-purple), var(--aqua-blue), var(--deep-purple), var(--ai-pink));
+            box-shadow: 0 0 50px rgba(255, 0, 128, 0.4);
+            animation: borderRotate 4s linear infinite;
+        }
+
+        @keyframes borderRotate {
+            0% { filter: hue-rotate(0deg); }
+            100% { filter: hue-rotate(360deg); }
         }
 
         .wheel-container {
             position: relative;
-            width: 400px;
-            height: 400px;
+            width: 380px;
+            height: 380px;
+            background: #000;
+            border-radius: 50%;
+            overflow: hidden;
+            border: 5px solid #fff;
         }
 
         canvas {
@@ -55,158 +95,190 @@
             height: 100%;
         }
 
-        #pointer {
+        /* Pointeur Étoile (Star Eye) */
+        #star-pointer {
             position: absolute;
             top: 50%;
-            right: -25px;
+            right: -40px;
             transform: translateY(-50%);
-            width: 0;
-            height: 0;
-            border-top: 20px solid transparent;
-            border-bottom: 20px solid transparent;
-            border-right: 35px solid #fff;
-            filter: drop-shadow(-2px 0 2px rgba(0,0,0,0.5));
-            z-index: 10;
+            font-size: 60px;
+            color: var(--gold);
+            text-shadow: 0 0 15px var(--gold), 0 0 30px orange;
+            z-index: 20;
+            filter: drop-shadow(-5px 0 5px rgba(0,0,0,0.8));
         }
 
-        /* Centre de la roue (décoratif) */
-        .center-circle {
+        /* Centre Roue */
+        .center-eye {
             position: absolute;
-            top: 50%;
-            left: 50%;
-            width: 50px;
-            height: 50px;
-            background: #f1c40f;
-            border-radius: 50%;
+            top: 50%; left: 50%;
             transform: translate(-50%, -50%);
-            box-shadow: 0 0 10px rgba(0,0,0,0.5);
-            z-index: 5;
+            width: 60px; height: 60px;
+            background: radial-gradient(circle, #fff 10%, var(--ai-pink) 60%, var(--deep-purple) 100%);
+            border-radius: 50%;
+            z-index: 10;
+            box-shadow: 0 0 20px var(--ai-pink);
             display: flex;
             align-items: center;
             justify-content: center;
-            font-weight: bold;
-            color: #23272a;
+        }
+        
+        .center-eye::after {
+            content: "★";
+            color: white;
+            font-size: 30px;
         }
 
+        /* Bouton */
         button {
-            padding: 15px 50px;
-            font-size: 1.3rem;
-            font-weight: bold;
-            background: linear-gradient(45deg, #f1c40f, #d4ac0d);
+            margin-top: 40px;
+            padding: 15px 60px;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 1.2rem;
+            font-weight: 900;
+            text-transform: uppercase;
+            color: white;
+            background: linear-gradient(45deg, var(--ai-pink), #ff6b6b);
             border: none;
             border-radius: 50px;
             cursor: pointer;
-            color: #2c2f33;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
-            transition: transform 0.2s, box-shadow 0.2s;
-            margin-bottom: 15px;
+            box-shadow: 0 0 20px rgba(255, 0, 128, 0.6);
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
         }
 
         button:hover {
-            transform: scale(1.05);
-            box-shadow: 0 0 25px rgba(241, 196, 15, 0.6);
+            transform: scale(1.1);
+            box-shadow: 0 0 40px rgba(255, 0, 128, 1);
         }
 
         button:disabled {
-            background: #72767d;
-            cursor: not-allowed;
-            transform: none;
+            background: #555;
             box-shadow: none;
-        }
-
-        .disclaimer {
-            font-size: 0.75rem;
-            color: #586069;
-            max-width: 400px;
-            text-align: center;
-            margin-top: 10px;
-            line-height: 1.4;
-        }
-
-        /* Modal Resultat */
-        #result-modal {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.9);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            opacity: 0;
-            pointer-events: none;
-            transition: opacity 0.3s;
-            z-index: 100;
-        }
-
-        #result-modal.active {
-            opacity: 1;
-            pointer-events: all;
-        }
-
-        .modal-content {
-            background: #23272a;
-            padding: 40px;
-            border-radius: 20px;
-            text-align: center;
-            border: 2px solid #f1c40f;
-            width: 300px;
-            box-shadow: 0 0 50px rgba(0,0,0,0.8);
-            transform: scale(0.8);
-            transition: transform 0.3s;
-        }
-
-        #result-modal.active .modal-content {
+            cursor: not-allowed;
             transform: scale(1);
         }
 
-        .close-btn {
-            background: #7289da;
-            color: white;
-            padding: 10px 25px;
-            border-radius: 5px;
-            text-decoration: none;
-            display: inline-block;
+        /* TABLEAU DES PROBABILITES */
+        .stats-container {
+            margin-top: 50px;
+            width: 100%;
+            max-width: 500px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            padding: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+        }
+
+        .stats-container h3 {
+            text-align: center;
+            color: var(--aqua-blue);
+            margin-top: 0;
+            text-transform: uppercase;
+        }
+
+        .stats-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.9rem;
+        }
+
+        .stats-table th, .stats-table td {
+            padding: 10px;
+            text-align: left;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .stats-table th {
+            color: #aaa;
+            font-weight: normal;
+        }
+
+        .stats-table td.percent {
+            text-align: right;
+            font-family: monospace;
+            color: var(--gold);
+        }
+
+        .disclaimer {
+            font-size: 0.7rem;
+            color: #666;
             margin-top: 20px;
-            font-size: 1rem;
-            cursor: pointer;
-            border: none;
+            text-align: center;
+        }
+
+        /* Modal */
+        #result-modal {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.95);
+            display: flex; justify-content: center; align-items: center;
+            opacity: 0; pointer-events: none; transition: opacity 0.3s; z-index: 100;
+        }
+        #result-modal.active { opacity: 1; pointer-events: all; }
+        
+        .modal-content {
+            background: #1a0b2e;
+            padding: 50px;
+            border-radius: 20px;
+            text-align: center;
+            border: 2px solid var(--ai-pink);
+            box-shadow: 0 0 100px var(--ai-pink);
+            transform: scale(0.8); transition: transform 0.3s;
+            max-width: 90%;
+        }
+        #result-modal.active .modal-content { transform: scale(1); }
+
+        .modal-amount {
+            font-size: 3rem;
+            font-weight: 900;
+            margin: 20px 0;
+            color: white;
+            text-shadow: 0 0 20px var(--gold);
         }
 
         @media (max-width: 500px) {
             .wheel-container { width: 300px; height: 300px; }
-            button { font-size: 1rem; padding: 12px 30px; }
+            h1 { font-size: 2rem; }
+            .stage-container { padding: 10px; }
         }
     </style>
 </head>
 <body>
 
     <h1>VIP-Land</h1>
-    <div class="subtitle">Tente ta chance... si tu l'oses.</div>
+    <div class="subtitle">✧ Oshi no Ko Edition ✧</div>
 
-    <div class="wheel-wrapper">
+    <div class="stage-container">
         <div class="wheel-container">
             <canvas id="wheel" width="500" height="500"></canvas>
-            <div class="center-circle">VIP</div>
-            <div id="pointer"></div>
+            <div class="center-eye"></div>
         </div>
+        <!-- Pointeur étoile -->
+        <div id="star-pointer">★</div>
     </div>
 
-    <button id="spin-btn">LANCER (1 TICKET)</button>
-    
-    <div class="disclaimer">
-        Système certifié VIP-Land. <br>
-        Les gains sont crédités en monnaie serveur (DraftBot). <br>
-        Les probabilités sont ajustées pour la rareté des gros lots.
+    <button id="spin-btn">✦ LANCER LA ROUE ✦</button>
+
+    <div class="stats-container">
+        <h3>Taux de Drop (Probabilités)</h3>
+        <table class="stats-table" id="probs-table">
+            <!-- Rempli par JS -->
+        </table>
+        <div class="disclaimer">
+            Argent fictif (DraftBot) uniquement. <br>
+            Les probabilités sont réelles et automatiques.
+        </div>
     </div>
 
     <!-- Modal Résultat -->
     <div id="result-modal">
         <div class="modal-content">
-            <h2 id="result-title" style="margin-top:0; color:#f1c40f">...</h2>
-            <p id="result-message" style="font-size:1.2rem; margin:15px 0;">...</p>
-            <button class="close-btn" onclick="closeModal()">OK</button>
+            <h2 id="result-title" style="color:var(--aqua-blue); text-transform:uppercase;">Résultat</h2>
+            <div class="modal-amount" id="result-amount">...</div>
+            <p id="result-message" style="color:#ccc;">...</p>
+            <button onclick="closeModal()" style="margin-top:20px; padding:10px 30px; font-size:1rem;">Fermer</button>
         </div>
     </div>
 
@@ -215,54 +287,104 @@
         const ctx = canvas.getContext('2d');
         const spinBtn = document.getElementById('spin-btn');
         const modal = document.getElementById('result-modal');
-        const resultTitle = document.getElementById('result-title');
-        const resultMessage = document.getElementById('result-message');
+        const tableBody = document.getElementById('probs-table');
 
-        // --- CONFIGURATION DES LOTS ET DES PROBABILITÉS ---
-        // weight = poids. Plus le chiffre est haut, plus on a de chance de tomber dessus.
-        // Total "Perdu" weight = 400 + 400 + 400 + 400 + 400 = 2000
-        // Total "Win" weight = 1 + 5 + 10 + 20 + 50 + 100 = 186
-        // Chance de gagner = environ 8.5%
-        // Chance de perdre = environ 91.5%
+        // --- CONFIGURATION HARDCORE ---
+        // Poids (Weight) : Plus c'est haut, plus ça tombe.
+        // J'ai mis "Perdu" à 600 pour chaque slot (x6 slots) = 3600 de poids total pour la perte.
+        // Le 80k a un poids de 1.
         
         const segments = [
-            { text: "80k", color: "#FFD700", type: "win", message: "JACKPOT ! Tu remportes 80 000 !", weight: 1 }, // Ultra Rare
-            { text: "Perdu", color: "#e74c3c", type: "lose", message: "Rien pour cette fois.", weight: 400 },
-            { text: "40k", color: "#9b59b6", type: "win", message: "Incroyable ! 40 000 pour toi !", weight: 5 }, // Très Rare
-            { text: "Perdu", color: "#c0392b", type: "lose", message: "Pas de chance...", weight: 400 },
-            { text: "20k", color: "#3498db", type: "win", message: "Super ! Tu gagnes 20 000 !", weight: 10 }, // Rare
-            { text: "Perdu", color: "#e74c3c", type: "lose", message: "Essaie encore !", weight: 400 },
-            { text: "10k", color: "#2ecc71", type: "win", message: "Joli ! 10 000 dans la poche.", weight: 20 }, // Peu commun
-            { text: "Perdu", color: "#c0392b", type: "lose", message: "Dommage...", weight: 400 },
-            { text: "5k", color: "#1abc9c", type: "win", message: "C'est cool, tu gagnes 5 000.", weight: 50 }, // Commun
-            { text: "Perdu", color: "#e74c3c", type: "lose", message: "Perdu !", weight: 400 },
-            { text: "1k", color: "#95a5a6", type: "win", message: "Un petit lot de 1 000.", weight: 100 }, // Très commun
-            { text: "Perdu", color: "#c0392b", type: "lose", message: "Retente ta chance.", weight: 400 }
+            { text: "80k", color: "#ffd700", type: "win", message: "JACKPOT ABSOLU !!", weight: 1 }, 
+            { text: "Perdu", color: "#240046", type: "lose", message: "Dommage...", weight: 600 },
+            { text: "40k", color: "#ff0080", type: "win", message: "Incroyable !", weight: 5 }, 
+            { text: "Perdu", color: "#3a0ca3", type: "lose", message: "Rien...", weight: 600 },
+            { text: "20k", color: "#00ffff", type: "win", message: "Super gain !", weight: 10 }, 
+            { text: "Perdu", color: "#240046", type: "lose", message: "Aïe...", weight: 600 },
+            { text: "10k", color: "#4cc9f0", type: "win", message: "Joli !", weight: 25 }, 
+            { text: "Perdu", color: "#3a0ca3", type: "lose", message: "Pas de chance.", weight: 600 },
+            { text: "5k", color: "#f72585", type: "win", message: "C'est cool.", weight: 60 }, 
+            { text: "Perdu", color: "#240046", type: "lose", message: "Perdu...", weight: 600 },
+            { text: "1k", color: "#7209b7", type: "win", message: "Un début.", weight: 150 }, 
+            { text: "Perdu", color: "#3a0ca3", type: "lose", message: "Essaie encore.", weight: 600 }
         ];
 
         const totalSegments = segments.length;
         const arc = (2 * Math.PI) / totalSegments;
         let isSpinning = false;
 
+        // --- 1. Génération du Tableau des Probabilités ---
+        function generateProbabilities() {
+            const totalWeight = segments.reduce((acc, seg) => acc + seg.weight, 0);
+            
+            // On regroupe les items par nom pour le tableau (sinon on a 6 fois "Perdu")
+            const groups = {};
+            
+            segments.forEach(seg => {
+                if (!groups[seg.text]) {
+                    groups[seg.text] = { weight: 0, color: seg.color, isWin: seg.type === 'win' };
+                }
+                groups[seg.text].weight += seg.weight;
+            });
+
+            // Conversion en tableau pour trier
+            const sortedStats = Object.keys(groups).map(key => {
+                const percent = (groups[key].weight / totalWeight) * 100;
+                // Si c'est < 0.01, on affiche "< 0.01%"
+                let percentDisplay = percent < 0.01 ? "< 0.01%" : percent.toFixed(2) + "%";
+                return { 
+                    name: key, 
+                    percent: percentDisplay, 
+                    rawPercent: percent,
+                    color: groups[key].color,
+                    isWin: groups[key].isWin
+                };
+            }).sort((a, b) => {
+                // Tri : Gagnants d'abord (du plus gros au plus petit), puis Perdants
+                if (a.name === "Perdu") return 1; 
+                if (b.name === "Perdu") return -1;
+                return a.rawPercent - b.rawPercent; // Les plus rares en haut
+            });
+
+            // Injection HTML
+            sortedStats.forEach(stat => {
+                const tr = document.createElement('tr');
+                // Style spécial pour le nom
+                const colorStyle = stat.isWin ? `color: ${stat.color}; text-shadow: 0 0 5px ${stat.color}` : `color: #888`;
+                const nameDisplay = stat.name === "Perdu" ? "RIEN (PERDU)" : `MONNAIE : ${stat.name}`;
+                
+                tr.innerHTML = `
+                    <td style="${colorStyle}; font-weight:bold;">${nameDisplay}</td>
+                    <td class="percent">${stat.percent}</td>
+                `;
+                tableBody.appendChild(tr);
+            });
+        }
+
+        // --- 2. Dessiner la Roue ---
         function drawWheel() {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
             const centerX = canvas.width / 2;
             const centerY = canvas.height / 2;
             const radius = canvas.width / 2;
-
-            // Rotation initiale pour que le pointeur (à droite) soit aligné au milieu d'un segment
-            // Sans ça, le pointeur est entre deux segments au démarrage
+            
+            // Offset pour que le trait ne soit pas sous le pointeur au start
             const initialOffset = -arc / 2;
 
             segments.forEach((segment, i) => {
                 const angle = i * arc + initialOffset;
                 
                 ctx.beginPath();
+                // Alternance subtile pour les cases "Perdu" pour esthétique
                 ctx.fillStyle = segment.color;
                 ctx.moveTo(centerX, centerY);
                 ctx.arc(centerX, centerY, radius, angle, angle + arc);
                 ctx.lineTo(centerX, centerY);
                 ctx.fill();
+                
+                // Bordure fine
+                ctx.strokeStyle = "rgba(0,0,0,0.2)";
+                ctx.lineWidth = 2;
                 ctx.stroke();
 
                 // Texte
@@ -270,75 +392,90 @@
                 ctx.translate(centerX, centerY);
                 ctx.rotate(angle + arc / 2);
                 ctx.textAlign = "right";
-                ctx.fillStyle = "#fff";
-                ctx.font = "bold 20px Poppins";
-                ctx.shadowColor = "rgba(0,0,0,0.5)";
-                ctx.shadowBlur = 4;
+                ctx.fillStyle = segment.type === 'win' ? "#fff" : "rgba(255,255,255,0.3)";
+                ctx.font = segment.type === 'win' ? "bold 22px Montserrat" : "16px Montserrat";
+                
+                // Glow sur le texte gagnant
+                if (segment.type === 'win') {
+                    ctx.shadowColor = segment.color;
+                    ctx.shadowBlur = 10;
+                }
+                
                 ctx.fillText(segment.text, radius - 30, 8);
                 ctx.restore();
             });
         }
 
-        // Algorithme de sélection pondérée (Weighted Random)
-        function getWinningSegmentIndex() {
-            let totalWeight = segments.reduce((sum, seg) => sum + seg.weight, 0);
-            let randomNum = Math.random() * totalWeight;
-            
-            for (let i = 0; i < segments.length; i++) {
-                if (randomNum < segments[i].weight) {
-                    return i;
-                }
-                randomNum -= segments[i].weight;
-            }
-            return 0; // Fallback
-        }
-
-        function rotateWheel() {
+        // --- 3. Logique de Jeu ---
+        function spin() {
             if (isSpinning) return;
             isSpinning = true;
             spinBtn.disabled = true;
 
-            // 1. Déterminer le gagnant MAINTENANT grâce aux poids
-            const winningIndex = getWinningSegmentIndex();
+            // Sélection pondérée (Weighted Random)
+            const totalWeight = segments.reduce((acc, seg) => acc + seg.weight, 0);
+            let random = Math.random() * totalWeight;
+            let winningIndex = 0;
             
-            // 2. Calculer l'angle pour atterrir sur ce segment
-            // Le pointeur est à 0° (droite du cercle trigonométrique)
-            // L'angle du segment i est : i * arc
-            // Pour que le segment i soit à 0°, il faut tourner de : - (i * arc)
+            for (let i = 0; i < segments.length; i++) {
+                if (random < segments[i].weight) {
+                    winningIndex = i;
+                    break;
+                }
+                random -= segments[i].weight;
+            }
+
+            // Calcul de l'angle
+            // Le pointeur est à droite (0°), mais le canvas commence le dessin à 0°.
+            // Index 0 est entre -arc/2 et +arc/2.
+            // On ajoute de l'aléatoire dans le segment pour ne pas toujours atterrir au centre
+            const randomOffset = (Math.random() - 0.5) * (arc * 0.8);
             
-            // Ajout d'un peu d'aléatoire DANS le segment pour pas que ça tombe toujours au milieu
-            const randomOffsetInSegment = (Math.random() - 0.5) * (arc * 0.8); 
-            
+            // L'angle cible (inversé car on tourne le canvas)
             const segmentAngle = winningIndex * arc;
-            const targetAngle = (360 - (segmentAngle * 180 / Math.PI)) + (randomOffsetInSegment * 180 / Math.PI);
+            const targetRotation = (360 - (segmentAngle * 180 / Math.PI)) + (randomOffset * 180 / Math.PI);
             
-            // Ajouter beaucoup de tours (5 à 10 tours)
-            const fullSpins = (5 + Math.floor(Math.random() * 5)) * 360;
-            const finalRotation = fullSpins + targetAngle;
+            // + Tours complets (entre 8 et 12 tours pour le suspense)
+            const spins = (8 + Math.floor(Math.random() * 4)) * 360;
+            const finalDeg = spins + targetRotation;
 
-            // Appliquer la rotation via CSS
-            canvas.style.transition = `transform 6s cubic-bezier(0.1, 0.95, 0.2, 1)`; // Effet de freinage réaliste
-            canvas.style.transform = `rotate(${finalRotation}deg)`;
+            // Animation
+            canvas.style.transition = "transform 8s cubic-bezier(0.1, 1, 0.3, 1)"; // Effet Oshi no Ko : Très rapide puis très lent
+            canvas.style.transform = `rotate(${finalDeg}deg)`;
 
-            // Attendre la fin de l'animation
+            // Fin
             setTimeout(() => {
-                showResult(segments[winningIndex]);
                 isSpinning = false;
                 spinBtn.disabled = false;
+                showResult(segments[winningIndex]);
                 
-                // Reset silencieux (optionnel, ici on laisse la roue telle quelle)
-                // Pour une vraie roue infinie, on gérerait le modulo 360 ici
-                canvas.style.transition = 'none';
-                const actualPos = finalRotation % 360;
-                canvas.style.transform = `rotate(${actualPos}deg)`;
-                
-            }, 6000);
+                // Reset silencieux de la rotation pour éviter les bugs sur spams futurs
+                canvas.style.transition = "none";
+                canvas.style.transform = `rotate(${finalDeg % 360}deg)`;
+            }, 8000);
         }
 
         function showResult(winner) {
-            resultTitle.innerText = winner.type === 'win' ? "GAGNÉ !" : "PERDU";
-            resultTitle.style.color = winner.type === 'win' ? "#f1c40f" : "#e74c3c";
-            resultMessage.innerText = winner.message;
+            const title = document.getElementById('result-title');
+            const amount = document.getElementById('result-amount');
+            const msg = document.getElementById('result-message');
+
+            if (winner.type === 'win') {
+                title.innerText = "FÉLICITATIONS !";
+                title.style.color = winner.color;
+                amount.innerText = winner.text;
+                amount.style.color = winner.color;
+                amount.style.textShadow = `0 0 30px ${winner.color}`;
+                msg.innerText = winner.message;
+            } else {
+                title.innerText = "DOMMAGE...";
+                title.style.color = "#ccc";
+                amount.innerText = "PERDU";
+                amount.style.color = "#555";
+                amount.style.textShadow = "none";
+                msg.innerText = winner.message;
+            }
+
             modal.classList.add('active');
         }
 
@@ -346,15 +483,13 @@
             modal.classList.remove('active');
         }
 
-        // Démarrage
-        // On dessine la roue
+        // Init
         drawWheel();
-        
-        // On pré-tourne le canvas pour que la ligne de séparation ne soit pas pile sous le pointeur au début
-        // (Juste esthétique)
+        generateProbabilities();
+        // Petit ajustement visuel initial
         canvas.style.transform = `rotate(${arc/2 * 180/Math.PI}deg)`;
-
-        spinBtn.addEventListener('click', rotateWheel);
+        
+        spinBtn.addEventListener('click', spin);
 
     </script>
 </body>
