@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>VIP-Land | Ultimate Stage</title>
-    <!-- Ajout de la police Mochiy Pop One (Style Anime/Idol) et conservation de Montserrat pour les petits textes -->
     <link href="https://fonts.googleapis.com/css2?family=Mochiy+Pop+One&family=Montserrat:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -24,18 +23,17 @@
             font-family: 'Montserrat', sans-serif;
             height: 100vh;
             width: 100vw;
-            overflow: hidden; /* Important : empêche le scroll */
+            overflow: hidden;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
         }
 
-        /* --- LOADER (Écran de chargement) --- */
+        /* --- LOADER --- */
         #loader {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: #000;
-            z-index: 9999;
+            background: #000; z-index: 9999;
             display: flex; justify-content: center; align-items: center;
             transition: opacity 0.5s ease-out;
         }
@@ -44,219 +42,206 @@
             animation: pulseStar 0.5s infinite alternate;
         }
         body.loaded #loader { opacity: 0; pointer-events: none; }
-
         @keyframes pulseStar { from { transform: scale(1); text-shadow: 0 0 10px var(--c-pink); } to { transform: scale(1.5); text-shadow: 0 0 30px var(--c-purple); } }
 
-        /* --- ARRIÈRE PLAN ANIMÉ (Projecteurs & Particules) --- */
-        .background-layer {
-            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            pointer-events: none;
-            overflow: hidden;
-            z-index: 1; /* Derrière tout */
+        /* --- LECTEUR DE MUSIQUE (NOUVEAU) --- */
+        .music-player {
+            position: absolute;
+            top: 20px; right: 20px;
+            background: rgba(0, 0, 0, 0.6);
+            border: 1px solid var(--c-cyan);
+            border-radius: 50px;
+            padding: 8px 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            z-index: 50;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 0 15px rgba(0, 247, 255, 0.3);
+            transition: 0.3s;
+        }
+        .music-player:hover { border-color: var(--c-pink); box-shadow: 0 0 20px var(--c-pink); }
+        
+        .music-btn {
+            background: none; border: none; color: white;
+            font-size: 1.2rem; cursor: pointer; transition: 0.2s;
+            display: flex; align-items: center; justify-content: center;
+        }
+        .music-btn:hover { color: var(--c-pink); transform: scale(1.2); }
+        
+        .track-info {
+            display: flex; flex-direction: column; align-items: flex-end;
+        }
+        .track-label { font-size: 0.5rem; color: #aaa; text-transform: uppercase; letter-spacing: 1px; }
+        .track-name {
+            font-family: 'Mochiy Pop One', sans-serif;
+            font-size: 0.7rem; color: var(--c-gold);
+            max-width: 120px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
         }
 
-        /* Projecteurs */
+        /* --- ARRIÈRE PLAN ANIMÉ --- */
+        .background-layer {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            pointer-events: none; overflow: hidden; z-index: 1;
+        }
         .spotlight {
             position: absolute; top: -20%; left: 50%;
             width: 100px; height: 150%;
             background: linear-gradient(to bottom, rgba(255,255,255,0.15), transparent);
-            transform-origin: top center;
-            filter: blur(10px);
+            transform-origin: top center; filter: blur(10px);
         }
         .spot-left { animation: swingLeft 4s infinite ease-in-out alternate; }
         .spot-right { animation: swingRight 5s infinite ease-in-out alternate; }
-
         @keyframes swingLeft { from { transform: rotate(-30deg); } to { transform: rotate(-10deg); } }
         @keyframes swingRight { from { transform: rotate(30deg); } to { transform: rotate(10deg); } }
 
-        /* Public (Lueurs en bas) */
         .glow-sticks {
             position: absolute; bottom: -50px; left: 0; width: 100%; height: 150px;
             background: 
                 radial-gradient(circle at 20% 50%, var(--c-pink) 0%, transparent 40%),
                 radial-gradient(circle at 80% 60%, var(--c-cyan) 0%, transparent 40%),
                 radial-gradient(circle at 50% 80%, var(--c-purple) 0%, transparent 50%);
-            opacity: 0.6;
-            filter: blur(30px);
+            opacity: 0.6; filter: blur(30px);
             animation: crowdMove 2s infinite alternate;
         }
         @keyframes crowdMove { from { opacity: 0.5; transform: translateY(0); } to { opacity: 0.8; transform: translateY(-10px); } }
 
         /* --- CONTENU PRINCIPAL --- */
         .main-content {
-            z-index: 10; /* Devant le fond */
-            display: flex; flex-direction: column; align-items: center; justify-content: center;
-            width: 100%; height: 100%;
-            position: relative;
+            z-index: 10; display: flex; flex-direction: column; align-items: center; justify-content: center;
+            width: 100%; height: 100%; position: relative;
         }
 
-        /* --- TITRE ANIMÉ --- */
         h1 {
-            /* Application de la police Oshi no Ko */
             font-family: 'Mochiy Pop One', sans-serif;
-            font-size: clamp(2rem, 5vw, 4rem);
-            text-transform: uppercase;
-            margin: 0 0 10px 0;
-            
-            /* Animation Dégradé fluide */
+            font-size: clamp(2rem, 5vw, 4rem); text-transform: uppercase; margin: 0 0 10px 0;
             background: linear-gradient(90deg, #fff, var(--c-pink), var(--c-purple), var(--c-cyan), var(--c-gold), #fff);
             background-size: 200% auto;
-            -webkit-background-clip: text; 
-            background-clip: text; 
-            color: transparent;
-            
+            -webkit-background-clip: text; background-clip: text; color: transparent;
             filter: drop-shadow(0 0 10px var(--c-purple));
             animation: textFlow 3s linear infinite;
         }
+        @keyframes textFlow { 0% { background-position: 0% center; } 100% { background-position: 200% center; } }
 
-        @keyframes textFlow {
-            0% { background-position: 0% center; }
-            100% { background-position: 200% center; }
-        }
-
-        /* --- LA ROUE (RESPONSIVE) --- */
+        /* --- LA ROUE --- */
         .wheel-container {
             position: relative;
-            /* La magie : vmin = pourcentage de la largeur OU hauteur (le plus petit des deux) */
             width: 85vmin; height: 85vmin;
-            max-width: 500px; max-height: 500px; /* Limite sur PC */
-            border-radius: 50%;
-            padding: 10px;
+            max-width: 500px; max-height: 500px;
+            border-radius: 50%; padding: 10px;
             background: conic-gradient(from 0deg, var(--c-purple), var(--c-pink), var(--c-cyan), var(--c-purple));
             box-shadow: 0 0 50px rgba(255, 0, 153, 0.4);
             display: flex; justify-content: center; align-items: center;
         }
-
         .wheel-mask {
-            width: 100%; height: 100%;
-            border-radius: 50%;
-            overflow: hidden;
-            position: relative;
-            background: #000;
+            width: 100%; height: 100%; border-radius: 50%; overflow: hidden;
+            position: relative; background: #000;
         }
-
         canvas { width: 100%; height: 100%; display: block; }
 
-        /* Éléments par dessus la roue */
         .pointer {
             position: absolute; top: -20px; left: 50%; transform: translateX(-50%);
             width: 0; height: 0;
-            border-left: 20px solid transparent; border-right: 20px solid transparent;
-            border-top: 40px solid white;
-            filter: drop-shadow(0 0 10px var(--c-cyan));
-            z-index: 20;
+            border-left: 20px solid transparent; border-right: 20px solid transparent; border-top: 40px solid white;
+            filter: drop-shadow(0 0 10px var(--c-cyan)); z-index: 20;
         }
-
         .pupil-star {
             position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
-            width: 20%; height: 20%;
-            background: white;
+            width: 20%; height: 20%; background: white;
             clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
-            box-shadow: 0 0 20px white;
-            z-index: 15;
+            box-shadow: 0 0 20px white; z-index: 15;
             animation: breathe 3s infinite ease-in-out;
         }
-        @keyframes breathe { 50% { transform: translate(-50%, -50%) scale(1.1); box-shadow: 0 0 50px var(--c-pink); } }
 
         /* --- CONTROLES --- */
         .btn-container { margin-top: 20px; z-index: 20; text-align: center; }
-
         #spin-btn {
-            background: transparent; color: white;
-            border: 2px solid rgba(255,255,255,0.3);
-            padding: 15px 50px;
-            font-family: 'Mochiy Pop One', sans-serif; /* Police Oshi no Ko */
-            font-size: 1.1rem;
-            text-transform: uppercase; cursor: pointer;
-            border-radius: 50px;
-            transition: 0.3s;
-            box-shadow: 0 0 20px rgba(0,0,0,0.5);
+            background: transparent; color: white; border: 2px solid rgba(255,255,255,0.3);
+            padding: 15px 50px; font-family: 'Mochiy Pop One', sans-serif; font-size: 1.1rem;
+            text-transform: uppercase; cursor: pointer; border-radius: 50px;
+            transition: 0.3s; box-shadow: 0 0 20px rgba(0,0,0,0.5);
         }
         #spin-btn:hover {
             background: var(--c-pink); border-color: var(--c-pink);
-            box-shadow: 0 0 40px var(--c-pink);
-            transform: scale(1.05);
+            box-shadow: 0 0 40px var(--c-pink); transform: scale(1.05);
         }
         #spin-btn:disabled { background: #333; border-color: #333; color: #777; cursor: not-allowed; transform: none; box-shadow: none; }
 
-        .stats-box {
-            margin-top: 15px;
-            display: flex; gap: 10px; justify-content: center; flex-wrap: wrap;
-        }
+        .stats-box { margin-top: 15px; display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
         .stat-tag {
-            font-family: 'Montserrat', sans-serif; /* Reste lisible pour les stats */
-            font-size: 0.8rem; background: rgba(0,0,0,0.5); border: 1px solid #444;
-            padding: 5px 10px; border-radius: 5px; color: #ccc;
+            font-family: 'Montserrat', sans-serif; font-size: 0.8rem;
+            background: rgba(0,0,0,0.5); border: 1px solid #444; padding: 5px 10px; border-radius: 5px; color: #ccc;
         }
         .stat-tag b { color: var(--c-gold); margin-left: 5px; }
 
         /* --- MODAL --- */
         #modal {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.9);
-            display: none; /* Caché par défaut via CSS */
-            justify-content: center; align-items: center;
+            background: rgba(0,0,0,0.9); display: none; justify-content: center; align-items: center;
             z-index: 100; opacity: 0; transition: opacity 0.3s;
         }
         #modal.active { display: flex; opacity: 1; }
-
         .modal-content {
-            background: linear-gradient(135deg, #240046, #000);
-            border: 2px solid var(--c-pink);
-            padding: 40px; text-align: center;
-            box-shadow: 0 0 60px var(--c-pink);
-            transform: scale(0.8); transition: 0.3s;
-            width: 90%; max-width: 400px;
+            background: linear-gradient(135deg, #240046, #000); border: 2px solid var(--c-pink);
+            padding: 40px; text-align: center; box-shadow: 0 0 60px var(--c-pink);
+            transform: scale(0.8); transition: 0.3s; width: 90%; max-width: 400px;
         }
         #modal.active .modal-content { transform: scale(1); }
-
-        .win-txt { 
-            font-family: 'Mochiy Pop One', sans-serif; /* Police Oshi no Ko */
-            font-size: 2.5rem; color: var(--c-gold); text-shadow: 0 0 20px var(--c-gold); margin: 20px 0; 
-        }
-        .close-btn { 
-            font-family: 'Mochiy Pop One', sans-serif;
-            background: transparent; border: 1px solid white; color: white; padding: 10px 30px; cursor: pointer; 
-        }
+        .win-txt { font-family: 'Mochiy Pop One', sans-serif; font-size: 2.5rem; color: var(--c-gold); text-shadow: 0 0 20px var(--c-gold); margin: 20px 0; }
+        .close-btn { font-family: 'Mochiy Pop One', sans-serif; background: transparent; border: 1px solid white; color: white; padding: 10px 30px; cursor: pointer; }
         .close-btn:hover { background: white; color: black; }
 
-        /* Media Queries pour petits écrans */
+        @media (max-width: 600px) {
+            .music-player { top: 10px; right: 10px; padding: 5px 10px; }
+            .track-name { font-size: 0.6rem; max-width: 80px; }
+            h1 { font-size: 1.5rem; }
+            #spin-btn { padding: 10px 30px; font-size: 0.9rem; }
+        }
         @media (max-height: 600px) {
             h1 { font-size: 1.5rem; margin-bottom: 5px; }
-            #spin-btn { padding: 10px 30px; font-size: 0.9rem; }
-            .stats-box { display: none; } /* On cache les stats si l'écran est trop petit en hauteur */
+            .stats-box { display: none; }
         }
     </style>
 </head>
 <body>
 
+    <!-- LECTEUR AUDIO HTML (Caché) -->
+    <audio id="bg-audio" loop></audio>
+
     <!-- LOADER -->
     <div id="loader"><div class="loader-star">★</div></div>
 
-    <!-- FOND ANIMÉ -->
+    <!-- BACKGROUND -->
     <div class="background-layer">
         <div class="spotlight spot-left"></div>
         <div class="spotlight spot-right"></div>
         <div class="glow-sticks"></div>
     </div>
 
-    <!-- CONTENU -->
+    <!-- UI -->
     <div class="main-content">
+        
+        <!-- LECTEUR MUSIQUE UI -->
+        <div class="music-player">
+            <button class="music-btn" id="play-pause-btn">▶</button>
+            <div class="track-info">
+                <span class="track-label">NOW PLAYING</span>
+                <span class="track-name" id="track-name">YOASOBI - Idol</span>
+            </div>
+            <button class="music-btn" id="next-track-btn">⏭</button>
+        </div>
+
         <h1>VIP-Land</h1>
         
         <div class="wheel-container">
             <div class="pointer"></div>
-            <div class="wheel-mask">
-                <canvas id="wheel" width="500" height="500"></canvas>
-            </div>
+            <div class="wheel-mask"><canvas id="wheel" width="500" height="500"></canvas></div>
             <div class="pupil-star"></div>
         </div>
 
         <div class="btn-container">
             <button id="spin-btn">LANCER (1 TICKET)</button>
-            <div class="stats-box" id="stats-list">
-                <!-- JS va mettre les % ici -->
-            </div>
+            <div class="stats-box" id="stats-list"></div>
         </div>
     </div>
 
@@ -271,7 +256,50 @@
     </div>
 
     <script>
-        // Charger la page proprement et attendre que la police soit chargée pour dessiner le canvas
+        /* --- GESTION MUSIQUE --- */
+        // Mets les vrais noms de tes fichiers mp3 ici !
+        const tracks =[
+            { name: "YOASOBI - Idol", src: "idol.mp3" },
+            { name: "GEMN - Fatal", src: "fatal.mp3" }
+        ];
+        
+        let currentTrackIndex = 0;
+        const audioEl = document.getElementById('bg-audio');
+        const playBtn = document.getElementById('play-pause-btn');
+        const nextBtn = document.getElementById('next-track-btn');
+        const trackNameEl = document.getElementById('track-name');
+        let isPlaying = false;
+
+        function loadTrack(index) {
+            audioEl.src = tracks[index].src;
+            trackNameEl.innerText = tracks[index].name;
+            audioEl.volume = 0.3; // Volume par défaut à 30%
+        }
+
+        function togglePlay() {
+            if(isPlaying) {
+                audioEl.pause();
+                playBtn.innerText = "▶";
+            } else {
+                audioEl.play().catch(e => console.log("Attente d'interaction utilisateur"));
+                playBtn.innerText = "⏸";
+            }
+            isPlaying = !isPlaying;
+        }
+
+        function nextTrack() {
+            currentTrackIndex = (currentTrackIndex + 1) % tracks.length;
+            loadTrack(currentTrackIndex);
+            if(isPlaying) audioEl.play();
+        }
+
+        playBtn.addEventListener('click', togglePlay);
+        nextBtn.addEventListener('click', nextTrack);
+        
+        // Charger la première musique en mémoire
+        loadTrack(0);
+
+        /* --- CHARGEMENT ROUE --- */
         window.addEventListener('load', () => {
             document.fonts.ready.then(() => {
                 setTimeout(() => {
@@ -287,7 +315,6 @@
         const modal = document.getElementById('modal');
         const statsList = document.getElementById('stats-list');
 
-        // Config 50/50
         const segments =[
             { text: "80k", color: "#ffd700", type: "win", msg: "JACKPOT !", weight: 1 }, 
             { text: "PERDU", color: "#240046", type: "lose", msg: "Rien...", weight: 32 },
@@ -309,40 +336,30 @@
         function drawWheel() {
             ctx.clearRect(0,0,500,500);
             const cx = 250, cy = 250, r = 250;
-            
-            // On décale le dessin pour que le segment 0 soit en HAUT (Midi)
             const offset = -Math.PI/2 - (arc/2);
 
             segments.forEach((seg, i) => {
                 const angle = i * arc + offset;
-                
                 ctx.beginPath();
                 ctx.moveTo(cx, cy);
                 ctx.arc(cx, cy, r, angle, angle + arc);
                 ctx.lineTo(cx, cy);
                 
-                // Dégradé Oeil
                 const grd = ctx.createRadialGradient(cx, cy, 40, cx, cy, r);
                 if(seg.type === 'win') {
-                    grd.addColorStop(0, seg.color);
-                    grd.addColorStop(0.6, seg.color);
-                    grd.addColorStop(1, "#10002b");
+                    grd.addColorStop(0, seg.color); grd.addColorStop(0.6, seg.color); grd.addColorStop(1, "#10002b");
                 } else {
-                    grd.addColorStop(0, "#000");
-                    grd.addColorStop(1, seg.color);
+                    grd.addColorStop(0, "#000"); grd.addColorStop(1, seg.color);
                 }
                 
-                ctx.fillStyle = grd;
-                ctx.fill();
-                ctx.stroke();
+                ctx.fillStyle = grd; ctx.fill(); ctx.stroke();
 
-                // Texte avec la police Oshi no Ko
                 ctx.save();
                 ctx.translate(cx, cy);
                 ctx.rotate(angle + arc / 2);
                 ctx.textAlign = "right";
                 ctx.fillStyle = "white";
-                ctx.font = "20px 'Mochiy Pop One'"; // Police appliquée au Canvas
+                ctx.font = "20px 'Mochiy Pop One'";
                 ctx.shadowColor = "black"; ctx.shadowBlur = 4;
                 ctx.fillText(seg.text, r - 30, 8);
                 ctx.restore();
@@ -354,6 +371,9 @@
             isSpinning = true;
             spinBtn.disabled = true;
 
+            // Démarre la musique automatiquement si ce n'est pas déjà fait
+            if(!isPlaying) { togglePlay(); }
+
             const total = segments.reduce((a,b)=>a+b.weight,0);
             let r = Math.random() * total;
             let winIdx = 0;
@@ -362,15 +382,13 @@
                 r -= segments[i].weight;
             }
 
-            // Calcul angle
             const segAngle = 360 / segments.length;
             const randomOffset = (Math.random() - 0.5) * (segAngle * 0.8);
             
             const targetRotation = -(winIdx * segAngle) + randomOffset;
-            const spins = (5 + Math.floor(Math.random() * 5)) * 360; // 5 à 10 tours
+            const spins = (5 + Math.floor(Math.random() * 5)) * 360;
             const finalDeg = spins + targetRotation;
 
-            // Application CSS
             canvas.style.transition = "transform 5s cubic-bezier(0.1, 1, 0.3, 1)";
             canvas.style.transform = `rotate(${finalDeg}deg)`;
 
@@ -379,10 +397,8 @@
                 isSpinning = false;
                 spinBtn.disabled = false;
                 
-                // Reset silencieux
                 canvas.style.transition = "none";
-                const reset = finalDeg % 360;
-                canvas.style.transform = `rotate(${reset}deg)`;
+                canvas.style.transform = `rotate(${finalDeg % 360}deg)`;
             }, 5000);
         }
 
@@ -406,11 +422,8 @@
             modal.classList.add('active');
         }
 
-        function closeModal() {
-            modal.classList.remove('active');
-        }
+        function closeModal() { modal.classList.remove('active'); }
 
-        // Stats (seulement les gains)
         function initStats() {
             const total = segments.reduce((a,b)=>a+b.weight,0);
             const wins = {};
@@ -420,9 +433,7 @@
                 wins[s.text].w += s.weight;
             });
             
-            // Tri
-            const sorted = Object.keys(wins).sort((a,b) => wins[a].w - wins[b].w);
-            sorted.forEach(k => {
+            Object.keys(wins).sort((a,b) => wins[a].w - wins[b].w).forEach(k => {
                 const p = ((wins[k].w / total) * 100).toFixed(1) + "%";
                 const el = document.createElement('div');
                 el.className = 'stat-tag';
@@ -431,10 +442,8 @@
             });
         }
 
-        // Init Events
         spinBtn.addEventListener('click', spin);
         initStats();
-
     </script>
 </body>
 </html>
