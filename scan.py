@@ -3,7 +3,7 @@ import os
 def generate_sidebar():
     with open('_sidebar.md', 'w', encoding='utf-8') as f:
         # On parcourt les dossiers 'staff' et 'player'
-        for folder in ['staff', 'player']:
+        for folder in ['Staff', 'player']:
             if not os.path.exists(folder): continue
             
             f.write(f'* **{folder.upper()}**\n')
