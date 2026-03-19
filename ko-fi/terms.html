@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Charte d'Utilisation - LifeStealFR</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/github-markdown-css/5.2.0/github-markdown.min.css">
+    <style>
+        body {
+            box-sizing: border-box;
+            min-width: 200px;
+            max-width: 980px;
+            margin: 0 auto;
+            padding: 45px;
+            background-color: #0d1117; /* Fond sombre style GitHub */
+        }
+        .markdown-body {
+            color: #c9d1d9;
+        }
+        @media (max-width: 767px) {
+            .markdown-body { padding: 15px; }
+        }
+    </style>
+</head>
+<body class="markdown-body">
+
+    <div id="content">Chargement de la charte...</div>
+
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script>
+        const url = 'https://raw.githubusercontent.com/LifeStealFR/lifestealfr.github.io/refs/heads/main/ko-fi/README.md';
+
+        fetch(url)
+            .then(response => response.text())
+            .then(text => {
+                // On remplace le texte de chargement par le Markdown converti
+                document.getElementById('content').innerHTML = marked.parse(text);
+            })
+            .catch(err => {
+                document.getElementById('content').innerHTML = "Erreur de chargement : " + err;
+            });
+    </script>
+</body>
+</html>
