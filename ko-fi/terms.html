@@ -3,28 +3,100 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Charte d'Utilisation - LifeStealFR</title>
+    <title>Terms of Use | LifeStealFR</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/github-markdown-css/5.2.0/github-markdown.min.css">
     <style>
+        :root {
+            --bg-color: #0d1117;
+            --accent-color: #ff5f5f; /* Couleur rappelant Ko-fi / LifeSteal */
+            --card-bg: #161b22;
+        }
+
         body {
-            box-sizing: border-box;
-            min-width: 200px;
-            max-width: 980px;
-            margin: 0 auto;
-            padding: 45px;
-            background-color: #0d1117; /* Fond sombre style GitHub */
+            background-color: var(--bg-color);
+            margin: 0;
+            font-family: 'Inter', -apple-system, sans-serif;
+            display: flex;
+            justify-content: center;
         }
+
+        /* Container principal avec effet de carte */
+        .main-container {
+            max-width: 900px;
+            width: 100%;
+            margin: 40px 20px;
+            background: var(--card-bg);
+            border: 1px solid #30363d;
+            border-radius: 12px;
+            padding: 60px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.3);
+        }
+
+        /* Override du style GitHub pour le rendre plus "Design" */
         .markdown-body {
-            color: #c9d1d9;
+            background-color: transparent !important;
+            color: #c9d1d9 !important;
+            font-family: 'Inter', sans-serif !important;
         }
+
+        .markdown-body h1 {
+            border-bottom: 2px solid var(--accent-color);
+            padding-bottom: 10px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: -1px;
+            color: #fff;
+        }
+
+        .markdown-body table {
+            display: table;
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            border: 1px solid #30363d;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .markdown-body table th {
+            background-color: #21262d;
+            border: none;
+            padding: 15px;
+        }
+
+        .markdown-body table td {
+            border-color: #30363d;
+            padding: 12px;
+        }
+
+        /* Style des blocs de citation (Notes) */
+        .markdown-body blockquote {
+            border-left: 4px solid var(--accent-color);
+            background: rgba(255, 95, 95, 0.05);
+            padding: 15px 25px;
+            border-radius: 0 8px 8px 0;
+        }
+
+        /* Animation de chargement */
+        #loader {
+            text-align: center;
+            color: var(--accent-color);
+            font-weight: 600;
+            margin-top: 50px;
+        }
+
         @media (max-width: 767px) {
-            .markdown-body { padding: 15px; }
+            .main-container { padding: 25px; margin: 10px; }
         }
     </style>
 </head>
-<body class="markdown-body">
+<body>
 
-    <div id="content">Chargement de la charte...</div>
+    <div class="main-container">
+        <div id="loader">Chargement de la charte...</div>
+        <article id="content" class="markdown-body"></article>
+    </div>
 
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     <script>
@@ -33,11 +105,17 @@
         fetch(url)
             .then(response => response.text())
             .then(text => {
-                // On remplace le texte de chargement par le Markdown converti
+                document.getElementById('loader').style.display = 'none';
+                // Options pour Marked pour un rendu propre
+                marked.setOptions({
+                    gfm: true,
+                    breaks: true
+                });
                 document.getElementById('content').innerHTML = marked.parse(text);
             })
             .catch(err => {
-                document.getElementById('content').innerHTML = "Erreur de chargement : " + err;
+                document.getElementById('loader').innerHTML = "❌ Erreur de chargement de la charte.";
+                console.error(err);
             });
     </script>
 </body>
