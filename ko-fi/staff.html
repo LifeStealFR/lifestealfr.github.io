@@ -3,129 +3,122 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Contact Staff | LifeStealFR</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/github-markdown-css/5.2.0/github-markdown.min.css">
+    <title>Team & Contact | LifeStealFR</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg-color: #0d1117;
-            --accent-color: #5865F2; /* Bleu Blurple Discord */
+            --bg: #0a0c10;
             --card-bg: #161b22;
+            --accent: #5865F2; /* Discord Blue */
+            --mc-gold: #ffaa00;
+            --text-main: #f0f6fc;
+            --text-dim: #8b949e;
         }
 
         body {
-            background-color: var(--bg-color);
-            margin: 0;
+            background-color: var(--bg);
+            color: var(--text-main);
             font-family: 'Inter', sans-serif;
-            display: flex;
-            justify-content: center;
-            min-height: 100vh;
+            margin: 0; padding: 40px 20px;
+            display: flex; flex-direction: column; align-items: center;
         }
 
-        .main-container {
-            max-width: 800px;
+        .header { text-align: center; margin-bottom: 50px; }
+        h1 { font-weight: 900; font-size: 2.5rem; text-transform: uppercase; margin: 0; }
+        .subtitle { color: var(--text-dim); margin-top: 10px; }
+
+        #staff-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
             width: 100%;
-            margin: 40px 20px;
+            max-width: 900px;
+        }
+
+        .card {
             background: var(--card-bg);
             border: 1px solid #30363d;
-            border-radius: 16px;
-            padding: 50px;
-            box-shadow: 0 25px 50px rgba(0,0,0,0.4);
+            border-radius: 15px;
+            padding: 25px;
+            transition: 0.3s;
         }
 
-        .header-logo {
-            text-align: center;
-            margin-bottom: 30px;
+        .card:hover { border-color: var(--accent); transform: translateY(-5px); }
+
+        .role { font-size: 0.7rem; font-weight: 800; color: var(--accent); text-transform: uppercase; margin-bottom: 15px; display: block; letter-spacing: 1px; }
+        
+        .info-box {
+            background: rgba(0,0,0,0.3);
+            border-radius: 8px;
+            padding: 12px;
+            margin-top: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
 
-        .markdown-body {
-            background-color: transparent !important;
-            color: #c9d1d9 !important;
-        }
+        .label { font-size: 0.75rem; color: var(--text-dim); }
+        .value { font-family: 'monospace'; font-weight: 600; font-size: 0.9rem; }
+        .mc { color: var(--mc-gold); }
 
-        /* Style spécifique pour les pseudos Discord en code source `text` */
-        .markdown-body code {
-            background-color: rgba(88, 101, 242, 0.2);
-            color: #5865F2;
-            padding: 4px 8px;
-            border-radius: 6px;
-            font-weight: 600;
-        }
-
-        .markdown-body h1 {
-            text-align: center;
-            border-bottom: 1px solid #30363d;
-            padding-bottom: 20px;
-            color: #fff;
-        }
-
-        .markdown-body ul {
-            list-style: none;
-            padding: 0;
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 15px;
-        }
-
-        /* Style pour transformer les listes Markdown en cartes de staff */
-        .markdown-body li {
-            background: #21262d;
-            border: 1px solid #30363d;
-            padding: 15px;
-            border-radius: 10px;
-            transition: transform 0.2s ease;
-        }
-
-        .markdown-body li:hover {
-            transform: translateY(-5px);
-            border-color: var(--accent-color);
-        }
-
-        #loader {
-            text-align: center;
-            color: #8b949e;
-            margin-top: 50px;
-        }
-
-        .back-btn {
-            display: inline-block;
-            margin-bottom: 20px;
-            color: #8b949e;
-            text-decoration: none;
-            font-size: 0.9em;
-            transition: color 0.2s;
-        }
-
-        .back-btn:hover { color: #fff; }
-
-        @media (max-width: 600px) {
-            .main-container { padding: 20px; }
-        }
+        #error { color: #ff5f5f; display: none; }
     </style>
 </head>
 <body>
 
-    <div class="main-container">
-        <a href="index.html" class="back-btn">← Retour à la charte</a>
-        <div id="loader">Récupération des contacts...</div>
-        <article id="content" class="markdown-body"></article>
+    <div class="header">
+        <h1>L'Équipe</h1>
+        <p class="subtitle">Contacts officiels LifeStealFR</p>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <div id="staff-grid">
+        </div>
+    
+    <div id="error">Impossible de charger les données du staff.</div>
+
     <script>
-        // Remplace par l'URL de ton nouveau fichier Markdown pour le staff
         const url = 'https://raw.githubusercontent.com/LifeStealFR/LifeSteal/refs/heads/main/ko-fi/staff.md';
 
-        fetch(url)
-            .then(response => response.text())
-            .then(text => {
-                document.getElementById('loader').style.display = 'none';
-                document.getElementById('content').innerHTML = marked.parse(text);
-            })
-            .catch(err => {
-                document.getElementById('loader').innerHTML = "Impossible de charger la liste du staff.";
-                console.error(err);
-            });
+        async function loadStaff() {
+            try {
+                const response = await fetch(url);
+                const text = await response.text();
+                
+                // On sépare le MD par les titres (marqués par #)
+                const sections = text.split('#').filter(s => s.trim() !== "");
+                const grid = document.getElementById('staff-grid');
+
+                sections.forEach(section => {
+                    const lines = section.split('\n');
+                    const role = lines[0].trim();
+                    
+                    // On cherche les valeurs entre les ` `
+                    const discordMatch = section.match(/Discord.*`(.+?)`/);
+                    const mcMatch = section.match(/Minecraft.*`(.+?)`/);
+
+                    if (discordMatch && mcMatch) {
+                        const card = document.createElement('div');
+                        card.className = 'card';
+                        card.innerHTML = `
+                            <span class="role">${role}</span>
+                            <div class="info-box">
+                                <span class="label">DISCORD</span>
+                                <span class="value">${discordMatch[1]}</span>
+                            </div>
+                            <div class="info-box">
+                                <span class="label">MINECRAFT</span>
+                                <span class="value mc">${mcMatch[1]}</span>
+                            </div>
+                        `;
+                        grid.appendChild(card);
+                    }
+                });
+            } catch (e) {
+                document.getElementById('error').style.display = 'block';
+            }
+        }
+
+        loadStaff();
     </script>
 </body>
 </html>
