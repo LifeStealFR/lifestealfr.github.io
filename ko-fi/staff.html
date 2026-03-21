@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Staff & Contact | LifeStealFR</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/github-markdown-css/5.2.0/github-markdown.min.css">
     <style>
         :root {
             --bg: #0d1117;
@@ -25,31 +26,31 @@
 
         .container { max-width: 900px; width: 100%; }
 
-        /* Header */
-        .main-title { font-size: 2.5rem; font-weight: 900; text-align: center; margin-bottom: 10px; color: #fff; }
-        .intro-text { color: var(--text-dim); text-align: center; margin-bottom: 40px; }
-
-        /* Grades (##) */
-        .rank-group-title {
-            font-size: 1.4rem; font-weight: 800; color: var(--accent);
-            margin: 50px 0 20px 0; display: flex; align-items: center;
-            text-transform: uppercase; letter-spacing: 1px;
+        /* Override Markdown Body pour le fond sombre */
+        .markdown-body {
+            background-color: transparent !important;
+            color: var(--text-main) !important;
+            font-family: 'Inter', sans-serif !important;
         }
-        .rank-group-title::after { content: ""; flex: 1; height: 1px; background: #30363d; margin-left: 15px; }
 
-        /* Grille */
+        /* Grille pour les cartes ### */
         .staff-grid {
-            display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; margin-bottom: 40px;
+            display: grid; 
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); 
+            gap: 20px; 
+            margin: 25px 0;
         }
 
-        /* Cartes (###) */
         .card {
-            background: var(--card-bg); border: 1px solid #30363d;
-            border-radius: 16px; padding: 25px; transition: 0.3s;
+            background: var(--card-bg);
+            border: 1px solid #30363d;
+            border-radius: 16px;
+            padding: 25px;
+            transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
         .card:hover { border-color: var(--accent); transform: translateY(-5px); }
 
-        .staff-name { font-size: 1.2rem; font-weight: 800; color: #fff; margin-bottom: 20px; display: block; }
+        .staff-name { font-size: 1.25rem; font-weight: 800; color: #fff; margin-bottom: 20px; display: block; border-bottom: 1px solid #30363d; padding-bottom: 10px;}
 
         .info-row {
             display: flex; justify-content: space-between; align-items: center;
@@ -58,101 +59,85 @@
         }
 
         .label { font-size: 0.65rem; color: var(--text-dim); font-weight: 700; text-transform: uppercase; }
-        .value { font-family: 'monospace'; font-size: 0.9rem; color: #fff; }
+        .value { font-family: 'monospace'; font-size: 0.95rem; color: #fff; }
         .mc-gold { color: var(--mc-gold); font-weight: 700; }
-        .role-tag { font-size: 0.8rem; color: var(--text-dim); margin-top: 10px; display: block; opacity: 0.8; }
+        .role-tag { font-size: 0.85rem; color: var(--text-dim); margin-top: 15px; display: block; font-style: italic; }
 
-        /* Sécurité */
-        .security-section {
-            margin-top: 50px; padding: 25px; border-top: 1px solid #30363d; color: var(--text-dim);
-        }
-        .security-section h2 { color: #ff5f5f; font-size: 1.1rem; }
-        
         #loader { margin-top: 100px; color: var(--text-dim); font-weight: 600; }
     </style>
 </head>
 <body>
 
-    <div class="container" id="content">
-        <div id="loader">Chargement de l'équipe...</div>
+    <div class="container markdown-body" id="content">
+        <div id="loader">Chargement du contenu...</div>
     </div>
 
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     <script>
         const url = 'https://raw.githubusercontent.com/LifeStealFR/LifeSteal/refs/heads/main/ko-fi/staff.md';
 
         async function init() {
             try {
                 const res = await fetch(url);
-                const md = await res.text();
+                let md = await res.text();
                 const container = document.getElementById('content');
                 container.innerHTML = ""; 
 
-                const lines = md.split('\n');
-                let currentGrid = null;
+                // On sépare par les profils ### pour isoler les cartes
+                const parts = md.split(/(?=### )/g);
 
-                lines.forEach(line => {
-                    const cleanLine = line.trim();
+                parts.forEach(part => {
+                    if (part.startsWith('### ')) {
+                        // C'est un profil, on crée une carte
+                        const lines = part.split('\n');
+                        const name = lines[0].replace('### ', '').trim();
+                        const content = lines.slice(1).join('\n');
 
-                    if (cleanLine.startsWith('# ')) {
-                        container.innerHTML += `<h1 class="main-title">${cleanLine.replace('# ', '')}</h1>`;
-                    } 
-                    else if (cleanLine.startsWith('## ')) {
-                        const title = cleanLine.replace('## ', '');
-                        if (title.includes('Rappel de Sécurité')) {
-                            container.innerHTML += `<div class="security-section"><h2>${title}</h2></div>`;
-                            currentGrid = null;
+                        // Extraction des données
+                        const discord = content.match(/Discord.*`(.+?)`/)?.[1] || "";
+                        const mc = content.match(/Minecraft.*`(.+?)`/)?.[1] || "";
+                        const role = content.match(/Rôle.*:(.+)/)?.[1] || "";
+
+                        // On crée la structure HTML de la carte
+                        const cardHTML = `
+                            <div class="card">
+                                <span class="staff-name">${name}</span>
+                                <div class="info-row">
+                                    <span class="label">Discord</span>
+                                    <span class="value">${discord}</span>
+                                </div>
+                                <div class="info-row">
+                                    <span class="label">Minecraft</span>
+                                    <span class="value mc-gold">${mc}</span>
+                                </div>
+                                ${role ? `<span class="role-tag">📍 ${role.trim()}</span>` : ''}
+                            </div>
+                        `;
+                        
+                        // On injecte dans une grille si nécessaire ou on l'affiche direct
+                        const lastElem = container.lastElementChild;
+                        if (lastElem && lastElem.className === 'staff-grid') {
+                            lastElem.innerHTML += cardHTML;
                         } else {
-                            container.innerHTML += `<h2 class="rank-group-title">${title}</h2>`;
-                            currentGrid = document.createElement('div');
-                            currentGrid.className = 'staff-grid';
-                            container.appendChild(currentGrid);
+                            const grid = document.createElement('div');
+                            grid.className = 'staff-grid';
+                            grid.innerHTML = cardHTML;
+                            container.appendChild(grid);
                         }
-                    } 
-                    else if (cleanLine.startsWith('### ')) {
-                        const name = cleanLine.replace('### ', '');
-                        const card = document.createElement('div');
-                        card.className = 'card';
-                        card.innerHTML = `<span class="staff-name">${name}</span><div class="card-body"></div>`;
-                        if (currentGrid) currentGrid.appendChild(card);
-                    }
-                    else if (cleanLine.includes('**Pseudo Discord**')) {
-                        const val = cleanLine.match(/`(.+?)`/)?.[1] || "";
-                        addDetail(container, 'Discord', val, false);
-                    }
-                    else if (cleanLine.includes('**Pseudo Minecraft**')) {
-                        const val = cleanLine.match(/`(.+?)`/)?.[1] || "";
-                        addDetail(container, 'Minecraft', val, true);
-                    }
-                    else if (cleanLine.includes('**Rôle**')) {
-                        const val = cleanLine.split(':')[1]?.trim() || "";
-                        addDetail(container, 'Rôle', val, false, true);
-                    }
-                    else if (cleanLine.startsWith('* ') || cleanLine.startsWith('>')) {
-                        const sec = container.querySelector('.security-section');
-                        if (sec) sec.innerHTML += `<p>${cleanLine.replace(/[\*\>]/g, '')}</p>`;
+                    } else {
+                        // C'est du Markdown normal (Titres, Textes, Images)
+                        const rawHtml = marked.parse(part);
+                        const tempDiv = document.createElement('div');
+                        tempDiv.innerHTML = rawHtml;
+                        container.appendChild(tempDiv);
                     }
                 });
-            } catch (e) { container.innerHTML = "Erreur de chargement."; }
-        }
-
-        function addDetail(container, label, value, isMc, isRole = false) {
-            const grids = container.querySelectorAll('.staff-grid');
-            const lastGrid = grids[grids.length - 1];
-            if (!lastGrid) return;
-            const lastCard = lastGrid.lastElementChild;
-            if (!lastCard) return;
-            const body = lastCard.querySelector('.card-body');
-            
-            if (isRole) {
-                body.innerHTML += `<span class="role-tag">📍 ${value}</span>`;
-            } else {
-                body.innerHTML += `
-                    <div class="info-row">
-                        <span class="label">${label}</span>
-                        <span class="value ${isMc ? 'mc-gold' : ''}">${value}</span>
-                    </div>`;
+            } catch (e) {
+                container.innerHTML = "Erreur de chargement du fichier Markdown.";
+                console.error(e);
             }
         }
+
         init();
     </script>
 </body>
