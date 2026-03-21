@@ -11,12 +11,29 @@
         body { background-color: var(--bg); color: var(--text-main); font-family: 'Inter', sans-serif; margin: 0; padding: 40px 20px; display: flex; flex-direction: column; align-items: center; }
         .container { max-width: 1000px; width: 100%; }
         
+        /* Style Markdown */
         .markdown-body { background-color: transparent !important; color: var(--text-main) !important; margin-bottom: 20px; }
-        .markdown-body h2 { border-bottom: 1px solid #30363d; padding-bottom: 10px; margin-top: 40px; color: #fff !important; }
+        .markdown-body h2 { border-bottom: 1px solid #30363d; padding-bottom: 10px; margin-top: 50px; color: #fff !important; font-size: 1.5rem; }
+        .markdown-body hr { height: 1px; background-color: #30363d; border: none; margin: 40px 0; }
 
-        .staff-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 25px; margin: 20px 0 40px 0; }
+        /* Grille des cartes */
+        .staff-grid { 
+            display: grid; 
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); 
+            gap: 25px; 
+            margin: 20px 0 40px 0; 
+        }
         
-        .card { background: var(--card-bg); border: 1px solid #30363d; border-radius: 16px; padding: 25px; transition: 0.3s; display: flex; flex-direction: column; }
+        .card { 
+            background: var(--card-bg); 
+            border: 1px solid #30363d; 
+            border-radius: 16px; 
+            padding: 25px; 
+            transition: 0.3s; 
+            display: flex; 
+            flex-direction: column; 
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+        }
         .card:hover { border-color: var(--accent); transform: translateY(-5px); }
         
         .staff-name { font-size: 1.4rem; font-weight: 800; color: #fff; margin-bottom: 15px; border-bottom: 1px solid #30363d; padding-bottom: 10px; }
@@ -40,53 +57,46 @@
                 const md = await res.text();
                 const container = document.getElementById('main-content');
 
-                // On découpe par blocs de titres (## ou ###)
-                const parts = md.split(/(?=##+ )/g);
+                // 1. On sépare le MD par les titres de niveau 2 (##) ou HR (---) pour garder les sections
+                const sections = md.split(/(?=## |---|### )/g);
+                let currentGrid = null;
 
-                parts.forEach(part => {
+                sections.forEach(part => {
                     const trimmed = part.trim();
-                    
+
                     if (trimmed.startsWith('###')) {
-                        // --- PROFIL INDIVIDUEL ---
+                        // C'EST UNE CARTE
+                        if (!currentGrid) {
+                            currentGrid = document.createElement('div');
+                            currentGrid.className = 'staff-grid';
+                            container.appendChild(currentGrid);
+                        }
+                        
                         const lines = trimmed.split('\n');
                         const name = lines[0].replace('### ', '').trim();
                         let discord = "Non renseigné", mc = "Non renseigné", role = "";
 
                         lines.forEach(line => {
-                            const cleanLine = line.trim();
-                            if (cleanLine.startsWith('*')) {
-                                const l = cleanLine.toLowerCase();
-                                if (l.includes('discord')) discord = cleanLine.match(/`(.+?)`/)?.[1] || discord;
-                                if (l.includes('minecraft')) mc = cleanLine.match(/`(.+?)`/)?.[1] || mc;
-                                if (l.includes('rôle') || l.includes('role')) {
-                                    role = cleanLine.split(':')[1]?.replace(/\*\*/g, '').replace(/[`]/g, '').trim() || "";
+                            const cl = line.trim();
+                            if (cl.startsWith('*')) {
+                                if (cl.toLowerCase().includes('discord')) discord = cl.match(/`(.+?)`/)?.[1] || discord;
+                                if (cl.toLowerCase().includes('minecraft')) mc = cl.match(/`(.+?)`/)?.[1] || mc;
+                                if (cl.toLowerCase().includes('rôle') || cl.toLowerCase().includes('role')) {
+                                    role = cl.split(':')[1]?.replace(/\*\*/g, '').replace(/[`]/g, '').trim() || "";
                                 }
                             }
                         });
 
-                        const cardHTML = `
+                        currentGrid.innerHTML += `
                             <div class="card">
                                 <span class="staff-name">${name}</span>
                                 <div class="info-row"><span class="label">Discord</span><span class="value">${discord}</span></div>
                                 <div class="info-row"><span class="label">Minecraft</span><span class="value mc-gold">${mc}</span></div>
                                 ${role ? `<div class="role-tag">📍 ${role}</div>` : ''}
                             </div>`;
-
-                        // On cherche la dernière grille. Si elle n'existe pas ou qu'un titre est passé par là, on en crée une.
-                        let lastElem = container.lastElementChild;
-                        if (lastElem && lastElem.classList.contains('staff-grid')) {
-                            lastElem.innerHTML += cardHTML;
-                        } else {
-                            const grid = document.createElement('div');
-                            grid.className = 'staff-grid';
-                            grid.innerHTML = cardHTML;
-                            container.appendChild(grid);
-                        }
-
                     } else {
-                        // --- TITRES ET TEXTE NORMAL ---
-                        // Cela inclut les # et les ##. Quand on injecte un ## ici,
-                        // le prochain profil créera obligatoirement une nouvelle grille en dessous.
+                        // C'EST DU TEXTE / TITRE / HR
+                        currentGrid = null; // On ferme la grille dès qu'on sort des profils
                         const mdDiv = document.createElement('div');
                         mdDiv.className = 'markdown-body';
                         mdDiv.innerHTML = marked.parse(part);
