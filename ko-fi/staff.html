@@ -11,25 +11,22 @@
         body { background-color: var(--bg); color: var(--text-main); font-family: 'Inter', sans-serif; margin: 0; padding: 40px 20px; display: flex; flex-direction: column; align-items: center; }
         .container { max-width: 1000px; width: 100%; }
         
-        /* Style des Sections (Groupes ##) */
-        .group-section { margin-top: 50px; border-top: 1px solid #30363d; padding-top: 20px; }
-        .group-title { font-size: 1.8rem; font-weight: 800; color: #fff; margin-bottom: 25px; display: flex; align-items: center; gap: 10px; }
+        .group-section { margin-top: 40px; }
+        .group-title { font-size: 1.6rem; font-weight: 800; color: #fff; margin-bottom: 20px; display: flex; align-items: center; border-bottom: 1px solid #30363d; padding-bottom: 10px; }
         
-        /* Grille de cartes (Profils ###) */
-        .staff-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 20px; margin-bottom: 30px; }
+        .staff-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 20px; margin-bottom: 20px; }
         
-        .card { background: var(--card-bg); border: 1px solid #30363d; border-radius: 12px; padding: 25px; transition: 0.3s; }
+        .card { background: var(--card-bg); border: 1px solid #30363d; border-radius: 12px; padding: 25px; transition: 0.3s; display: flex; flex-direction: column; }
         .card:hover { border-color: var(--accent); transform: translateY(-5px); }
-        .staff-name { font-size: 1.3rem; font-weight: 800; color: #fff; margin-bottom: 15px; border-bottom: 1px solid #30363d; padding-bottom: 10px; display: block; }
+        .staff-name { font-size: 1.3rem; font-weight: 800; color: #fff; margin-bottom: 15px; border-bottom: 1px solid #30363d; padding-bottom: 10px; }
         
         .info-box { display: flex; justify-content: space-between; align-items: center; background: rgba(0,0,0,0.3); padding: 10px 15px; border-radius: 8px; margin-bottom: 8px; }
         .label { font-size: 0.65rem; color: var(--text-dim); font-weight: 700; text-transform: uppercase; }
         .value { font-family: 'monospace'; font-size: 0.9rem; color: #fff; }
         .mc-gold { color: var(--mc-gold); font-weight: 700; }
-        .role-tag { margin-top: 15px; font-size: 0.85rem; color: var(--text-dim); font-style: italic; }
+        .role-tag { margin-top: 15px; font-size: 0.85rem; color: var(--text-dim); font-style: italic; display: flex; align-items: center; gap: 8px; }
 
-        /* Markdown standard pour le reste */
-        .markdown-body { background: transparent !important; color: var(--text-main) !important; margin-bottom: 30px; }
+        .markdown-body { background: transparent !important; color: var(--text-main) !important; margin-bottom: 20px; }
     </style>
 </head>
 <body>
@@ -45,41 +42,44 @@
                 const md = await res.text();
                 const container = document.getElementById('content');
                 
-                // On découpe par ligne pour analyser la structure
                 const lines = md.split('\n');
-                let currentGroup = null;
                 let currentGrid = null;
+                let activeProfile = null;
 
                 lines.forEach(line => {
                     const trimmed = line.trim();
 
                     if (trimmed.startsWith('# ')) {
-                        // Titre Principal (#)
                         container.innerHTML += `<div class="markdown-body"><h1>${trimmed.replace('# ', '')}</h1></div>`;
                     } 
                     else if (trimmed.startsWith('## ')) {
-                        // NOUVEAU GROUPE (##)
-                        currentGroup = document.createElement('div');
-                        currentGroup.className = 'group-section';
-                        currentGroup.innerHTML = `<h2 class="group-title">${trimmed.replace('## ', '')}</h2>`;
-                        
+                        // Reset : nouveau groupe = nouvelle section
+                        const section = document.createElement('div');
+                        section.className = 'group-section';
+                        section.innerHTML = `<h2 class="group-title">${trimmed.replace('## ', '')}</h2>`;
                         currentGrid = document.createElement('div');
                         currentGrid.className = 'staff-grid';
-                        currentGroup.appendChild(currentGrid);
-                        
-                        container.appendChild(currentGroup);
+                        section.appendChild(currentGrid);
+                        container.appendChild(section);
                     }
                     else if (trimmed.startsWith('### ')) {
-                        // NOUVEAU PROFIL (###) dans le groupe actuel
-                        const profileName = trimmed.replace('### ', '');
+                        // Nouveau Profil
+                        activeProfile = {
+                            name: trimmed.replace('### ', ''),
+                            discord: "Non renseigné",
+                            mc: "Non renseigné",
+                            role: ""
+                        };
+                        
                         const card = document.createElement('div');
                         card.className = 'card';
-                        card.innerHTML = `<span class="staff-name">${profileName}</span><div class="card-data"></div>`;
+                        card.id = "profile-" + activeProfile.name.replace(/\s+/g, '');
+                        card.innerHTML = `<span class="staff-name">${activeProfile.name}</span><div class="card-data"></div>`;
                         
                         if (currentGrid) {
                             currentGrid.appendChild(card);
                         } else {
-                            // Cas où il y a un ### sans ## avant
+                            // Si pas de ## avant le ###
                             const soloGrid = document.createElement('div');
                             soloGrid.className = 'staff-grid';
                             soloGrid.appendChild(card);
@@ -87,25 +87,24 @@
                             currentGrid = soloGrid;
                         }
                     }
-                    else if (trimmed.startsWith('* ')) {
-                        // INFOS DU PROFIL
-                        const lastCard = container.querySelector('.card:last-of-type .card-data');
-                        if (lastCard) {
-                            const l = trimmed.toLowerCase();
-                            if (l.includes('discord')) {
-                                const val = trimmed.match(/`(.+?)`/)?.[1] || "";
-                                lastCard.innerHTML += `<div class="info-box"><span class="label">Discord</span><span class="value">${val}</span></div>`;
-                            } else if (l.includes('minecraft')) {
-                                const val = trimmed.match(/`(.+?)`/)?.[1] || "";
-                                lastCard.innerHTML += `<div class="info-box"><span class="label">Minecraft</span><span class="value mc-gold">${val}</span></div>`;
-                            } else if (l.includes('rôle') || l.includes('role')) {
-                                const val = trimmed.split(':')[1]?.replace(/\*\*/g, '').trim() || "";
-                                lastCard.parentElement.innerHTML += `<div class="role-tag">📍 ${val}</div>`;
-                            }
+                    else if (trimmed.startsWith('* ') && activeProfile) {
+                        // On injecte les infos dans la CARTE ACTUELLE uniquement
+                        const lastCardData = container.querySelector('.card:last-of-type .card-data');
+                        const l = trimmed.toLowerCase();
+                        
+                        if (l.includes('discord')) {
+                            const val = trimmed.match(/`(.+?)`/)?.[1] || "";
+                            lastCardData.innerHTML += `<div class="info-box"><span class="label">Discord</span><span class="value">${val}</span></div>`;
+                        } else if (l.includes('minecraft')) {
+                            const val = trimmed.match(/`(.+?)`/)?.[1] || "";
+                            lastCardData.innerHTML += `<div class="info-box"><span class="label">Minecraft</span><span class="value mc-gold">${val}</span></div>`;
+                        } else if (l.includes('rôle') || l.includes('role')) {
+                            const val = trimmed.split(':')[1]?.replace(/\*\*/g, '').trim() || "";
+                            lastCardData.parentElement.innerHTML += `<div class="role-tag">📍 ${val}</div>`;
                         }
                     }
                     else if (trimmed.length > 0 && !trimmed.startsWith('---')) {
-                        // TEXTE NORMAL / NOTES / CITATIONS
+                        // Markdown standard (si pas dans un profil)
                         const textDiv = document.createElement('div');
                         textDiv.className = 'markdown-body';
                         textDiv.innerHTML = marked.parse(line);
@@ -113,7 +112,7 @@
                     }
                     else if (trimmed.startsWith('---')) {
                         container.innerHTML += `<hr style="border:0; border-top:1px solid #30363d; margin:40px 0;">`;
-                        currentGrid = null; // Reset de la grille après un séparateur
+                        currentGrid = null; 
                     }
                 });
             } catch (e) { console.error(e); }
