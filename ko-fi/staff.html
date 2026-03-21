@@ -7,84 +7,23 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/github-markdown-css/5.2.0/github-markdown.min.css">
     <style>
-        :root {
-            --bg: #0d1117;
-            --card-bg: #161b22;
-            --accent: #5865F2;
-            --mc-gold: #ffaa00;
-            --text-main: #f0f6fc;
-            --text-dim: #8b949e;
-        }
-
-        body {
-            background-color: var(--bg);
-            color: var(--text-main);
-            font-family: 'Inter', sans-serif;
-            margin: 0; padding: 40px 20px;
-            display: flex; flex-direction: column; align-items: center;
-        }
-
+        :root { --bg: #0d1117; --card-bg: #161b22; --accent: #5865F2; --mc-gold: #ffaa00; --text-main: #f0f6fc; --text-dim: #8b949e; }
+        body { background-color: var(--bg); color: var(--text-main); font-family: 'Inter', sans-serif; margin: 0; padding: 40px 20px; display: flex; flex-direction: column; align-items: center; }
         .container { max-width: 1000px; width: 100%; }
-
-        /* Correction du style Markdown de base pour le mode sombre */
-        .markdown-body {
-            background-color: transparent !important;
-            color: var(--text-main) !important;
-        }
-        .markdown-body h1, .markdown-body h2 { border-bottom: 1px solid #30363d; padding-bottom: 10px; margin-top: 40px; }
-
-        /* Système de Grille Staff */
-        .staff-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-            gap: 25px;
-            margin: 30px 0;
-        }
-
-        /* Design des Cartes */
-        .card {
-            background: var(--card-bg);
-            border: 1px solid #30363d;
-            border-radius: 16px;
-            padding: 25px;
-            transition: all 0.3s ease;
-            display: flex;
-            flex-direction: column;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-        }
-        .card:hover { border-color: var(--accent); transform: translateY(-5px); box-shadow: 0 10px 30px rgba(0,0,0,0.4); }
-
-        .staff-name {
-            font-size: 1.4rem; font-weight: 800; color: #fff;
-            margin-bottom: 15px; border-bottom: 1px solid #30363d;
-            padding-bottom: 10px; display: block;
-        }
-
-        /* Lignes d'infos Discord/MC */
-        .info-row {
-            display: flex; justify-content: space-between; align-items: center;
-            background: rgba(0,0,0,0.25); padding: 12px 15px; border-radius: 10px;
-            margin-bottom: 10px; border: 1px solid rgba(255,255,255,0.03);
-        }
-
-        .label { font-size: 0.7rem; color: var(--text-dim); font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; }
+        .markdown-body { background-color: transparent !important; color: var(--text-main) !important; margin-bottom: 20px; }
+        .staff-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 25px; margin: 30px 0; }
+        .card { background: var(--card-bg); border: 1px solid #30363d; border-radius: 16px; padding: 25px; transition: 0.3s; display: flex; flex-direction: column; }
+        .card:hover { border-color: var(--accent); transform: translateY(-5px); }
+        .staff-name { font-size: 1.4rem; font-weight: 800; color: #fff; margin-bottom: 15px; border-bottom: 1px solid #30363d; padding-bottom: 10px; }
+        .info-row { display: flex; justify-content: space-between; align-items: center; background: rgba(0,0,0,0.25); padding: 12px 15px; border-radius: 10px; margin-bottom: 10px; border: 1px solid rgba(255,255,255,0.03); }
+        .label { font-size: 0.7rem; color: var(--text-dim); font-weight: 700; text-transform: uppercase; }
         .value { font-family: 'monospace'; font-size: 0.95rem; color: #fff; }
         .mc-gold { color: var(--mc-gold); font-weight: 700; }
-
-        /* Tag du Rôle */
-        .role-tag {
-            margin-top: 10px; font-size: 0.9rem; color: var(--text-dim);
-            font-style: italic; display: flex; align-items: center; gap: 8px;
-        }
-
-        #loader { margin-top: 80px; text-align: center; color: var(--text-dim); font-weight: 600; }
+        .role-tag { margin-top: 10px; font-size: 0.9rem; color: var(--text-dim); font-style: italic; display: flex; align-items: center; gap: 8px; }
     </style>
 </head>
 <body>
-
-    <div class="container" id="main-content">
-        <div id="loader">Initialisation du contenu...</div>
-    </div>
+    <div class="container" id="main-content"></div>
 
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     <script>
@@ -95,54 +34,37 @@
                 const res = await fetch(url);
                 const md = await res.text();
                 const container = document.getElementById('main-content');
-                container.innerHTML = ""; // Clear loader
 
-                // On découpe le MD par blocs de profils (###)
-                // Le regex permet de séparer sans supprimer les ###
                 const parts = md.split(/(?=### )/g);
 
                 parts.forEach(part => {
-                    const trimmedPart = part.trim();
-
-                    if (trimmedPart.startsWith('### ')) {
-                        // --- MODE CARTE STAFF ---
-                        const lines = trimmedPart.split('\n');
+                    if (part.trim().startsWith('###')) {
+                        const lines = part.split('\n');
                         const name = lines[0].replace('### ', '').trim();
                         
-                        let discord = "Non renseigné";
-                        let mc = "Non renseigné";
-                        let role = "";
+                        let discord = "Non renseigné", mc = "Non renseigné", role = "";
 
+                        // On ne scanne QUE les lignes qui commencent par une puce '*'
                         lines.forEach(line => {
-                            const l = line.toLowerCase();
-                            if (l.includes('discord')) {
-                                discord = line.match(/`(.+?)`/)?.[1] || line.split(':')[1]?.trim() || discord;
-                            }
-                            if (l.includes('minecraft')) {
-                                mc = line.match(/`(.+?)`/)?.[1] || line.split(':')[1]?.trim() || mc;
-                            }
-                            if (l.includes('rôle') || l.includes('role')) {
-                                // On nettoie tout ce qui traîne (gras, émojis en double, etc.)
-                                role = line.split(':')[1]?.replace(/\*\*/g, '').trim() || "";
+                            const cleanLine = line.trim();
+                            if (cleanLine.startsWith('*')) {
+                                const l = cleanLine.toLowerCase();
+                                if (l.includes('discord')) discord = cleanLine.match(/`(.+?)`/)?.[1] || discord;
+                                if (l.includes('minecraft')) mc = cleanLine.match(/`(.+?)`/)?.[1] || mc;
+                                if (l.includes('rôle') || l.includes('role')) {
+                                    role = cleanLine.split(':')[1]?.replace(/\*\*/g, '').replace(/[`]/g, '').trim() || "";
+                                }
                             }
                         });
 
                         const cardHTML = `
                             <div class="card">
                                 <span class="staff-name">${name}</span>
-                                <div class="info-row">
-                                    <span class="label">Discord</span>
-                                    <span class="value">${discord}</span>
-                                </div>
-                                <div class="info-row">
-                                    <span class="label">Minecraft</span>
-                                    <span class="value mc-gold">${mc}</span>
-                                </div>
+                                <div class="info-row"><span class="label">Discord</span><span class="value">${discord}</span></div>
+                                <div class="info-row"><span class="label">Minecraft</span><span class="value mc-gold">${mc}</span></div>
                                 ${role ? `<div class="role-tag">📍 ${role}</div>` : ''}
-                            </div>
-                        `;
+                            </div>`;
 
-                        // Vérifier si on doit ajouter à une grille existante ou en créer une
                         let lastElem = container.lastElementChild;
                         if (lastElem && lastElem.classList.contains('staff-grid')) {
                             lastElem.innerHTML += cardHTML;
@@ -152,22 +74,15 @@
                             grid.innerHTML = cardHTML;
                             container.appendChild(grid);
                         }
-
-                    } else if (trimmedPart.length > 0) {
-                        // --- MODE FULL MARKDOWN ---
-                        // On crée un wrapper markdown-body pour chaque section hors-carte
-                        const mdSection = document.createElement('div');
-                        mdSection.className = 'markdown-body';
-                        mdSection.innerHTML = marked.parse(part);
-                        container.appendChild(mdSection);
+                    } else {
+                        const mdDiv = document.createElement('div');
+                        mdDiv.className = 'markdown-body';
+                        mdDiv.innerHTML = marked.parse(part);
+                        container.appendChild(mdDiv);
                     }
                 });
-            } catch (e) {
-                document.getElementById('main-content').innerHTML = "❌ Erreur de chargement du staff.";
-                console.error(e);
-            }
+            } catch (e) { console.error(e); }
         }
-
         init();
     </script>
 </body>
