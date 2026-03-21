@@ -3,13 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Team & Contact | LifeStealFR</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
+    <title>Staff | LifeStealFR</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800;900&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg: #0a0c10;
+            --bg: #0d1117;
             --card-bg: #161b22;
-            --accent: #5865F2; /* Discord Blue */
+            --accent: #5865F2;
             --mc-gold: #ffaa00;
             --text-main: #f0f6fc;
             --text-dim: #8b949e;
@@ -19,106 +19,144 @@
             background-color: var(--bg);
             color: var(--text-main);
             font-family: 'Inter', sans-serif;
-            margin: 0; padding: 40px 20px;
+            margin: 0; padding: 50px 20px;
             display: flex; flex-direction: column; align-items: center;
         }
 
-        .header { text-align: center; margin-bottom: 50px; }
-        h1 { font-weight: 900; font-size: 2.5rem; text-transform: uppercase; margin: 0; }
-        .subtitle { color: var(--text-dim); margin-top: 10px; }
+        .container { max-width: 1000px; width: 100%; }
 
-        #staff-grid {
+        /* Titre # (Grandes Sections) */
+        .main-category {
+            font-size: 2rem; font-weight: 900;
+            text-transform: uppercase; letter-spacing: 2px;
+            border-bottom: 2px solid #30363d;
+            margin: 60px 0 30px 0; padding-bottom: 10px;
+            color: #fff; text-align: center;
+        }
+
+        /* Titre ## (Groupes de Ranks) */
+        .rank-group-title {
+            font-size: 1.2rem; font-weight: 700;
+            color: var(--accent);
+            margin: 40px 0 20px 0;
+            display: flex; align-items: center;
+        }
+        .rank-group-title::after {
+            content: ""; flex: 1; height: 1px; background: #30363d; margin-left: 15px;
+        }
+
+        /* Grille de cartes ### */
+        .staff-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
             gap: 20px;
-            width: 100%;
-            max-width: 900px;
         }
 
         .card {
             background: var(--card-bg);
             border: 1px solid #30363d;
-            border-radius: 15px;
-            padding: 25px;
-            transition: 0.3s;
+            border-radius: 12px;
+            padding: 20px;
+            transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
-
         .card:hover { border-color: var(--accent); transform: translateY(-5px); }
 
-        .role { font-size: 0.7rem; font-weight: 800; color: var(--accent); text-transform: uppercase; margin-bottom: 15px; display: block; letter-spacing: 1px; }
+        .staff-name { font-size: 1.1rem; font-weight: 800; margin-bottom: 15px; display: block; }
         
-        .info-box {
-            background: rgba(0,0,0,0.3);
-            border-radius: 8px;
-            padding: 12px;
-            margin-top: 10px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+        .info-row {
+            display: flex; justify-content: space-between;
+            background: rgba(0,0,0,0.2);
+            padding: 8px 12px; border-radius: 6px; margin-bottom: 8px;
+            font-size: 0.85rem; border: 1px solid rgba(255,255,255,0.03);
         }
 
-        .label { font-size: 0.75rem; color: var(--text-dim); }
-        .value { font-family: 'monospace'; font-weight: 600; font-size: 0.9rem; }
-        .mc { color: var(--mc-gold); }
+        .label { color: var(--text-dim); font-weight: 600; font-size: 0.7rem; text-transform: uppercase; }
+        .value { font-family: 'monospace'; color: #fff; }
+        .mc-color { color: var(--mc-gold); }
 
-        #error { color: #ff5f5f; display: none; }
+        #loader { font-size: 1.2rem; color: var(--text-dim); margin-top: 100px; }
     </style>
 </head>
 <body>
 
-    <div class="header">
-        <h1>L'Équipe</h1>
-        <p class="subtitle">Contacts officiels LifeStealFR</p>
+    <div class="container" id="main-content">
+        <div id="loader">Chargement de l'équipe...</div>
     </div>
-
-    <div id="staff-grid">
-        </div>
-    
-    <div id="error">Impossible de charger les données du staff.</div>
 
     <script>
         const url = 'https://raw.githubusercontent.com/LifeStealFR/LifeSteal/refs/heads/main/ko-fi/staff.md';
 
-        async function loadStaff() {
+        async function init() {
             try {
-                const response = await fetch(url);
-                const text = await response.text();
-                
-                // On sépare le MD par les titres (marqués par #)
-                const sections = text.split('#').filter(s => s.trim() !== "");
-                const grid = document.getElementById('staff-grid');
+                const res = await fetch(url);
+                const md = await res.text();
+                const container = document.getElementById('main-content');
+                container.innerHTML = ""; // On vide le loader
 
-                sections.forEach(section => {
-                    const lines = section.split('\n');
-                    const role = lines[0].trim();
-                    
-                    // On cherche les valeurs entre les ` `
-                    const discordMatch = section.match(/Discord.*`(.+?)`/);
-                    const mcMatch = section.match(/Minecraft.*`(.+?)`/);
+                const lines = md.split('\n');
+                let currentGrid = null;
 
-                    if (discordMatch && mcMatch) {
+                lines.forEach(line => {
+                    const cleanLine = line.trim();
+
+                    if (cleanLine.startsWith('# ')) {
+                        // Grand Titre Section
+                        const h1 = document.createElement('h1');
+                        h1.className = 'main-category';
+                        h1.textContent = cleanLine.replace('# ', '');
+                        container.appendChild(h1);
+                    } 
+                    else if (cleanLine.startsWith('## ')) {
+                        // Titre de Rank
+                        const h2 = document.createElement('h2');
+                        h2.className = 'rank-group-title';
+                        h2.textContent = cleanLine.replace('## ', '');
+                        container.appendChild(h2);
+                        
+                        // On crée une nouvelle grille pour ce rank
+                        currentGrid = document.createElement('div');
+                        currentGrid.className = 'staff-grid';
+                        container.appendChild(currentGrid);
+                    } 
+                    else if (cleanLine.startsWith('### ')) {
+                        // Création d'une carte Profil
+                        const name = cleanLine.replace('### ', '');
                         const card = document.createElement('div');
                         card.className = 'card';
-                        card.innerHTML = `
-                            <span class="role">${role}</span>
-                            <div class="info-box">
-                                <span class="label">DISCORD</span>
-                                <span class="value">${discordMatch[1]}</span>
-                            </div>
-                            <div class="info-box">
-                                <span class="label">MINECRAFT</span>
-                                <span class="value mc">${mcMatch[1]}</span>
-                            </div>
-                        `;
-                        grid.appendChild(card);
+                        card.innerHTML = `<span class="staff-name">${name}</span><div class="data-area"></div>`;
+                        if (currentGrid) currentGrid.appendChild(card);
+                    }
+                    else if (cleanLine.includes('**Discord**')) {
+                        const val = cleanLine.match(/`(.+?)`/)?.[1] || "";
+                        addInfo(container, 'Discord', val, false);
+                    }
+                    else if (cleanLine.includes('**Minecraft**')) {
+                        const val = cleanLine.match(/`(.+?)`/)?.[1] || "";
+                        addInfo(container, 'Minecraft', val, true);
                     }
                 });
             } catch (e) {
-                document.getElementById('error').style.display = 'block';
+                console.error(e);
             }
         }
 
-        loadStaff();
+        function addInfo(container, label, value, isMc) {
+            const grids = container.querySelectorAll('.staff-grid');
+            const lastGrid = grids[grids.length - 1];
+            if (!lastGrid) return;
+            const lastCard = lastGrid.lastElementChild;
+            if (!lastCard) return;
+            
+            const area = lastCard.querySelector('.data-area');
+            area.innerHTML += `
+                <div class="info-row">
+                    <span class="label">${label}</span>
+                    <span class="value ${isMc ? 'mc-color' : ''}">${value}</span>
+                </div>
+            `;
+        }
+
+        init();
     </script>
 </body>
 </html>
