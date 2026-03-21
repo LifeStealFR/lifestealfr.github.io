@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Staff & Contact | LifeStealFR</title>
+    <title>Staff | LifeStealFR</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/github-markdown-css/5.2.0/github-markdown.min.css">
     <style>
@@ -11,41 +11,29 @@
         body { background-color: var(--bg); color: var(--text-main); font-family: 'Inter', sans-serif; margin: 0; padding: 40px 20px; display: flex; flex-direction: column; align-items: center; }
         .container { max-width: 1000px; width: 100%; }
         
-        /* Style Markdown */
-        .markdown-body { background-color: transparent !important; color: var(--text-main) !important; margin-bottom: 20px; }
-        .markdown-body h2 { border-bottom: 1px solid #30363d; padding-bottom: 10px; margin-top: 50px; color: #fff !important; font-size: 1.5rem; }
-        .markdown-body hr { height: 1px; background-color: #30363d; border: none; margin: 40px 0; }
-
-        /* Grille des cartes */
-        .staff-grid { 
-            display: grid; 
-            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); 
-            gap: 25px; 
-            margin: 20px 0 40px 0; 
-        }
+        /* Style des Sections (Groupes ##) */
+        .group-section { margin-top: 50px; border-top: 1px solid #30363d; padding-top: 20px; }
+        .group-title { font-size: 1.8rem; font-weight: 800; color: #fff; margin-bottom: 25px; display: flex; align-items: center; gap: 10px; }
         
-        .card { 
-            background: var(--card-bg); 
-            border: 1px solid #30363d; 
-            border-radius: 16px; 
-            padding: 25px; 
-            transition: 0.3s; 
-            display: flex; 
-            flex-direction: column; 
-            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
-        }
+        /* Grille de cartes (Profils ###) */
+        .staff-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 20px; margin-bottom: 30px; }
+        
+        .card { background: var(--card-bg); border: 1px solid #30363d; border-radius: 12px; padding: 25px; transition: 0.3s; }
         .card:hover { border-color: var(--accent); transform: translateY(-5px); }
+        .staff-name { font-size: 1.3rem; font-weight: 800; color: #fff; margin-bottom: 15px; border-bottom: 1px solid #30363d; padding-bottom: 10px; display: block; }
         
-        .staff-name { font-size: 1.4rem; font-weight: 800; color: #fff; margin-bottom: 15px; border-bottom: 1px solid #30363d; padding-bottom: 10px; }
-        .info-row { display: flex; justify-content: space-between; align-items: center; background: rgba(0,0,0,0.25); padding: 12px 15px; border-radius: 10px; margin-bottom: 10px; border: 1px solid rgba(255,255,255,0.03); }
-        .label { font-size: 0.7rem; color: var(--text-dim); font-weight: 700; text-transform: uppercase; }
-        .value { font-family: 'monospace'; font-size: 0.95rem; color: #fff; }
+        .info-box { display: flex; justify-content: space-between; align-items: center; background: rgba(0,0,0,0.3); padding: 10px 15px; border-radius: 8px; margin-bottom: 8px; }
+        .label { font-size: 0.65rem; color: var(--text-dim); font-weight: 700; text-transform: uppercase; }
+        .value { font-family: 'monospace'; font-size: 0.9rem; color: #fff; }
         .mc-gold { color: var(--mc-gold); font-weight: 700; }
-        .role-tag { margin-top: 10px; font-size: 0.9rem; color: var(--text-dim); font-style: italic; display: flex; align-items: center; gap: 8px; }
+        .role-tag { margin-top: 15px; font-size: 0.85rem; color: var(--text-dim); font-style: italic; }
+
+        /* Markdown standard pour le reste */
+        .markdown-body { background: transparent !important; color: var(--text-main) !important; margin-bottom: 30px; }
     </style>
 </head>
 <body>
-    <div class="container" id="main-content"></div>
+    <div class="container" id="content"></div>
 
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     <script>
@@ -55,52 +43,77 @@
             try {
                 const res = await fetch(url);
                 const md = await res.text();
-                const container = document.getElementById('main-content');
-
-                // 1. On sépare le MD par les titres de niveau 2 (##) ou HR (---) pour garder les sections
-                const sections = md.split(/(?=## |---|### )/g);
+                const container = document.getElementById('content');
+                
+                // On découpe par ligne pour analyser la structure
+                const lines = md.split('\n');
+                let currentGroup = null;
                 let currentGrid = null;
 
-                sections.forEach(part => {
-                    const trimmed = part.trim();
+                lines.forEach(line => {
+                    const trimmed = line.trim();
 
-                    if (trimmed.startsWith('###')) {
-                        // C'EST UNE CARTE
-                        if (!currentGrid) {
-                            currentGrid = document.createElement('div');
-                            currentGrid.className = 'staff-grid';
-                            container.appendChild(currentGrid);
-                        }
+                    if (trimmed.startsWith('# ')) {
+                        // Titre Principal (#)
+                        container.innerHTML += `<div class="markdown-body"><h1>${trimmed.replace('# ', '')}</h1></div>`;
+                    } 
+                    else if (trimmed.startsWith('## ')) {
+                        // NOUVEAU GROUPE (##)
+                        currentGroup = document.createElement('div');
+                        currentGroup.className = 'group-section';
+                        currentGroup.innerHTML = `<h2 class="group-title">${trimmed.replace('## ', '')}</h2>`;
                         
-                        const lines = trimmed.split('\n');
-                        const name = lines[0].replace('### ', '').trim();
-                        let discord = "Non renseigné", mc = "Non renseigné", role = "";
-
-                        lines.forEach(line => {
-                            const cl = line.trim();
-                            if (cl.startsWith('*')) {
-                                if (cl.toLowerCase().includes('discord')) discord = cl.match(/`(.+?)`/)?.[1] || discord;
-                                if (cl.toLowerCase().includes('minecraft')) mc = cl.match(/`(.+?)`/)?.[1] || mc;
-                                if (cl.toLowerCase().includes('rôle') || cl.toLowerCase().includes('role')) {
-                                    role = cl.split(':')[1]?.replace(/\*\*/g, '').replace(/[`]/g, '').trim() || "";
-                                }
+                        currentGrid = document.createElement('div');
+                        currentGrid.className = 'staff-grid';
+                        currentGroup.appendChild(currentGrid);
+                        
+                        container.appendChild(currentGroup);
+                    }
+                    else if (trimmed.startsWith('### ')) {
+                        // NOUVEAU PROFIL (###) dans le groupe actuel
+                        const profileName = trimmed.replace('### ', '');
+                        const card = document.createElement('div');
+                        card.className = 'card';
+                        card.innerHTML = `<span class="staff-name">${profileName}</span><div class="card-data"></div>`;
+                        
+                        if (currentGrid) {
+                            currentGrid.appendChild(card);
+                        } else {
+                            // Cas où il y a un ### sans ## avant
+                            const soloGrid = document.createElement('div');
+                            soloGrid.className = 'staff-grid';
+                            soloGrid.appendChild(card);
+                            container.appendChild(soloGrid);
+                            currentGrid = soloGrid;
+                        }
+                    }
+                    else if (trimmed.startsWith('* ')) {
+                        // INFOS DU PROFIL
+                        const lastCard = container.querySelector('.card:last-of-type .card-data');
+                        if (lastCard) {
+                            const l = trimmed.toLowerCase();
+                            if (l.includes('discord')) {
+                                const val = trimmed.match(/`(.+?)`/)?.[1] || "";
+                                lastCard.innerHTML += `<div class="info-box"><span class="label">Discord</span><span class="value">${val}</span></div>`;
+                            } else if (l.includes('minecraft')) {
+                                const val = trimmed.match(/`(.+?)`/)?.[1] || "";
+                                lastCard.innerHTML += `<div class="info-box"><span class="label">Minecraft</span><span class="value mc-gold">${val}</span></div>`;
+                            } else if (l.includes('rôle') || l.includes('role')) {
+                                const val = trimmed.split(':')[1]?.replace(/\*\*/g, '').trim() || "";
+                                lastCard.parentElement.innerHTML += `<div class="role-tag">📍 ${val}</div>`;
                             }
-                        });
-
-                        currentGrid.innerHTML += `
-                            <div class="card">
-                                <span class="staff-name">${name}</span>
-                                <div class="info-row"><span class="label">Discord</span><span class="value">${discord}</span></div>
-                                <div class="info-row"><span class="label">Minecraft</span><span class="value mc-gold">${mc}</span></div>
-                                ${role ? `<div class="role-tag">📍 ${role}</div>` : ''}
-                            </div>`;
-                    } else {
-                        // C'EST DU TEXTE / TITRE / HR
-                        currentGrid = null; // On ferme la grille dès qu'on sort des profils
-                        const mdDiv = document.createElement('div');
-                        mdDiv.className = 'markdown-body';
-                        mdDiv.innerHTML = marked.parse(part);
-                        container.appendChild(mdDiv);
+                        }
+                    }
+                    else if (trimmed.length > 0 && !trimmed.startsWith('---')) {
+                        // TEXTE NORMAL / NOTES / CITATIONS
+                        const textDiv = document.createElement('div');
+                        textDiv.className = 'markdown-body';
+                        textDiv.innerHTML = marked.parse(line);
+                        container.appendChild(textDiv);
+                    }
+                    else if (trimmed.startsWith('---')) {
+                        container.innerHTML += `<hr style="border:0; border-top:1px solid #30363d; margin:40px 0;">`;
+                        currentGrid = null; // Reset de la grille après un séparateur
                     }
                 });
             } catch (e) { console.error(e); }
