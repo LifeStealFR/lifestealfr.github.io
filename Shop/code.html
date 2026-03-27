@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Générateur de Code Tebex Pro</title>
+    <style>
+        :root {
+            --primary-color: #3498db;
+            --primary-hover: #2980b9;
+            --bg-color: #f4f7f6;
+            --text-color: #333;
+            --panel-bg: #ffffff;
+            --border-color: #bdc3c7;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+        }
+
+        .container {
+            text-align: center;
+            background: var(--panel-bg);
+            padding: 2.5rem;
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            max-width: 450px;
+            width: 90%;
+        }
+
+        h1 { margin-top: 0; font-size: 1.8rem; margin-bottom: 0.5rem; }
+        .subtitle { color: #7f8c8d; margin-bottom: 2rem; font-size: 0.9rem; }
+
+        /* Style de la zone d'affichage du code */
+        .code-display {
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 1.6rem;
+            font-weight: bold;
+            color: #2c3e50;
+            background: #ecf0f1;
+            padding: 1.2rem;
+            margin: 1.5rem 0;
+            border-radius: 8px;
+            border: 2px dashed var(--border-color);
+            min-height: 1.8rem;
+            word-wrap: break-word; /* Pour les longs codes sur mobile */
+        }
+
+        /* Style du sélecteur de parties */
+        .selector-group {
+            margin-bottom: 2rem;
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .selector-title {
+            font-weight: bold;
+            margin-bottom: 10px;
+            display: block;
+        }
+
+        /* Cache les radios par défaut */
+        .radio-input {
+            display: none;
+        }
+
+        /* Style des labels comme des boutons */
+        .radio-label {
+            border: 2px solid var(--border-color);
+            padding: 8px 16px;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+            user-select: none;
+        }
+
+        /* Style quand radio coché */
+        .radio-input:checked + .radio-label {
+            background-color: var(--primary-color);
+            color: white;
+            border-color: var(--primary-color);
+            box-shadow: 0 2px 5px rgba(52, 152, 219, 0.3);
+        }
+
+        /* Style du bouton principal */
+        .generate-btn {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 14px 28px;
+            font-size: 1.1rem;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background 0.3s ease, transform 0.1s ease;
+            width: 100%;
+            font-weight: bold;
+        }
+
+        .generate-btn:hover { background-color: var(--primary-hover); }
+        .generate-btn:active { transform: scale(0.98); }
+
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Générateur de Code</h1>
+    <p class="subtitle">Format compatible Tebex / Boutique</p>
+
+    <div class="selector-title">Nombre de parties (XXXX)</div>
+    <div class="selector-group">
+        <input type="radio" id="part3" name="segments" value="3" class="radio-input" checked>
+        <label for="part3" class="radio-label">3 Parties</label>
+
+        <input type="radio" id="part4" name="segments" value="4" class="radio-input">
+        <label for="part4" class="radio-label">4 Parties</label>
+
+        <input type="radio" id="part5" name="segments" value="5" class="radio-input">
+        <label for="part5" class="radio-label">5 Parties</label>
+    </div>
+
+    <div class="code-display" id="tebex-code">Cliquez ci-dessous</div>
+
+    <button class="generate-btn" onclick="generateFlexibleCode()">Générer le coupon</button>
+</div>
+
+<script>
+    function generateFlexibleCode() {
+        // 1. Récupérer la valeur sélectionnée
+        const segmentsRadios = document.getElementsByName('segments');
+        let numberOfSegments = 3; // Valeur par défaut
+        
+        for (const radio of segmentsRadios) {
+            if (radio.checked) {
+                numberOfSegments = parseInt(radio.value);
+                break;
+            }
+        }
+
+        // 2. Configuration du générateur
+        const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+        const segmentLength = 4; // Longueur de chaque bloc (standard)
+        
+        function makeSegment(length) {
+            let result = '';
+            for (let i = 0; i < length; i++) {
+                result += chars.charAt(Math.floor(Math.random() * chars.length));
+            }
+            return result;
+        }
+
+        // 3. Construction du code
+        let codeParts = [];
+        for (let i = 0; i < numberOfSegments; i++) {
+            codeParts.push(makeSegment(segmentLength));
+        }
+
+        // Joint les parties avec des tirets
+        const finalCode = codeParts.join('-');
+        
+        // 4. Affichage
+        document.getElementById('tebex-code').innerText = finalCode;
+    }
+</script>
+
+</body>
+</html>
+
