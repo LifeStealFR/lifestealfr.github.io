@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Générateur de Code Custom</title>
+    <title>Générateur de Code Custom Pro</title>
     <style>
         :root {
             --primary: #6366f1;
@@ -12,6 +12,8 @@
             --card-bg: #1e293b;
             --text: #f8fafc;
             --border: #334155;
+            --success: #10b981;
+            --success-hover: #059669;
         }
 
         body {
@@ -32,12 +34,12 @@
             border-radius: 1rem;
             box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
             width: 100%;
-            max-width: 500px;
+            max-width: 550px;
             border: 1px solid var(--border);
         }
 
-        h1 { margin: 0 0 0.5rem 0; font-size: 1.5rem; text-align: center; }
-        .desc { text-align: center; color: #94a3b8; font-size: 0.9rem; margin-bottom: 2rem; }
+        h1 { margin: 0 0 0.5rem 0; font-size: 1.8rem; text-align: center; }
+        .desc { text-align: center; color: #94a3b8; font-size: 0.9rem; margin-bottom: 1.5rem; }
 
         .settings-grid {
             display: grid;
@@ -46,166 +48,281 @@
             margin-bottom: 20px;
         }
 
-        .control-group { display: flex; flex-direction: column; gap: 8px; }
+        .full-width { grid-column: span 2; }
+
+        .control-group { display: flex; flex-direction: column; gap: 6px; }
         label { font-size: 0.85rem; font-weight: 600; color: #cbd5e1; }
 
-        input[type="number"], select {
+        input[type="number"], input[type="text"], select {
             background: #0f172a;
             border: 1px solid var(--border);
             color: white;
-            padding: 8px;
+            padding: 10px;
             border-radius: 6px;
             outline: none;
+            transition: border-color 0.2s;
+            font-family: inherit;
         }
+        input:focus, select:focus { border-color: var(--primary); }
 
         .checkbox-group {
             grid-column: span 2;
-            display: flex;
-            flex-wrap: wrap;
-            gap: 15px;
-            padding: 10px;
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+            padding: 12px;
             background: #0f172a;
             border-radius: 8px;
+            border: 1px solid var(--border);
         }
 
-        .checkbox-item { display: flex; align-items: center; gap: 8px; font-size: 0.85rem; }
+        .checkbox-item { display: flex; align-items: center; gap: 8px; font-size: 0.85rem; cursor: pointer; }
+        .checkbox-item input { accent-color: var(--primary); width: 16px; height: 16px; cursor: pointer; }
 
         /* Zone d'affichage */
         .result-container {
             position: relative;
-            background: #000;
-            padding: 1.2rem;
-            border-radius: 8px;
             margin: 20px 0;
-            border: 1px solid var(--primary);
-            min-height: 1.5rem;
-            display: flex;
-            justify-content: center;
-            align-items: center;
         }
 
         #code-output {
-            font-family: 'Monaco', 'Consolas', monospace;
-            font-size: 1.2rem;
+            width: 100%;
+            background: #000;
             color: #fbbf24;
-            word-break: break-all;
+            font-family: 'Monaco', 'Consolas', monospace;
+            font-size: 1.1rem;
+            padding: 1.2rem;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            resize: vertical;
+            min-height: 80px;
+            max-height: 250px;
             text-align: center;
+            box-sizing: border-box;
+            line-height: 1.5;
         }
+        #code-output:focus { border-color: var(--primary); outline: none; }
 
         /* Boutons */
-        .btn-stack { display: flex; gap: 10px; }
+        .btn-stack { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 10px; }
         
         button {
-            flex: 1;
             padding: 12px;
             border-radius: 8px;
             border: none;
             font-weight: 600;
             cursor: pointer;
             transition: all 0.2s;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
         }
 
-        .gen-btn { background: var(--primary); color: white; }
+        .gen-btn { background: var(--primary); color: white; grid-column: span 2; font-size: 1.1rem; padding: 14px;}
         .gen-btn:hover { background: var(--primary-hover); }
 
         .copy-btn { background: #334155; color: white; }
         .copy-btn:hover { background: #475569; }
-        .copy-btn.success { background: #10b981; }
+        .copy-btn.success { background: var(--success); }
+
+        .dl-btn { background: #0f172a; color: white; border: 1px solid var(--border); }
+        .dl-btn:hover { background: #1e293b; border-color: #94a3b8; }
 
     </style>
 </head>
 <body>
 
 <div class="card">
-    <h1>Générateur de Code Pro</h1>
-    <p class="desc">Configurez votre pattern Tebex ou clé personnalisée</p>
+    <h1>Générateur de Codes & Clés</h1>
+    <p class="desc">Générez des clés de jeu, codes promos ou mots de passe</p>
 
     <div class="settings-grid">
-        <div class="control-group">
-            <label>Nombre de segments</label>
-            <input type="number" id="parts" value="4" min="1" max="10">
+        <!-- Préréglages -->
+        <div class="control-group full-width">
+            <label>Paterns prédéfinis</label>
+            <select id="preset" onchange="applyPreset()">
+                <option value="custom">Personnalisé (Custom)</option>
+                <option value="tebex">Carte Cadeau Tebex (4x4)</option>
+                <option value="steam">Clé Steam (3x5)</option>
+                <option value="windows">Licence Windows (5x5)</option>
+                <option value="nitro">Lien Discord Nitro (16 chars)</option>
+                <option value="password">Mot de passe fort (24 chars)</option>
+            </select>
         </div>
 
         <div class="control-group">
-            <label>Longueur segment</label>
-            <input type="number" id="segLength" value="4" min="1" max="12">
+            <label>Nombre de segments</label>
+            <input type="number" id="parts" value="4" min="1" max="20" onchange="setCustomMode()">
+        </div>
+
+        <div class="control-group">
+            <label>Caractères par segment</label>
+            <input type="number" id="segLength" value="4" min="1" max="50" onchange="setCustomMode()">
+        </div>
+
+        <div class="control-group">
+            <label>Séparateur</label>
+            <select id="separator" onchange="setCustomMode()">
+                <option value="-">Tiret (-)</option>
+                <option value="_">Underscore (_)</option>
+                <option value=" ">Espace</option>
+                <option value="">Aucun</option>
+            </select>
+        </div>
+
+        <div class="control-group">
+            <label>Quantité à générer</label>
+            <input type="number" id="quantity" value="1" min="1" max="500">
+        </div>
+
+        <div class="control-group full-width">
+            <label>Préfixe (Optionnel)</label>
+            <input type="text" id="prefix" placeholder="ex: TBX-" onchange="setCustomMode()">
         </div>
 
         <div class="checkbox-group">
-            <div class="checkbox-item">
-                <input type="checkbox" id="useUpper" checked> <label for="useUpper">ABC</label>
-            </div>
-            <div class="checkbox-item">
-                <input type="checkbox" id="useNumbers" checked> <label for="useNumbers">123</label>
-            </div>
-            <div class="checkbox-item">
-                <input type="checkbox" id="useSpecial"> <label for="useSpecial">!@#</label>
-            </div>
+            <label class="checkbox-item">
+                <input type="checkbox" id="useUpper" checked onchange="setCustomMode()"> ABC
+            </label>
+            <label class="checkbox-item">
+                <input type="checkbox" id="useLower" onchange="setCustomMode()"> abc
+            </label>
+            <label class="checkbox-item">
+                <input type="checkbox" id="useNumbers" checked onchange="setCustomMode()"> 123
+            </label>
+            <label class="checkbox-item">
+                <input type="checkbox" id="useSpecial" onchange="setCustomMode()"> !@#
+            </label>
         </div>
     </div>
 
     <div class="result-container">
-        <div id="code-output">CLIQUEZ SUR GÉNÉRER</div>
+        <textarea id="code-output" readonly placeholder="CLIQUEZ SUR GÉNÉRER"></textarea>
     </div>
 
+    <button class="gen-btn" onclick="generateCode()">⚡ GÉNÉRER</button>
     <div class="btn-stack">
-        <button class="gen-btn" onclick="generateCode()">GÉNÉRER</button>
-        <button class="copy-btn" id="copyBtn" onclick="copyToClipboard()">COPIER</button>
+        <button class="copy-btn" id="copyBtn" onclick="copyToClipboard()">📄 COPIER</button>
+        <button class="dl-btn" onclick="downloadTxt()">💾 EXPORTER (.txt)</button>
     </div>
 </div>
 
 <script>
+    // Configuration des paterns prédéfinis
+    const presets = {
+        tebex: { parts: 4, segLength: 4, sep: '-', upper: true, lower: false, num: true, spec: false, prefix: '' },
+        steam: { parts: 3, segLength: 5, sep: '-', upper: true, lower: false, num: true, spec: false, prefix: '' },
+        windows: { parts: 5, segLength: 5, sep: '-', upper: true, lower: false, num: true, spec: false, prefix: '' },
+        nitro: { parts: 1, segLength: 16, sep: '', upper: true, lower: true, num: true, spec: false, prefix: 'discord.gift/' },
+        password: { parts: 1, segLength: 24, sep: '', upper: true, lower: true, num: true, spec: true, prefix: '' }
+    };
+
+    function applyPreset() {
+        const presetKey = document.getElementById('preset').value;
+        if(presetKey === 'custom') return;
+
+        const config = presets[presetKey];
+        document.getElementById('parts').value = config.parts;
+        document.getElementById('segLength').value = config.segLength;
+        document.getElementById('separator').value = config.sep;
+        document.getElementById('prefix').value = config.prefix;
+        document.getElementById('useUpper').checked = config.upper;
+        document.getElementById('useLower').checked = config.lower;
+        document.getElementById('useNumbers').checked = config.num;
+        document.getElementById('useSpecial').checked = config.spec;
+    }
+
+    // Si l'utilisateur modifie manuellement une valeur, on remet le menu déroulant sur "Personnalisé"
+    function setCustomMode() {
+        document.getElementById('preset').value = 'custom';
+    }
+
     function generateCode() {
-        const parts = document.getElementById('parts').value;
-        const segLength = document.getElementById('segLength').value;
+        const parts = parseInt(document.getElementById('parts').value);
+        const segLength = parseInt(document.getElementById('segLength').value);
+        const quantity = parseInt(document.getElementById('quantity').value) || 1;
+        const separator = document.getElementById('separator').value;
+        const prefix = document.getElementById('prefix').value;
         
-        // Construction du dictionnaire de caractères
         let charset = "";
         if(document.getElementById('useUpper').checked) charset += "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+        if(document.getElementById('useLower').checked) charset += "abcdefghijklmnopqrstuvwxyz";
         if(document.getElementById('useNumbers').checked) charset += "0123456789";
         if(document.getElementById('useSpecial').checked) charset += "!#$%&*+-=?@";
 
         if(charset === "") {
-            alert("Sélectionnez au moins un type de caractère !");
+            alert("Veuillez sélectionner au moins un type de caractère !");
             return;
         }
 
-        let fullCode = [];
+        let allCodes =[];
 
-        for (let i = 0; i < parts; i++) {
-            let segment = "";
-            for (let j = 0; j < segLength; j++) {
-                segment += charset.charAt(Math.floor(Math.random() * charset.length));
+        for (let q = 0; q < quantity; q++) {
+            let fullCode =[];
+            for (let i = 0; i < parts; i++) {
+                let segment = "";
+                // Utilisation de crypto.getRandomValues pour une vraie génération aléatoire et sécurisée
+                const randomValues = new Uint32Array(segLength);
+                window.crypto.getRandomValues(randomValues);
+                for (let j = 0; j < segLength; j++) {
+                    segment += charset[randomValues[j] % charset.length];
+                }
+                fullCode.push(segment);
             }
-            fullCode.push(segment);
+            allCodes.push(prefix + fullCode.join(separator));
         }
 
-        const result = fullCode.join('-');
-        document.getElementById('code-output').innerText = result;
+        const outputArea = document.getElementById('code-output');
+        outputArea.value = allCodes.join('\n');
         
+        // Ajuster l'alignement selon la quantité
+        outputArea.style.textAlign = quantity > 1 ? 'left' : 'center';
+
         // Reset du bouton copier
         const btn = document.getElementById('copyBtn');
-        btn.innerText = "COPIER";
+        btn.innerHTML = "📄 COPIER";
         btn.classList.remove('success');
     }
 
     function copyToClipboard() {
-        const text = document.getElementById('code-output').innerText;
-        if(text === "CLIQUEZ SUR GÉNÉRER") return;
+        const text = document.getElementById('code-output').value;
+        if(!text) return;
 
         navigator.clipboard.writeText(text).then(() => {
             const btn = document.getElementById('copyBtn');
-            btn.innerText = "COPIÉ !";
+            btn.innerHTML = "✅ COPIÉ !";
             btn.classList.add('success');
             
             setTimeout(() => {
-                btn.innerText = "COPIER";
+                btn.innerHTML = "📄 COPIER";
                 btn.classList.remove('success');
             }, 2000);
         });
+    }
+
+    function downloadTxt() {
+        const text = document.getElementById('code-output').value;
+        if(!text) {
+            alert("Il n'y a rien à exporter ! Générez d'abord des codes.");
+            return;
+        }
+
+        const blob = new Blob([text], { type: 'text/plain' });
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        
+        // Nom du fichier avec la date
+        const date = new Date().toISOString().slice(0,10);
+        a.href = url;
+        a.download = `codes_generes_${date}.txt`;
+        
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        window.URL.revokeObjectURL(url);
     }
 </script>
 
 </body>
 </html>
-
