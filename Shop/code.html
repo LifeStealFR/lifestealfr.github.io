@@ -3,172 +3,206 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Générateur de Code Tebex Pro</title>
+    <title>Générateur de Code Custom</title>
     <style>
         :root {
-            --primary-color: #3498db;
-            --primary-hover: #2980b9;
-            --bg-color: #f4f7f6;
-            --text-color: #333;
-            --panel-bg: #ffffff;
-            --border-color: #bdc3c7;
+            --primary: #6366f1;
+            --primary-hover: #4f46e5;
+            --bg: #0f172a;
+            --card-bg: #1e293b;
+            --text: #f8fafc;
+            --border: #334155;
         }
 
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Inter', system-ui, sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
             display: flex;
             justify-content: center;
             align-items: center;
             min-height: 100vh;
             margin: 0;
-            background-color: var(--bg-color);
-            color: var(--text-color);
+            padding: 20px;
         }
 
-        .container {
-            text-align: center;
-            background: var(--panel-bg);
-            padding: 2.5rem;
-            border-radius: 16px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-            max-width: 450px;
-            width: 90%;
+        .card {
+            background: var(--card-bg);
+            padding: 2rem;
+            border-radius: 1rem;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 500px;
+            border: 1px solid var(--border);
         }
 
-        h1 { margin-top: 0; font-size: 1.8rem; margin-bottom: 0.5rem; }
-        .subtitle { color: #7f8c8d; margin-bottom: 2rem; font-size: 0.9rem; }
+        h1 { margin: 0 0 0.5rem 0; font-size: 1.5rem; text-align: center; }
+        .desc { text-align: center; color: #94a3b8; font-size: 0.9rem; margin-bottom: 2rem; }
 
-        /* Style de la zone d'affichage du code */
-        .code-display {
-            font-family: 'Courier New', Courier, monospace;
-            font-size: 1.6rem;
-            font-weight: bold;
-            color: #2c3e50;
-            background: #ecf0f1;
-            padding: 1.2rem;
-            margin: 1.5rem 0;
+        .settings-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .control-group { display: flex; flex-direction: column; gap: 8px; }
+        label { font-size: 0.85rem; font-weight: 600; color: #cbd5e1; }
+
+        input[type="number"], select {
+            background: #0f172a;
+            border: 1px solid var(--border);
+            color: white;
+            padding: 8px;
+            border-radius: 6px;
+            outline: none;
+        }
+
+        .checkbox-group {
+            grid-column: span 2;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            padding: 10px;
+            background: #0f172a;
             border-radius: 8px;
-            border: 2px dashed var(--border-color);
-            min-height: 1.8rem;
-            word-wrap: break-word; /* Pour les longs codes sur mobile */
         }
 
-        /* Style du sélecteur de parties */
-        .selector-group {
-            margin-bottom: 2rem;
+        .checkbox-item { display: flex; align-items: center; gap: 8px; font-size: 0.85rem; }
+
+        /* Zone d'affichage */
+        .result-container {
+            position: relative;
+            background: #000;
+            padding: 1.2rem;
+            border-radius: 8px;
+            margin: 20px 0;
+            border: 1px solid var(--primary);
+            min-height: 1.5rem;
             display: flex;
             justify-content: center;
-            gap: 10px;
+            align-items: center;
         }
 
-        .selector-title {
-            font-weight: bold;
-            margin-bottom: 10px;
-            display: block;
+        #code-output {
+            font-family: 'Monaco', 'Consolas', monospace;
+            font-size: 1.2rem;
+            color: #fbbf24;
+            word-break: break-all;
+            text-align: center;
         }
 
-        /* Cache les radios par défaut */
-        .radio-input {
-            display: none;
-        }
-
-        /* Style des labels comme des boutons */
-        .radio-label {
-            border: 2px solid var(--border-color);
-            padding: 8px 16px;
-            border-radius: 20px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            font-size: 0.9rem;
-            user-select: none;
-        }
-
-        /* Style quand radio coché */
-        .radio-input:checked + .radio-label {
-            background-color: var(--primary-color);
-            color: white;
-            border-color: var(--primary-color);
-            box-shadow: 0 2px 5px rgba(52, 152, 219, 0.3);
-        }
-
-        /* Style du bouton principal */
-        .generate-btn {
-            background-color: var(--primary-color);
-            color: white;
-            border: none;
-            padding: 14px 28px;
-            font-size: 1.1rem;
+        /* Boutons */
+        .btn-stack { display: flex; gap: 10px; }
+        
+        button {
+            flex: 1;
+            padding: 12px;
             border-radius: 8px;
+            border: none;
+            font-weight: 600;
             cursor: pointer;
-            transition: background 0.3s ease, transform 0.1s ease;
-            width: 100%;
-            font-weight: bold;
+            transition: all 0.2s;
         }
 
-        .generate-btn:hover { background-color: var(--primary-hover); }
-        .generate-btn:active { transform: scale(0.98); }
+        .gen-btn { background: var(--primary); color: white; }
+        .gen-btn:hover { background: var(--primary-hover); }
+
+        .copy-btn { background: #334155; color: white; }
+        .copy-btn:hover { background: #475569; }
+        .copy-btn.success { background: #10b981; }
 
     </style>
 </head>
 <body>
 
-<div class="container">
-    <h1>Générateur de Code</h1>
-    <p class="subtitle">Format compatible Tebex / Boutique</p>
+<div class="card">
+    <h1>Générateur de Code Pro</h1>
+    <p class="desc">Configurez votre pattern Tebex ou clé personnalisée</p>
 
-    <div class="selector-title">Nombre de parties (XXXX)</div>
-    <div class="selector-group">
-        <input type="radio" id="part3" name="segments" value="3" class="radio-input" checked>
-        <label for="part3" class="radio-label">3 Parties</label>
+    <div class="settings-grid">
+        <div class="control-group">
+            <label>Nombre de segments</label>
+            <input type="number" id="parts" value="4" min="1" max="10">
+        </div>
 
-        <input type="radio" id="part4" name="segments" value="4" class="radio-input">
-        <label for="part4" class="radio-label">4 Parties</label>
+        <div class="control-group">
+            <label>Longueur segment</label>
+            <input type="number" id="segLength" value="4" min="1" max="12">
+        </div>
 
-        <input type="radio" id="part5" name="segments" value="5" class="radio-input">
-        <label for="part5" class="radio-label">5 Parties</label>
+        <div class="checkbox-group">
+            <div class="checkbox-item">
+                <input type="checkbox" id="useUpper" checked> <label for="useUpper">ABC</label>
+            </div>
+            <div class="checkbox-item">
+                <input type="checkbox" id="useNumbers" checked> <label for="useNumbers">123</label>
+            </div>
+            <div class="checkbox-item">
+                <input type="checkbox" id="useSpecial"> <label for="useSpecial">!@#</label>
+            </div>
+        </div>
     </div>
 
-    <div class="code-display" id="tebex-code">Cliquez ci-dessous</div>
+    <div class="result-container">
+        <div id="code-output">CLIQUEZ SUR GÉNÉRER</div>
+    </div>
 
-    <button class="generate-btn" onclick="generateFlexibleCode()">Générer le coupon</button>
+    <div class="btn-stack">
+        <button class="gen-btn" onclick="generateCode()">GÉNÉRER</button>
+        <button class="copy-btn" id="copyBtn" onclick="copyToClipboard()">COPIER</button>
+    </div>
 </div>
 
 <script>
-    function generateFlexibleCode() {
-        // 1. Récupérer la valeur sélectionnée
-        const segmentsRadios = document.getElementsByName('segments');
-        let numberOfSegments = 3; // Valeur par défaut
+    function generateCode() {
+        const parts = document.getElementById('parts').value;
+        const segLength = document.getElementById('segLength').value;
         
-        for (const radio of segmentsRadios) {
-            if (radio.checked) {
-                numberOfSegments = parseInt(radio.value);
-                break;
+        // Construction du dictionnaire de caractères
+        let charset = "";
+        if(document.getElementById('useUpper').checked) charset += "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+        if(document.getElementById('useNumbers').checked) charset += "0123456789";
+        if(document.getElementById('useSpecial').checked) charset += "!#$%&*+-=?@";
+
+        if(charset === "") {
+            alert("Sélectionnez au moins un type de caractère !");
+            return;
+        }
+
+        let fullCode = [];
+
+        for (let i = 0; i < parts; i++) {
+            let segment = "";
+            for (let j = 0; j < segLength; j++) {
+                segment += charset.charAt(Math.floor(Math.random() * charset.length));
             }
+            fullCode.push(segment);
         }
 
-        // 2. Configuration du générateur
-        const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
-        const segmentLength = 4; // Longueur de chaque bloc (standard)
+        const result = fullCode.join('-');
+        document.getElementById('code-output').innerText = result;
         
-        function makeSegment(length) {
-            let result = '';
-            for (let i = 0; i < length; i++) {
-                result += chars.charAt(Math.floor(Math.random() * chars.length));
-            }
-            return result;
-        }
+        // Reset du bouton copier
+        const btn = document.getElementById('copyBtn');
+        btn.innerText = "COPIER";
+        btn.classList.remove('success');
+    }
 
-        // 3. Construction du code
-        let codeParts = [];
-        for (let i = 0; i < numberOfSegments; i++) {
-            codeParts.push(makeSegment(segmentLength));
-        }
+    function copyToClipboard() {
+        const text = document.getElementById('code-output').innerText;
+        if(text === "CLIQUEZ SUR GÉNÉRER") return;
 
-        // Joint les parties avec des tirets
-        const finalCode = codeParts.join('-');
-        
-        // 4. Affichage
-        document.getElementById('tebex-code').innerText = finalCode;
+        navigator.clipboard.writeText(text).then(() => {
+            const btn = document.getElementById('copyBtn');
+            btn.innerText = "COPIÉ !";
+            btn.classList.add('success');
+            
+            setTimeout(() => {
+                btn.innerText = "COPIER";
+                btn.classList.remove('success');
+            }, 2000);
+        });
     }
 </script>
 
