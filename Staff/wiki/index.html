@@ -17,17 +17,17 @@
   <!-- CSS pour la barre latérale DÉPLIABLE -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/docsify-sidebar-collapse/dist/sidebar.min.css" />
 
-  <!-- DESIGN "DARK IDOL THEME" (Custom CSS) -->
+  <!-- DESIGN "RUBY RED THEME" (Custom CSS) -->
   <style>
     :root {
-      /* Palette de couleurs "Dark Idol" */
-      --bg-color: #0d0509;       /* Noir/Magenta profond */
-      --text-color: #fce7f3;     /* Rose très pâle pour la lisibilité */
-      --heading-color: #ff7eb3;  /* Rose vibrant pour les titres */
-      --accent-color: #ff2a7a;   /* Rose signature */
-      --accent-hover: #ff5e99;   /* Rose plus clair au survol */
-      --border-color: #3d1c2a;   /* Bordures discrètes */
-      --star-color: #ffdf00;     /* Jaune doré (détails) */
+      /* Nouvelle Palette "Ruby Hoshino" (Rouge Rubis / Bordeaux) */
+      --bg-color: #0b0204;       /* Noir avec une très légère teinte bordeaux */
+      --text-color: #ffeff3;     /* Blanc rosé très pâle pour la lecture */
+      --heading-color: #ff4d6d;  /* Rouge doux pour les titres */
+      --accent-color: #ff1e46;   /* Rouge Carmin/Rubis vif (Signature Ruby) */
+      --accent-hover: #ff4d6d;   /* Rouge légèrement plus clair au survol */
+      --border-color: #4a0d1a;   /* Bordures bordeaux sombre */
+      --star-color: #ffdf00;     /* Jaune doré (L'étoile) */
     }
 
     body {
@@ -38,7 +38,7 @@
       min-height: 100vh;
     }
 
-    /* ================= ANIMATION DE FOND (Ne coupe jamais) ================= */
+    /* ================= ANIMATION DE FOND (Améliorée) ================= */
     .animated-background {
       position: fixed;
       top: 0;
@@ -50,85 +50,82 @@
       overflow: hidden;
     }
     
-    /* Orbes lumineuses qui flottent */
+    /* Orbes lumineuses façon scène */
     .animated-background::before,
     .animated-background::after {
       content: '';
       position: absolute;
       border-radius: 50%;
-      filter: blur(100px); /* Flou extrême pour faire un halo */
-      opacity: 0.4;
+      filter: blur(120px); /* Flou très doux */
+      opacity: 0.35;
       animation: float 12s infinite alternate ease-in-out;
     }
     
-    /* Orbe Rose en haut à gauche */
+    /* Orbe Rouge Rubis éclatant en haut à gauche */
     .animated-background::before {
-      width: 40vw;
-      height: 40vw;
+      width: 45vw;
+      height: 45vw;
       background: var(--accent-color);
       top: -10vw;
       left: -10vw;
     }
 
-    /* Orbe Violette/Magenta en bas à droite */
+    /* Orbe Bordeaux profond en bas à droite */
     .animated-background::after {
-      width: 35vw;
-      height: 35vw;
-      background: #7a1b5c;
+      width: 40vw;
+      height: 40vw;
+      background: #8a0820;
       bottom: -10vw;
       right: -10vw;
-      animation-duration: 15s;
+      animation-duration: 16s;
       animation-delay: -5s;
     }
 
     @keyframes float {
       0% { transform: translate(0, 0) scale(1); opacity: 0.2; }
-      100% { transform: translate(50px, 50px) scale(1.1); opacity: 0.5; }
+      100% { transform: translate(60px, 40px) scale(1.15); opacity: 0.45; }
     }
 
     /* ================= BARRE LATÉRALE (SIDEBAR) ================= */
     .sidebar {
-      /* Glassmorphism : Effet de verre pour voir l'animation à travers */
-      background-color: rgba(22, 8, 16, 0.7) !important;
+      background-color: rgba(14, 2, 4, 0.75) !important;
       backdrop-filter: blur(15px);
       -webkit-backdrop-filter: blur(15px);
-      border-right: 1px solid rgba(255, 42, 122, 0.1);
-      box-shadow: 2px 0 20px rgba(0, 0, 0, 0.5);
+      border-right: 1px solid rgba(255, 30, 70, 0.15);
+      box-shadow: 2px 0 20px rgba(0, 0, 0, 0.6);
     }
     
-    /* Titre du Wiki */
     .sidebar > h1 {
       font-weight: 800;
       font-size: 1.4rem;
       color: #fff;
       margin: 20px 0;
       text-align: center;
-      text-shadow: 0 0 10px var(--accent-color);
+      text-shadow: 0 0 12px rgba(255, 30, 70, 0.8);
     }
     .sidebar > h1 .app-name-link::after { content: " ✨"; }
     
-    /* Liens des pages */
     .sidebar ul li a {
-      color: #fbcfe8;
+      color: #ffb3c6;
       font-size: 0.95rem;
-      transition: all 0.3s ease;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
       border-radius: 8px;
       padding: 8px 12px;
       text-decoration: none;
     }
     .sidebar ul li a:hover {
       color: #fff;
-      background-color: rgba(255, 42, 122, 0.15);
-      box-shadow: inset 2px 0 0 var(--accent-color);
+      background-color: rgba(255, 30, 70, 0.15);
+      transform: translateX(4px); /* Petite animation au survol très clean */
     }
     .sidebar ul li.active > a {
       color: #fff;
       background-color: var(--accent-color);
       font-weight: 600;
-      box-shadow: 0 4px 10px rgba(255, 42, 122, 0.3);
+      box-shadow: 0 4px 12px rgba(255, 30, 70, 0.4);
+      transform: translateX(4px);
     }
 
-    /* Noms des Dossiers */
     .sidebar ul li > strong {
       color: var(--heading-color);
       font-size: 0.85rem;
@@ -139,9 +136,8 @@
       cursor: pointer;
     }
 
-    /* Barre de recherche design */
     .sidebar .search input {
-      background-color: rgba(10, 3, 6, 0.8) !important;
+      background-color: rgba(10, 2, 3, 0.8) !important;
       border: 1px solid var(--border-color) !important;
       color: #fff !important;
       border-radius: 20px !important;
@@ -150,7 +146,7 @@
     }
     .sidebar .search input:focus {
       border-color: var(--accent-color) !important;
-      box-shadow: 0 0 8px rgba(255, 42, 122, 0.4) !important;
+      box-shadow: 0 0 10px rgba(255, 30, 70, 0.3) !important;
     }
 
     /* ================= ADAPTATION DES FICHIERS .MD ================= */
@@ -158,7 +154,7 @@
       max-width: 900px;
       padding: 40px;
       position: relative;
-      z-index: 1; /* S'assure que le texte passe AU DESSUS de l'animation */
+      z-index: 1;
     }
 
     .markdown-section h1, .markdown-section h2, .markdown-section h3, .markdown-section h4 {
@@ -169,7 +165,7 @@
     .markdown-section h1 {
       font-size: 2.5rem;
       margin-bottom: 1.5rem;
-      text-shadow: 0 2px 10px rgba(255, 126, 179, 0.3);
+      text-shadow: 0 2px 10px rgba(255, 77, 109, 0.3);
     }
 
     .markdown-section h2 {
@@ -181,6 +177,7 @@
     .markdown-section h2::before {
       content: "✨ ";
       color: var(--star-color);
+      text-shadow: 0 0 8px rgba(255, 223, 0, 0.4);
     }
 
     .markdown-section a {
@@ -193,12 +190,12 @@
     .markdown-section a:hover {
       color: var(--accent-hover);
       border-bottom: 1px solid var(--accent-hover);
-      text-shadow: 0 0 8px rgba(255, 42, 122, 0.4);
+      text-shadow: 0 0 8px rgba(255, 30, 70, 0.4);
     }
 
     .markdown-section strong {
       color: #fff;
-      text-shadow: 0 0 5px rgba(255, 255, 255, 0.3);
+      text-shadow: 0 0 5px rgba(255, 255, 255, 0.2);
     }
     .markdown-section em {
       color: var(--star-color);
@@ -206,85 +203,117 @@
 
     /* Blocs de code */
     .markdown-section pre {
-      background-color: rgba(10, 3, 6, 0.8);
+      background-color: rgba(10, 2, 3, 0.85);
       border: 1px solid var(--border-color);
-      border-left: 3px solid var(--accent-color);
+      border-left: 4px solid var(--accent-color);
       border-radius: 8px;
-      backdrop-filter: blur(5px);
-      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+      backdrop-filter: blur(8px);
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
     }
     
     .markdown-section code {
-      background-color: rgba(255, 42, 122, 0.15);
-      color: #ff9ebd;
+      background-color: rgba(255, 30, 70, 0.15);
+      color: #ffb3c6;
       border-radius: 4px;
-      padding: 2px 6px;
+      padding: 3px 6px;
       font-size: 0.9em;
     }
 
     /* Citations */
     .markdown-section blockquote {
       border-left: 4px solid var(--accent-color);
-      background-color: rgba(255, 42, 122, 0.05);
-      color: #fbcfe8;
+      background-color: rgba(255, 30, 70, 0.05);
+      color: #ffb3c6;
       border-radius: 0 12px 12px 0;
       padding: 15px 20px;
       margin: 20px 0;
       backdrop-filter: blur(5px);
     }
 
-    /* Tableaux */
+    /* ================= TABLEAUX (FIXÉS ET SUBLIMÉS) ================= */
+    /* On force l'annulation des couleurs moches de Docsify avec !important */
     .markdown-section table {
-      border-collapse: collapse;
-      width: 100%;
-      margin: 20px 0;
-      border-radius: 8px;
-      overflow: hidden;
-      background-color: rgba(18, 6, 13, 0.6);
-      backdrop-filter: blur(5px);
+      width: 100% !important;
+      border-collapse: separate !important; /* Permet les bordures arrondies */
+      border-spacing: 0 !important;
+      margin: 25px 0 !important;
+      border-radius: 10px !important;
+      overflow: hidden !important;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4) !important;
+      border: 1px solid var(--border-color) !important;
     }
-    .markdown-section th {
-      background-color: rgba(255, 42, 122, 0.2);
-      color: #fff;
-      padding: 10px;
+    
+    .markdown-section table tr {
+      background-color: rgba(15, 2, 4, 0.6) !important;
+      backdrop-filter: blur(8px);
+      transition: background-color 0.2s ease;
     }
-    .markdown-section td {
-      border: 1px solid var(--border-color);
-      padding: 10px;
+    
+    /* Effet ligne sur deux plus sombre */
+    .markdown-section table tr:nth-child(2n) {
+      background-color: rgba(20, 3, 6, 0.8) !important;
+    }
+    
+    /* Effet de brillance au survol d'une ligne du tableau */
+    .markdown-section table tr:hover {
+      background-color: rgba(255, 30, 70, 0.15) !important;
     }
 
-    /* Scrollbar personnalisée */
+    .markdown-section table th {
+      background-color: rgba(255, 30, 70, 0.25) !important;
+      color: #fff !important;
+      font-weight: 600 !important;
+      text-transform: uppercase !important;
+      letter-spacing: 0.05em;
+      padding: 14px 16px !important;
+      border: none !important;
+      border-bottom: 2px solid var(--accent-color) !important;
+      text-align: left !important;
+    }
+
+    .markdown-section table td {
+      border: none !important;
+      border-bottom: 1px solid rgba(74, 13, 26, 0.4) !important;
+      padding: 12px 16px !important;
+      color: var(--text-color) !important;
+    }
+    
+    /* Retire la bordure de la dernière ligne pour faire propre */
+    .markdown-section table tr:last-child td {
+      border-bottom: none !important;
+    }
+
+    /* ================= SCROLLBAR ================= */
     ::-webkit-scrollbar { width: 8px; height: 8px; }
     ::-webkit-scrollbar-track { background: var(--bg-color); }
-    ::-webkit-scrollbar-thumb { background: #5c273d; border-radius: 4px; }
+    ::-webkit-scrollbar-thumb { background: #4a0d1a; border-radius: 4px; }
     ::-webkit-scrollbar-thumb:hover { background: var(--accent-color); }
 
-    /* ================= RESPONSIVE (Mobiles & Tablettes) ================= */
+    /* ================= RESPONSIVE ================= */
     @media screen and (max-width: 768px) {
-      .markdown-section {
-        padding: 20px 15px; /* Réduit les marges sur téléphone */
-      }
-      .markdown-section h1 {
-        font-size: 2rem;
-      }
-      .markdown-section h2 {
-        font-size: 1.5rem;
-      }
-      .sidebar {
-        background-color: rgba(22, 8, 16, 0.95) !important; /* Plus opaque sur mobile pour masquer l'arrière-plan */
+      .markdown-section { padding: 25px 15px; }
+      .markdown-section h1 { font-size: 2rem; }
+      .markdown-section h2 { font-size: 1.5rem; }
+      .sidebar { background-color: rgba(14, 2, 4, 0.95) !important; }
+      
+      /* Permet de scroller les tableaux sur mobile s'ils sont trop larges */
+      .markdown-section table {
+        display: block !important;
+        overflow-x: auto !important;
+        white-space: nowrap !important;
       }
     }
   </style>
 </head>
 <body>
-  <!-- Calque d'animation fixe en arrière-plan -->
+  <!-- Calque d'animation de fond -->
   <div class="animated-background"></div>
 
   <div id="app">✨ Chargement du Wiki...</div>
 
   <script>
     window.$docsify = {
-      name: 'Staff Wiki', // Titre neutre
+      name: 'Staff Wiki',
       repo: '',
       
       alias: {
@@ -297,8 +326,8 @@
       
       search: {
         paths: 'auto',
-        placeholder: '🔍 Rechercher...', // Neutre
-        noData: '❌ Aucun résultat.', // Neutre
+        placeholder: '🔍 Rechercher...',
+        noData: '❌ Aucun résultat.',
         depth: 3,
       },
 
