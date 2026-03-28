@@ -1,14 +1,14 @@
 * **STAFF**
   * [Introduction](Staff/README.md)
-  * [Casier Judiciaire](Staff/casier-judiciaire.md)
-  * [Charte Staff](Staff/charte-staff.md)
-  * [Convocations](Staff/convocations.md)
-    * **Tickets**
-      * [Types De Ticket](Staff/tickets/types-de-ticket.md)
-    * **Support**
-      * **English**
-        * [Ticket](Staff/Support/English/Ticket.md)
     * **Wiki**
       * [Introduction](Staff/wiki/README.md)
+      * [Casier Judiciaire](Staff/wiki/casier-judiciaire.md)
+      * [Charte Staff](Staff/wiki/charte-staff.md)
+      * [Convocations](Staff/wiki/convocations.md)
+      * **Tickets**
+        * [Types De Ticket](Staff/wiki/tickets/types-de-ticket.md)
+      * **Support**
+        * **English**
+          * [Ticket](Staff/wiki/Support/English/Ticket.md)
 * **PLAYER**
   * [Reglement Discord](player/reglement-discord.md)
