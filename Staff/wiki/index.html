@@ -2,11 +2,11 @@
 <html lang="fr">
 <head>
   <meta charset="UTF-8">
-  <title>Staff Wiki - Ruby Edition 🌟</title>
+  <title>Staff Wiki</title>
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
 
-  <!-- Police "Poppins" pour un côté plus doux, moderne et "Idol" -->
+  <!-- Police "Poppins" pour le côté moderne et doux -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -14,36 +14,86 @@
   <!-- Thème de base Dark -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/docsify/lib/themes/dark.css">
   
-  <!-- CSS pour rendre la barre latérale DÉPLIABLE -->
+  <!-- CSS pour la barre latérale DÉPLIABLE -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/docsify-sidebar-collapse/dist/sidebar.min.css" />
 
-  <!-- DESIGN RUBY HOSHINO (Custom CSS) -->
+  <!-- DESIGN "DARK IDOL THEME" (Custom CSS) -->
   <style>
     :root {
-      /* Palette de couleurs "Ruby Hoshino Dark Idol" */
-      --bg-color: #0d0509;       /* Noir avec une infime touche de magenta */
-      --sidebar-bg: #160810;     /* Fond de la sidebar légèrement plus clair */
-      --text-color: #fce7f3;     /* Rose très pâle/blanc pour le texte (lisibilité) */
+      /* Palette de couleurs "Dark Idol" */
+      --bg-color: #0d0509;       /* Noir/Magenta profond */
+      --text-color: #fce7f3;     /* Rose très pâle pour la lisibilité */
       --heading-color: #ff7eb3;  /* Rose vibrant pour les titres */
-      --accent-color: #ff2a7a;   /* Le Rose signature de Ruby */
+      --accent-color: #ff2a7a;   /* Rose signature */
       --accent-hover: #ff5e99;   /* Rose plus clair au survol */
-      --border-color: #3d1c2a;   /* Bordures rose foncé/bordeaux */
-      --star-color: #ffdf00;     /* Jaune doré (l'étoile de son œil) */
+      --border-color: #3d1c2a;   /* Bordures discrètes */
+      --star-color: #ffdf00;     /* Jaune doré (détails) */
     }
 
     body {
       font-family: 'Poppins', sans-serif;
       background-color: var(--bg-color);
       color: var(--text-color);
-      /* Léger dégradé radial au centre pour l'ambiance scène/idol */
-      background-image: radial-gradient(circle at 50% 0%, #2a0a1a 0%, transparent 50%);
+      margin: 0;
+      min-height: 100vh;
+    }
+
+    /* ================= ANIMATION DE FOND (Ne coupe jamais) ================= */
+    .animated-background {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      z-index: -1;
+      background-color: var(--bg-color);
+      overflow: hidden;
+    }
+    
+    /* Orbes lumineuses qui flottent */
+    .animated-background::before,
+    .animated-background::after {
+      content: '';
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(100px); /* Flou extrême pour faire un halo */
+      opacity: 0.4;
+      animation: float 12s infinite alternate ease-in-out;
+    }
+    
+    /* Orbe Rose en haut à gauche */
+    .animated-background::before {
+      width: 40vw;
+      height: 40vw;
+      background: var(--accent-color);
+      top: -10vw;
+      left: -10vw;
+    }
+
+    /* Orbe Violette/Magenta en bas à droite */
+    .animated-background::after {
+      width: 35vw;
+      height: 35vw;
+      background: #7a1b5c;
+      bottom: -10vw;
+      right: -10vw;
+      animation-duration: 15s;
+      animation-delay: -5s;
+    }
+
+    @keyframes float {
+      0% { transform: translate(0, 0) scale(1); opacity: 0.2; }
+      100% { transform: translate(50px, 50px) scale(1.1); opacity: 0.5; }
     }
 
     /* ================= BARRE LATÉRALE (SIDEBAR) ================= */
     .sidebar {
-      background-color: var(--sidebar-bg);
-      border-right: 1px solid var(--border-color);
-      box-shadow: 2px 0 15px rgba(255, 42, 122, 0.05);
+      /* Glassmorphism : Effet de verre pour voir l'animation à travers */
+      background-color: rgba(22, 8, 16, 0.7) !important;
+      backdrop-filter: blur(15px);
+      -webkit-backdrop-filter: blur(15px);
+      border-right: 1px solid rgba(255, 42, 122, 0.1);
+      box-shadow: 2px 0 20px rgba(0, 0, 0, 0.5);
     }
     
     /* Titre du Wiki */
@@ -53,11 +103,9 @@
       color: #fff;
       margin: 20px 0;
       text-align: center;
-      text-shadow: 0 0 10px var(--accent-color); /* Effet Néon */
+      text-shadow: 0 0 10px var(--accent-color);
     }
-    .sidebar > h1 .app-name-link::after {
-      content: " 🌟"; /* Ajoute la petite étoile automatiquement */
-    }
+    .sidebar > h1 .app-name-link::after { content: " ✨"; }
     
     /* Liens des pages */
     .sidebar ul li a {
@@ -80,7 +128,7 @@
       box-shadow: 0 4px 10px rgba(255, 42, 122, 0.3);
     }
 
-    /* Noms des Dossiers dans la sidebar */
+    /* Noms des Dossiers */
     .sidebar ul li > strong {
       color: var(--heading-color);
       font-size: 0.85rem;
@@ -93,10 +141,10 @@
 
     /* Barre de recherche design */
     .sidebar .search input {
-      background-color: #0a0306 !important;
+      background-color: rgba(10, 3, 6, 0.8) !important;
       border: 1px solid var(--border-color) !important;
       color: #fff !important;
-      border-radius: 20px !important; /* Plus arrondi */
+      border-radius: 20px !important;
       padding: 10px 15px !important;
       font-family: 'Poppins', sans-serif;
     }
@@ -109,9 +157,10 @@
     .markdown-section {
       max-width: 900px;
       padding: 40px;
+      position: relative;
+      z-index: 1; /* S'assure que le texte passe AU DESSUS de l'animation */
     }
 
-    /* Titres dans le Markdown */
     .markdown-section h1, .markdown-section h2, .markdown-section h3, .markdown-section h4 {
       color: var(--heading-color);
       font-weight: 700;
@@ -128,15 +177,12 @@
       border-bottom: 2px dashed var(--border-color);
       padding-bottom: 0.5rem;
       margin-top: 2.5rem;
-      position: relative;
     }
-    /* Petite étoile devant les H2 */
     .markdown-section h2::before {
       content: "✨ ";
       color: var(--star-color);
     }
 
-    /* Liens dans le texte Markdown */
     .markdown-section a {
       color: var(--heading-color);
       text-decoration: none;
@@ -150,25 +196,24 @@
       text-shadow: 0 0 8px rgba(255, 42, 122, 0.4);
     }
 
-    /* Texte en gras et italique */
     .markdown-section strong {
       color: #fff;
       text-shadow: 0 0 5px rgba(255, 255, 255, 0.3);
     }
     .markdown-section em {
-      color: var(--star-color); /* Italique en jaune étoile */
+      color: var(--star-color);
     }
 
-    /* Jolis blocs de code */
+    /* Blocs de code */
     .markdown-section pre {
-      background-color: #0a0306;
+      background-color: rgba(10, 3, 6, 0.8);
       border: 1px solid var(--border-color);
       border-left: 3px solid var(--accent-color);
       border-radius: 8px;
+      backdrop-filter: blur(5px);
       box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
     }
     
-    /* Code "inline" (ex: `commande`) */
     .markdown-section code {
       background-color: rgba(255, 42, 122, 0.15);
       color: #ff9ebd;
@@ -177,7 +222,7 @@
       font-size: 0.9em;
     }
 
-    /* Design des citations (blocs avec > dans le md) */
+    /* Citations */
     .markdown-section blockquote {
       border-left: 4px solid var(--accent-color);
       background-color: rgba(255, 42, 122, 0.05);
@@ -185,10 +230,7 @@
       border-radius: 0 12px 12px 0;
       padding: 15px 20px;
       margin: 20px 0;
-      position: relative;
-    }
-    .markdown-section blockquote p {
-      margin: 0;
+      backdrop-filter: blur(5px);
     }
 
     /* Tableaux */
@@ -198,17 +240,17 @@
       margin: 20px 0;
       border-radius: 8px;
       overflow: hidden;
+      background-color: rgba(18, 6, 13, 0.6);
+      backdrop-filter: blur(5px);
     }
     .markdown-section th {
       background-color: rgba(255, 42, 122, 0.2);
       color: #fff;
-      border: 1px solid var(--border-color);
       padding: 10px;
     }
     .markdown-section td {
       border: 1px solid var(--border-color);
       padding: 10px;
-      background-color: #12060d;
     }
 
     /* Scrollbar personnalisée */
@@ -216,34 +258,50 @@
     ::-webkit-scrollbar-track { background: var(--bg-color); }
     ::-webkit-scrollbar-thumb { background: #5c273d; border-radius: 4px; }
     ::-webkit-scrollbar-thumb:hover { background: var(--accent-color); }
+
+    /* ================= RESPONSIVE (Mobiles & Tablettes) ================= */
+    @media screen and (max-width: 768px) {
+      .markdown-section {
+        padding: 20px 15px; /* Réduit les marges sur téléphone */
+      }
+      .markdown-section h1 {
+        font-size: 2rem;
+      }
+      .markdown-section h2 {
+        font-size: 1.5rem;
+      }
+      .sidebar {
+        background-color: rgba(22, 8, 16, 0.95) !important; /* Plus opaque sur mobile pour masquer l'arrière-plan */
+      }
+    }
   </style>
 </head>
 <body>
+  <!-- Calque d'animation fixe en arrière-plan -->
+  <div class="animated-background"></div>
+
   <div id="app">✨ Chargement du Wiki...</div>
 
   <script>
     window.$docsify = {
-      name: 'B Komachi Staff', // Le nom affiché (tu peux changer !)
+      name: 'Staff Wiki', // Titre neutre
       repo: '',
       
-      // Force le wiki à utiliser le menu principal "_sidebar.md" 
       alias: {
         '/.*/_sidebar.md': '/_sidebar.md'
       },
       
       loadSidebar: true,
-      subMaxLevel: 0, // Cache les sous-titres dans la sidebar
+      subMaxLevel: 0,
       auto2top: true,
       
-      // Config de la recherche
       search: {
         paths: 'auto',
-        placeholder: '🔍 Rechercher une star...',
-        noData: '❌ Aucune idole trouvée.',
+        placeholder: '🔍 Rechercher...', // Neutre
+        noData: '❌ Aucun résultat.', // Neutre
         depth: 3,
       },
 
-      // Les dossiers sont réduits par défaut
       sidebarDisplayLevel: 1 
     }
   </script>
@@ -252,16 +310,9 @@
   <script src="https://cdn.jsdelivr.net/npm/docsify@4/lib/docsify.min.js"></script>
   
   <!-- PLUGINS -->
-  <!-- 1. Barre de recherche -->
   <script src="https://cdn.jsdelivr.net/npm/docsify@4/lib/plugins/search.min.js"></script>
-  
-  <!-- 2. Rendre les dossiers dépliables (accordéon) -->
   <script src="https://cdn.jsdelivr.net/npm/docsify-sidebar-collapse/dist/docsify-sidebar-collapse.min.js"></script>
-  
-  <!-- 3. Zoom sur les images -->
   <script src="https://cdn.jsdelivr.net/npm/docsify@4/lib/plugins/zoom-image.min.js"></script>
-  
-  <!-- 4. Bouton pour copier le code -->
   <script src="https://cdn.jsdelivr.net/npm/docsify-copy-code/dist/docsify-copy-code.min.js"></script>
 </body>
 </html>
