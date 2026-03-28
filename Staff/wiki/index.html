@@ -4,76 +4,190 @@
   <meta charset="UTF-8">
   <title>Staff Wiki</title>
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
-  <meta name="description" content="Wiki officiel pour le staff">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
 
-  <!-- Thème sombre design (Docsify Themeable) -->
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/docsify-themeable@0/dist/css/theme-simple-dark.css">
+  <!-- Police "Inter" très moderne (utilisée par Github, Vercel, Discord) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 
-  <!-- Personnalisation CSS (Design) -->
+  <!-- Thème de base Dark -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/docsify/lib/themes/dark.css">
+  
+  <!-- CSS pour rendre la barre latérale DÉPLIABLE -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/docsify-sidebar-collapse/dist/sidebar.min.css" />
+
+  <!-- DESIGN ULTRA MODERNE (Custom CSS) -->
   <style>
     :root {
-      /* Couleur d'accentuation (Ici un violet moderne, tu peux changer par du bleu #3498db ou rouge #e74c3c) */
-      --theme-color: #bb86fc; 
-      
-      /* Typographie plus propre */
-      --base-font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-      
-      /* Fond légèrement plus texturé pour le menu */
-      --sidebar-background: #181a1b;
-      --sidebar-name-color: #bb86fc;
-      --sidebar-nav-link-color: #a0aabf;
-      --sidebar-nav-link-color--active: #fff;
+      /* Palette de couleurs "Dark Modern" */
+      --bg-color: #09090b;       /* Fond principal noir profond */
+      --sidebar-bg: #111113;     /* Fond de la sidebar légèrement plus clair */
+      --text-color: #a1a1aa;     /* Texte gris clair agréable à lire */
+      --heading-color: #fafafa;  /* Titres en blanc pur */
+      --accent-color: #8b5cf6;   /* Violet néon (Modifie l'hexa si tu préfères bleu/rouge) */
+      --accent-hover: #a78bfa;   /* Violet clair au survol */
+      --border-color: #27272a;   /* Bordures discrètes */
     }
 
-    /* Design des titres dans les pages */
-    .markdown-section h1, .markdown-section h2 {
-      border-bottom: 1px solid #333;
-      padding-bottom: 8px;
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: var(--bg-color);
+      color: var(--text-color);
     }
 
-    /* Arrondir la barre de recherche */
+    /* ================= BARRE LATÉRALE (SIDEBAR) ================= */
+    .sidebar {
+      background-color: var(--sidebar-bg);
+      border-right: 1px solid var(--border-color);
+    }
+    .sidebar > h1 {
+      font-weight: 700;
+      font-size: 1.3rem;
+      color: var(--heading-color);
+      margin: 20px 0;
+      text-align: center;
+    }
+    
+    /* Liens des pages */
+    .sidebar ul li a {
+      color: var(--text-color);
+      font-size: 0.95rem;
+      transition: all 0.2s ease;
+      border-radius: 6px;
+      padding: 6px 10px;
+      text-decoration: none; /* Retire la barre de soulignement */
+    }
+    .sidebar ul li a:hover {
+      color: var(--accent-hover);
+      background-color: rgba(139, 92, 246, 0.1);
+    }
+    .sidebar ul li.active > a {
+      color: var(--heading-color);
+      background-color: var(--accent-color);
+      font-weight: 600;
+    }
+
+    /* Noms des Dossiers dans la sidebar */
+    .sidebar ul li > strong {
+      color: var(--heading-color);
+      font-size: 0.85rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-top: 15px;
+      display: block;
+      cursor: pointer;
+    }
+
+    /* Barre de recherche design */
     .sidebar .search input {
-      border-radius: 8px;
+      background-color: #18181b !important;
+      border: 1px solid var(--border-color) !important;
+      color: var(--heading-color) !important;
+      border-radius: 8px !important;
+      padding: 10px !important;
+      font-family: 'Inter', sans-serif;
     }
+    .sidebar .search input:focus {
+      border-color: var(--accent-color) !important;
+      box-shadow: 0 0 0 2px rgba(139, 92, 246, 0.2) !important;
+    }
+
+    /* ================= CONTENU DES PAGES (MARKDOWN) ================= */
+    .markdown-section {
+      max-width: 900px;
+      padding: 40px;
+    }
+    .markdown-section h1, .markdown-section h2, .markdown-section h3 {
+      color: var(--heading-color);
+      font-weight: 600;
+    }
+    .markdown-section h1 {
+      font-size: 2.5rem;
+      margin-bottom: 1rem;
+    }
+    .markdown-section h2 {
+      font-size: 1.75rem;
+      border-bottom: 1px solid var(--border-color);
+      padding-bottom: 0.5rem;
+      margin-top: 2.5rem;
+    }
+    
+    /* Jolis blocs de code */
+    .markdown-section pre {
+      background-color: #18181b;
+      border: 1px solid var(--border-color);
+      border-radius: 10px;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    }
+    
+    /* Design des citations (blocs > ) */
+    .markdown-section blockquote {
+      border-left: 4px solid var(--accent-color);
+      background-color: rgba(139, 92, 246, 0.05);
+      color: #d4d4d8;
+      border-radius: 0 8px 8px 0;
+      padding: 15px 20px;
+    }
+
+    /* Scrollbar personnalisée */
+    ::-webkit-scrollbar { width: 8px; height: 8px; }
+    ::-webkit-scrollbar-track { background: var(--bg-color); }
+    ::-webkit-scrollbar-thumb { background: #3f3f46; border-radius: 4px; }
+    ::-webkit-scrollbar-thumb:hover { background: var(--accent-color); }
   </style>
 </head>
 <body>
-  <div id="app">⏳ Chargement du Wiki du Staff...</div>
+  <div id="app">⏳ Chargement de la base de données...</div>
 
   <script>
     window.$docsify = {
-      name: '🛡️ Staff Wiki', // Le nom affiché en haut à gauche
-      repo: '', // Optionnel : Mets le lien de ton repo GitHub ici pour afficher une icône en haut à droite
+      name: '🚀 Staff Wiki',
+      repo: '',
       
-      // Configuration pour lire dans les DOSSIERS via un menu latéral
-      loadSidebar: true, // Active la lecture du fichier _sidebar.md
-      subMaxLevel: 3,    // Affiche les sous-titres (h2, h3) dans le menu
-      autoHeader: true,  // Ajoute le titre principal automatiquement
+      // ⚠️ LE FIX EST LÀ : 
+      // Force le wiki à utiliser le menu principal "_sidebar.md" 
+      // même quand on navigue à l'intérieur des dossiers.
+      alias: {
+        '/.*/_sidebar.md': '/_sidebar.md'
+      },
       
-      // Options ergonomiques
-      auto2top: true,    // Remonte en haut automatiquement quand on change de page
-      themeColor: '#bb86fc', 
+      loadSidebar: true,
       
-      // Configuration du plugin de recherche
+      // Empêche les sous-titres des pages de s'afficher dans la sidebar
+      // pour que l'on ne voie QUE tes dossiers et tes fichiers !
+      subMaxLevel: 0, 
+      
+      auto2top: true,
+      
+      // Config de la recherche
       search: {
         paths: 'auto',
-        placeholder: '🔍 Rechercher dans le wiki...',
-        noData: '❌ Aucun résultat trouvé.',
+        placeholder: '🔍 Rechercher...',
+        noData: '❌ Aucun résultat.',
         depth: 3,
-      }
+      },
+
+      // Config du plugin pour que les dossiers soient dépliables
+      // 1 = Les dossiers sont réduits par défaut, et s'ouvrent quand on clique
+      sidebarDisplayLevel: 1 
     }
   </script>
 
   <!-- Docsify Core -->
   <script src="https://cdn.jsdelivr.net/npm/docsify@4/lib/docsify.min.js"></script>
   
-  <!-- Plugins indispensables pour le Wiki -->
+  <!-- PLUGINS -->
   <!-- 1. Barre de recherche -->
   <script src="https://cdn.jsdelivr.net/npm/docsify@4/lib/plugins/search.min.js"></script>
-  <!-- 2. Zoom sur les images (clic pour agrandir) -->
+  
+  <!-- 2. LE FIX VISUEL : Rendre les dossiers dépliables (accordéon) -->
+  <script src="https://cdn.jsdelivr.net/npm/docsify-sidebar-collapse/dist/docsify-sidebar-collapse.min.js"></script>
+  
+  <!-- 3. Zoom sur les images -->
   <script src="https://cdn.jsdelivr.net/npm/docsify@4/lib/plugins/zoom-image.min.js"></script>
-  <!-- 3. Bouton "Copier" sur les blocs de code -->
+  
+  <!-- 4. Bouton pour copier le code -->
   <script src="https://cdn.jsdelivr.net/npm/docsify-copy-code/dist/docsify-copy-code.min.js"></script>
 </body>
 </html>
