@@ -2,14 +2,14 @@
 <html lang="fr">
 <head>
   <meta charset="UTF-8">
-  <title>Staff Wiki</title>
+  <title>Staff Wiki - Ruby Edition 🌟</title>
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
 
-  <!-- Police "Inter" très moderne (utilisée par Github, Vercel, Discord) -->
+  <!-- Police "Poppins" pour un côté plus doux, moderne et "Idol" -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
   <!-- Thème de base Dark -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/docsify/lib/themes/dark.css">
@@ -17,55 +17,67 @@
   <!-- CSS pour rendre la barre latérale DÉPLIABLE -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/docsify-sidebar-collapse/dist/sidebar.min.css" />
 
-  <!-- DESIGN ULTRA MODERNE (Custom CSS) -->
+  <!-- DESIGN RUBY HOSHINO (Custom CSS) -->
   <style>
     :root {
-      /* Palette de couleurs "Dark Modern" */
-      --bg-color: #09090b;       /* Fond principal noir profond */
-      --sidebar-bg: #111113;     /* Fond de la sidebar légèrement plus clair */
-      --text-color: #a1a1aa;     /* Texte gris clair agréable à lire */
-      --heading-color: #fafafa;  /* Titres en blanc pur */
-      --accent-color: #8b5cf6;   /* Violet néon (Modifie l'hexa si tu préfères bleu/rouge) */
-      --accent-hover: #a78bfa;   /* Violet clair au survol */
-      --border-color: #27272a;   /* Bordures discrètes */
+      /* Palette de couleurs "Ruby Hoshino Dark Idol" */
+      --bg-color: #0d0509;       /* Noir avec une infime touche de magenta */
+      --sidebar-bg: #160810;     /* Fond de la sidebar légèrement plus clair */
+      --text-color: #fce7f3;     /* Rose très pâle/blanc pour le texte (lisibilité) */
+      --heading-color: #ff7eb3;  /* Rose vibrant pour les titres */
+      --accent-color: #ff2a7a;   /* Le Rose signature de Ruby */
+      --accent-hover: #ff5e99;   /* Rose plus clair au survol */
+      --border-color: #3d1c2a;   /* Bordures rose foncé/bordeaux */
+      --star-color: #ffdf00;     /* Jaune doré (l'étoile de son œil) */
     }
 
     body {
-      font-family: 'Inter', sans-serif;
+      font-family: 'Poppins', sans-serif;
       background-color: var(--bg-color);
       color: var(--text-color);
+      /* Léger dégradé radial au centre pour l'ambiance scène/idol */
+      background-image: radial-gradient(circle at 50% 0%, #2a0a1a 0%, transparent 50%);
     }
 
     /* ================= BARRE LATÉRALE (SIDEBAR) ================= */
     .sidebar {
       background-color: var(--sidebar-bg);
       border-right: 1px solid var(--border-color);
+      box-shadow: 2px 0 15px rgba(255, 42, 122, 0.05);
     }
+    
+    /* Titre du Wiki */
     .sidebar > h1 {
-      font-weight: 700;
-      font-size: 1.3rem;
-      color: var(--heading-color);
+      font-weight: 800;
+      font-size: 1.4rem;
+      color: #fff;
       margin: 20px 0;
       text-align: center;
+      text-shadow: 0 0 10px var(--accent-color); /* Effet Néon */
+    }
+    .sidebar > h1 .app-name-link::after {
+      content: " 🌟"; /* Ajoute la petite étoile automatiquement */
     }
     
     /* Liens des pages */
     .sidebar ul li a {
-      color: var(--text-color);
+      color: #fbcfe8;
       font-size: 0.95rem;
-      transition: all 0.2s ease;
-      border-radius: 6px;
-      padding: 6px 10px;
-      text-decoration: none; /* Retire la barre de soulignement */
+      transition: all 0.3s ease;
+      border-radius: 8px;
+      padding: 8px 12px;
+      text-decoration: none;
     }
     .sidebar ul li a:hover {
-      color: var(--accent-hover);
-      background-color: rgba(139, 92, 246, 0.1);
+      color: #fff;
+      background-color: rgba(255, 42, 122, 0.15);
+      box-shadow: inset 2px 0 0 var(--accent-color);
     }
     .sidebar ul li.active > a {
-      color: var(--heading-color);
+      color: #fff;
       background-color: var(--accent-color);
       font-weight: 600;
+      box-shadow: 0 4px 10px rgba(255, 42, 122, 0.3);
     }
 
     /* Noms des Dossiers dans la sidebar */
@@ -73,7 +85,7 @@
       color: var(--heading-color);
       font-size: 0.85rem;
       text-transform: uppercase;
-      letter-spacing: 0.05em;
+      letter-spacing: 0.08em;
       margin-top: 15px;
       display: block;
       cursor: pointer;
@@ -81,95 +93,157 @@
 
     /* Barre de recherche design */
     .sidebar .search input {
-      background-color: #18181b !important;
+      background-color: #0a0306 !important;
       border: 1px solid var(--border-color) !important;
-      color: var(--heading-color) !important;
-      border-radius: 8px !important;
-      padding: 10px !important;
-      font-family: 'Inter', sans-serif;
+      color: #fff !important;
+      border-radius: 20px !important; /* Plus arrondi */
+      padding: 10px 15px !important;
+      font-family: 'Poppins', sans-serif;
     }
     .sidebar .search input:focus {
       border-color: var(--accent-color) !important;
-      box-shadow: 0 0 0 2px rgba(139, 92, 246, 0.2) !important;
+      box-shadow: 0 0 8px rgba(255, 42, 122, 0.4) !important;
     }
 
-    /* ================= CONTENU DES PAGES (MARKDOWN) ================= */
+    /* ================= ADAPTATION DES FICHIERS .MD ================= */
     .markdown-section {
       max-width: 900px;
       padding: 40px;
     }
-    .markdown-section h1, .markdown-section h2, .markdown-section h3 {
+
+    /* Titres dans le Markdown */
+    .markdown-section h1, .markdown-section h2, .markdown-section h3, .markdown-section h4 {
       color: var(--heading-color);
-      font-weight: 600;
+      font-weight: 700;
     }
+    
     .markdown-section h1 {
       font-size: 2.5rem;
-      margin-bottom: 1rem;
+      margin-bottom: 1.5rem;
+      text-shadow: 0 2px 10px rgba(255, 126, 179, 0.3);
     }
+
     .markdown-section h2 {
-      font-size: 1.75rem;
-      border-bottom: 1px solid var(--border-color);
+      font-size: 1.8rem;
+      border-bottom: 2px dashed var(--border-color);
       padding-bottom: 0.5rem;
       margin-top: 2.5rem;
+      position: relative;
     }
-    
+    /* Petite étoile devant les H2 */
+    .markdown-section h2::before {
+      content: "✨ ";
+      color: var(--star-color);
+    }
+
+    /* Liens dans le texte Markdown */
+    .markdown-section a {
+      color: var(--heading-color);
+      text-decoration: none;
+      font-weight: 600;
+      border-bottom: 1px solid transparent;
+      transition: all 0.2s ease;
+    }
+    .markdown-section a:hover {
+      color: var(--accent-hover);
+      border-bottom: 1px solid var(--accent-hover);
+      text-shadow: 0 0 8px rgba(255, 42, 122, 0.4);
+    }
+
+    /* Texte en gras et italique */
+    .markdown-section strong {
+      color: #fff;
+      text-shadow: 0 0 5px rgba(255, 255, 255, 0.3);
+    }
+    .markdown-section em {
+      color: var(--star-color); /* Italique en jaune étoile */
+    }
+
     /* Jolis blocs de code */
     .markdown-section pre {
-      background-color: #18181b;
+      background-color: #0a0306;
       border: 1px solid var(--border-color);
-      border-radius: 10px;
-      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+      border-left: 3px solid var(--accent-color);
+      border-radius: 8px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
     }
     
-    /* Design des citations (blocs > ) */
+    /* Code "inline" (ex: `commande`) */
+    .markdown-section code {
+      background-color: rgba(255, 42, 122, 0.15);
+      color: #ff9ebd;
+      border-radius: 4px;
+      padding: 2px 6px;
+      font-size: 0.9em;
+    }
+
+    /* Design des citations (blocs avec > dans le md) */
     .markdown-section blockquote {
       border-left: 4px solid var(--accent-color);
-      background-color: rgba(139, 92, 246, 0.05);
-      color: #d4d4d8;
-      border-radius: 0 8px 8px 0;
+      background-color: rgba(255, 42, 122, 0.05);
+      color: #fbcfe8;
+      border-radius: 0 12px 12px 0;
       padding: 15px 20px;
+      margin: 20px 0;
+      position: relative;
+    }
+    .markdown-section blockquote p {
+      margin: 0;
+    }
+
+    /* Tableaux */
+    .markdown-section table {
+      border-collapse: collapse;
+      width: 100%;
+      margin: 20px 0;
+      border-radius: 8px;
+      overflow: hidden;
+    }
+    .markdown-section th {
+      background-color: rgba(255, 42, 122, 0.2);
+      color: #fff;
+      border: 1px solid var(--border-color);
+      padding: 10px;
+    }
+    .markdown-section td {
+      border: 1px solid var(--border-color);
+      padding: 10px;
+      background-color: #12060d;
     }
 
     /* Scrollbar personnalisée */
     ::-webkit-scrollbar { width: 8px; height: 8px; }
     ::-webkit-scrollbar-track { background: var(--bg-color); }
-    ::-webkit-scrollbar-thumb { background: #3f3f46; border-radius: 4px; }
+    ::-webkit-scrollbar-thumb { background: #5c273d; border-radius: 4px; }
     ::-webkit-scrollbar-thumb:hover { background: var(--accent-color); }
   </style>
 </head>
 <body>
-  <div id="app">⏳ Chargement de la base de données...</div>
+  <div id="app">✨ Chargement du Wiki...</div>
 
   <script>
     window.$docsify = {
-      name: '🚀 Staff Wiki',
+      name: 'B Komachi Staff', // Le nom affiché (tu peux changer !)
       repo: '',
       
-      // ⚠️ LE FIX EST LÀ : 
       // Force le wiki à utiliser le menu principal "_sidebar.md" 
-      // même quand on navigue à l'intérieur des dossiers.
       alias: {
         '/.*/_sidebar.md': '/_sidebar.md'
       },
       
       loadSidebar: true,
-      
-      // Empêche les sous-titres des pages de s'afficher dans la sidebar
-      // pour que l'on ne voie QUE tes dossiers et tes fichiers !
-      subMaxLevel: 0, 
-      
+      subMaxLevel: 0, // Cache les sous-titres dans la sidebar
       auto2top: true,
       
       // Config de la recherche
       search: {
         paths: 'auto',
-        placeholder: '🔍 Rechercher...',
-        noData: '❌ Aucun résultat.',
+        placeholder: '🔍 Rechercher une star...',
+        noData: '❌ Aucune idole trouvée.',
         depth: 3,
       },
 
-      // Config du plugin pour que les dossiers soient dépliables
-      // 1 = Les dossiers sont réduits par défaut, et s'ouvrent quand on clique
+      // Les dossiers sont réduits par défaut
       sidebarDisplayLevel: 1 
     }
   </script>
@@ -181,7 +255,7 @@
   <!-- 1. Barre de recherche -->
   <script src="https://cdn.jsdelivr.net/npm/docsify@4/lib/plugins/search.min.js"></script>
   
-  <!-- 2. LE FIX VISUEL : Rendre les dossiers dépliables (accordéon) -->
+  <!-- 2. Rendre les dossiers dépliables (accordéon) -->
   <script src="https://cdn.jsdelivr.net/npm/docsify-sidebar-collapse/dist/docsify-sidebar-collapse.min.js"></script>
   
   <!-- 3. Zoom sur les images -->
