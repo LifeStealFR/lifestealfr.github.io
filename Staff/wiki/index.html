@@ -6,7 +6,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
 
-  <!-- Police "Poppins" pour le côté moderne et doux -->
+  <!-- Police "Poppins" -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -17,17 +17,17 @@
   <!-- CSS pour la barre latérale DÉPLIABLE -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/docsify-sidebar-collapse/dist/sidebar.min.css" />
 
-  <!-- DESIGN "RUBY RED THEME" (Custom CSS) -->
+  <!-- DESIGN "RUBY RED THEME" FIXÉ (Custom CSS) -->
   <style>
     :root {
-      /* Nouvelle Palette "Ruby Hoshino" (Rouge Rubis / Bordeaux) */
-      --bg-color: #0b0204;       /* Noir avec une très légère teinte bordeaux */
-      --text-color: #ffeff3;     /* Blanc rosé très pâle pour la lecture */
-      --heading-color: #ff4d6d;  /* Rouge doux pour les titres */
-      --accent-color: #ff1e46;   /* Rouge Carmin/Rubis vif (Signature Ruby) */
-      --accent-hover: #ff4d6d;   /* Rouge légèrement plus clair au survol */
-      --border-color: #4a0d1a;   /* Bordures bordeaux sombre */
-      --star-color: #ffdf00;     /* Jaune doré (L'étoile) */
+      /* Palette "Ruby Hoshino" (Rouge Rubis / Bordeaux) */
+      --bg-color: #0b0204;
+      --text-color: #ffeff3;
+      --heading-color: #ff4d6d;
+      --accent-color: #ff1e46;
+      --accent-hover: #ff4d6d;
+      --border-color: #4a0d1a;
+      --star-color: #ffdf00;
     }
 
     body {
@@ -38,7 +38,7 @@
       min-height: 100vh;
     }
 
-    /* ================= ANIMATION DE FOND (Améliorée) ================= */
+    /* ================= ANIMATION DE FOND ================= */
     .animated-background {
       position: fixed;
       top: 0;
@@ -49,44 +49,32 @@
       background-color: var(--bg-color);
       overflow: hidden;
     }
-    
-    /* Orbes lumineuses façon scène */
     .animated-background::before,
     .animated-background::after {
       content: '';
       position: absolute;
       border-radius: 50%;
-      filter: blur(120px); /* Flou très doux */
+      filter: blur(120px);
       opacity: 0.35;
       animation: float 12s infinite alternate ease-in-out;
     }
-    
-    /* Orbe Rouge Rubis éclatant en haut à gauche */
     .animated-background::before {
-      width: 45vw;
-      height: 45vw;
+      width: 45vw; height: 45vw;
       background: var(--accent-color);
-      top: -10vw;
-      left: -10vw;
+      top: -10vw; left: -10vw;
     }
-
-    /* Orbe Bordeaux profond en bas à droite */
     .animated-background::after {
-      width: 40vw;
-      height: 40vw;
+      width: 40vw; height: 40vw;
       background: #8a0820;
-      bottom: -10vw;
-      right: -10vw;
-      animation-duration: 16s;
-      animation-delay: -5s;
+      bottom: -10vw; right: -10vw;
+      animation-duration: 16s; animation-delay: -5s;
     }
-
     @keyframes float {
       0% { transform: translate(0, 0) scale(1); opacity: 0.2; }
       100% { transform: translate(60px, 40px) scale(1.15); opacity: 0.45; }
     }
 
-    /* ================= BARRE LATÉRALE (SIDEBAR) ================= */
+    /* ================= BARRE LATÉRALE ================= */
     .sidebar {
       background-color: rgba(14, 2, 4, 0.75) !important;
       backdrop-filter: blur(15px);
@@ -94,55 +82,37 @@
       border-right: 1px solid rgba(255, 30, 70, 0.15);
       box-shadow: 2px 0 20px rgba(0, 0, 0, 0.6);
     }
-    
     .sidebar > h1 {
-      font-weight: 800;
-      font-size: 1.4rem;
-      color: #fff;
-      margin: 20px 0;
-      text-align: center;
+      font-weight: 800; font-size: 1.4rem; color: #fff;
+      margin: 20px 0; text-align: center;
       text-shadow: 0 0 12px rgba(255, 30, 70, 0.8);
     }
     .sidebar > h1 .app-name-link::after { content: " ✨"; }
     
     .sidebar ul li a {
-      color: #ffb3c6;
-      font-size: 0.95rem;
+      color: #ffb3c6; font-size: 0.95rem;
       transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-      border-radius: 8px;
-      padding: 8px 12px;
-      text-decoration: none;
+      border-radius: 8px; padding: 8px 12px; text-decoration: none;
     }
     .sidebar ul li a:hover {
-      color: #fff;
-      background-color: rgba(255, 30, 70, 0.15);
-      transform: translateX(4px); /* Petite animation au survol très clean */
-    }
-    .sidebar ul li.active > a {
-      color: #fff;
-      background-color: var(--accent-color);
-      font-weight: 600;
-      box-shadow: 0 4px 12px rgba(255, 30, 70, 0.4);
+      color: #fff; background-color: rgba(255, 30, 70, 0.15);
       transform: translateX(4px);
     }
-
-    .sidebar ul li > strong {
-      color: var(--heading-color);
-      font-size: 0.85rem;
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-      margin-top: 15px;
-      display: block;
-      cursor: pointer;
+    .sidebar ul li.active > a {
+      color: #fff; background-color: var(--accent-color);
+      font-weight: 600; box-shadow: 0 4px 12px rgba(255, 30, 70, 0.4);
+      transform: translateX(4px);
     }
-
+    .sidebar ul li > strong {
+      color: var(--heading-color); font-size: 0.85rem;
+      text-transform: uppercase; letter-spacing: 0.08em;
+      margin-top: 15px; display: block; cursor: pointer;
+    }
     .sidebar .search input {
       background-color: rgba(10, 2, 3, 0.8) !important;
       border: 1px solid var(--border-color) !important;
-      color: #fff !important;
-      border-radius: 20px !important;
-      padding: 10px 15px !important;
-      font-family: 'Poppins', sans-serif;
+      color: #fff !important; border-radius: 20px !important;
+      padding: 10px 15px !important; font-family: 'Poppins', sans-serif;
     }
     .sidebar .search input:focus {
       border-color: var(--accent-color) !important;
@@ -151,120 +121,112 @@
 
     /* ================= ADAPTATION DES FICHIERS .MD ================= */
     .markdown-section {
-      max-width: 900px;
-      padding: 40px;
-      position: relative;
-      z-index: 1;
+      max-width: 900px; padding: 40px; position: relative; z-index: 1;
     }
-
     .markdown-section h1, .markdown-section h2, .markdown-section h3, .markdown-section h4 {
-      color: var(--heading-color);
-      font-weight: 700;
+      color: var(--heading-color); font-weight: 700;
     }
-    
     .markdown-section h1 {
-      font-size: 2.5rem;
-      margin-bottom: 1.5rem;
+      font-size: 2.5rem; margin-bottom: 1.5rem;
       text-shadow: 0 2px 10px rgba(255, 77, 109, 0.3);
     }
-
     .markdown-section h2 {
-      font-size: 1.8rem;
-      border-bottom: 2px dashed var(--border-color);
-      padding-bottom: 0.5rem;
-      margin-top: 2.5rem;
+      font-size: 1.8rem; border-bottom: 2px dashed var(--border-color);
+      padding-bottom: 0.5rem; margin-top: 2.5rem;
     }
     .markdown-section h2::before {
-      content: "✨ ";
-      color: var(--star-color);
+      content: "✨ "; color: var(--star-color);
       text-shadow: 0 0 8px rgba(255, 223, 0, 0.4);
     }
-
     .markdown-section a {
-      color: var(--heading-color);
-      text-decoration: none;
-      font-weight: 600;
-      border-bottom: 1px solid transparent;
-      transition: all 0.2s ease;
+      color: var(--heading-color); text-decoration: none; font-weight: 600;
+      border-bottom: 1px solid transparent; transition: all 0.2s ease;
     }
     .markdown-section a:hover {
-      color: var(--accent-hover);
-      border-bottom: 1px solid var(--accent-hover);
+      color: var(--accent-hover); border-bottom: 1px solid var(--accent-hover);
       text-shadow: 0 0 8px rgba(255, 30, 70, 0.4);
     }
-
     .markdown-section strong {
-      color: #fff;
-      text-shadow: 0 0 5px rgba(255, 255, 255, 0.2);
+      color: #fff; text-shadow: 0 0 5px rgba(255, 255, 255, 0.2);
     }
-    .markdown-section em {
-      color: var(--star-color);
+    .markdown-section em { color: var(--star-color); }
+    
+    /* Ligne de séparation Markdown (---) */
+    .markdown-section hr {
+      border: none !important; border-bottom: 2px dashed rgba(255, 30, 70, 0.3) !important;
+      margin: 30px 0 !important;
     }
 
-    /* Blocs de code */
+    /* ================= BLOCS DE CODE (FIXÉS) ================= */
+    /* Le contour externe */
     .markdown-section pre {
-      background-color: rgba(10, 2, 3, 0.85);
-      border: 1px solid var(--border-color);
-      border-left: 4px solid var(--accent-color);
-      border-radius: 8px;
-      backdrop-filter: blur(8px);
-      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+      background-color: rgba(14, 2, 4, 0.85) !important; /* Bordeaux sombre uni */
+      border: 1px solid var(--border-color) !important;
+      border-left: 4px solid var(--accent-color) !important;
+      border-radius: 8px !important;
+      padding: 1.5rem !important;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4) !important;
+      margin: 25px 0 !important;
+      overflow: auto !important;
     }
     
+    /* FIX : On supprime le rectangle gris dégueulasse de docsify à l'intérieur */
+    .markdown-section pre > code {
+      background-color: transparent !important;
+      color: #ffeff3 !important;
+      padding: 0 !important;
+      font-size: 0.9em !important;
+      border-radius: 0 !important;
+      display: block !important;
+    }
+
+    /* Seulement pour le code en plein texte (les petits mots entourés de ` `) */
     .markdown-section code {
-      background-color: rgba(255, 30, 70, 0.15);
-      color: #ffb3c6;
-      border-radius: 4px;
-      padding: 3px 6px;
-      font-size: 0.9em;
+      background-color: rgba(255, 30, 70, 0.15) !important;
+      color: #ffb3c6 !important;
+      border-radius: 4px !important;
+      padding: 3px 6px !important;
+      font-size: 0.9em !important;
     }
 
-    /* Citations */
+    /* ================= CITATIONS ================= */
     .markdown-section blockquote {
-      border-left: 4px solid var(--accent-color);
-      background-color: rgba(255, 30, 70, 0.05);
-      color: #ffb3c6;
-      border-radius: 0 12px 12px 0;
-      padding: 15px 20px;
-      margin: 20px 0;
-      backdrop-filter: blur(5px);
+      border-left: 4px solid var(--accent-color); background-color: rgba(255, 30, 70, 0.05);
+      color: #ffb3c6; border-radius: 0 12px 12px 0;
+      padding: 15px 20px; margin: 20px 0; backdrop-filter: blur(5px);
     }
 
-    /* ================= TABLEAUX (FIXÉS ET SUBLIMÉS) ================= */
-    /* On force l'annulation des couleurs moches de Docsify avec !important */
+    /* ================= TABLEAUX (FIXÉS) ================= */
+    /* On force "display: table" pour que le tableau respecte la taille de son texte */
     .markdown-section table {
+      display: table !important; 
       width: 100% !important;
-      border-collapse: separate !important; /* Permet les bordures arrondies */
+      border-collapse: separate !important; /* Indispensable pour les bords arrondis */
       border-spacing: 0 !important;
       margin: 25px 0 !important;
       border-radius: 10px !important;
       overflow: hidden !important;
-      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4) !important;
-      border: 1px solid var(--border-color) !important;
+      background-color: rgba(15, 2, 4, 0.6) !important;
+      box-shadow: 0 0 0 1px var(--border-color) !important; /* Fausse bordure parfaite */
     }
     
     .markdown-section table tr {
-      background-color: rgba(15, 2, 4, 0.6) !important;
-      backdrop-filter: blur(8px);
+      background-color: transparent !important;
       transition: background-color 0.2s ease;
     }
     
-    /* Effet ligne sur deux plus sombre */
     .markdown-section table tr:nth-child(2n) {
-      background-color: rgba(20, 3, 6, 0.8) !important;
+      background-color: rgba(20, 3, 6, 0.5) !important;
     }
     
-    /* Effet de brillance au survol d'une ligne du tableau */
     .markdown-section table tr:hover {
       background-color: rgba(255, 30, 70, 0.15) !important;
     }
 
     .markdown-section table th {
       background-color: rgba(255, 30, 70, 0.25) !important;
-      color: #fff !important;
-      font-weight: 600 !important;
-      text-transform: uppercase !important;
-      letter-spacing: 0.05em;
+      color: #fff !important; font-weight: 600 !important;
+      text-transform: uppercase !important; letter-spacing: 0.05em;
       padding: 14px 16px !important;
       border: none !important;
       border-bottom: 2px solid var(--accent-color) !important;
@@ -278,7 +240,6 @@
       color: var(--text-color) !important;
     }
     
-    /* Retire la bordure de la dernière ligne pour faire propre */
     .markdown-section table tr:last-child td {
       border-bottom: none !important;
     }
@@ -296,7 +257,7 @@
       .markdown-section h2 { font-size: 1.5rem; }
       .sidebar { background-color: rgba(14, 2, 4, 0.95) !important; }
       
-      /* Permet de scroller les tableaux sur mobile s'ils sont trop larges */
+      /* Sur téléphone, le tableau redevient un bloc qu'on peut faire glisser pour ne pas casser l'écran */
       .markdown-section table {
         display: block !important;
         overflow-x: auto !important;
