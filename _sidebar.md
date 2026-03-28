@@ -8,5 +8,6 @@
     * **Support**
       * **English**
         * [Ticket](Staff/Support/English/Ticket.md)
+    * **Wiki**
 * **PLAYER**
   * [Reglement Discord](player/reglement-discord.md)
