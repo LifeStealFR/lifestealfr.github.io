@@ -10,5 +10,7 @@
       * **Support**
         * **English**
           * [Ticket](Staff/wiki/Support/English/Ticket.md)
+      * **Oshi No Ko**
+        * [Guide Pleurer](Staff/wiki/Oshi-No-Ko/Guide-pleurer.md)
 * **PLAYER**
   * [Reglement Discord](player/reglement-discord.md)
