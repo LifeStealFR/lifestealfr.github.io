@@ -4,7 +4,6 @@
 * [Casier Judiciaire](casier-judiciaire.md)
 * [Charte Staff](charte-staff.md)
 * [Convocations](convocations.md)
-* **Oshi No Ko**
 * **Support**
   * **English**
     * [Ticket](Support/English/Ticket.md)
