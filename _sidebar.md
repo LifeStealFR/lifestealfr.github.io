@@ -1,6 +1,7 @@
 * **STAFF**
   * [Introduction](Staff/README.md)
     * **Wiki**
+      * [Invitation](Staff/wiki/Invitation.md)
       * [Introduction](Staff/wiki/README.md)
       * [Casier Judiciaire](Staff/wiki/casier-judiciaire.md)
       * [Charte Staff](Staff/wiki/charte-staff.md)
@@ -10,6 +11,5 @@
       * **Support**
         * **English**
           * [Ticket](Staff/wiki/Support/English/Ticket.md)
-      * **Oshi No Ko**
 * **PLAYER**
   * [Reglement Discord](player/reglement-discord.md)
