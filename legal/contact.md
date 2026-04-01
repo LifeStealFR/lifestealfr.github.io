@@ -1,5 +1,5 @@
 # 📩 Contacts & Support Officiels
-**Propriété de LifeStealFR / [Retour à l'accueil](README.md.md)**
+**Propriété de LifeStealFR / [Retour à l'accueil](README.md)**
 
 Besoin d'aide, d'un partenariat ou de signaler un problème ? Voici les seuls canaux de communication officiels de **LifeStealFR**. 
 
