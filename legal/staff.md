@@ -8,13 +8,29 @@ Besoin d'aide, d'une licence spécifique ou d'une commande personnalisée ? Voic
 ### AngmarRoiSorcier
 * **Pseudo Discord :** `angmarroisorcie`
 * **Pseudo Minecraft :** `AngmarRoiSorcier`
-* **Rôle :** Owner & Créateur des visuels
-
+* **Rôle :** Owner
+### Flokyxxs
+* **Pseudo Discord :** `tattane_`
+* **Pseudo Minecraft :** `Just_Floky`
+* **Rôle :** Owner
+### `_Rafou_`
+* **Pseudo Discord :** `rafou_le_fou_off`
+* **Pseudo Minecraft :** `_Rafou_`
+* **Rôle :** Administrateur+ Réseau & Support
 ## 🛡️ Administration Générale
 ### Saguasay
 * **Pseudo Discord :** `saguasay`
 * **Pseudo Minecraft :** `0x_Saguasay`
 * **Rôle :** Administrateur Réseau & Support
+### `_LeNinja_`
+* **Pseudo Discord :** `.leninja_`
+* **Pseudo Minecraft :** `_LeNinja_`
+* **Rôle :** Administrateur Réseau & Support
+### DarKLapin
+* **Pseudo Discord :** `_0lapin0_`
+* **Pseudo Minecraft :** `DarKLapin`
+* **Rôle :** Responsable & Support
+
 
 ---
 
