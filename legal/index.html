@@ -1,186 +1,308 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LifeStealFR - Documentation</title>
-    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
-    <style>
-        :root { --bg: #0d0d10; --panel: #15151a; --primary: #3498db; --text: #a0a0a8; --text-light: #ffffff; --border: #222228; }
-        body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); margin: 0; display: flex; height: 100vh; overflow: hidden; }
-        
-        nav { width: 320px; background: var(--panel); border-right: 1px solid var(--border); display: flex; flex-direction: column; }
-        .nav-header { padding: 25px; border-bottom: 1px solid var(--border); text-align: center; }
-        .nav-header h1 { font-size: 1em; color: white; margin: 0; letter-spacing: 2px; text-transform: uppercase; }
-        
-        #tree-container { flex: 1; overflow-y: auto; padding: 15px; font-size: 0.9em; }
-        ul { list-style: none; padding-left: 15px; margin: 5px 0; }
-        
-        .folder { cursor: pointer; padding: 8px 10px; border-radius: 4px; display: flex; align-items: center; font-weight: 600; color: #ddd; transition: 0.2s; }
-        .folder:hover { background: rgba(255,255,255,0.05); }
-        .folder::before { content: '📁'; margin-right: 8px; }
-        .folder.open::before { content: '📂'; }
-        
-        .file { cursor: pointer; padding: 6px 10px; border-radius: 4px; display: flex; align-items: center; transition: 0.2s; color: var(--text); display: block; width: 100%; box-sizing: border-box; }
-        .file:hover { background: rgba(52, 152, 219, 0.1); color: var(--primary); }
-        .file::before { content: '📄'; margin-right: 8px; opacity: 0.6; }
-        .file.active { background: var(--primary) !important; color: white !important; font-weight: bold; }
+  <meta charset="UTF-8">
+  <title>LifeSteal Legal</title>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
 
-        .collapsed { display: none; }
+  <!-- Police "Poppins" -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
-        main { flex: 1; overflow-y: auto; background: var(--bg); padding: 50px; scroll-behavior: smooth; }
-        #doc-content { max-width: 850px; margin: 0 auto; line-height: 1.7; animation: fadeIn 0.4s ease; }
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+  <!-- Thème de base Dark -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/docsify/lib/themes/dark.css">
+  
+  <!-- CSS pour la barre latérale DÉPLIABLE -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/docsify-sidebar-collapse/dist/sidebar.min.css" />
 
-        /* Style Markdown */
-        #doc-content h1 { color: #fff; border-bottom: 1px solid var(--border); padding-bottom: 15px; }
-        #doc-content h2 { color: var(--primary); margin-top: 1.5em; }
-        #doc-content table { width: 100%; border-collapse: collapse; margin: 20px 0; }
-        #doc-content th, #doc-content td { border: 1px solid var(--border); padding: 12px; text-align: left; }
-        #doc-content th { background: #1a1a20; }
-        #doc-content img { max-width: 100%; border-radius: 8px; }
+  <!-- DESIGN "RUBY RED THEME" FIXÉ (Custom CSS) -->
+  <style>
+    :root {
+      /* Palette "Ruby Hoshino" (Rouge Rubis / Bordeaux) */
+      --bg-color: #0b0204;
+      --text-color: #ffeff3;
+      --heading-color: #ff4d6d;
+      --accent-color: #ff1e46;
+      --accent-hover: #ff4d6d;
+      --border-color: #4a0d1a;
+      --star-color: #ffdf00;
+    }
 
-        .loader { text-align: center; color: var(--primary); margin-top: 20px; font-size: 0.8em; }
-    </style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      background-color: var(--bg-color);
+      color: var(--text-color);
+      margin: 0;
+      min-height: 100vh;
+    }
+
+    /* ================= ANIMATION DE FOND ================= */
+    .animated-background {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      z-index: -1;
+      background-color: var(--bg-color);
+      overflow: hidden;
+    }
+    .animated-background::before,
+    .animated-background::after {
+      content: '';
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(120px);
+      opacity: 0.35;
+      animation: float 12s infinite alternate ease-in-out;
+    }
+    .animated-background::before {
+      width: 45vw; height: 45vw;
+      background: var(--accent-color);
+      top: -10vw; left: -10vw;
+    }
+    .animated-background::after {
+      width: 40vw; height: 40vw;
+      background: #8a0820;
+      bottom: -10vw; right: -10vw;
+      animation-duration: 16s; animation-delay: -5s;
+    }
+    @keyframes float {
+      0% { transform: translate(0, 0) scale(1); opacity: 0.2; }
+      100% { transform: translate(60px, 40px) scale(1.15); opacity: 0.45; }
+    }
+
+    /* ================= BARRE LATÉRALE ================= */
+    .sidebar {
+      background-color: rgba(14, 2, 4, 0.75) !important;
+      backdrop-filter: blur(15px);
+      -webkit-backdrop-filter: blur(15px);
+      border-right: 1px solid rgba(255, 30, 70, 0.15);
+      box-shadow: 2px 0 20px rgba(0, 0, 0, 0.6);
+    }
+    .sidebar > h1 {
+      font-weight: 800; font-size: 1.4rem; color: #fff;
+      margin: 20px 0; text-align: center;
+      text-shadow: 0 0 12px rgba(255, 30, 70, 0.8);
+    }
+    .sidebar > h1 .app-name-link::after { content: " ✨"; }
+    
+    .sidebar ul li a {
+      color: #ffb3c6; font-size: 0.95rem;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      border-radius: 8px; padding: 8px 12px; text-decoration: none;
+    }
+    .sidebar ul li a:hover {
+      color: #fff; background-color: rgba(255, 30, 70, 0.15);
+      transform: translateX(4px);
+    }
+    .sidebar ul li.active > a {
+      color: #fff; background-color: var(--accent-color);
+      font-weight: 600; box-shadow: 0 4px 12px rgba(255, 30, 70, 0.4);
+      transform: translateX(4px);
+    }
+    .sidebar ul li > strong {
+      color: var(--heading-color); font-size: 0.85rem;
+      text-transform: uppercase; letter-spacing: 0.08em;
+      margin-top: 15px; display: block; cursor: pointer;
+    }
+    .sidebar .search input {
+      background-color: rgba(10, 2, 3, 0.8) !important;
+      border: 1px solid var(--border-color) !important;
+      color: #fff !important; border-radius: 20px !important;
+      padding: 10px 15px !important; font-family: 'Poppins', sans-serif;
+    }
+    .sidebar .search input:focus {
+      border-color: var(--accent-color) !important;
+      box-shadow: 0 0 10px rgba(255, 30, 70, 0.3) !important;
+    }
+
+    /* ================= ADAPTATION DES FICHIERS .MD ================= */
+    .markdown-section {
+      max-width: 900px; padding: 40px; position: relative; z-index: 1;
+    }
+    .markdown-section h1, .markdown-section h2, .markdown-section h3, .markdown-section h4 {
+      color: var(--heading-color); font-weight: 700;
+    }
+    .markdown-section h1 {
+      font-size: 2.5rem; margin-bottom: 1.5rem;
+      text-shadow: 0 2px 10px rgba(255, 77, 109, 0.3);
+    }
+    .markdown-section h2 {
+      font-size: 1.8rem; border-bottom: 2px dashed var(--border-color);
+      padding-bottom: 0.5rem; margin-top: 2.5rem;
+    }
+    .markdown-section h2::before {
+      content: "✨ "; color: var(--star-color);
+      text-shadow: 0 0 8px rgba(255, 223, 0, 0.4);
+    }
+    .markdown-section a {
+      color: var(--heading-color); text-decoration: none; font-weight: 600;
+      border-bottom: 1px solid transparent; transition: all 0.2s ease;
+    }
+    .markdown-section a:hover {
+      color: var(--accent-hover); border-bottom: 1px solid var(--accent-hover);
+      text-shadow: 0 0 8px rgba(255, 30, 70, 0.4);
+    }
+    .markdown-section strong {
+      color: #fff; text-shadow: 0 0 5px rgba(255, 255, 255, 0.2);
+    }
+    .markdown-section em { color: var(--star-color); }
+    
+    /* Ligne de séparation Markdown (---) */
+    .markdown-section hr {
+      border: none !important; border-bottom: 2px dashed rgba(255, 30, 70, 0.3) !important;
+      margin: 30px 0 !important;
+    }
+
+    /* ================= BLOCS DE CODE (FIXÉS) ================= */
+    /* Le contour externe */
+    .markdown-section pre {
+      background-color: rgba(14, 2, 4, 0.85) !important; /* Bordeaux sombre uni */
+      border: 1px solid var(--border-color) !important;
+      border-left: 4px solid var(--accent-color) !important;
+      border-radius: 8px !important;
+      padding: 1.5rem !important;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4) !important;
+      margin: 25px 0 !important;
+      overflow: auto !important;
+    }
+    
+    /* FIX : On supprime le rectangle gris dégueulasse de docsify à l'intérieur */
+    .markdown-section pre > code {
+      background-color: transparent !important;
+      color: #ffeff3 !important;
+      padding: 0 !important;
+      font-size: 0.9em !important;
+      border-radius: 0 !important;
+      display: block !important;
+    }
+
+    /* Seulement pour le code en plein texte (les petits mots entourés de ` `) */
+    .markdown-section code {
+      background-color: rgba(255, 30, 70, 0.15) !important;
+      color: #ffb3c6 !important;
+      border-radius: 4px !important;
+      padding: 3px 6px !important;
+      font-size: 0.9em !important;
+    }
+
+    /* ================= CITATIONS ================= */
+    .markdown-section blockquote {
+      border-left: 4px solid var(--accent-color); background-color: rgba(255, 30, 70, 0.05);
+      color: #ffb3c6; border-radius: 0 12px 12px 0;
+      padding: 15px 20px; margin: 20px 0; backdrop-filter: blur(5px);
+    }
+
+    /* ================= TABLEAUX (FIXÉS) ================= */
+    /* On force "display: table" pour que le tableau respecte la taille de son texte */
+    .markdown-section table {
+      display: table !important; 
+      width: 100% !important;
+      border-collapse: separate !important; /* Indispensable pour les bords arrondis */
+      border-spacing: 0 !important;
+      margin: 25px 0 !important;
+      border-radius: 10px !important;
+      overflow: hidden !important;
+      background-color: rgba(15, 2, 4, 0.6) !important;
+      box-shadow: 0 0 0 1px var(--border-color) !important; /* Fausse bordure parfaite */
+    }
+    
+    .markdown-section table tr {
+      background-color: transparent !important;
+      transition: background-color 0.2s ease;
+    }
+    
+    .markdown-section table tr:nth-child(2n) {
+      background-color: rgba(20, 3, 6, 0.5) !important;
+    }
+    
+    .markdown-section table tr:hover {
+      background-color: rgba(255, 30, 70, 0.15) !important;
+    }
+
+    .markdown-section table th {
+      background-color: rgba(255, 30, 70, 0.25) !important;
+      color: #fff !important; font-weight: 600 !important;
+      text-transform: uppercase !important; letter-spacing: 0.05em;
+      padding: 14px 16px !important;
+      border: none !important;
+      border-bottom: 2px solid var(--accent-color) !important;
+      text-align: left !important;
+    }
+
+    .markdown-section table td {
+      border: none !important;
+      border-bottom: 1px solid rgba(74, 13, 26, 0.4) !important;
+      padding: 12px 16px !important;
+      color: var(--text-color) !important;
+    }
+    
+    .markdown-section table tr:last-child td {
+      border-bottom: none !important;
+    }
+
+    /* ================= SCROLLBAR ================= */
+    ::-webkit-scrollbar { width: 8px; height: 8px; }
+    ::-webkit-scrollbar-track { background: var(--bg-color); }
+    ::-webkit-scrollbar-thumb { background: #4a0d1a; border-radius: 4px; }
+    ::-webkit-scrollbar-thumb:hover { background: var(--accent-color); }
+
+    /* ================= RESPONSIVE ================= */
+    @media screen and (max-width: 768px) {
+      .markdown-section { padding: 25px 15px; }
+      .markdown-section h1 { font-size: 2rem; }
+      .markdown-section h2 { font-size: 1.5rem; }
+      .sidebar { background-color: rgba(14, 2, 4, 0.95) !important; }
+      
+      /* Sur téléphone, le tableau redevient un bloc qu'on peut faire glisser pour ne pas casser l'écran */
+      .markdown-section table {
+        display: block !important;
+        overflow-x: auto !important;
+        white-space: nowrap !important;
+      }
+    }
+  </style>
 </head>
 <body>
+  <!-- Calque d'animation de fond -->
+  <div class="animated-background"></div>
 
-<nav>
-    <div class="nav-header">
-        <h1>⚖️ LifeStealFR Docs</h1>
-    </div>
-    <div id="tree-container"><div class="loader">CHARGEMENT...</div></div>
-</nav>
+  <div id="app">✨ Chargement...</div>
 
-<main>
-    <div id="doc-content">
-        <h1>Bienvenue</h1>
-        <p>Sélectionnez un document à gauche pour l'afficher.</p>
-    </div>
-</main>
+  <script>
+    window.$docsify = {
+      name: 'Staff Wiki',
+      repo: '',
+      
+      alias: {
+        '/.*/_sidebar.md': '/_sidebar.md'
+      },
+      
+      loadSidebar: true,
+      subMaxLevel: 0,
+      auto2top: true,
+      
+      search: {
+        paths: 'auto',
+        placeholder: '🔍 Rechercher...',
+        noData: '❌ Aucun résultat.',
+        depth: 3,
+      },
 
-<script>
-    const CONFIG = {
-        owner: "LifeStealFR",
-        repo: "lifestealfr.github.io",
-        branch: "main",
-        rootPath: "legal" // Le dossier parent
-    };
-
-    const treeContainer = document.getElementById('tree-container');
-    const docContent = document.getElementById('doc-content');
-
-    // 1. Récupérer l'arborescence complète
-    async function fetchTree() {
-        try {
-            const res = await fetch(`https://api.github.com/repos/${CONFIG.owner}/${CONFIG.repo}/git/trees/${CONFIG.branch}?recursive=1`);
-            const data = await res.json();
-            
-            // On filtre pour ne garder que les .md dans le dossier spécifié
-            const files = data.tree.filter(item => 
-                item.path.startsWith(CONFIG.rootPath) && item.path.endsWith('.md')
-            );
-
-            buildMenu(files);
-        } catch (err) {
-            treeContainer.innerHTML = `<p style="color:red">Erreur : ${err.message}</p>`;
-        }
+      sidebarDisplayLevel: 1 
     }
+  </script>
 
-    // 2. Transformer la liste de fichiers en menu HTML
-    function buildMenu(files) {
-        const tree = {};
-
-        files.forEach(file => {
-            const parts = file.path.split('/');
-            let current = tree;
-            parts.forEach((part, i) => {
-                if (i === parts.length - 1) {
-                    current[part] = file;
-                } else {
-                    current[part] = current[part] || {};
-                    current = current[part];
-                }
-            });
-        });
-
-        treeContainer.innerHTML = '';
-        const rootUl = document.createElement('ul');
-        // On démarre la récursion à partir du dossier racine défini dans CONFIG
-        generateHTML(tree[CONFIG.rootPath], rootUl, CONFIG.rootPath);
-        treeContainer.appendChild(rootUl);
-
-        // Si l'URL a déjà un #chemin/vers/fichier.md, on le charge
-        if (window.location.hash) {
-            const path = window.location.hash.substring(1);
-            loadMD(path);
-        }
-    }
-
-    // 3. Générer le HTML du menu (Récursif)
-    function generateHTML(node, container, currentPath) {
-        Object.keys(node).sort().forEach(key => {
-            const path = `${currentPath}/${key}`;
-            const li = document.createElement('li');
-
-            if (node[key].sha) { // C'est un fichier
-                const a = document.createElement('div'); // Utilisation de div pour éviter les sauts de page
-                a.className = 'file';
-                a.dataset.path = path;
-                a.innerText = key.replace('.md', '').replace(/[-_]/g, ' ');
-                a.onclick = () => loadMD(path);
-                li.appendChild(a);
-            } else { // C'est un dossier
-                const div = document.createElement('div');
-                div.className = 'folder';
-                div.innerText = key;
-                const ul = document.createElement('ul');
-                ul.className = 'collapsed';
-                div.onclick = () => {
-                    div.classList.toggle('open');
-                    ul.classList.toggle('collapsed');
-                };
-                li.appendChild(div);
-                li.appendChild(ul);
-                generateHTML(node[key], ul, path);
-            }
-            container.appendChild(li);
-        });
-    }
-
-    // 4. Charger le Markdown et l'afficher
-    async function loadMD(path) {
-        console.log("Tentative de chargement du fichier :", path);
-        docContent.innerHTML = "<div class='loader'>CHARGEMENT DU DOCUMENT...</div>";
-        
-        // Mise à jour visuelle du menu
-        document.querySelectorAll('.file').forEach(f => f.classList.remove('active'));
-        const activeEl = document.querySelector(`[data-path="${path}"]`);
-        if (activeEl) activeEl.classList.add('active');
-
-        // Mise à jour du hash dans l'URL
-        window.location.hash = path;
-
-        // URL brute GitHub
-        const rawUrl = `https://raw.githubusercontent.com/${CONFIG.owner}/${CONFIG.repo}/${CONFIG.branch}/${path}`;
-
-        try {
-            const res = await fetch(rawUrl);
-            if (!res.ok) throw new Error("Fichier introuvable sur GitHub");
-            const md = await res.text();
-            
-            // Rendu du Markdown
-            docContent.innerHTML = marked.parse(md);
-            document.querySelector('main').scrollTop = 0;
-            console.log("Chargement réussi !");
-        } catch (err) {
-            console.error(err);
-            docContent.innerHTML = `<h1>Erreur</h1><p>Impossible de charger le document : <br><code>${path}</code></p>`;
-        }
-    }
-
-    fetchTree();
-</script>
-
+  <!-- Docsify Core -->
+  <script src="https://cdn.jsdelivr.net/npm/docsify@4/lib/docsify.min.js"></script>
+  
+  <!-- PLUGINS -->
+  <script src="https://cdn.jsdelivr.net/npm/docsify@4/lib/plugins/search.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/docsify-sidebar-collapse/dist/docsify-sidebar-collapse.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/docsify@4/lib/plugins/zoom-image.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/docsify-copy-code/dist/docsify-copy-code.min.js"></script>
 </body>
 </html>
