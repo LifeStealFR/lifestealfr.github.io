@@ -1,5 +1,5 @@
 # ⚖️ Conditions Générales de Vente et d'Utilisation (TOS)
-**Propriété de LifeStealFR / [Contacter le Staff](https://lifestealfr.github.io/legal/staff)**
+**Propriété de LifeStealFR / [Contacter le Staff](staff/index.md)**
 
 Ce document définit vos droits d'utilisation sur l'ensemble des ressources numériques (Configurations, Plugins, Setups, Maps, etc.) proposées par **LifeStealFR**, que ce soit sur BuiltByBit, Ko-fi, Polymart ou via notre serveur Discord. En téléchargeant ou en achetant une ressource, vous acceptez les présentes conditions.
 
