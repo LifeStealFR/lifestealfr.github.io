@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LifeStealFR - Centre Légal</title>
+    <!-- On utilise Marked.js pour transformer le MD en HTML proprement -->
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <style>
+        :root { --bg: #0f0f12; --panel: #16161a; --primary: #3498db; --text: #d1d1d1; }
+        body { font-family: 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); margin: 0; display: flex; height: 100vh; overflow: hidden; }
+        
+        /* Barre latérale */
+        nav { width: 280px; background: var(--panel); border-right: 1px solid #2d2d35; padding: 20px; overflow-y: auto; }
+        nav h2 { color: white; font-size: 1.2em; margin-bottom: 20px; }
+        nav ul { list-style: none; padding: 0; }
+        nav li { margin-bottom: 10px; }
+        nav a { color: var(--text); text-decoration: none; font-size: 0.95em; transition: 0.3s; display: block; padding: 8px; border-radius: 5px; }
+        nav a:hover, nav a.active { background: rgba(52, 152, 219, 0.1); color: var(--primary); }
+        .category { font-size: 0.8em; text-transform: uppercase; color: #555; font-weight: bold; margin-top: 20px; display: block; }
+
+        /* Contenu principal */
+        main { flex: 1; padding: 40px; overflow-y: auto; scroll-behavior: smooth; }
+        #content { max-width: 800px; margin: 0 auto; background: var(--panel); padding: 40px; border-radius: 10px; border: 1px solid #2d2d35; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+        
+        /* Style du Markdown */
+        #content h1 { color: #fff; border-bottom: 2px solid var(--primary); padding-bottom: 10px; }
+        #content h2 { color: var(--primary); margin-top: 30px; }
+        #content table { width: 100%; border-collapse: collapse; margin: 20px 0; }
+        #content th, #content td { border: 1px solid #2d2d35; padding: 12px; text-align: left; }
+        #content th { background: #1a1a20; }
+        #content code { background: #2d2d35; padding: 2px 5px; border-radius: 3px; color: #f1c40f; }
+    </style>
+</head>
+<body>
+
+<nav>
+    <h2>⚖️ LifeStealFR</h2>
+    <span class="category">Boutique</span>
+    <ul>
+        <li><a href="#shop-terms" onclick="loadContent('shop-terms')">Conditions de vente</a></li>
+        <li><a href="#shop-refund" onclick="loadContent('shop-refund')">Remboursements</a></li>
+        <li><a href="#shop-verify" onclick="loadContent('shop-verify')">Vérification Discord</a></li>
+    </ul>
+    
+    <span class="category">Staff</span>
+    <ul>
+        <li><a href="#staff-list" onclick="loadContent('staff-list')">Liste du Staff</a></li>
+        <li><a href="#staff-join" onclick="loadContent('staff-join')">Nous rejoindre</a></li>
+    </ul>
+
+    <span class="category">Général</span>
+    <ul>
+        <li><a href="#privacy" onclick="loadContent('privacy')">Confidentialité</a></li>
+        <li><a href="#branding" onclick="loadContent('branding')">Charte Graphique</a></li>
+    </ul>
+</nav>
+
+<main>
+    <div id="content">Chargement des documents...</div>
+</main>
+
+<script>
+    async function loadContent(pageId) {
+        const contentDiv = document.getElementById('content');
+        // On met à jour l'état actif dans le menu
+        document.querySelectorAll('nav a').forEach(a => a.classList.remove('active'));
+        const activeLink = document.querySelector(`nav a[href="#${pageId}"]`);
+        if (activeLink) activeLink.classList.add('active');
+
+        try {
+            // On va chercher le fichier .md dans le dossier docs/
+            const response = await fetch(`docs/${pageId}.md`);
+            if (!response.ok) throw new Error('Document introuvable');
+            const mdText = await response.text();
+            // On transforme le Markdown en HTML avec Marked.js
+            contentDiv.innerHTML = marked.parse(mdText);
+        } catch (error) {
+            contentDiv.innerHTML = `<h1>⚠️ Erreur</h1><p>Impossible de charger le document : ${pageId}</p>`;
+        }
+    }
+
+    // Gestion du chargement initial via l'URL (ex: legal/#shop-terms)
+    window.addEventListener('load', () => {
+        const hash = window.location.hash.substring(1) || 'shop-terms';
+        loadContent(hash);
+    });
+</script>
+
+</body>
+</html>
