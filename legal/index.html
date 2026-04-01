@@ -37,7 +37,12 @@
       margin: 0;
       min-height: 100vh;
     }
-
+/* Rend le fond sombre/transparent quand on clique sur une image Docsify */
+    .medium-zoom-overlay {
+        background-color: rgba(11, 11, 14, 0.9) !important; 
+    /* rgba(11, 11, 14, 0.9) donne un gris très sombre presque noir, semi-transparent. 
+       Tu peux mettre "transparent !important;" si tu veux que ce soit 100% invisible. */
+    }
     /* ================= ANIMATION DE FOND ================= */
     .animated-background {
       position: fixed;
