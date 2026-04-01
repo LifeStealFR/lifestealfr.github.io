@@ -1,5 +1,5 @@
 # 🎨 Charte Graphique & Identité Visuelle
-**Propriété de LifeStealFR / [Contacter le Staff](#legal/staff/index.md)**
+**Propriété de LifeStealFR / [Contacter le Staff](staff/index.md)**
 
 Ce document définit les standards visuels pour l'utilisation de la marque **LifeStealFR**. Que vous soyez un partenaire, un membre du staff ou un créateur de contenu, merci de respecter ces directives pour maintenir une image cohérente et professionnelle.
 
