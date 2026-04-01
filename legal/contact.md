@@ -1,5 +1,5 @@
 # 📩 Contacts & Support Officiels
-**Propriété de LifeStealFR / [Retour à l'accueil](#legal/index.md)**
+**Propriété de LifeStealFR / [Retour à l'accueil](README.md.md)**
 
 Besoin d'aide, d'un partenariat ou de signaler un problème ? Voici les seuls canaux de communication officiels de **LifeStealFR**. 
 
@@ -37,7 +37,7 @@ Vous avez trouvé une de nos ressources payantes partagée gratuitement ? Vous s
 
 ### 👥 5. Notre Équipe (Staff)
 Vous voulez vérifier si une personne fait réellement partie de notre équipe avant de lui parler ? 
-*   **Vérification :** [Consulter la liste officielle du Staff](#legal/staff.md)
+*   **Vérification :** [Consulter la liste officielle du Staff](staff.md)
 
 ---
 
