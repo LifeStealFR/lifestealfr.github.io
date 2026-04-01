@@ -2,7 +2,8 @@
 
 * [Branding](branding.md)
 * [Contact](contact.md)
-* [Staff](staff.md)
 * **Branding**
 * **Shop**
   * [Terms](shop/terms.md)
+* **Staff**
+  * [Staff](staff/staff.md)
