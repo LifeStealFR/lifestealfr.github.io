@@ -3,88 +3,158 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LifeStealFR - Centre Légal</title>
-    <!-- On utilise Marked.js pour transformer le MD en HTML proprement -->
+    <title>LifeStealFR - Centre Juridique</title>
+    <!-- Rendu Markdown Pro -->
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     <style>
-        :root { --bg: #0f0f12; --panel: #16161a; --primary: #3498db; --text: #d1d1d1; }
-        body { font-family: 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); margin: 0; display: flex; height: 100vh; overflow: hidden; }
+        :root { --bg: #0b0b0e; --panel: #121217; --primary: #3498db; --text: #bdc3c7; --text-light: #ffffff; --border: #23232b; }
         
-        /* Barre latérale */
-        nav { width: 280px; background: var(--panel); border-right: 1px solid #2d2d35; padding: 20px; overflow-y: auto; }
-        nav h2 { color: white; font-size: 1.2em; margin-bottom: 20px; }
-        nav ul { list-style: none; padding: 0; }
-        nav li { margin-bottom: 10px; }
-        nav a { color: var(--text); text-decoration: none; font-size: 0.95em; transition: 0.3s; display: block; padding: 8px; border-radius: 5px; }
-        nav a:hover, nav a.active { background: rgba(52, 152, 219, 0.1); color: var(--primary); }
-        .category { font-size: 0.8em; text-transform: uppercase; color: #555; font-weight: bold; margin-top: 20px; display: block; }
+        body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: var(--bg); color: var(--text); margin: 0; display: flex; height: 100vh; overflow: hidden; }
+        
+        /* Sidebar Dynamique */
+        nav { width: 280px; background: var(--panel); border-right: 1px solid var(--border); display: flex; flex-direction: column; z-index: 10; }
+        .nav-header { padding: 30px 20px; border-bottom: 1px solid var(--border); text-align: center; }
+        .nav-header img { width: 50px; margin-bottom: 10px; border-radius: 50%; }
+        .nav-header h1 { font-size: 1.1em; color: var(--text-light); margin: 0; letter-spacing: 1px; text-transform: uppercase; }
+        
+        #menu { flex: 1; overflow-y: auto; padding: 20px 15px; list-style: none; margin: 0; }
+        .menu-item { margin-bottom: 8px; }
+        .menu-link { 
+            display: block; padding: 12px 16px; border-radius: 8px; 
+            color: var(--text); text-decoration: none; font-size: 0.9em;
+            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+            border: 1px solid transparent;
+        }
+        .menu-link:hover { background: rgba(52, 152, 219, 0.08); color: var(--primary); border-color: rgba(52, 152, 219, 0.2); }
+        .menu-link.active { background: var(--primary); color: white; font-weight: 600; box-shadow: 0 4px 15px rgba(52, 152, 219, 0.3); }
 
-        /* Contenu principal */
-        main { flex: 1; padding: 40px; overflow-y: auto; scroll-behavior: smooth; }
-        #content { max-width: 800px; margin: 0 auto; background: var(--panel); padding: 40px; border-radius: 10px; border: 1px solid #2d2d35; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+        /* Zone d'affichage */
+        main { flex: 1; overflow-y: auto; padding: 60px 40px; scroll-behavior: smooth; background: radial-gradient(circle at top right, #16161d, #0b0b0e); }
+        #doc-container { max-width: 800px; margin: 0 auto; animation: fadeIn 0.5s ease; }
         
-        /* Style du Markdown */
-        #content h1 { color: #fff; border-bottom: 2px solid var(--primary); padding-bottom: 10px; }
-        #content h2 { color: var(--primary); margin-top: 30px; }
-        #content table { width: 100%; border-collapse: collapse; margin: 20px 0; }
-        #content th, #content td { border: 1px solid #2d2d35; padding: 12px; text-align: left; }
-        #content th { background: #1a1a20; }
-        #content code { background: #2d2d35; padding: 2px 5px; border-radius: 3px; color: #f1c40f; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* Style Markdown */
+        #doc-container h1 { color: var(--text-light); font-size: 2.5em; margin-bottom: 0.5em; }
+        #doc-container h2 { color: var(--primary); margin-top: 2em; font-size: 1.5em; border-bottom: 1px solid var(--border); padding-bottom: 10px; }
+        #doc-container p { line-height: 1.8; margin-bottom: 1.5em; }
+        #doc-container table { width: 100%; border-collapse: collapse; margin: 2em 0; background: rgba(255,255,255,0.02); border-radius: 10px; overflow: hidden; }
+        #doc-container th, #doc-container td { padding: 15px; border: 1px solid var(--border); text-align: left; }
+        #doc-container th { background: rgba(52, 152, 219, 0.1); color: var(--text-light); }
+        #doc-container code { background: #1e1e26; color: #f1c40f; padding: 3px 7px; border-radius: 4px; font-family: 'Fira Code', monospace; font-size: 0.9em; }
+        #doc-container blockquote { border-left: 4px solid var(--primary); background: rgba(52, 152, 219, 0.05); margin: 2em 0; padding: 1px 20px; font-style: italic; border-radius: 0 8px 8px 0; }
+
+        .loader { display: flex; justify-content: center; align-items: center; height: 100px; color: var(--primary); font-size: 0.9em; text-transform: uppercase; letter-spacing: 2px; }
+
+        /* Mobile */
+        @media (max-width: 768px) {
+            body { flex-direction: column; }
+            nav { width: 100%; height: auto; border-right: none; border-bottom: 1px solid var(--border); }
+            main { padding: 30px 20px; }
+        }
     </style>
 </head>
 <body>
 
 <nav>
-    <h2>⚖️ LifeStealFR</h2>
-    <span class="category">Boutique</span>
-    <ul>
-        <li><a href="#shop-terms" onclick="loadContent('shop-terms')">Conditions de vente</a></li>
-        <li><a href="#shop-refund" onclick="loadContent('shop-refund')">Remboursements</a></li>
-        <li><a href="#shop-verify" onclick="loadContent('shop-verify')">Vérification Discord</a></li>
-    </ul>
-    
-    <span class="category">Staff</span>
-    <ul>
-        <li><a href="#staff-list" onclick="loadContent('staff-list')">Liste du Staff</a></li>
-        <li><a href="#staff-join" onclick="loadContent('staff-join')">Nous rejoindre</a></li>
-    </ul>
-
-    <span class="category">Général</span>
-    <ul>
-        <li><a href="#privacy" onclick="loadContent('privacy')">Confidentialité</a></li>
-        <li><a href="#branding" onclick="loadContent('branding')">Charte Graphique</a></li>
+    <div class="nav-header">
+        <h1>LifeStealFR Legal</h1>
+    </div>
+    <ul id="menu">
+        <div class="loader">Initialisation...</div>
     </ul>
 </nav>
 
 <main>
-    <div id="content">Chargement des documents...</div>
+    <div id="doc-container">
+        <h1>⚖️ Centre de Documentation</h1>
+        <p>Sélectionnez un document dans le menu latéral pour commencer la lecture.</p>
+    </div>
 </main>
 
 <script>
-    async function loadContent(pageId) {
-        const contentDiv = document.getElementById('content');
-        // On met à jour l'état actif dans le menu
-        document.querySelectorAll('nav a').forEach(a => a.classList.remove('active'));
-        const activeLink = document.querySelector(`nav a[href="#${pageId}"]`);
-        if (activeLink) activeLink.classList.add('active');
+    // --- CONFIGURATION LIFESTEALFR ---
+    const CONFIG = {
+        owner: "LifeStealFR",        // Nom de l'organisation
+        repo: "lifestealfr.github.io", // Nom du dépôt
+        path: "legal/docs"           // Chemin vers tes .md
+    };
 
+    const menuEl = document.getElementById('menu');
+    const container = document.getElementById('doc-container');
+
+    // 1. Lister les fichiers MD du dossier docs/
+    async function initExplorer() {
         try {
-            // On va chercher le fichier .md dans le dossier docs/
-            const response = await fetch(`docs/${pageId}.md`);
-            if (!response.ok) throw new Error('Document introuvable');
-            const mdText = await response.text();
-            // On transforme le Markdown en HTML avec Marked.js
-            contentDiv.innerHTML = marked.parse(mdText);
-        } catch (error) {
-            contentDiv.innerHTML = `<h1>⚠️ Erreur</h1><p>Impossible de charger le document : ${pageId}</p>`;
+            const apiURL = `https://api.github.com/repos/${CONFIG.owner}/${CONFIG.repo}/contents/${CONFIG.path}`;
+            const response = await fetch(apiURL);
+            const files = await response.json();
+
+            if (!Array.isArray(files)) throw new Error("Dossier introuvable");
+
+            menuEl.innerHTML = ""; // Vider le loader
+
+            files.forEach(file => {
+                if (file.name.endsWith('.md')) {
+                    const li = document.createElement('li');
+                    li.className = "menu-item";
+                    
+                    // On rend le nom joli : "shop-terms.md" -> "Shop Terms"
+                    const displayName = file.name
+                        .replace('.md', '')
+                        .split(/[-_]/)
+                        .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+                        .join(' ');
+
+                    const a = document.createElement('a');
+                    a.href = `#${file.name}`;
+                    a.className = "menu-link";
+                    a.innerText = displayName;
+                    
+                    a.onclick = (e) => {
+                        e.preventDefault();
+                        loadDoc(file.download_url, a);
+                    };
+
+                    li.appendChild(a);
+                    menuEl.appendChild(li);
+                }
+            });
+
+            // Charger auto si URL directe (ex: legal/#terms.md)
+            const hash = window.location.hash.substring(1);
+            if (hash) {
+                const target = files.find(f => f.name === hash);
+                if (target) loadDoc(target.download_url, document.querySelector(`[href="#${hash}"]`));
+            }
+
+        } catch (err) {
+            menuEl.innerHTML = `<p style="color:#e74c3c; padding:20px;">Erreur : ${err.message}</p>`;
         }
     }
 
-    // Gestion du chargement initial via l'URL (ex: legal/#shop-terms)
-    window.addEventListener('load', () => {
-        const hash = window.location.hash.substring(1) || 'shop-terms';
-        loadContent(hash);
-    });
+    // 2. Lire et afficher le Markdown
+    async function loadDoc(url, element) {
+        container.style.opacity = "0.5"; // Effet de transition
+        
+        if (element) {
+            document.querySelectorAll('.menu-link').forEach(l => l.classList.remove('active'));
+            element.classList.add('active');
+            window.location.hash = element.getAttribute('href').substring(1);
+        }
+
+        try {
+            const res = await fetch(url);
+            const text = await res.text();
+            container.innerHTML = marked.parse(text);
+            container.style.opacity = "1";
+            document.querySelector('main').scrollTop = 0; // Remonter en haut
+        } catch (err) {
+            container.innerHTML = `<h1>Erreur</h1><p>Impossible de charger le document.</p>`;
+        }
+    }
+
+    initExplorer();
 </script>
 
 </body>
