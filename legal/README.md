@@ -19,7 +19,7 @@ Tout ce que vous devez savoir avant et après l'achat d'une de nos configuration
 ### 📞 Contact & Support
 Besoin d'aide avec un produit ou envie de collaborer avec nous ?
 
-*   📩 **[Contacts Officiels](contact/index.md)** : Où nous trouver et comment faire une demande de support.
+*   📩 **[Contacts Officiels](contact.md)** : Où nous trouver et comment faire une demande de support.
 *   🤝 **[Partenariats](partners.md)** : Conditions pour les Créateurs de Contenu (YouTube/Twitch).
 
 ---
