@@ -32,7 +32,7 @@ Notre logo représente l'excellence et la modernité de nos configurations. Merc
 
 ---
 
-### 🎬 5. Pour les Créateurs de Contenu
+### 🎬 3. Pour les Créateurs de Contenu
 
 Si vous présentez nos ressources (BuildByBit, Ko-fi) en vidéo ou en stream, vous pouvez demander un **Media Kit** complet incluant :
 *   Overlays de présentation animés.
