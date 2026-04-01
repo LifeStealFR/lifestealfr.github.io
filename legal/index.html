@@ -3,13 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LifeStealFR - Documentation Légale</title>
+    <title>LifeStealFR - Documentation</title>
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     <style>
         :root { --bg: #0d0d10; --panel: #15151a; --primary: #3498db; --text: #a0a0a8; --text-light: #ffffff; --border: #222228; }
         body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); margin: 0; display: flex; height: 100vh; overflow: hidden; }
         
-        /* Sidebar avec Arborescence */
         nav { width: 320px; background: var(--panel); border-right: 1px solid var(--border); display: flex; flex-direction: column; }
         .nav-header { padding: 25px; border-bottom: 1px solid var(--border); text-align: center; }
         .nav-header h1 { font-size: 1em; color: white; margin: 0; letter-spacing: 2px; text-transform: uppercase; }
@@ -17,35 +16,31 @@
         #tree-container { flex: 1; overflow-y: auto; padding: 15px; font-size: 0.9em; }
         ul { list-style: none; padding-left: 15px; margin: 5px 0; }
         
-        /* Style des dossiers et fichiers */
-        .folder { cursor: pointer; padding: 6px 10px; border-radius: 4px; display: flex; align-items: center; font-weight: 600; color: #ddd; transition: 0.2s; }
+        .folder { cursor: pointer; padding: 8px 10px; border-radius: 4px; display: flex; align-items: center; font-weight: 600; color: #ddd; transition: 0.2s; }
         .folder:hover { background: rgba(255,255,255,0.05); }
-        .folder::before { content: '📁'; margin-right: 8px; font-size: 1.1em; }
+        .folder::before { content: '📁'; margin-right: 8px; }
         .folder.open::before { content: '📂'; }
         
-        .file { cursor: pointer; padding: 6px 10px; border-radius: 4px; display: flex; align-items: center; transition: 0.2s; color: var(--text); text-decoration: none; }
+        .file { cursor: pointer; padding: 6px 10px; border-radius: 4px; display: flex; align-items: center; transition: 0.2s; color: var(--text); display: block; width: 100%; box-sizing: border-box; }
         .file:hover { background: rgba(52, 152, 219, 0.1); color: var(--primary); }
         .file::before { content: '📄'; margin-right: 8px; opacity: 0.6; }
-        .file.active { background: var(--primary); color: white; font-weight: bold; }
-        .file.active::before { filter: brightness(0) invert(1); }
+        .file.active { background: var(--primary) !important; color: white !important; font-weight: bold; }
 
         .collapsed { display: none; }
 
-        /* Zone Contenu */
         main { flex: 1; overflow-y: auto; background: var(--bg); padding: 50px; scroll-behavior: smooth; }
         #doc-content { max-width: 850px; margin: 0 auto; line-height: 1.7; animation: fadeIn 0.4s ease; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
-        /* Markdown Style */
-        #doc-content h1 { color: #fff; border-bottom: 1px solid var(--border); padding-bottom: 15px; font-size: 2.2em; }
-        #doc-content h2 { color: var(--primary); margin-top: 1.5em; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 5px; }
-        #doc-content table { width: 100%; border-collapse: collapse; margin: 20px 0; border-radius: 8px; overflow: hidden; }
+        /* Style Markdown */
+        #doc-content h1 { color: #fff; border-bottom: 1px solid var(--border); padding-bottom: 15px; }
+        #doc-content h2 { color: var(--primary); margin-top: 1.5em; }
+        #doc-content table { width: 100%; border-collapse: collapse; margin: 20px 0; }
         #doc-content th, #doc-content td { border: 1px solid var(--border); padding: 12px; text-align: left; }
-        #doc-content th { background: #1a1a20; color: white; }
-        #doc-content code { background: #1e1e24; color: #f1c40f; padding: 3px 6px; border-radius: 4px; font-family: monospace; }
-        #doc-content blockquote { border-left: 4px solid var(--primary); background: rgba(52, 152, 219, 0.05); padding: 10px 20px; margin: 20px 0; }
+        #doc-content th { background: #1a1a20; }
+        #doc-content img { max-width: 100%; border-radius: 8px; }
 
-        .loader { text-align: center; color: var(--primary); margin-top: 20px; font-size: 0.8em; letter-spacing: 1px; }
+        .loader { text-align: center; color: var(--primary); margin-top: 20px; font-size: 0.8em; }
     </style>
 </head>
 <body>
@@ -54,15 +49,13 @@
     <div class="nav-header">
         <h1>⚖️ LifeStealFR Docs</h1>
     </div>
-    <div id="tree-container">
-        <div class="loader">CHARGEMENT DE L'ARBORESCENCE...</div>
-    </div>
+    <div id="tree-container"><div class="loader">CHARGEMENT...</div></div>
 </nav>
 
 <main>
     <div id="doc-content">
         <h1>Bienvenue</h1>
-        <p>Utilisez le menu à gauche pour naviguer dans l'arborescence des dossiers légaux.</p>
+        <p>Sélectionnez un document à gauche pour l'afficher.</p>
     </div>
 </main>
 
@@ -70,42 +63,39 @@
     const CONFIG = {
         owner: "LifeStealFR",
         repo: "lifestealfr.github.io",
-        basePath: "legal", // Dossier racine à scanner
-        branch: "main"    // Ta branche principale
+        branch: "main",
+        rootPath: "legal" // Le dossier parent
     };
 
     const treeContainer = document.getElementById('tree-container');
     const docContent = document.getElementById('doc-content');
 
-    // 1. Fetch de toute l'arborescence récursivement
-    async function fetchFullTree() {
+    // 1. Récupérer l'arborescence complète
+    async function fetchTree() {
         try {
-            // On utilise l'API Git Trees avec recursive=1
             const res = await fetch(`https://api.github.com/repos/${CONFIG.owner}/${CONFIG.repo}/git/trees/${CONFIG.branch}?recursive=1`);
             const data = await res.json();
             
-            // On ne garde que les fichiers .md dans le dossier /legal/
-            const legalFiles = data.tree.filter(item => 
-                item.path.startsWith(CONFIG.basePath) && 
-                item.path.endsWith('.md')
+            // On filtre pour ne garder que les .md dans le dossier spécifié
+            const files = data.tree.filter(item => 
+                item.path.startsWith(CONFIG.rootPath) && item.path.endsWith('.md')
             );
 
-            renderTree(legalFiles);
+            buildMenu(files);
         } catch (err) {
-            treeContainer.innerHTML = `<p style="color:red">Erreur API : ${err.message}</p>`;
+            treeContainer.innerHTML = `<p style="color:red">Erreur : ${err.message}</p>`;
         }
     }
 
-    // 2. Construction de l'arbre HTML
-    function renderTree(files) {
+    // 2. Transformer la liste de fichiers en menu HTML
+    function buildMenu(files) {
         const tree = {};
 
-        // Transformer la liste plate en objet imbriqué
         files.forEach(file => {
             const parts = file.path.split('/');
             let current = tree;
-            parts.forEach((part, index) => {
-                if (index === parts.length - 1) {
+            parts.forEach((part, i) => {
+                if (i === parts.length - 1) {
                     current[part] = file;
                 } else {
                     current[part] = current[part] || {};
@@ -114,91 +104,82 @@
             });
         });
 
-        treeContainer.innerHTML = ''; // Nettoyer le loader
+        treeContainer.innerHTML = '';
         const rootUl = document.createElement('ul');
-        buildHtmlTree(tree[CONFIG.basePath], rootUl);
+        // On démarre la récursion à partir du dossier racine défini dans CONFIG
+        generateHTML(tree[CONFIG.rootPath], rootUl, CONFIG.rootPath);
         treeContainer.appendChild(rootUl);
 
-        // Auto-chargement via Hash
-        const currentHash = window.location.hash.substring(1);
-        if (currentHash) {
-            const fileUrl = `https://raw.githubusercontent.com/${CONFIG.owner}/${CONFIG.repo}/${CONFIG.branch}/${currentHash}`;
-            loadMarkdown(fileUrl, currentHash);
+        // Si l'URL a déjà un #chemin/vers/fichier.md, on le charge
+        if (window.location.hash) {
+            const path = window.location.hash.substring(1);
+            loadMD(path);
         }
     }
 
-    // 3. Fonction récursive pour créer les dossiers/fichiers
-    function buildHtmlTree(node, container, fullPath = CONFIG.basePath) {
+    // 3. Générer le HTML du menu (Récursif)
+    function generateHTML(node, container, currentPath) {
         Object.keys(node).sort().forEach(key => {
-            const currentPath = `${fullPath}/${key}`;
+            const path = `${currentPath}/${key}`;
             const li = document.createElement('li');
 
-            if (node[key].sha) { 
-                // C'est un fichier
-                const a = document.createElement('a');
+            if (node[key].sha) { // C'est un fichier
+                const a = document.createElement('div'); // Utilisation de div pour éviter les sauts de page
                 a.className = 'file';
-                a.id = `file-${currentPath}`;
+                a.dataset.path = path;
                 a.innerText = key.replace('.md', '').replace(/[-_]/g, ' ');
-                a.onclick = () => {
-                    const rawUrl = `https://raw.githubusercontent.com/${CONFIG.owner}/${CONFIG.repo}/${CONFIG.branch}/${currentPath}`;
-                    loadMarkdown(rawUrl, currentPath);
-                };
+                a.onclick = () => loadMD(path);
                 li.appendChild(a);
-            } else {
-                // C'est un dossier
+            } else { // C'est un dossier
                 const div = document.createElement('div');
                 div.className = 'folder';
-                div.innerText = key.charAt(0).toUpperCase() + key.slice(1);
-                
+                div.innerText = key;
                 const ul = document.createElement('ul');
                 ul.className = 'collapsed';
-                
                 div.onclick = () => {
                     div.classList.toggle('open');
                     ul.classList.toggle('collapsed');
                 };
-
                 li.appendChild(div);
                 li.appendChild(ul);
-                buildHtmlTree(node[key], ul, currentPath);
+                generateHTML(node[key], ul, path);
             }
             container.appendChild(li);
         });
     }
 
-    // 4. Charger et afficher le contenu
-    async function loadMarkdown(url, path) {
-        docContent.style.opacity = '0.5';
+    // 4. Charger le Markdown et l'afficher
+    async function loadMD(path) {
+        console.log("Tentative de chargement du fichier :", path);
+        docContent.innerHTML = "<div class='loader'>CHARGEMENT DU DOCUMENT...</div>";
         
-        // Update URL Hash
+        // Mise à jour visuelle du menu
+        document.querySelectorAll('.file').forEach(f => f.classList.remove('active'));
+        const activeEl = document.querySelector(`[data-path="${path}"]`);
+        if (activeEl) activeEl.classList.add('active');
+
+        // Mise à jour du hash dans l'URL
         window.location.hash = path;
 
-        // Update Active Class
-        document.querySelectorAll('.file').forEach(f => f.classList.remove('active'));
-        const activeFile = document.getElementById(`file-${path}`);
-        if(activeFile) {
-            activeFile.classList.add('active');
-            // Ouvrir les dossiers parents si fermés
-            let parent = activeFile.parentElement.parentElement;
-            while(parent && parent.id !== 'tree-container') {
-                parent.classList.remove('collapsed');
-                if(parent.previousElementSibling) parent.previousElementSibling.classList.add('open');
-                parent = parent.parentElement.parentElement;
-            }
-        }
+        // URL brute GitHub
+        const rawUrl = `https://raw.githubusercontent.com/${CONFIG.owner}/${CONFIG.repo}/${CONFIG.branch}/${path}`;
 
         try {
-            const res = await fetch(url);
+            const res = await fetch(rawUrl);
+            if (!res.ok) throw new Error("Fichier introuvable sur GitHub");
             const md = await res.text();
+            
+            // Rendu du Markdown
             docContent.innerHTML = marked.parse(md);
-            docContent.style.opacity = '1';
             document.querySelector('main').scrollTop = 0;
+            console.log("Chargement réussi !");
         } catch (err) {
-            docContent.innerHTML = `<h1>Erreur</h1><p>Impossible de charger : ${path}</p>`;
+            console.error(err);
+            docContent.innerHTML = `<h1>Erreur</h1><p>Impossible de charger le document : <br><code>${path}</code></p>`;
         }
     }
 
-    fetchFullTree();
+    fetchTree();
 </script>
 
 </body>
