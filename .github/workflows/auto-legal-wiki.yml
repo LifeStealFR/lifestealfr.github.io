@@ -1,0 +1,26 @@
+name: UPDATE LEGAL LIFESTEAL
+
+on:
+  push:
+    paths:
+      - 'legal/**/*.md' # S'active uniquement pour les fichiers dans Staff/wiki
+      - 'legal/scan.py'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: 📥 Clonage des données
+        uses: actions/checkout@v4
+        
+      - name: ⚙️ Lancement du Cardinal Script
+        run: python legal/scan.py
+        
+      - name: 💾 Sauvegarde du nouveau Menu
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: "🤖 [SYS] Auto-update Menu Navigation"
+          file_pattern: legal/_sidebar.md
