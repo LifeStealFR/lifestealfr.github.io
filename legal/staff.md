@@ -30,6 +30,7 @@ Besoin d'aide, d'une licence spécifique ou d'une commande personnalisée ? Voic
 * **Pseudo Discord :** `_0lapin0_`
 * **Pseudo Minecraft :** `DarKLapin`
 * **Rôle :** Responsable & Support
+## 🛡️ Modération & Support
 
 
 ---
