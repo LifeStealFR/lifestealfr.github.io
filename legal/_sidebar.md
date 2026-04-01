@@ -6,4 +6,4 @@
 * **Shop**
   * [Terms](shop/terms.md)
 * **Staff**
-  * [Staff](staff/staff.md)
+  * [Index](staff/index.md)
