@@ -19,30 +19,7 @@ Notre logo représente l'excellence et la modernité de nos configurations. Merc
 
 ---
 
-### 🎨 2. Palette de Couleurs (Couleurs Officielles)
-
-Nous utilisons des couleurs froides et sombres pour un rendu "Premium". Ces codes doivent être utilisés pour tous vos supports graphiques liés à LifeStealFR.
-
-| Couleur | Code Hexadécimal | Usage |
-| :--- | :---: | :--- |
-| **Bleu LifeSteal** | `#3498DB` | Éléments d'action, liens, titres principaux. |
-| **Gris Profond** | `#15151A` | Arrière-plan des interfaces et panneaux. |
-| **Or Accent** | `#F1C40F` | Mise en avant, badges VIP, alertes. |
-| **Blanc Pur** | `#FFFFFF` | Texte principal et icônes claires. |
-| **Gris Texte** | `#A0A0A8` | Descriptions et textes secondaires. |
-
----
-
-### ✍️ 3. Typographie
-
-Pour garantir une lisibilité maximale sur tous les écrans :
-*   **Titres :** `Inter` ou `Segoe UI Bold` (Propre, moderne, sans empattement).
-*   **Corps de texte :** `Inter` ou `Segoe UI Regular`.
-*   **Données / Code :** `Fira Code` ou `Consolas` (Pour les configurations YAML/JSON).
-
----
-
-### ✅ 4. Règles d'Utilisation (Do's & Don'ts)
+### ✅ 2. Règles d'Utilisation (Do's & Don'ts)
 
 #### ✅ À faire :
 *   Laisser un espace vide (zone de sécurité) suffisant autour du logo.
@@ -51,8 +28,6 @@ Pour garantir une lisibilité maximale sur tous les écrans :
 
 #### ❌ À ne pas faire :
 *   Étirer ou écraser le logo (conserver le ratio 1:1).
-*   Changer la police d'écriture du logo.
-*   Utiliser des couleurs non répertoriées (ex: Vert néon, Rose).
 *   Ajouter des effets d'ombre portée "Old School" ou des contours épais.
 
 ---
@@ -70,6 +45,3 @@ Si vous présentez nos ressources (BuildByBit, Ko-fi) en vidéo ou en stream, vo
 Pour toute question relative à l'utilisation de nos visuels ou pour une demande de partenariat spécifique :
 *   **Discord :** [discord.gg/3vMguzZFbJ](https://discord.gg/3vMguzZFbJ)
 *   **Mention :** Merci de mentionner **"Branding par LifeStealFR"** lors de l'utilisation de nos ressources.
-
----
-*Dernière révision : Mai 2024*
