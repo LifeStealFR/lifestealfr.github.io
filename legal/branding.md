@@ -11,9 +11,9 @@ Notre logo représente l'excellence et la modernité de nos configurations. Merc
 
 | Version | Aperçu | Usage Recommandé |
 | :--- | :---: | :--- |
-| **Logo Principal (Couleurs)** | ![Logo](https://raw.githubusercontent.com/LifeStealFR/lifestealfr.github.io/refs/heads/main/legal/branding/logo-pixel.png) | Utilisation standard (Web, Discord, Boutiques). |
-| **Logo Monochrome (Blanc)** | ![Logo Blanc](https://via.placeholder.com/120/ffffff/000000?text=LSFR) | Sur fonds très sombres ou colorés. |
-| **Icône (Avatar)** | ![Icone](https://via.placeholder.com/60/3498db/ffffff?text=LS) | Profils sociaux, icônes de serveurs, favicons. |
+| **Logo Principal (Couleurs)** | ![Logo](https://raw.githubusercontent.com/LifeStealFR/lifestealfr.github.io/refs/heads/main/legal/branding/logo.png) | Utilisation standard (Web, Discord, Boutiques). |
+| **Logo Monochrome (Blanc)** | ![Logo Blanc](https://raw.githubusercontent.com/LifeStealFR/lifestealfr.github.io/refs/heads/main/legal/branding/logo-monochrome.png) | Sur fonds très sombres ou colorés. |
+| **Icône (Avatar)** | ![Icone](https://raw.githubusercontent.com/LifeStealFR/lifestealfr.github.io/refs/heads/main/legal/branding/logo-icon.png) | Profils sociaux, icônes de serveurs, favicons. |
 
 > 📥 **Téléchargements :** [Cliquez ici pour accéder au Drive des Assets](https://discord.gg/3vMguzZFbJ)
 
