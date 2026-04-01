@@ -24,7 +24,7 @@ Vous hésitez sur un produit ou vous voulez savoir s'il est compatible avec votr
 Vous êtes un créateur de contenu (YouTube/Twitch) ou un gérant de serveur et vous souhaitez collaborer avec nous ?
 *   **Contact :** Adressez-vous directement aux **Administrateurs** via Ticket Discord.
 *   **Objet :** "Demande de Partenariat - [Votre Nom/Projet]"
-*   **Consulter :** [Nos conditions de partenariat](#legal/partners.md) (si disponible).
+*   **Consulter :** [Nos conditions de partenariat](partners.md) (si disponible).
 
 ---
 
