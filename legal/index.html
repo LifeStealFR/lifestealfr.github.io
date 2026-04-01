@@ -3,158 +3,202 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LifeStealFR - Centre Juridique</title>
-    <!-- Rendu Markdown Pro -->
+    <title>LifeStealFR - Documentation Légale</title>
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     <style>
-        :root { --bg: #0b0b0e; --panel: #121217; --primary: #3498db; --text: #bdc3c7; --text-light: #ffffff; --border: #23232b; }
+        :root { --bg: #0d0d10; --panel: #15151a; --primary: #3498db; --text: #a0a0a8; --text-light: #ffffff; --border: #222228; }
+        body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); margin: 0; display: flex; height: 100vh; overflow: hidden; }
         
-        body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: var(--bg); color: var(--text); margin: 0; display: flex; height: 100vh; overflow: hidden; }
+        /* Sidebar avec Arborescence */
+        nav { width: 320px; background: var(--panel); border-right: 1px solid var(--border); display: flex; flex-direction: column; }
+        .nav-header { padding: 25px; border-bottom: 1px solid var(--border); text-align: center; }
+        .nav-header h1 { font-size: 1em; color: white; margin: 0; letter-spacing: 2px; text-transform: uppercase; }
         
-        /* Sidebar Dynamique */
-        nav { width: 280px; background: var(--panel); border-right: 1px solid var(--border); display: flex; flex-direction: column; z-index: 10; }
-        .nav-header { padding: 30px 20px; border-bottom: 1px solid var(--border); text-align: center; }
-        .nav-header img { width: 50px; margin-bottom: 10px; border-radius: 50%; }
-        .nav-header h1 { font-size: 1.1em; color: var(--text-light); margin: 0; letter-spacing: 1px; text-transform: uppercase; }
+        #tree-container { flex: 1; overflow-y: auto; padding: 15px; font-size: 0.9em; }
+        ul { list-style: none; padding-left: 15px; margin: 5px 0; }
         
-        #menu { flex: 1; overflow-y: auto; padding: 20px 15px; list-style: none; margin: 0; }
-        .menu-item { margin-bottom: 8px; }
-        .menu-link { 
-            display: block; padding: 12px 16px; border-radius: 8px; 
-            color: var(--text); text-decoration: none; font-size: 0.9em;
-            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-            border: 1px solid transparent;
-        }
-        .menu-link:hover { background: rgba(52, 152, 219, 0.08); color: var(--primary); border-color: rgba(52, 152, 219, 0.2); }
-        .menu-link.active { background: var(--primary); color: white; font-weight: 600; box-shadow: 0 4px 15px rgba(52, 152, 219, 0.3); }
-
-        /* Zone d'affichage */
-        main { flex: 1; overflow-y: auto; padding: 60px 40px; scroll-behavior: smooth; background: radial-gradient(circle at top right, #16161d, #0b0b0e); }
-        #doc-container { max-width: 800px; margin: 0 auto; animation: fadeIn 0.5s ease; }
+        /* Style des dossiers et fichiers */
+        .folder { cursor: pointer; padding: 6px 10px; border-radius: 4px; display: flex; align-items: center; font-weight: 600; color: #ddd; transition: 0.2s; }
+        .folder:hover { background: rgba(255,255,255,0.05); }
+        .folder::before { content: '📁'; margin-right: 8px; font-size: 1.1em; }
+        .folder.open::before { content: '📂'; }
         
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .file { cursor: pointer; padding: 6px 10px; border-radius: 4px; display: flex; align-items: center; transition: 0.2s; color: var(--text); text-decoration: none; }
+        .file:hover { background: rgba(52, 152, 219, 0.1); color: var(--primary); }
+        .file::before { content: '📄'; margin-right: 8px; opacity: 0.6; }
+        .file.active { background: var(--primary); color: white; font-weight: bold; }
+        .file.active::before { filter: brightness(0) invert(1); }
 
-        /* Style Markdown */
-        #doc-container h1 { color: var(--text-light); font-size: 2.5em; margin-bottom: 0.5em; }
-        #doc-container h2 { color: var(--primary); margin-top: 2em; font-size: 1.5em; border-bottom: 1px solid var(--border); padding-bottom: 10px; }
-        #doc-container p { line-height: 1.8; margin-bottom: 1.5em; }
-        #doc-container table { width: 100%; border-collapse: collapse; margin: 2em 0; background: rgba(255,255,255,0.02); border-radius: 10px; overflow: hidden; }
-        #doc-container th, #doc-container td { padding: 15px; border: 1px solid var(--border); text-align: left; }
-        #doc-container th { background: rgba(52, 152, 219, 0.1); color: var(--text-light); }
-        #doc-container code { background: #1e1e26; color: #f1c40f; padding: 3px 7px; border-radius: 4px; font-family: 'Fira Code', monospace; font-size: 0.9em; }
-        #doc-container blockquote { border-left: 4px solid var(--primary); background: rgba(52, 152, 219, 0.05); margin: 2em 0; padding: 1px 20px; font-style: italic; border-radius: 0 8px 8px 0; }
+        .collapsed { display: none; }
 
-        .loader { display: flex; justify-content: center; align-items: center; height: 100px; color: var(--primary); font-size: 0.9em; text-transform: uppercase; letter-spacing: 2px; }
+        /* Zone Contenu */
+        main { flex: 1; overflow-y: auto; background: var(--bg); padding: 50px; scroll-behavior: smooth; }
+        #doc-content { max-width: 850px; margin: 0 auto; line-height: 1.7; animation: fadeIn 0.4s ease; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* Mobile */
-        @media (max-width: 768px) {
-            body { flex-direction: column; }
-            nav { width: 100%; height: auto; border-right: none; border-bottom: 1px solid var(--border); }
-            main { padding: 30px 20px; }
-        }
+        /* Markdown Style */
+        #doc-content h1 { color: #fff; border-bottom: 1px solid var(--border); padding-bottom: 15px; font-size: 2.2em; }
+        #doc-content h2 { color: var(--primary); margin-top: 1.5em; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 5px; }
+        #doc-content table { width: 100%; border-collapse: collapse; margin: 20px 0; border-radius: 8px; overflow: hidden; }
+        #doc-content th, #doc-content td { border: 1px solid var(--border); padding: 12px; text-align: left; }
+        #doc-content th { background: #1a1a20; color: white; }
+        #doc-content code { background: #1e1e24; color: #f1c40f; padding: 3px 6px; border-radius: 4px; font-family: monospace; }
+        #doc-content blockquote { border-left: 4px solid var(--primary); background: rgba(52, 152, 219, 0.05); padding: 10px 20px; margin: 20px 0; }
+
+        .loader { text-align: center; color: var(--primary); margin-top: 20px; font-size: 0.8em; letter-spacing: 1px; }
     </style>
 </head>
 <body>
 
 <nav>
     <div class="nav-header">
-        <h1>LifeStealFR Legal</h1>
+        <h1>⚖️ LifeStealFR Docs</h1>
     </div>
-    <ul id="menu">
-        <div class="loader">Initialisation...</div>
-    </ul>
+    <div id="tree-container">
+        <div class="loader">CHARGEMENT DE L'ARBORESCENCE...</div>
+    </div>
 </nav>
 
 <main>
-    <div id="doc-container">
-        <h1>⚖️ Centre de Documentation</h1>
-        <p>Sélectionnez un document dans le menu latéral pour commencer la lecture.</p>
+    <div id="doc-content">
+        <h1>Bienvenue</h1>
+        <p>Utilisez le menu à gauche pour naviguer dans l'arborescence des dossiers légaux.</p>
     </div>
 </main>
 
 <script>
-    // --- CONFIGURATION LIFESTEALFR ---
     const CONFIG = {
-        owner: "LifeStealFR",        // Nom de l'organisation
-        repo: "lifestealfr.github.io", // Nom du dépôt
-        path: "legal"           // Chemin vers tes .md
+        owner: "LifeStealFR",
+        repo: "lifestealfr.github.io",
+        basePath: "legal", // Dossier racine à scanner
+        branch: "main"    // Ta branche principale
     };
 
-    const menuEl = document.getElementById('menu');
-    const container = document.getElementById('doc-container');
+    const treeContainer = document.getElementById('tree-container');
+    const docContent = document.getElementById('doc-content');
 
-    // 1. Lister les fichiers MD du dossier docs/
-    async function initExplorer() {
+    // 1. Fetch de toute l'arborescence récursivement
+    async function fetchFullTree() {
         try {
-            const apiURL = `https://api.github.com/repos/${CONFIG.owner}/${CONFIG.repo}/contents/${CONFIG.path}`;
-            const response = await fetch(apiURL);
-            const files = await response.json();
+            // On utilise l'API Git Trees avec recursive=1
+            const res = await fetch(`https://api.github.com/repos/${CONFIG.owner}/${CONFIG.repo}/git/trees/${CONFIG.branch}?recursive=1`);
+            const data = await res.json();
+            
+            // On ne garde que les fichiers .md dans le dossier /legal/
+            const legalFiles = data.tree.filter(item => 
+                item.path.startsWith(CONFIG.basePath) && 
+                item.path.endsWith('.md')
+            );
 
-            if (!Array.isArray(files)) throw new Error("Dossier introuvable");
-
-            menuEl.innerHTML = ""; // Vider le loader
-
-            files.forEach(file => {
-                if (file.name.endsWith('.md')) {
-                    const li = document.createElement('li');
-                    li.className = "menu-item";
-                    
-                    // On rend le nom joli : "shop-terms.md" -> "Shop Terms"
-                    const displayName = file.name
-                        .replace('.md', '')
-                        .split(/[-_]/)
-                        .map(word => word.charAt(0).toUpperCase() + word.slice(1))
-                        .join(' ');
-
-                    const a = document.createElement('a');
-                    a.href = `#${file.name}`;
-                    a.className = "menu-link";
-                    a.innerText = displayName;
-                    
-                    a.onclick = (e) => {
-                        e.preventDefault();
-                        loadDoc(file.download_url, a);
-                    };
-
-                    li.appendChild(a);
-                    menuEl.appendChild(li);
-                }
-            });
-
-            // Charger auto si URL directe (ex: legal/#terms.md)
-            const hash = window.location.hash.substring(1);
-            if (hash) {
-                const target = files.find(f => f.name === hash);
-                if (target) loadDoc(target.download_url, document.querySelector(`[href="#${hash}"]`));
-            }
-
+            renderTree(legalFiles);
         } catch (err) {
-            menuEl.innerHTML = `<p style="color:#e74c3c; padding:20px;">Erreur : ${err.message}</p>`;
+            treeContainer.innerHTML = `<p style="color:red">Erreur API : ${err.message}</p>`;
         }
     }
 
-    // 2. Lire et afficher le Markdown
-    async function loadDoc(url, element) {
-        container.style.opacity = "0.5"; // Effet de transition
+    // 2. Construction de l'arbre HTML
+    function renderTree(files) {
+        const tree = {};
+
+        // Transformer la liste plate en objet imbriqué
+        files.forEach(file => {
+            const parts = file.path.split('/');
+            let current = tree;
+            parts.forEach((part, index) => {
+                if (index === parts.length - 1) {
+                    current[part] = file;
+                } else {
+                    current[part] = current[part] || {};
+                    current = current[part];
+                }
+            });
+        });
+
+        treeContainer.innerHTML = ''; // Nettoyer le loader
+        const rootUl = document.createElement('ul');
+        buildHtmlTree(tree[CONFIG.basePath], rootUl);
+        treeContainer.appendChild(rootUl);
+
+        // Auto-chargement via Hash
+        const currentHash = window.location.hash.substring(1);
+        if (currentHash) {
+            const fileUrl = `https://raw.githubusercontent.com/${CONFIG.owner}/${CONFIG.repo}/${CONFIG.branch}/${currentHash}`;
+            loadMarkdown(fileUrl, currentHash);
+        }
+    }
+
+    // 3. Fonction récursive pour créer les dossiers/fichiers
+    function buildHtmlTree(node, container, fullPath = CONFIG.basePath) {
+        Object.keys(node).sort().forEach(key => {
+            const currentPath = `${fullPath}/${key}`;
+            const li = document.createElement('li');
+
+            if (node[key].sha) { 
+                // C'est un fichier
+                const a = document.createElement('a');
+                a.className = 'file';
+                a.id = `file-${currentPath}`;
+                a.innerText = key.replace('.md', '').replace(/[-_]/g, ' ');
+                a.onclick = () => {
+                    const rawUrl = `https://raw.githubusercontent.com/${CONFIG.owner}/${CONFIG.repo}/${CONFIG.branch}/${currentPath}`;
+                    loadMarkdown(rawUrl, currentPath);
+                };
+                li.appendChild(a);
+            } else {
+                // C'est un dossier
+                const div = document.createElement('div');
+                div.className = 'folder';
+                div.innerText = key.charAt(0).toUpperCase() + key.slice(1);
+                
+                const ul = document.createElement('ul');
+                ul.className = 'collapsed';
+                
+                div.onclick = () => {
+                    div.classList.toggle('open');
+                    ul.classList.toggle('collapsed');
+                };
+
+                li.appendChild(div);
+                li.appendChild(ul);
+                buildHtmlTree(node[key], ul, currentPath);
+            }
+            container.appendChild(li);
+        });
+    }
+
+    // 4. Charger et afficher le contenu
+    async function loadMarkdown(url, path) {
+        docContent.style.opacity = '0.5';
         
-        if (element) {
-            document.querySelectorAll('.menu-link').forEach(l => l.classList.remove('active'));
-            element.classList.add('active');
-            window.location.hash = element.getAttribute('href').substring(1);
+        // Update URL Hash
+        window.location.hash = path;
+
+        // Update Active Class
+        document.querySelectorAll('.file').forEach(f => f.classList.remove('active'));
+        const activeFile = document.getElementById(`file-${path}`);
+        if(activeFile) {
+            activeFile.classList.add('active');
+            // Ouvrir les dossiers parents si fermés
+            let parent = activeFile.parentElement.parentElement;
+            while(parent && parent.id !== 'tree-container') {
+                parent.classList.remove('collapsed');
+                if(parent.previousElementSibling) parent.previousElementSibling.classList.add('open');
+                parent = parent.parentElement.parentElement;
+            }
         }
 
         try {
             const res = await fetch(url);
-            const text = await res.text();
-            container.innerHTML = marked.parse(text);
-            container.style.opacity = "1";
-            document.querySelector('main').scrollTop = 0; // Remonter en haut
+            const md = await res.text();
+            docContent.innerHTML = marked.parse(md);
+            docContent.style.opacity = '1';
+            document.querySelector('main').scrollTop = 0;
         } catch (err) {
-            container.innerHTML = `<h1>Erreur</h1><p>Impossible de charger le document.</p>`;
+            docContent.innerHTML = `<h1>Erreur</h1><p>Impossible de charger : ${path}</p>`;
         }
     }
 
-    initExplorer();
+    fetchFullTree();
 </script>
 
 </body>
