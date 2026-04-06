@@ -4,240 +4,285 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>FMHY | LifeStealFR</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/github-markdown-css/5.2.0/github-markdown.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;900&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg-color: #0d1117;
-            --accent-color: #ff5f5f;
-            --card-bg: #161b22;
+            --bg-main: #09090b; /* Noir très profond */
+            --bg-card: #121214;
+            --bg-element: #1c1c1f;
+            --accent: #ff3b3b; /* Rouge vif LifeSteal */
+            --accent-hover: #ff5f5f;
+            --text-main: #e4e4e7;
+            --text-muted: #a1a1aa;
+            --border: #27272a;
         }
 
-        /* Scrollbar personnalisée */
-        ::-webkit-scrollbar { width: 10px; }
-        ::-webkit-scrollbar-track { background: var(--bg-color); }
-        ::-webkit-scrollbar-thumb { background: #30363d; border-radius: 5px; }
-        ::-webkit-scrollbar-thumb:hover { background: var(--accent-color); }
+        /* Scrollbar stylisée */
+        ::-webkit-scrollbar { width: 8px; height: 8px; }
+        ::-webkit-scrollbar-track { background: var(--bg-main); }
+        ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--accent); }
 
         body {
-            background-color: var(--bg-color);
+            background-color: var(--bg-main);
+            color: var(--text-main);
             margin: 0;
-            font-family: 'Inter', -apple-system, sans-serif;
+            font-family: 'Inter', sans-serif;
+            line-height: 1.6;
             display: flex;
             justify-content: center;
-            scroll-behavior: smooth; /* Pour le retour en haut en douceur */
         }
 
-        .main-container {
-            max-width: 1000px; /* Un peu plus large pour les grands tableaux */
+        .container {
+            max-width: 1000px;
             width: 100%;
             margin: 40px 20px;
-            background: var(--card-bg);
-            border: 1px solid #30363d;
-            border-radius: 12px;
-            padding: 50px;
-            box-shadow: 0 20px 50px rgba(0,0,0,0.4);
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 40px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.5);
         }
 
-        /* Amélioration du Markdown */
+        /* --- DESIGN DU CONTENU MARKDOWN --- */
         .markdown-body {
-            background-color: transparent !important;
-            color: #c9d1d9 !important;
-            font-family: 'Inter', sans-serif !important;
+            font-size: 15px;
         }
 
-        .markdown-body h1, .markdown-body h2 {
-            border-bottom: 2px solid #30363d;
-            padding-bottom: 10px;
-            margin-top: 40px;
-            color: #fff;
-        }
-
+        /* Titres */
         .markdown-body h1 {
-            border-bottom-color: var(--accent-color);
-            font-weight: 800;
+            color: #fff;
+            font-size: 2.5em;
+            font-weight: 900;
             text-transform: uppercase;
-            letter-spacing: -1px;
-        }
-
-        /* Gestion des liens très longs */
-        .markdown-body a {
-            color: var(--accent-color) !important;
-            word-break: break-word; /* Empêche les URL de casser la page */
-        }
-
-        .markdown-body a:hover {
-            text-decoration: underline;
-            filter: brightness(1.2);
-        }
-
-        /* Responsive images */
-        .markdown-body img {
-            max-width: 100%;
-            border-radius: 8px;
-            background-color: #0d1117;
-        }
-
-        .markdown-body table {
-            display: block;
-            width: 100%;
-            overflow-x: auto; /* Scroll horizontal pour les tableaux sur mobile */
-            border-collapse: collapse;
-        }
-
-        .markdown-body blockquote {
-            border-left: 4px solid var(--accent-color);
-            background: rgba(255, 95, 95, 0.05);
-            padding: 15px 25px;
-            border-radius: 0 8px 8px 0;
-            color: #8b949e;
-        }
-
-        /* Loader animé */
-        #loader-container {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            height: 50vh;
-        }
-
-        .spinner {
-            width: 50px;
-            height: 50px;
-            border: 5px solid #30363d;
-            border-top-color: var(--accent-color);
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-            margin-bottom: 20px;
-        }
-
-        @keyframes spin { 100% { transform: rotate(360deg); } }
-
-        .loader-text {
-            color: #c9d1d9;
-            font-weight: 600;
+            border-bottom: 3px solid var(--accent);
+            padding-bottom: 10px;
+            margin-bottom: 30px;
             text-align: center;
         }
 
-        .loader-subtext {
-            color: #8b949e;
-            font-size: 0.85em;
-            margin-top: 5px;
+        .markdown-body h2 {
+            color: #fff;
+            font-size: 1.8em;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 8px;
+            margin-top: 50px;
         }
 
-        /* Bouton Retour en haut */
-        #btn-back-to-top {
-            position: fixed;
-            bottom: 30px;
-            right: 30px;
-            display: none;
-            background-color: var(--accent-color);
-            color: white;
-            border: none;
-            border-radius: 50%;
-            width: 50px;
-            height: 50px;
-            font-size: 24px;
+        .markdown-body h3 {
+            color: var(--accent-hover);
+            margin-top: 30px;
+        }
+
+        /* Liens */
+        .markdown-body a {
+            color: var(--accent);
+            text-decoration: none;
+            font-weight: 500;
+            word-break: break-word;
+            transition: color 0.2s, text-shadow 0.2s;
+        }
+
+        .markdown-body a:hover {
+            color: var(--accent-hover);
+            text-shadow: 0 0 8px rgba(255, 59, 59, 0.4);
+            text-decoration: underline;
+        }
+
+        /* Listes */
+        .markdown-body ul, .markdown-body ol {
+            padding-left: 20px;
+            margin-bottom: 20px;
+        }
+
+        .markdown-body li {
+            margin-bottom: 6px;
+        }
+
+        /* Menus déroulants (Très utilisés par FMHY) */
+        .markdown-body details {
+            background: var(--bg-element);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 12px 16px;
+            margin: 15px 0;
+        }
+
+        .markdown-body summary {
+            font-weight: 700;
+            color: #fff;
             cursor: pointer;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
-            transition: transform 0.2s, background-color 0.2s;
-            z-index: 1000;
+            outline: none;
+        }
+        
+        .markdown-body details[open] summary {
+            margin-bottom: 10px;
+            color: var(--accent);
         }
 
-        #btn-back-to-top:hover {
-            transform: scale(1.1);
-            background-color: #ff4747;
+        /* Tableaux */
+        .table-wrapper {
+            overflow-x: auto;
+            margin: 20px 0;
+            border-radius: 8px;
+            border: 1px solid var(--border);
         }
 
-        @media (max-width: 767px) {
-            .main-container { padding: 20px; margin: 10px; }
-            #btn-back-to-top { bottom: 20px; right: 20px; width: 40px; height: 40px; font-size: 20px; }
+        .markdown-body table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .markdown-body th {
+            background: var(--bg-element);
+            color: #fff;
+            text-align: left;
+            padding: 12px;
+            font-weight: 700;
+        }
+
+        .markdown-body td {
+            padding: 12px;
+            border-top: 1px solid var(--border);
+        }
+
+        /* Citations & Code */
+        .markdown-body blockquote {
+            margin: 20px 0;
+            padding: 15px 20px;
+            background: rgba(255, 59, 59, 0.05);
+            border-left: 4px solid var(--accent);
+            border-radius: 0 8px 8px 0;
+            color: var(--text-muted);
+        }
+
+        .markdown-body code {
+            background: var(--bg-element);
+            padding: 3px 6px;
+            border-radius: 4px;
+            font-family: monospace;
+            font-size: 0.9em;
+            color: #ff8a8a;
+        }
+
+        .markdown-body img {
+            max-width: 100%;
+            border-radius: 8px;
+        }
+
+        /* --- UI LOADER --- */
+        #loader {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 50px 0;
+        }
+
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid var(--border);
+            border-top-color: var(--accent);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        .loader-text { margin-top: 15px; font-weight: 600; color: #fff; }
+        .loader-sub { color: var(--text-muted); font-size: 0.9em; margin-top: 5px; }
+
+        @media (max-width: 768px) {
+            .container { margin: 0; border-radius: 0; border: none; padding: 20px; }
+            .markdown-body h1 { font-size: 1.8em; }
         }
     </style>
 </head>
 <body>
 
-    <div class="main-container">
-        <div id="loader-container">
+    <div class="container">
+        <div id="loader">
             <div class="spinner"></div>
-            <div class="loader-text">Chargement de la base de données...</div>
-            <div class="loader-subtext">Le fichier est volumineux, cela peut prendre quelques secondes.</div>
+            <div class="loader-text">Récupération des données...</div>
+            <div class="loader-sub">Préparation de l'affichage en cours</div>
         </div>
-        <article id="content" class="markdown-body" style="display: none;"></article>
+        
+        <div id="content" class="markdown-body"></div>
     </div>
-
-    <!-- Bouton retour en haut -->
-    <button id="btn-back-to-top" title="Retour en haut">↑</button>
 
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     <script>
-        const url = 'https://api.fmhy.net/single-page';
-
-        // 1. Personnalisation du rendu Marked.js pour optimiser les performances
-        const renderer = new marked.Renderer();
-        
-        // Ajout du Lazy Loading sur les images (VITAL pour la performance)
-        renderer.image = function(href, title, text) {
-            return `<img src="${href}" alt="${text}" title="${title || ''}" loading="lazy" />`;
-        };
-
-        // Forcer les liens à s'ouvrir dans un nouvel onglet
-        renderer.link = function(href, title, text) {
-            return `<a href="${href}" title="${title || ''}" target="_blank" rel="noopener noreferrer">${text}</a>`;
-        };
-
+        // Configuration de base de Marked (Sans modifier les liens pour ne rien casser)
         marked.setOptions({
-            renderer: renderer,
             gfm: true,
             breaks: true
         });
 
-        // 2. Fetch et traitement
+        const url = 'https://api.fmhy.net/single-page';
+
         fetch(url)
-            .then(response => {
-                if (!response.ok) throw new Error("Erreur réseau");
-                return response.text();
-            })
+            .then(res => res.text())
             .then(text => {
-                // On met à jour le texte du loader pendant le parsing
-                document.querySelector('.loader-text').innerText = "Génération de l'affichage...";
+                // ASTUCE DE GÉNIE : On découpe le fichier de 1.6Mo à chaque sous-titre (##)
+                // Cela crée une liste de petits morceaux (chunks)
+                const chunks = text.split(/(?=^## )/gm);
+                let currentChunk = 0;
                 
-                // On utilise setTimeout pour ne pas geler le navigateur pendant qu'il change le texte
-                setTimeout(() => {
-                    const parsedHTML = marked.parse(text);
-                    const contentDiv = document.getElementById('content');
-                    const loaderDiv = document.getElementById('loader-container');
-                    
-                    contentDiv.innerHTML = parsedHTML;
-                    
-                    loaderDiv.style.display = 'none';
-                    contentDiv.style.display = 'block';
-                }, 100); // 100ms donne le temps au DOM de respirer
+                const contentDiv = document.getElementById('content');
+                const loader = document.getElementById('loader');
+
+                // Fonction récursive pour injecter les morceaux un par un
+                function renderNextChunk() {
+                    if (currentChunk < chunks.length) {
+                        // On parse le petit morceau
+                        const html = marked.parse(chunks[currentChunk]);
+                        
+                        // On le met dans une div temporaire pour chercher les tableaux
+                        const tempDiv = document.createElement('div');
+                        tempDiv.innerHTML = html;
+
+                        // Rendre les tableaux "scrollables" sur mobile (Responsive)
+                        tempDiv.querySelectorAll('table').forEach(table => {
+                            const wrapper = document.createElement('div');
+                            wrapper.className = 'table-wrapper';
+                            table.parentNode.insertBefore(wrapper, table);
+                            wrapper.appendChild(table);
+                        });
+
+                        // On injecte le résultat dans la page
+                        contentDiv.appendChild(tempDiv);
+
+                        // Dès que le premier morceau (l'intro) est chargé, on cache le loader !
+                        if (currentChunk === 0) {
+                            loader.style.display = 'none';
+                        }
+
+                        currentChunk++;
+                        
+                        // On passe au morceau suivant avec un micro-délai de 10ms
+                        // Ça empêche le navigateur de freezer !
+                        setTimeout(renderNextChunk, 10);
+                    }
+                }
+
+                // On lance le processus
+                renderNextChunk();
             })
             .catch(err => {
-                document.querySelector('.spinner').style.display = 'none';
-                document.querySelector('.loader-text').innerHTML = "❌ Erreur de chargement.";
-                document.querySelector('.loader-subtext').innerHTML = "Impossible de récupérer les données depuis l'API FMHY.";
-                console.error(err);
+                document.getElementById('loader').innerHTML = "<span style='color:red; font-weight:bold;'>❌ Erreur de chargement. Veuillez rafraîchir.</span>";
             });
 
-        // 3. Logique du bouton "Retour en haut"
-        const backToTopBtn = document.getElementById("btn-back-to-top");
-
-        window.onscroll = function() {
-            if (document.body.scrollTop > 500 || document.documentElement.scrollTop > 500) {
-                backToTopBtn.style.display = "block";
-            } else {
-                backToTopBtn.style.display = "none";
+        // GESTION DES LIENS SECURISEE
+        // Au lieu de modifier Marked.js, on écoute les clics sur la page.
+        document.addEventListener('click', function(e) {
+            // Si l'élément cliqué est un lien (ou dans un lien)
+            const link = e.target.closest('a');
+            
+            // Si c'est un lien et qu'il commence par http (lien externe)
+            if (link && link.href.startsWith('http')) {
+                link.setAttribute('target', '_blank');
+                link.setAttribute('rel', 'noopener noreferrer');
             }
-        };
-
-        backToTopBtn.addEventListener("click", () => {
-            window.scrollTo({
-                top: 0,
-                behavior: "smooth"
-            });
         });
     </script>
 </body>
