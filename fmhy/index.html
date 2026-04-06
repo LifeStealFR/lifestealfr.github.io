@@ -9,9 +9,15 @@
     <style>
         :root {
             --bg-color: #0d1117;
-            --accent-color: #ff5f5f; /* Couleur rappelant Ko-fi / LifeSteal */
+            --accent-color: #ff5f5f;
             --card-bg: #161b22;
         }
+
+        /* Scrollbar personnalisée */
+        ::-webkit-scrollbar { width: 10px; }
+        ::-webkit-scrollbar-track { background: var(--bg-color); }
+        ::-webkit-scrollbar-thumb { background: #30363d; border-radius: 5px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--accent-color); }
 
         body {
             background-color: var(--bg-color);
@@ -19,104 +25,220 @@
             font-family: 'Inter', -apple-system, sans-serif;
             display: flex;
             justify-content: center;
+            scroll-behavior: smooth; /* Pour le retour en haut en douceur */
         }
 
-        /* Container principal avec effet de carte */
         .main-container {
-            max-width: 900px;
+            max-width: 1000px; /* Un peu plus large pour les grands tableaux */
             width: 100%;
             margin: 40px 20px;
             background: var(--card-bg);
             border: 1px solid #30363d;
             border-radius: 12px;
-            padding: 60px;
-            box-shadow: 0 20px 50px rgba(0,0,0,0.3);
+            padding: 50px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.4);
         }
 
-        /* Override du style GitHub pour le rendre plus "Design" */
+        /* Amélioration du Markdown */
         .markdown-body {
             background-color: transparent !important;
             color: #c9d1d9 !important;
             font-family: 'Inter', sans-serif !important;
         }
 
-        .markdown-body h1 {
-            border-bottom: 2px solid var(--accent-color);
+        .markdown-body h1, .markdown-body h2 {
+            border-bottom: 2px solid #30363d;
             padding-bottom: 10px;
-            font-weight: 800;
-            text-transform: uppercase;
-            letter-spacing: -1px;
+            margin-top: 40px;
             color: #fff;
         }
 
-        .markdown-body table {
-            display: table;
-            width: 100%;
-            border-collapse: separate;
-            border-spacing: 0;
-            border: 1px solid #30363d;
+        .markdown-body h1 {
+            border-bottom-color: var(--accent-color);
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: -1px;
+        }
+
+        /* Gestion des liens très longs */
+        .markdown-body a {
+            color: var(--accent-color) !important;
+            word-break: break-word; /* Empêche les URL de casser la page */
+        }
+
+        .markdown-body a:hover {
+            text-decoration: underline;
+            filter: brightness(1.2);
+        }
+
+        /* Responsive images */
+        .markdown-body img {
+            max-width: 100%;
             border-radius: 8px;
-            overflow: hidden;
+            background-color: #0d1117;
         }
 
-        .markdown-body table th {
-            background-color: #21262d;
-            border: none;
-            padding: 15px;
+        .markdown-body table {
+            display: block;
+            width: 100%;
+            overflow-x: auto; /* Scroll horizontal pour les tableaux sur mobile */
+            border-collapse: collapse;
         }
 
-        .markdown-body table td {
-            border-color: #30363d;
-            padding: 12px;
-        }
-
-        /* Style des blocs de citation (Notes) */
         .markdown-body blockquote {
             border-left: 4px solid var(--accent-color);
             background: rgba(255, 95, 95, 0.05);
             padding: 15px 25px;
             border-radius: 0 8px 8px 0;
+            color: #8b949e;
         }
 
-        /* Animation de chargement */
-        #loader {
-            text-align: center;
-            color: var(--accent-color);
+        /* Loader animé */
+        #loader-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 50vh;
+        }
+
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 5px solid #30363d;
+            border-top-color: var(--accent-color);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-bottom: 20px;
+        }
+
+        @keyframes spin { 100% { transform: rotate(360deg); } }
+
+        .loader-text {
+            color: #c9d1d9;
             font-weight: 600;
-            margin-top: 50px;
+            text-align: center;
+        }
+
+        .loader-subtext {
+            color: #8b949e;
+            font-size: 0.85em;
+            margin-top: 5px;
+        }
+
+        /* Bouton Retour en haut */
+        #btn-back-to-top {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            display: none;
+            background-color: var(--accent-color);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            font-size: 24px;
+            cursor: pointer;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+            transition: transform 0.2s, background-color 0.2s;
+            z-index: 1000;
+        }
+
+        #btn-back-to-top:hover {
+            transform: scale(1.1);
+            background-color: #ff4747;
         }
 
         @media (max-width: 767px) {
-            .main-container { padding: 25px; margin: 10px; }
+            .main-container { padding: 20px; margin: 10px; }
+            #btn-back-to-top { bottom: 20px; right: 20px; width: 40px; height: 40px; font-size: 20px; }
         }
     </style>
 </head>
 <body>
 
     <div class="main-container">
-        <div id="loader">Chargement...</div>
-        <article id="content" class="markdown-body"></article>
+        <div id="loader-container">
+            <div class="spinner"></div>
+            <div class="loader-text">Chargement de la base de données...</div>
+            <div class="loader-subtext">Le fichier est volumineux, cela peut prendre quelques secondes.</div>
+        </div>
+        <article id="content" class="markdown-body" style="display: none;"></article>
     </div>
+
+    <!-- Bouton retour en haut -->
+    <button id="btn-back-to-top" title="Retour en haut">↑</button>
 
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     <script>
         const url = 'https://api.fmhy.net/single-page';
 
+        // 1. Personnalisation du rendu Marked.js pour optimiser les performances
+        const renderer = new marked.Renderer();
+        
+        // Ajout du Lazy Loading sur les images (VITAL pour la performance)
+        renderer.image = function(href, title, text) {
+            return `<img src="${href}" alt="${text}" title="${title || ''}" loading="lazy" />`;
+        };
+
+        // Forcer les liens à s'ouvrir dans un nouvel onglet
+        renderer.link = function(href, title, text) {
+            return `<a href="${href}" title="${title || ''}" target="_blank" rel="noopener noreferrer">${text}</a>`;
+        };
+
+        marked.setOptions({
+            renderer: renderer,
+            gfm: true,
+            breaks: true
+        });
+
+        // 2. Fetch et traitement
         fetch(url)
-            .then(response => response.text())
+            .then(response => {
+                if (!response.ok) throw new Error("Erreur réseau");
+                return response.text();
+            })
             .then(text => {
-                document.getElementById('loader').style.display = 'none';
-                // Options pour Marked pour un rendu propre
-                marked.setOptions({
-                    gfm: true,
-                    breaks: true
-                });
-                document.getElementById('content').innerHTML = marked.parse(text);
+                // On met à jour le texte du loader pendant le parsing
+                document.querySelector('.loader-text').innerText = "Génération de l'affichage...";
+                
+                // On utilise setTimeout pour ne pas geler le navigateur pendant qu'il change le texte
+                setTimeout(() => {
+                    const parsedHTML = marked.parse(text);
+                    const contentDiv = document.getElementById('content');
+                    const loaderDiv = document.getElementById('loader-container');
+                    
+                    contentDiv.innerHTML = parsedHTML;
+                    
+                    loaderDiv.style.display = 'none';
+                    contentDiv.style.display = 'block';
+                }, 100); // 100ms donne le temps au DOM de respirer
             })
             .catch(err => {
-                document.getElementById('loader').innerHTML = "❌ Erreur de chargement de la charte.";
+                document.querySelector('.spinner').style.display = 'none';
+                document.querySelector('.loader-text').innerHTML = "❌ Erreur de chargement.";
+                document.querySelector('.loader-subtext').innerHTML = "Impossible de récupérer les données depuis l'API FMHY.";
                 console.error(err);
             });
+
+        // 3. Logique du bouton "Retour en haut"
+        const backToTopBtn = document.getElementById("btn-back-to-top");
+
+        window.onscroll = function() {
+            if (document.body.scrollTop > 500 || document.documentElement.scrollTop > 500) {
+                backToTopBtn.style.display = "block";
+            } else {
+                backToTopBtn.style.display = "none";
+            }
+        };
+
+        backToTopBtn.addEventListener("click", () => {
+            window.scrollTo({
+                top: 0,
+                behavior: "smooth"
+            });
+        });
     </script>
 </body>
 </html>
