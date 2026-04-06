@@ -1,33 +1,38 @@
 <!DOCTYPE html>
-<html lang="fr" data-theme="dark">
+<html lang="fr" data-theme="ai">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>FMHY | LifeStealFR</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- SCRIPT EN TÊTE : Empêche le clignotement des couleurs au chargement -->
+    <script>
+        const savedTheme = localStorage.getItem('animeTheme') || 'ai';
+        document.documentElement.setAttribute('data-theme', savedTheme);
+    </script>
+
     <style>
-        /* --- SYSTÈME DE THÈMES CORRIGÉ --- */
-        [data-theme="dark"] {
+        /* --- SYSTÈME DE COULEURS FIXES --- */
+        :root {
             --bg-main: #09090b;
-            --bg-sidebar: #121214;
-            --bg-surface: #18181b;
-            --bg-hover: #27272a;
-            --accent: #ef4444; 
+            --bg-sidebar: rgba(18, 18, 20, 0.85); /* Légèrement transparent pour voir l'aura */
+            --bg-surface: rgba(24, 24, 27, 0.85);
+            --bg-hover: rgba(39, 39, 42, 0.9);
             --text-main: #f4f4f5;
             --text-muted: #a1a1aa;
-            --border: #27272a;
+            --border: rgba(39, 39, 42, 0.5);
         }
 
-        [data-theme="light"] {
-            --bg-main: #f8f9fa;
-            --bg-sidebar: #ffffff;
-            --bg-surface: #ffffff;
-            --bg-hover: #e2e8f0;
-            --accent: #dc2626;
-            --text-main: #0f172a;
-            --text-muted: #64748b;
-            --border: #cbd5e1;
-        }
+        /* PALETTES DE PERSONNAGES (Définit l'accent et l'aura) */
+        [data-theme="ruby"] { --accent: #f43f5e; --accent-hover: #e11d48; --aura: rgba(244, 63, 94, 0.25); }
+        [data-theme="ai"] { --accent: #c026d3; --accent-hover: #a21caf; --aura: rgba(192, 38, 211, 0.25); }
+        [data-theme="aqua"] { --accent: #06b6d4; --accent-hover: #0891b2; --aura: rgba(6, 182, 212, 0.25); }
+        [data-theme="memcho"] { --accent: #eab308; --accent-hover: #ca8a04; --aura: rgba(234, 179, 8, 0.25); }
+        [data-theme="kana"] { --accent: #dc2626; --accent-hover: #b91c1c; --aura: rgba(220, 38, 38, 0.25); }
+        [data-theme="akane"] { --accent: #4f46e5; --accent-hover: #4338ca; --aura: rgba(79, 70, 229, 0.25); }
+        [data-theme="asuna"] { --accent: #f97316; --accent-hover: #ea580c; --aura: rgba(249, 115, 22, 0.25); }
+        [data-theme="sinon"] { --accent: #10b981; --accent-hover: #059669; --aura: rgba(16, 185, 129, 0.25); }
 
         * { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -37,126 +42,147 @@
             font-family: 'Inter', sans-serif;
             line-height: 1.6;
             overflow-x: hidden;
-            transition: background-color 0.2s, color 0.2s;
+        }
+
+        /* --- FOND ANIMÉ (AURA GPU-ACCELERATED ZERO LAG) --- */
+        #animated-bg {
+            position: fixed; inset: 0; z-index: -1;
+            overflow: hidden; pointer-events: none;
+            background: var(--bg-main);
+        }
+        
+        .aura {
+            position: absolute;
+            border-radius: 50%;
+            background: var(--aura);
+            filter: blur(120px); /* Crée l'effet de lumière douce */
+            will-change: transform; /* Dit à la carte graphique de s'en occuper */
+            transition: background 0.5s ease;
+        }
+
+        .aura-1 {
+            width: 50vw; height: 50vw; top: -10vw; left: -10vw;
+            animation: float1 15s infinite alternate ease-in-out;
+        }
+
+        .aura-2 {
+            width: 60vw; height: 60vw; bottom: -20vw; right: -10vw;
+            animation: float2 20s infinite alternate-reverse ease-in-out;
+        }
+
+        /* Mouvements 3D pour forcer le GPU (Zero lag CPU) */
+        @keyframes float1 { 
+            0% { transform: translate3d(0,0,0) scale(0.8); } 
+            100% { transform: translate3d(15vw, 15vh, 0) scale(1.2); } 
+        }
+        @keyframes float2 { 
+            0% { transform: translate3d(0,0,0) scale(1); } 
+            100% { transform: translate3d(-15vw, -10vh, 0) scale(1.1); } 
         }
 
         /* Scrollbar */
         ::-webkit-scrollbar { width: 6px; height: 6px; }
         ::-webkit-scrollbar-track { background: transparent; }
-        ::-webkit-scrollbar-thumb { background: var(--text-muted); border-radius: 10px; }
+        ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.2); border-radius: 10px; }
         ::-webkit-scrollbar-thumb:hover { background: var(--accent); }
 
         /* --- NAVBAR --- */
         .navbar {
             position: fixed; top: 0; left: 0; right: 0; height: 60px;
-            background: var(--bg-surface);
+            background: var(--bg-surface); backdrop-filter: blur(15px);
             border-bottom: 1px solid var(--border);
             display: flex; align-items: center; justify-content: space-between;
             padding: 0 20px; z-index: 2000;
         }
 
-        .nav-left { display: flex; align-items: center; gap: 15px; }
+        .nav-left, .nav-right { display: flex; align-items: center; gap: 15px; }
         .menu-btn { background: none; border: none; color: var(--text-main); font-size: 26px; cursor: pointer; display: none; }
         .logo { font-weight: 800; font-size: 1.2rem; }
-        .logo span { color: var(--accent); }
+        .logo span { color: var(--accent); transition: color 0.3s; text-shadow: 0 0 10px var(--aura); }
 
-        .nav-right { display: flex; align-items: center; gap: 10px; }
-        .icon-btn { background: var(--bg-hover); border: none; color: var(--text-main); width: 38px; height: 38px; border-radius: 8px; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; }
-        .icon-btn:hover { background: var(--accent); color: white; }
+        .icon-btn { background: var(--bg-hover); border: none; color: var(--text-main); width: 38px; height: 38px; border-radius: 8px; cursor: pointer; font-size: 1.2rem; transition: background 0.2s; }
+        .icon-btn:hover { background: var(--border); }
         
-        .user-profile { display: flex; align-items: center; gap: 10px; cursor: pointer; padding: 5px 10px; border-radius: 8px; background: var(--bg-hover); font-weight: 500; font-size: 0.9rem;}
-        .avatar { width: 28px; height: 28px; background: var(--accent); border-radius: 50%; color: white; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 12px; }
+        .theme-menu {
+            position: absolute; top: 55px; right: 20px; background: var(--bg-surface);
+            border: 1px solid var(--border); border-radius: 12px; padding: 12px;
+            display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.8);
+            opacity: 0; pointer-events: none; transform: translateY(-10px);
+            transition: 0.2s cubic-bezier(0.4, 0, 0.2, 1); backdrop-filter: blur(20px);
+        }
+        .theme-menu.show { opacity: 1; pointer-events: auto; transform: translateY(0); }
+        .color-dot { width: 28px; height: 28px; border-radius: 50%; cursor: pointer; border: 2px solid rgba(255,255,255,0.1); transition: transform 0.2s, box-shadow 0.2s; }
+        .color-dot:hover { transform: scale(1.15); box-shadow: 0 0 15px currentColor; }
 
-        /* --- LAYOUT --- */
-        .app-container { display: flex; margin-top: 60px; }
+        .user-profile { display: flex; align-items: center; gap: 10px; cursor: pointer; padding: 5px 10px; border-radius: 8px; background: var(--bg-hover); font-weight: 500; font-size: 0.9rem; border: 1px solid transparent; transition: border-color 0.2s;}
+        .user-profile:hover { border-color: var(--accent); }
+        .avatar { width: 28px; height: 28px; background: var(--accent); border-radius: 50%; color: white; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 12px; transition: background 0.3s, box-shadow 0.3s; box-shadow: 0 0 10px var(--aura); }
 
-        /* --- SIDEBAR CORRIGÉE --- */
+        /* --- LAYOUT & SIDEBAR --- */
+        .app-container { display: flex; margin-top: 60px; min-height: calc(100vh - 60px); }
+
         .sidebar {
-            width: 300px; 
-            background-color: var(--bg-sidebar); 
-            border-right: 1px solid var(--border);
-            position: fixed; top: 60px; bottom: 0; left: 0; 
-            overflow-y: auto; padding: 20px;
-            z-index: 1500; 
-            transition: transform 0.3s ease;
+            width: 280px; background-color: var(--bg-sidebar); border-right: 1px solid var(--border);
+            position: fixed; top: 60px; bottom: 0; left: 0; overflow-y: auto; padding: 20px;
+            z-index: 1500; transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1); backdrop-filter: blur(10px);
         }
 
         .toc-title { font-size: 0.8rem; font-weight: 800; color: var(--text-muted); text-transform: uppercase; margin-bottom: 15px; letter-spacing: 1px; }
-
-        .toc-link {
-            display: block; text-decoration: none; color: var(--text-muted);
-            padding: 6px 10px; border-radius: 6px; font-size: 0.9rem;
-            margin-bottom: 2px;
-        }
+        .toc-link { display: block; text-decoration: none; color: var(--text-muted); padding: 6px 10px; border-radius: 6px; font-size: 0.9rem; margin-bottom: 2px; transition: color 0.2s, background 0.2s; }
         .toc-link:hover { background: var(--bg-hover); color: var(--text-main); }
         .toc-h1 { font-weight: 700; color: var(--text-main); margin-top: 15px; border-bottom: 1px solid var(--border); padding-bottom: 5px; }
         .toc-h2 { margin-left: 10px; font-size: 0.85rem; }
         .toc-h3 { margin-left: 20px; font-size: 0.8rem; opacity: 0.8; }
 
-        /* --- CONTENU --- */
-        .main-content {
-            flex: 1; margin-left: 300px; padding: 40px; max-width: 1000px;
-        }
-
         /* --- MARKDOWN --- */
-        .markdown-body { font-size: 16px; }
+        .main-content { flex: 1; margin-left: 280px; padding: 40px; max-width: 1000px; }
+        .markdown-body { font-size: 16px; content-visibility: auto; }
+        
         .markdown-body h1, .markdown-body h2 { color: var(--text-main); scroll-margin-top: 80px; }
-        .markdown-body h1 { font-size: 2.2em; font-weight: 800; border-bottom: 3px solid var(--accent); padding-bottom: 10px; margin: 40px 0 20px; }
+        .markdown-body h1 { font-size: 2.2em; font-weight: 800; border-bottom: 3px solid var(--accent); padding-bottom: 10px; margin: 40px 0 20px; transition: border-color 0.3s; text-shadow: 0 2px 15px var(--aura); }
         .markdown-body h1:first-child { margin-top: 0; }
         .markdown-body h2 { font-size: 1.5em; margin: 30px 0 15px; border-bottom: 1px solid var(--border); padding-bottom: 5px; }
-        .markdown-body h3 { font-size: 1.2em; color: var(--accent); }
+        .markdown-body h3 { font-size: 1.2em; color: var(--accent); transition: color 0.3s; }
 
-        .markdown-body a { color: var(--accent); text-decoration: none; font-weight: 600; word-break: break-word; }
-        .markdown-body a:hover { text-decoration: underline; }
+        .markdown-body a { color: var(--accent); text-decoration: none; font-weight: 600; word-break: break-word; transition: color 0.3s; }
+        .markdown-body a:hover { text-decoration: underline; text-shadow: 0 0 8px var(--aura); }
 
-        .markdown-body details { background: var(--bg-surface); border: 1px solid var(--border); border-radius: 8px; margin: 15px 0; overflow: hidden; }
+        .markdown-body details { background: var(--bg-surface); border: 1px solid var(--border); border-radius: 8px; margin: 15px 0; overflow: hidden; backdrop-filter: blur(5px); }
         .markdown-body summary { background: var(--bg-hover); padding: 12px 15px; font-weight: 700; cursor: pointer; }
         .markdown-body details > div, .markdown-body details > p { padding: 15px; }
 
-        .table-wrapper { overflow-x: auto; margin: 20px 0; border: 1px solid var(--border); border-radius: 8px; }
+        .table-wrapper { overflow-x: auto; margin: 20px 0; border: 1px solid var(--border); border-radius: 8px; background: rgba(0,0,0,0.2); }
         .markdown-body table { width: 100%; border-collapse: collapse; }
         .markdown-body th { background: var(--bg-hover); padding: 12px; text-align: left; }
         .markdown-body td { padding: 12px; border-top: 1px solid var(--border); }
 
-        .markdown-body blockquote { border-left: 4px solid var(--accent); padding: 10px 20px; background: var(--bg-surface); margin: 20px 0; border-radius: 0 8px 8px 0; color: var(--text-muted); }
+        .markdown-body blockquote { border-left: 4px solid var(--accent); padding: 15px 20px; background: rgba(0,0,0,0.3); margin: 20px 0; border-radius: 0 8px 8px 0; color: var(--text-muted); transition: border-color 0.3s; }
 
-        /* --- LOADER --- */
-        #loader { position: fixed; inset: 0; background: var(--bg-main); z-index: 9999; display: flex; flex-direction: column; align-items: center; justify-content: center; }
-        .spinner { width: 50px; height: 50px; border: 4px solid var(--border); border-top-color: var(--accent); border-radius: 50%; animation: spin 1s linear infinite; }
+        #inline-loader { display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 100px 0; }
+        .spinner { width: 45px; height: 45px; border: 4px solid var(--border); border-top-color: var(--accent); border-radius: 50%; animation: spin 1s linear infinite; }
         @keyframes spin { to { transform: rotate(360deg); } }
-        .loader-text { margin-top: 20px; font-weight: 700; font-size: 1.2rem; }
+        .loader-text { margin-top: 20px; font-weight: 700; color: var(--text-muted); }
 
-        /* --- VOILE SOMBRE MOBILE (Overlay) --- */
-        #mobile-overlay {
-            display: none; position: fixed; top: 60px; left: 0; right: 0; bottom: 0;
-            background: rgba(0, 0, 0, 0.6); z-index: 1400; backdrop-filter: blur(2px);
-            opacity: 0; transition: opacity 0.3s;
-        }
-
-        /* --- RESPONSIVE MOBILE --- */
+        /* --- MOBILE --- */
+        #mobile-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 1400; opacity: 0; transition: opacity 0.3s; backdrop-filter: blur(3px); }
         @media (max-width: 900px) {
             .menu-btn { display: block; }
-            .sidebar { transform: translateX(-100%); width: 280px; box-shadow: 5px 0 20px rgba(0,0,0,0.5); }
-            
-            /* Quand le menu est ouvert */
+            .sidebar { transform: translateX(-100%); box-shadow: 10px 0 30px rgba(0,0,0,0.8); }
             .sidebar.open { transform: translateX(0); }
-            #mobile-overlay.active { display: block; opacity: 1; }
-
+            #mobile-overlay.active { display: block; opacity: 1; top: 60px; }
             .main-content { margin-left: 0; padding: 20px; }
-            .user-profile span { display: none; } /* Cache le pseudo sur petit écran */
+            .user-profile span { display: none; }
         }
     </style>
 </head>
 <body>
 
-    <!-- Écran de chargement -->
-    <div id="loader">
-        <div class="spinner"></div>
-        <div class="loader-text">Chargement de l'encyclopédie...</div>
+    <!-- FOND ANIMÉ GPU -->
+    <div id="animated-bg">
+        <div class="aura aura-1"></div>
+        <div class="aura aura-2"></div>
     </div>
-
-    <!-- Voile sombre pour mobile -->
-    <div id="mobile-overlay"></div>
 
     <nav class="navbar">
         <div class="nav-left">
@@ -164,49 +190,45 @@
             <div class="logo">LifeSteal<span>FR</span></div>
         </div>
         <div class="nav-right">
-            <button class="icon-btn" id="themeToggle">🌓</button>
-            <div class="user-profile" id="userProfile">
+            <!-- Bouton Palette -->
+            <button class="icon-btn" id="themeBtn" title="Changer l'Aura">🎨</button>
+            <!-- Menu caché des couleurs -->
+            <div class="theme-menu" id="themeMenu"></div>
+
+            <div class="user-profile" id="userProfile" title="Modifier le Profil">
                 <div class="avatar" id="userAvatar">A</div>
                 <span id="userNameDisplay">Anonyme</span>
             </div>
         </div>
     </nav>
 
+    <div id="mobile-overlay"></div>
+
     <div class="app-container">
         <aside class="sidebar" id="sidebar">
-            <div class="toc-title">Navigation</div>
+            <div class="toc-title">Bibliothèque</div>
             <nav id="toc"></nav>
         </aside>
 
         <main class="main-content">
-            <div id="content" class="markdown-body"></div>
+            <div id="inline-loader">
+                <div class="spinner"></div>
+                <div class="loader-text" id="loaderState">Extraction des données...</div>
+            </div>
+            
+            <div id="content" class="markdown-body" style="display: none;"></div>
         </main>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     <script>
-        // --- 1. INITIALISATION DU THÈME ---
-        // Le thème doit être appliqué sur le <html> (document.documentElement)
-        const savedTheme = localStorage.getItem('theme') || 'dark';
-        document.documentElement.setAttribute('data-theme', savedTheme);
-
-        // Pseudo
+        // --- 1. INITIALISATION DU PROFIL ---
         const savedName = localStorage.getItem('username') || 'Visiteur';
         document.getElementById('userNameDisplay').innerText = savedName;
         document.getElementById('userAvatar').innerText = savedName.charAt(0).toUpperCase();
 
-        // --- 2. GESTION DU THÈME (BOUTON) ---
-        document.getElementById('themeToggle').addEventListener('click', () => {
-            const currentTheme = document.documentElement.getAttribute('data-theme');
-            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
-            document.documentElement.setAttribute('data-theme', newTheme);
-            localStorage.setItem('theme', newTheme);
-        });
-
-        // --- 3. GESTION DU PSEUDO ---
         document.getElementById('userProfile').addEventListener('click', () => {
-            const currentName = localStorage.getItem('username') || '';
-            const newName = prompt("Choisissez votre pseudo local :", currentName);
+            const newName = prompt("Choisis ton pseudo local :", localStorage.getItem('username') || '');
             if (newName && newName.trim() !== '') {
                 localStorage.setItem('username', newName.trim());
                 document.getElementById('userNameDisplay').innerText = newName.trim();
@@ -214,74 +236,118 @@
             }
         });
 
-        // --- 4. RÉCUPÉRATION ET PARSING ---
+        // --- 2. GESTION DES COULEURS ANIMES ---
+        const palettes = [
+            { id: 'ruby', color: '#f43f5e', title: 'Ruby Hoshino' },
+            { id: 'ai', color: '#c026d3', title: 'Ai Hoshino' },
+            { id: 'aqua', color: '#06b6d4', title: 'Aqua Hoshino' },
+            { id: 'memcho', color: '#eab308', title: 'Memcho' },
+            { id: 'kana', color: '#dc2626', title: 'Kana Arima' },
+            { id: 'akane', color: '#4f46e5', title: 'Akane Kurokawa' },
+            { id: 'asuna', color: '#f97316', title: 'Asuna Yuuki' },
+            { id: 'sinon', color: '#10b981', title: 'Sinon (Hecate)' }
+        ];
+
+        const themeMenu = document.getElementById('themeMenu');
+        palettes.forEach(p => {
+            const dot = document.createElement('div');
+            dot.className = 'color-dot';
+            dot.style.background = p.color;
+            dot.style.color = p.color; // Pour le hover box-shadow
+            dot.title = p.title;
+            dot.onclick = () => {
+                document.documentElement.setAttribute('data-theme', p.id);
+                localStorage.setItem('animeTheme', p.id);
+                themeMenu.classList.remove('show');
+            };
+            themeMenu.appendChild(dot);
+        });
+
+        document.getElementById('themeBtn').onclick = (e) => {
+            e.stopPropagation();
+            themeMenu.classList.toggle('show');
+        };
+        document.addEventListener('click', () => themeMenu.classList.remove('show'));
+
+        // --- 3. FETCH ULTRA RAPIDE (DOM OFFLINE PATCH) ---
         marked.setOptions({ gfm: true, breaks: true });
 
         fetch('https://api.fmhy.net/single-page')
             .then(res => res.text())
             .then(text => {
-                const contentDiv = document.getElementById('content');
-                contentDiv.innerHTML = marked.parse(text);
-
-                // Tableaux Responsive
-                contentDiv.querySelectorAll('table').forEach(table => {
-                    const wrapper = document.createElement('div');
-                    wrapper.className = 'table-wrapper';
-                    table.parentNode.insertBefore(wrapper, table);
-                    wrapper.appendChild(table);
-                });
-
-                // Génération du Sommaire (TOC)
-                const tocDiv = document.getElementById('toc');
-                // On ne prend que h1, h2, h3 pour éviter de saturer le menu
-                const headings = contentDiv.querySelectorAll('h1, h2, h3');
+                document.getElementById('loaderState').innerText = "Génération de l'univers...";
                 
-                headings.forEach((heading, index) => {
-                    if (!heading.id) heading.id = 'section-' + index;
-                    
-                    const link = document.createElement('a');
-                    link.href = '#' + heading.id;
-                    // Nettoyage des symboles bizarres du markdown FMHY
-                    link.innerText = heading.innerText.replace(/[↑►▷]/g, '').trim();
-                    link.className = `toc-link toc-${heading.tagName.toLowerCase()}`;
-                    
-                    link.addEventListener('click', (e) => {
-                        e.preventDefault();
-                        heading.scrollIntoView({ behavior: 'smooth' });
-                        if (window.innerWidth <= 900) toggleMenu(false);
+                // Petit délai pour laisser l'UI respirer
+                setTimeout(() => {
+                    // Patch Vitesse : On crée un conteneur fantôme en RAM
+                    const ghostDiv = document.createElement('div');
+                    ghostDiv.innerHTML = marked.parse(text);
+
+                    // Traitement des tables dans le conteneur fantôme (très rapide)
+                    ghostDiv.querySelectorAll('table').forEach(table => {
+                        const wrapper = document.createElement('div');
+                        wrapper.className = 'table-wrapper';
+                        table.parentNode.insertBefore(wrapper, table);
+                        wrapper.appendChild(table);
                     });
 
-                    tocDiv.appendChild(link);
-                });
+                    // Génération du menu depuis le conteneur fantôme
+                    const tocDiv = document.getElementById('toc');
+                    const fragment = document.createDocumentFragment(); // Patch performance
+                    
+                    ghostDiv.querySelectorAll('h1, h2, h3').forEach((heading, index) => {
+                        if (!heading.id) heading.id = 'section-' + index;
+                        const link = document.createElement('a');
+                        link.href = '#' + heading.id;
+                        link.innerText = heading.innerText.replace(/[↑►▷]/g, '').trim();
+                        link.className = `toc-link toc-${heading.tagName.toLowerCase()}`;
+                        
+                        link.addEventListener('click', (e) => {
+                            e.preventDefault();
+                            document.getElementById(heading.id).scrollIntoView({ behavior: 'smooth' });
+                            if (window.innerWidth <= 900) toggleMenu(false);
+                        });
+                        fragment.appendChild(link);
+                    });
+                    
+                    tocDiv.appendChild(fragment); // Injection du sommaire en 1 fois
 
-                // Masquer le loader et restaurer le scroll après le rendu DOM
-                setTimeout(() => {
-                    document.getElementById('loader').style.display = 'none';
+                    // Injection finale du gros contenu (1 seule manipulation du DOM !)
+                    const contentDiv = document.getElementById('content');
+                    contentDiv.innerHTML = '';
+                    contentDiv.appendChild(ghostDiv);
+
+                    // Révélation instantanée
+                    document.getElementById('inline-loader').style.display = 'none';
+                    contentDiv.style.display = 'block';
+
+                    // Restauration fluide du scroll
                     const savedScroll = localStorage.getItem('scrollPosition');
-                    if (savedScroll) window.scrollTo(0, parseInt(savedScroll));
-                }, 300);
+                    if (savedScroll) {
+                        requestAnimationFrame(() => window.scrollTo(0, parseInt(savedScroll)));
+                    }
+                }, 50);
             });
 
-        // --- 5. SAUVEGARDE DU SCROLL ---
-        let scrollTimeout;
+        // --- 4. SAUVEGARDE DU SCROLL (Optimisé avec requestAnimationFrame) ---
+        let isScrolling;
         window.addEventListener('scroll', () => {
-            clearTimeout(scrollTimeout);
-            scrollTimeout = setTimeout(() => {
+            window.clearTimeout(isScrolling);
+            isScrolling = setTimeout(() => {
                 localStorage.setItem('scrollPosition', window.scrollY);
-            }, 500);
-        });
+            }, 200);
+        }, { passive: true });
 
-        // --- 6. OUVERTURE DES LIENS ---
+        // --- 5. LIENS SÉCURISÉS ---
         document.addEventListener('click', e => {
             const link = e.target.closest('a');
-            // Si c'est un lien et qu'il ne sert pas au sommaire (ne commence pas par #)
             if (link && !link.getAttribute('href').startsWith('#')) {
                 link.setAttribute('target', '_blank');
                 link.setAttribute('rel', 'noopener noreferrer');
             }
         });
 
-        // --- 7. MENU MOBILE & SWIPE ---
+        // --- 6. GESTION TACTILE PATCHÉE ---
         const sidebar = document.getElementById('sidebar');
         const overlay = document.getElementById('mobile-overlay');
         const menuBtn = document.getElementById('menuBtn');
@@ -289,11 +355,9 @@
         function toggleMenu(state) {
             const isOpen = state !== undefined ? state : !sidebar.classList.contains('open');
             sidebar.classList.toggle('open', isOpen);
-            
-            // Gestion de l'overlay noir sur mobile
             if (isOpen) {
                 overlay.classList.add('active');
-                document.body.style.overflow = 'hidden'; // Empêche de scroller derrière le menu
+                document.body.style.overflow = 'hidden';
             } else {
                 overlay.classList.remove('active');
                 document.body.style.overflow = '';
@@ -303,21 +367,29 @@
         menuBtn.addEventListener('click', () => toggleMenu());
         overlay.addEventListener('click', () => toggleMenu(false));
 
-        // Détection Tactile (Swipe)
+        // Patch : Le swipe n'est valide QUE s'il commence près du bord gauche de l'écran
+        // Ça évite de déclencher le menu quand on scroll un tableau vers la droite !
         let touchStartX = 0;
-        document.addEventListener('touchstart', e => {
-            touchStartX = e.changedTouches[0].screenX;
+        let touchStartY = 0;
+
+        document.addEventListener('touchstart', e => { 
+            touchStartX = e.changedTouches[0].screenX; 
+            touchStartY = e.changedTouches[0].screenY; 
         }, { passive: true });
 
         document.addEventListener('touchend', e => {
             if (window.innerWidth > 900) return;
-            const touchEndX = e.changedTouches[0].screenX;
-            const diff = touchEndX - touchStartX;
             
-            // Swipe Droite depuis le bord (Ouvrir)
-            if (diff > 70 && touchStartX < 40) toggleMenu(true);
-            // Swipe Gauche (Fermer)
-            if (diff < -70 && sidebar.classList.contains('open')) toggleMenu(false);
+            const diffX = e.changedTouches[0].screenX - touchStartX;
+            const diffY = Math.abs(e.changedTouches[0].screenY - touchStartY);
+
+            // Si on glisse plus à l'horizontale qu'à la verticale
+            if (diffY < 50) {
+                // Swipe pour OUVRIR (Doit partir du bord : < 40px)
+                if (diffX > 60 && touchStartX < 40) toggleMenu(true);
+                // Swipe pour FERMER
+                if (diffX < -60 && sidebar.classList.contains('open')) toggleMenu(false);
+            }
         }, { passive: true });
     </script>
 </body>
