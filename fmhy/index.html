@@ -1,34 +1,32 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="fr" data-theme="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>FMHY | LifeStealFR</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
-        /* --- SYSTÈME DE THÈMES (CSS VARIABLES) --- */
-        :root[data-theme="dark"] {
+        /* --- SYSTÈME DE THÈMES CORRIGÉ --- */
+        [data-theme="dark"] {
             --bg-main: #09090b;
             --bg-sidebar: #121214;
             --bg-surface: #18181b;
             --bg-hover: #27272a;
-            --accent: #ef4444; /* Rouge moderne */
+            --accent: #ef4444; 
             --text-main: #f4f4f5;
             --text-muted: #a1a1aa;
             --border: #27272a;
-            --shadow: rgba(0, 0, 0, 0.5);
         }
 
-        :root[data-theme="light"] {
-            --bg-main: #fafafa;
-            --bg-sidebar: #f4f4f5;
+        [data-theme="light"] {
+            --bg-main: #f8f9fa;
+            --bg-sidebar: #ffffff;
             --bg-surface: #ffffff;
-            --bg-hover: #e4e4e7;
+            --bg-hover: #e2e8f0;
             --accent: #dc2626;
-            --text-main: #18181b;
-            --text-muted: #52525b;
-            --border: #e4e4e7;
-            --shadow: rgba(0, 0, 0, 0.05);
+            --text-main: #0f172a;
+            --text-muted: #64748b;
+            --border: #cbd5e1;
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -39,141 +37,147 @@
             font-family: 'Inter', sans-serif;
             line-height: 1.6;
             overflow-x: hidden;
-            transition: background-color 0.3s, color 0.3s;
+            transition: background-color 0.2s, color 0.2s;
         }
 
-        /* Scrollbar moderne */
+        /* Scrollbar */
         ::-webkit-scrollbar { width: 6px; height: 6px; }
         ::-webkit-scrollbar-track { background: transparent; }
-        ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 10px; }
+        ::-webkit-scrollbar-thumb { background: var(--text-muted); border-radius: 10px; }
         ::-webkit-scrollbar-thumb:hover { background: var(--accent); }
 
-        /* --- NAVBAR (Barre du haut) --- */
+        /* --- NAVBAR --- */
         .navbar {
             position: fixed; top: 0; left: 0; right: 0; height: 60px;
             background: var(--bg-surface);
             border-bottom: 1px solid var(--border);
             display: flex; align-items: center; justify-content: space-between;
-            padding: 0 20px; z-index: 1000;
-            backdrop-filter: blur(10px);
+            padding: 0 20px; z-index: 2000;
         }
 
         .nav-left { display: flex; align-items: center; gap: 15px; }
-        .menu-btn { background: none; border: none; color: var(--text-main); font-size: 24px; cursor: pointer; display: none; }
-        .logo { font-weight: 800; font-size: 1.2rem; letter-spacing: -0.5px; }
+        .menu-btn { background: none; border: none; color: var(--text-main); font-size: 26px; cursor: pointer; display: none; }
+        .logo { font-weight: 800; font-size: 1.2rem; }
         .logo span { color: var(--accent); }
 
-        .nav-right { display: flex; align-items: center; gap: 15px; }
-        .icon-btn { background: var(--bg-hover); border: none; color: var(--text-main); width: 35px; height: 35px; border-radius: 8px; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 1.1rem; transition: 0.2s; }
+        .nav-right { display: flex; align-items: center; gap: 10px; }
+        .icon-btn { background: var(--bg-hover); border: none; color: var(--text-main); width: 38px; height: 38px; border-radius: 8px; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; }
         .icon-btn:hover { background: var(--accent); color: white; }
         
-        .user-profile { display: flex; align-items: center; gap: 10px; cursor: pointer; padding: 5px 10px; border-radius: 8px; background: var(--bg-hover); }
-        .user-profile:hover { border-color: var(--accent); }
-        .avatar { width: 28px; height: 28px; background: var(--accent); border-radius: 50%; color: white; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 12px; }
+        .user-profile { display: flex; align-items: center; gap: 10px; cursor: pointer; padding: 5px 10px; border-radius: 8px; background: var(--bg-hover); font-weight: 500; font-size: 0.9rem;}
+        .avatar { width: 28px; height: 28px; background: var(--accent); border-radius: 50%; color: white; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 12px; }
 
         /* --- LAYOUT --- */
-        .app-container { display: flex; margin-top: 60px; min-height: calc(100vh - 60px); }
+        .app-container { display: flex; margin-top: 60px; }
 
-        /* --- SIDEBAR (Sommaire) --- */
+        /* --- SIDEBAR CORRIGÉE --- */
         .sidebar {
-            width: 280px; background: var(--bg-sidebar); border-right: 1px solid var(--border);
-            position: fixed; top: 60px; bottom: 0; left: 0; overflow-y: auto; padding: 20px 10px;
-            z-index: 900; transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            width: 300px; 
+            background-color: var(--bg-sidebar); 
+            border-right: 1px solid var(--border);
+            position: fixed; top: 60px; bottom: 0; left: 0; 
+            overflow-y: auto; padding: 20px;
+            z-index: 1500; 
+            transition: transform 0.3s ease;
         }
 
-        .toc-title { font-size: 0.8rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; margin-bottom: 15px; padding-left: 10px; }
+        .toc-title { font-size: 0.8rem; font-weight: 800; color: var(--text-muted); text-transform: uppercase; margin-bottom: 15px; letter-spacing: 1px; }
 
         .toc-link {
             display: block; text-decoration: none; color: var(--text-muted);
-            padding: 6px 10px; border-radius: 6px; font-size: 0.9rem; transition: 0.2s;
-            white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+            padding: 6px 10px; border-radius: 6px; font-size: 0.9rem;
+            margin-bottom: 2px;
         }
         .toc-link:hover { background: var(--bg-hover); color: var(--text-main); }
-        .toc-link.active { background: rgba(239, 68, 68, 0.1); color: var(--accent); font-weight: 600; border-left: 3px solid var(--accent); }
-        
-        .toc-h1 { font-weight: 600; color: var(--text-main); margin-top: 10px; }
-        .toc-h2 { margin-left: 15px; font-size: 0.85rem; }
-        .toc-h3 { margin-left: 30px; font-size: 0.8rem; opacity: 0.8; }
+        .toc-h1 { font-weight: 700; color: var(--text-main); margin-top: 15px; border-bottom: 1px solid var(--border); padding-bottom: 5px; }
+        .toc-h2 { margin-left: 10px; font-size: 0.85rem; }
+        .toc-h3 { margin-left: 20px; font-size: 0.8rem; opacity: 0.8; }
 
         /* --- CONTENU --- */
         .main-content {
-            flex: 1; margin-left: 280px; padding: 40px; max-width: 1000px;
-            transition: margin-left 0.3s;
+            flex: 1; margin-left: 300px; padding: 40px; max-width: 1000px;
         }
 
-        /* --- DESIGN MARKDOWN (Façon Notion/Docs) --- */
-        .markdown-body { font-size: 16px; color: var(--text-main); }
-        
-        .markdown-body h1 { font-size: 2.2em; font-weight: 800; border-bottom: 2px solid var(--border); padding-bottom: 10px; margin: 40px 0 20px; color: var(--text-main); }
+        /* --- MARKDOWN --- */
+        .markdown-body { font-size: 16px; }
+        .markdown-body h1, .markdown-body h2 { color: var(--text-main); scroll-margin-top: 80px; }
+        .markdown-body h1 { font-size: 2.2em; font-weight: 800; border-bottom: 3px solid var(--accent); padding-bottom: 10px; margin: 40px 0 20px; }
         .markdown-body h1:first-child { margin-top: 0; }
-        .markdown-body h2 { font-size: 1.5em; margin: 30px 0 15px; color: var(--accent); }
-        .markdown-body h3 { font-size: 1.2em; margin: 20px 0 10px; }
+        .markdown-body h2 { font-size: 1.5em; margin: 30px 0 15px; border-bottom: 1px solid var(--border); padding-bottom: 5px; }
+        .markdown-body h3 { font-size: 1.2em; color: var(--accent); }
 
-        .markdown-body a { color: var(--accent); text-decoration: none; font-weight: 500; border-bottom: 1px solid transparent; transition: 0.2s; word-break: break-word; }
-        .markdown-body a:hover { border-bottom-color: var(--accent); }
+        .markdown-body a { color: var(--accent); text-decoration: none; font-weight: 600; word-break: break-word; }
+        .markdown-body a:hover { text-decoration: underline; }
 
-        /* Les blocs "Détails" type Wiki */
         .markdown-body details { background: var(--bg-surface); border: 1px solid var(--border); border-radius: 8px; margin: 15px 0; overflow: hidden; }
-        .markdown-body summary { background: var(--bg-hover); padding: 12px 15px; font-weight: 600; cursor: pointer; user-select: none; }
-        .markdown-body details[open] summary { border-bottom: 1px solid var(--border); }
+        .markdown-body summary { background: var(--bg-hover); padding: 12px 15px; font-weight: 700; cursor: pointer; }
         .markdown-body details > div, .markdown-body details > p { padding: 15px; }
 
-        /* Tableaux */
-        .table-wrapper { overflow-x: auto; margin: 20px 0; border-radius: 8px; border: 1px solid var(--border); }
-        .markdown-body table { width: 100%; border-collapse: collapse; text-align: left; }
-        .markdown-body th { background: var(--bg-hover); padding: 12px; font-weight: 600; }
+        .table-wrapper { overflow-x: auto; margin: 20px 0; border: 1px solid var(--border); border-radius: 8px; }
+        .markdown-body table { width: 100%; border-collapse: collapse; }
+        .markdown-body th { background: var(--bg-hover); padding: 12px; text-align: left; }
         .markdown-body td { padding: 12px; border-top: 1px solid var(--border); }
 
-        .markdown-body blockquote { border-left: 4px solid var(--accent); padding: 10px 20px; background: var(--bg-surface); margin: 20px 0; border-radius: 0 8px 8px 0; }
-        .markdown-body img { max-width: 100%; border-radius: 8px; margin: 20px 0; }
+        .markdown-body blockquote { border-left: 4px solid var(--accent); padding: 10px 20px; background: var(--bg-surface); margin: 20px 0; border-radius: 0 8px 8px 0; color: var(--text-muted); }
 
-        /* --- LOADER PREMIUM --- */
+        /* --- LOADER --- */
         #loader { position: fixed; inset: 0; background: var(--bg-main); z-index: 9999; display: flex; flex-direction: column; align-items: center; justify-content: center; }
-        .spinner { width: 40px; height: 40px; border: 3px solid var(--border); border-top-color: var(--accent); border-radius: 50%; animation: spin 1s linear infinite; }
+        .spinner { width: 50px; height: 50px; border: 4px solid var(--border); border-top-color: var(--accent); border-radius: 50%; animation: spin 1s linear infinite; }
         @keyframes spin { to { transform: rotate(360deg); } }
-        .loader-text { margin-top: 20px; font-weight: 600; font-size: 1.1rem; }
+        .loader-text { margin-top: 20px; font-weight: 700; font-size: 1.2rem; }
 
-        /* --- MOBILE & TACTILE --- */
+        /* --- VOILE SOMBRE MOBILE (Overlay) --- */
+        #mobile-overlay {
+            display: none; position: fixed; top: 60px; left: 0; right: 0; bottom: 0;
+            background: rgba(0, 0, 0, 0.6); z-index: 1400; backdrop-filter: blur(2px);
+            opacity: 0; transition: opacity 0.3s;
+        }
+
+        /* --- RESPONSIVE MOBILE --- */
         @media (max-width: 900px) {
             .menu-btn { display: block; }
-            .sidebar { transform: translateX(-100%); box-shadow: 10px 0 30px var(--shadow); }
+            .sidebar { transform: translateX(-100%); width: 280px; box-shadow: 5px 0 20px rgba(0,0,0,0.5); }
+            
+            /* Quand le menu est ouvert */
             .sidebar.open { transform: translateX(0); }
-            .main-content { margin-left: 0; padding: 20px; width: 100%; }
+            #mobile-overlay.active { display: block; opacity: 1; }
+
+            .main-content { margin-left: 0; padding: 20px; }
+            .user-profile span { display: none; } /* Cache le pseudo sur petit écran */
         }
     </style>
 </head>
-<body data-theme="dark">
+<body>
 
     <!-- Écran de chargement -->
     <div id="loader">
         <div class="spinner"></div>
-        <div class="loader-text">Synchronisation des données...</div>
+        <div class="loader-text">Chargement de l'encyclopédie...</div>
     </div>
 
-    <!-- Barre de Navigation -->
+    <!-- Voile sombre pour mobile -->
+    <div id="mobile-overlay"></div>
+
     <nav class="navbar">
         <div class="nav-left">
             <button class="menu-btn" id="menuBtn">☰</button>
             <div class="logo">LifeSteal<span>FR</span></div>
         </div>
         <div class="nav-right">
-            <button class="icon-btn" id="themeToggle" title="Changer de thème">🌓</button>
-            <div class="user-profile" id="userProfile" title="Changer de pseudo">
+            <button class="icon-btn" id="themeToggle">🌓</button>
+            <div class="user-profile" id="userProfile">
                 <div class="avatar" id="userAvatar">A</div>
                 <span id="userNameDisplay">Anonyme</span>
             </div>
         </div>
     </nav>
 
-    <!-- Application -->
     <div class="app-container">
-        <!-- Sommaire -->
         <aside class="sidebar" id="sidebar">
-            <div class="toc-title">Explorateur</div>
+            <div class="toc-title">Navigation</div>
             <nav id="toc"></nav>
         </aside>
 
-        <!-- Contenu Markdown -->
         <main class="main-content">
             <div id="content" class="markdown-body"></div>
         </main>
@@ -181,27 +185,45 @@
 
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     <script>
-        // 1. INITIALISATION (Thème, Pseudo, Position)
+        // --- 1. INITIALISATION DU THÈME ---
+        // Le thème doit être appliqué sur le <html> (document.documentElement)
         const savedTheme = localStorage.getItem('theme') || 'dark';
-        document.body.setAttribute('data-theme', savedTheme);
+        document.documentElement.setAttribute('data-theme', savedTheme);
 
+        // Pseudo
         const savedName = localStorage.getItem('username') || 'Visiteur';
         document.getElementById('userNameDisplay').innerText = savedName;
         document.getElementById('userAvatar').innerText = savedName.charAt(0).toUpperCase();
 
-        const url = 'https://api.fmhy.net/single-page';
+        // --- 2. GESTION DU THÈME (BOUTON) ---
+        document.getElementById('themeToggle').addEventListener('click', () => {
+            const currentTheme = document.documentElement.getAttribute('data-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            document.documentElement.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+        });
 
+        // --- 3. GESTION DU PSEUDO ---
+        document.getElementById('userProfile').addEventListener('click', () => {
+            const currentName = localStorage.getItem('username') || '';
+            const newName = prompt("Choisissez votre pseudo local :", currentName);
+            if (newName && newName.trim() !== '') {
+                localStorage.setItem('username', newName.trim());
+                document.getElementById('userNameDisplay').innerText = newName.trim();
+                document.getElementById('userAvatar').innerText = newName.trim().charAt(0).toUpperCase();
+            }
+        });
+
+        // --- 4. RÉCUPÉRATION ET PARSING ---
         marked.setOptions({ gfm: true, breaks: true });
 
-        // 2. FETCH ET RENDU
-        fetch(url)
+        fetch('https://api.fmhy.net/single-page')
             .then(res => res.text())
             .then(text => {
-                const html = marked.parse(text);
                 const contentDiv = document.getElementById('content');
-                contentDiv.innerHTML = html;
+                contentDiv.innerHTML = marked.parse(text);
 
-                // Emballer les tables
+                // Tableaux Responsive
                 contentDiv.querySelectorAll('table').forEach(table => {
                     const wrapper = document.createElement('div');
                     wrapper.className = 'table-wrapper';
@@ -209,8 +231,9 @@
                     wrapper.appendChild(table);
                 });
 
-                // Génération du menu TOC
+                // Génération du Sommaire (TOC)
                 const tocDiv = document.getElementById('toc');
+                // On ne prend que h1, h2, h3 pour éviter de saturer le menu
                 const headings = contentDiv.querySelectorAll('h1, h2, h3');
                 
                 headings.forEach((heading, index) => {
@@ -218,7 +241,8 @@
                     
                     const link = document.createElement('a');
                     link.href = '#' + heading.id;
-                    link.innerText = heading.innerText.replace(/↑|►/g, '').trim();
+                    // Nettoyage des symboles bizarres du markdown FMHY
+                    link.innerText = heading.innerText.replace(/[↑►▷]/g, '').trim();
                     link.className = `toc-link toc-${heading.tagName.toLowerCase()}`;
                     
                     link.addEventListener('click', (e) => {
@@ -230,95 +254,71 @@
                     tocDiv.appendChild(link);
                 });
 
-                // Cacher le loader ET restaurer le scroll
+                // Masquer le loader et restaurer le scroll après le rendu DOM
                 setTimeout(() => {
                     document.getElementById('loader').style.display = 'none';
                     const savedScroll = localStorage.getItem('scrollPosition');
                     if (savedScroll) window.scrollTo(0, parseInt(savedScroll));
-                }, 150);
+                }, 300);
             });
 
-        // 3. SAUVEGARDE DE LA POSITION (Local Storage)
+        // --- 5. SAUVEGARDE DU SCROLL ---
         let scrollTimeout;
         window.addEventListener('scroll', () => {
             clearTimeout(scrollTimeout);
             scrollTimeout = setTimeout(() => {
                 localStorage.setItem('scrollPosition', window.scrollY);
-            }, 200); // Sauvegarde toutes les 200ms lors du défilement
+            }, 500);
         });
 
-        // 4. GESTION DES LIENS
+        // --- 6. OUVERTURE DES LIENS ---
         document.addEventListener('click', e => {
             const link = e.target.closest('a');
-            if (link && !link.href.includes('#')) {
+            // Si c'est un lien et qu'il ne sert pas au sommaire (ne commence pas par #)
+            if (link && !link.getAttribute('href').startsWith('#')) {
                 link.setAttribute('target', '_blank');
+                link.setAttribute('rel', 'noopener noreferrer');
             }
         });
 
-        // 5. GESTION DU THÈME
-        document.getElementById('themeToggle').addEventListener('click', () => {
-            const currentTheme = document.body.getAttribute('data-theme');
-            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
-            document.body.setAttribute('data-theme', newTheme);
-            localStorage.setItem('theme', newTheme);
-        });
-
-        // 6. GESTION DU PSEUDO LOCAL
-        document.getElementById('userProfile').addEventListener('click', () => {
-            const currentName = localStorage.getItem('username') || '';
-            const newName = prompt("Choisis ton pseudo :", currentName);
-            if (newName && newName.trim() !== '') {
-                localStorage.setItem('username', newName.trim());
-                document.getElementById('userNameDisplay').innerText = newName.trim();
-                document.getElementById('userAvatar').innerText = newName.trim().charAt(0).toUpperCase();
-            }
-        });
-
-        // 7. GESTION MOBILE ET GESTES (SWIPE TACTILE)
+        // --- 7. MENU MOBILE & SWIPE ---
         const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('mobile-overlay');
         const menuBtn = document.getElementById('menuBtn');
-        let touchStartX = 0;
-        let touchEndX = 0;
 
-        function toggleMenu(forceState) {
-            if (forceState !== undefined) {
-                sidebar.classList.toggle('open', forceState);
+        function toggleMenu(state) {
+            const isOpen = state !== undefined ? state : !sidebar.classList.contains('open');
+            sidebar.classList.toggle('open', isOpen);
+            
+            // Gestion de l'overlay noir sur mobile
+            if (isOpen) {
+                overlay.classList.add('active');
+                document.body.style.overflow = 'hidden'; // Empêche de scroller derrière le menu
             } else {
-                sidebar.classList.toggle('open');
+                overlay.classList.remove('active');
+                document.body.style.overflow = '';
             }
         }
 
         menuBtn.addEventListener('click', () => toggleMenu());
+        overlay.addEventListener('click', () => toggleMenu(false));
 
-        // Fermer le menu si on clique sur le texte
-        document.querySelector('.main-content').addEventListener('click', () => {
-            if (window.innerWidth <= 900) toggleMenu(false);
-        });
-
-        // Détection du Swipe (Gestes Poweramp)
+        // Détection Tactile (Swipe)
+        let touchStartX = 0;
         document.addEventListener('touchstart', e => {
             touchStartX = e.changedTouches[0].screenX;
         }, { passive: true });
 
         document.addEventListener('touchend', e => {
-            touchEndX = e.changedTouches[0].screenX;
-            handleSwipe();
-        }, { passive: true });
-
-        function handleSwipe() {
-            // Uniquement actif sur mobile
             if (window.innerWidth > 900) return;
-
+            const touchEndX = e.changedTouches[0].screenX;
             const diff = touchEndX - touchStartX;
-            // Swipe à droite (Ouvrir menu)
-            if (diff > 80 && touchStartX < 50) { 
-                toggleMenu(true);
-            }
-            // Swipe à gauche (Fermer menu)
-            if (diff < -80) {
-                toggleMenu(false);
-            }
-        }
+            
+            // Swipe Droite depuis le bord (Ouvrir)
+            if (diff > 70 && touchStartX < 40) toggleMenu(true);
+            // Swipe Gauche (Fermer)
+            if (diff < -70 && sidebar.classList.contains('open')) toggleMenu(false);
+        }, { passive: true });
     </script>
 </body>
 </html>
