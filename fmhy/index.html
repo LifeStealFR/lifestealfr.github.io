@@ -6,33 +6,33 @@
     <title>FMHY | LifeStealFR</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     
-    <!-- SCRIPT EN TÊTE : Empêche le clignotement des couleurs au chargement -->
+    <!-- ANTI-CLIGNOTEMENT -->
     <script>
         const savedTheme = localStorage.getItem('animeTheme') || 'ai';
         document.documentElement.setAttribute('data-theme', savedTheme);
     </script>
 
     <style>
-        /* --- SYSTÈME DE COULEURS FIXES --- */
+        /* --- COULEURS DE BASE --- */
         :root {
             --bg-main: #09090b;
-            --bg-sidebar: rgba(18, 18, 20, 0.85); /* Légèrement transparent pour voir l'aura */
+            --bg-sidebar: rgba(18, 18, 20, 0.85);
             --bg-surface: rgba(24, 24, 27, 0.85);
-            --bg-hover: rgba(39, 39, 42, 0.9);
+            --bg-hover: #27272a;
             --text-main: #f4f4f5;
             --text-muted: #a1a1aa;
             --border: rgba(39, 39, 42, 0.5);
         }
 
-        /* PALETTES DE PERSONNAGES (Définit l'accent et l'aura) */
-        [data-theme="ruby"] { --accent: #f43f5e; --accent-hover: #e11d48; --aura: rgba(244, 63, 94, 0.25); }
-        [data-theme="ai"] { --accent: #c026d3; --accent-hover: #a21caf; --aura: rgba(192, 38, 211, 0.25); }
-        [data-theme="aqua"] { --accent: #06b6d4; --accent-hover: #0891b2; --aura: rgba(6, 182, 212, 0.25); }
-        [data-theme="memcho"] { --accent: #eab308; --accent-hover: #ca8a04; --aura: rgba(234, 179, 8, 0.25); }
-        [data-theme="kana"] { --accent: #dc2626; --accent-hover: #b91c1c; --aura: rgba(220, 38, 38, 0.25); }
-        [data-theme="akane"] { --accent: #4f46e5; --accent-hover: #4338ca; --aura: rgba(79, 70, 229, 0.25); }
-        [data-theme="asuna"] { --accent: #f97316; --accent-hover: #ea580c; --aura: rgba(249, 115, 22, 0.25); }
-        [data-theme="sinon"] { --accent: #10b981; --accent-hover: #059669; --aura: rgba(16, 185, 129, 0.25); }
+        /* PALETTES (Variables ultra-légères) */
+        [data-theme="ruby"] { --accent: #f43f5e; --aura: rgba(244, 63, 94, 0.20); }
+        [data-theme="ai"] { --accent: #c026d3; --aura: rgba(192, 38, 211, 0.20); }
+        [data-theme="aqua"] { --accent: #06b6d4; --aura: rgba(6, 182, 212, 0.20); }
+        [data-theme="memcho"] { --accent: #eab308; --aura: rgba(234, 179, 8, 0.20); }
+        [data-theme="kana"] { --accent: #dc2626; --aura: rgba(220, 38, 38, 0.20); }
+        [data-theme="akane"] { --accent: #4f46e5; --aura: rgba(79, 70, 229, 0.20); }
+        [data-theme="asuna"] { --accent: #f97316; --aura: rgba(249, 115, 22, 0.20); }
+        [data-theme="sinon"] { --accent: #10b981; --aura: rgba(16, 185, 129, 0.20); }
 
         * { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -44,7 +44,7 @@
             overflow-x: hidden;
         }
 
-        /* --- FOND ANIMÉ (AURA GPU-ACCELERATED ZERO LAG) --- */
+        /* --- FOND ANIMÉ ZERO LAG (RADIAL GRADIENT) --- */
         #animated-bg {
             position: fixed; inset: 0; z-index: -1;
             overflow: hidden; pointer-events: none;
@@ -53,43 +53,57 @@
         
         .aura {
             position: absolute;
+            /* Astuce anti-lag : Dégradé au lieu d'un filtre flou ! */
+            background: radial-gradient(circle, var(--aura) 0%, transparent 60%);
+            will-change: transform, opacity;
             border-radius: 50%;
-            background: var(--aura);
-            filter: blur(120px); /* Crée l'effet de lumière douce */
-            will-change: transform; /* Dit à la carte graphique de s'en occuper */
-            transition: background 0.5s ease;
         }
 
-        .aura-1 {
-            width: 50vw; height: 50vw; top: -10vw; left: -10vw;
-            animation: float1 15s infinite alternate ease-in-out;
-        }
+        .aura-1 { width: 80vw; height: 80vw; top: -20vw; left: -20vw; }
+        .aura-2 { width: 90vw; height: 90vw; bottom: -30vw; right: -20vw; }
 
-        .aura-2 {
-            width: 60vw; height: 60vw; bottom: -20vw; right: -10vw;
-            animation: float2 20s infinite alternate-reverse ease-in-out;
-        }
+        /* --- ANIMATIONS PERSONNALISÉES PAR PERSONNAGE --- */
+        /* Ai : Rotation Stellaire */
+        [data-theme="ai"] .aura { animation: aiAnim 20s linear infinite; }
+        @keyframes aiAnim { 0% { transform: rotate(0deg) translate(10vw) rotate(0deg); } 100% { transform: rotate(360deg) translate(10vw) rotate(-360deg); } }
 
-        /* Mouvements 3D pour forcer le GPU (Zero lag CPU) */
-        @keyframes float1 { 
-            0% { transform: translate3d(0,0,0) scale(0.8); } 
-            100% { transform: translate3d(15vw, 15vh, 0) scale(1.2); } 
-        }
-        @keyframes float2 { 
-            0% { transform: translate3d(0,0,0) scale(1); } 
-            100% { transform: translate3d(-15vw, -10vh, 0) scale(1.1); } 
-        }
+        /* Ruby : Pulsation (Battement de coeur) */
+        [data-theme="ruby"] .aura { animation: rubyAnim 3s ease-in-out infinite alternate; }
+        @keyframes rubyAnim { 0% { transform: scale(0.8); opacity: 0.7; } 100% { transform: scale(1.2); opacity: 1; } }
 
-        /* Scrollbar */
-        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        /* Aqua : Descente abyssale */
+        [data-theme="aqua"] .aura { animation: aquaAnim 8s ease-in-out infinite alternate; }
+        @keyframes aquaAnim { 0% { transform: translateY(-15vh); } 100% { transform: translateY(15vh); } }
+
+        /* Kana : Flammes montantes */
+        [data-theme="kana"] .aura { animation: kanaAnim 6s ease-in infinite alternate; }
+        @keyframes kanaAnim { 0% { transform: translateY(15vh) scale(1); opacity: 1; } 100% { transform: translateY(-15vh) scale(1.1); opacity: 0.5; } }
+
+        /* Memcho : Diagonales Joyeuses */
+        [data-theme="memcho"] .aura { animation: memchoAnim 5s ease-in-out infinite alternate; }
+        @keyframes memchoAnim { 0% { transform: translate(-10vw, -10vh); } 100% { transform: translate(10vw, 10vh); } }
+
+        /* Akane : Respiration Calme */
+        [data-theme="akane"] .aura { animation: akaneAnim 6s ease-in-out infinite alternate; transform: scale(1.5); }
+        @keyframes akaneAnim { 0% { opacity: 0.2; } 100% { opacity: 0.9; } }
+
+        /* Asuna : Flash d'épée (Rapide horizontal) */
+        [data-theme="asuna"] .aura-1 { height: 40vw; width: 120vw; animation: asunaAnim 2s cubic-bezier(0.4, 0, 0.2, 1) infinite alternate; }
+        @keyframes asunaAnim { 0% { transform: translateX(-30vw) scaleY(0.5); opacity: 0.3; } 100% { transform: translateX(30vw) scaleY(1); opacity: 1; } }
+
+        /* Sinon : Sniper (Immobile avec micro-tressaillements) */
+        [data-theme="sinon"] .aura { animation: sinonAnim 4s steps(2, end) infinite; }
+        @keyframes sinonAnim { 0%, 90% { transform: translate(0, 0); opacity: 0.6; } 95% { transform: translate(2vw, -1vh); opacity: 1; } 100% { transform: translate(-1vw, 1vh); opacity: 0.8; } }
+
+        /* --- UI DE BASE --- */
+        ::-webkit-scrollbar { width: 5px; }
         ::-webkit-scrollbar-track { background: transparent; }
         ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.2); border-radius: 10px; }
         ::-webkit-scrollbar-thumb:hover { background: var(--accent); }
 
-        /* --- NAVBAR --- */
         .navbar {
             position: fixed; top: 0; left: 0; right: 0; height: 60px;
-            background: var(--bg-surface); backdrop-filter: blur(15px);
+            background: var(--bg-surface); backdrop-filter: blur(10px);
             border-bottom: 1px solid var(--border);
             display: flex; align-items: center; justify-content: space-between;
             padding: 0 20px; z-index: 2000;
@@ -98,9 +112,9 @@
         .nav-left, .nav-right { display: flex; align-items: center; gap: 15px; }
         .menu-btn { background: none; border: none; color: var(--text-main); font-size: 26px; cursor: pointer; display: none; }
         .logo { font-weight: 800; font-size: 1.2rem; }
-        .logo span { color: var(--accent); transition: color 0.3s; text-shadow: 0 0 10px var(--aura); }
+        .logo span { color: var(--accent); }
 
-        .icon-btn { background: var(--bg-hover); border: none; color: var(--text-main); width: 38px; height: 38px; border-radius: 8px; cursor: pointer; font-size: 1.2rem; transition: background 0.2s; }
+        .icon-btn { background: var(--bg-hover); border: none; color: var(--text-main); width: 38px; height: 38px; border-radius: 8px; cursor: pointer; font-size: 1.2rem; }
         .icon-btn:hover { background: var(--border); }
         
         .theme-menu {
@@ -109,46 +123,45 @@
             display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px;
             box-shadow: 0 10px 40px rgba(0,0,0,0.8);
             opacity: 0; pointer-events: none; transform: translateY(-10px);
-            transition: 0.2s cubic-bezier(0.4, 0, 0.2, 1); backdrop-filter: blur(20px);
+            transition: 0.2s; backdrop-filter: blur(15px);
         }
         .theme-menu.show { opacity: 1; pointer-events: auto; transform: translateY(0); }
-        .color-dot { width: 28px; height: 28px; border-radius: 50%; cursor: pointer; border: 2px solid rgba(255,255,255,0.1); transition: transform 0.2s, box-shadow 0.2s; }
-        .color-dot:hover { transform: scale(1.15); box-shadow: 0 0 15px currentColor; }
+        .color-dot { width: 28px; height: 28px; border-radius: 50%; cursor: pointer; border: 2px solid rgba(255,255,255,0.1); }
+        
+        .user-profile { display: flex; align-items: center; gap: 10px; cursor: pointer; padding: 5px 10px; border-radius: 8px; background: var(--bg-hover); font-weight: 500; font-size: 0.9rem;}
+        .avatar { width: 28px; height: 28px; background: var(--accent); border-radius: 50%; color: white; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 12px; }
 
-        .user-profile { display: flex; align-items: center; gap: 10px; cursor: pointer; padding: 5px 10px; border-radius: 8px; background: var(--bg-hover); font-weight: 500; font-size: 0.9rem; border: 1px solid transparent; transition: border-color 0.2s;}
-        .user-profile:hover { border-color: var(--accent); }
-        .avatar { width: 28px; height: 28px; background: var(--accent); border-radius: 50%; color: white; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 12px; transition: background 0.3s, box-shadow 0.3s; box-shadow: 0 0 10px var(--aura); }
-
-        /* --- LAYOUT & SIDEBAR --- */
+        /* --- LAYOUT --- */
         .app-container { display: flex; margin-top: 60px; min-height: calc(100vh - 60px); }
 
         .sidebar {
             width: 280px; background-color: var(--bg-sidebar); border-right: 1px solid var(--border);
             position: fixed; top: 60px; bottom: 0; left: 0; overflow-y: auto; padding: 20px;
-            z-index: 1500; transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1); backdrop-filter: blur(10px);
+            z-index: 1500; transition: transform 0.3s; backdrop-filter: blur(10px);
         }
 
-        .toc-title { font-size: 0.8rem; font-weight: 800; color: var(--text-muted); text-transform: uppercase; margin-bottom: 15px; letter-spacing: 1px; }
-        .toc-link { display: block; text-decoration: none; color: var(--text-muted); padding: 6px 10px; border-radius: 6px; font-size: 0.9rem; margin-bottom: 2px; transition: color 0.2s, background 0.2s; }
+        .toc-title { font-size: 0.8rem; font-weight: 800; color: var(--text-muted); text-transform: uppercase; margin-bottom: 15px; }
+        .toc-link { display: block; text-decoration: none; color: var(--text-muted); padding: 6px 10px; border-radius: 6px; font-size: 0.9rem; }
         .toc-link:hover { background: var(--bg-hover); color: var(--text-main); }
         .toc-h1 { font-weight: 700; color: var(--text-main); margin-top: 15px; border-bottom: 1px solid var(--border); padding-bottom: 5px; }
         .toc-h2 { margin-left: 10px; font-size: 0.85rem; }
         .toc-h3 { margin-left: 20px; font-size: 0.8rem; opacity: 0.8; }
 
-        /* --- MARKDOWN --- */
-        .main-content { flex: 1; margin-left: 280px; padding: 40px; max-width: 1000px; }
-        .markdown-body { font-size: 16px; content-visibility: auto; }
+        /* --- MARKDOWN (Patch Anti-Crash) --- */
+        .main-content { flex: 1; margin-left: 280px; padding: 40px; max-width: 1000px; contain: content; }
         
+        /* Attention: AUCUNE transition animée ici pour éviter de surcharger le processeur */
+        .markdown-body { font-size: 16px; }
         .markdown-body h1, .markdown-body h2 { color: var(--text-main); scroll-margin-top: 80px; }
-        .markdown-body h1 { font-size: 2.2em; font-weight: 800; border-bottom: 3px solid var(--accent); padding-bottom: 10px; margin: 40px 0 20px; transition: border-color 0.3s; text-shadow: 0 2px 15px var(--aura); }
+        .markdown-body h1 { font-size: 2.2em; font-weight: 800; border-bottom: 3px solid var(--accent); padding-bottom: 10px; margin: 40px 0 20px; }
         .markdown-body h1:first-child { margin-top: 0; }
         .markdown-body h2 { font-size: 1.5em; margin: 30px 0 15px; border-bottom: 1px solid var(--border); padding-bottom: 5px; }
-        .markdown-body h3 { font-size: 1.2em; color: var(--accent); transition: color 0.3s; }
+        .markdown-body h3 { font-size: 1.2em; color: var(--accent); }
 
-        .markdown-body a { color: var(--accent); text-decoration: none; font-weight: 600; word-break: break-word; transition: color 0.3s; }
-        .markdown-body a:hover { text-decoration: underline; text-shadow: 0 0 8px var(--aura); }
+        .markdown-body a { color: var(--accent); text-decoration: none; font-weight: 600; word-break: break-word; }
+        .markdown-body a:hover { text-decoration: underline; }
 
-        .markdown-body details { background: var(--bg-surface); border: 1px solid var(--border); border-radius: 8px; margin: 15px 0; overflow: hidden; backdrop-filter: blur(5px); }
+        .markdown-body details { background: var(--bg-surface); border: 1px solid var(--border); border-radius: 8px; margin: 15px 0; overflow: hidden; }
         .markdown-body summary { background: var(--bg-hover); padding: 12px 15px; font-weight: 700; cursor: pointer; }
         .markdown-body details > div, .markdown-body details > p { padding: 15px; }
 
@@ -157,18 +170,18 @@
         .markdown-body th { background: var(--bg-hover); padding: 12px; text-align: left; }
         .markdown-body td { padding: 12px; border-top: 1px solid var(--border); }
 
-        .markdown-body blockquote { border-left: 4px solid var(--accent); padding: 15px 20px; background: rgba(0,0,0,0.3); margin: 20px 0; border-radius: 0 8px 8px 0; color: var(--text-muted); transition: border-color 0.3s; }
+        .markdown-body blockquote { border-left: 4px solid var(--accent); padding: 15px 20px; background: rgba(0,0,0,0.3); margin: 20px 0; border-radius: 0 8px 8px 0; color: var(--text-muted); }
 
         #inline-loader { display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 100px 0; }
-        .spinner { width: 45px; height: 45px; border: 4px solid var(--border); border-top-color: var(--accent); border-radius: 50%; animation: spin 1s linear infinite; }
+        .spinner { width: 40px; height: 40px; border: 4px solid var(--border); border-top-color: var(--accent); border-radius: 50%; animation: spin 1s linear infinite; }
         @keyframes spin { to { transform: rotate(360deg); } }
         .loader-text { margin-top: 20px; font-weight: 700; color: var(--text-muted); }
 
         /* --- MOBILE --- */
-        #mobile-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 1400; opacity: 0; transition: opacity 0.3s; backdrop-filter: blur(3px); }
+        #mobile-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 1400; opacity: 0; transition: opacity 0.3s; backdrop-filter: blur(2px); }
         @media (max-width: 900px) {
             .menu-btn { display: block; }
-            .sidebar { transform: translateX(-100%); box-shadow: 10px 0 30px rgba(0,0,0,0.8); }
+            .sidebar { transform: translateX(-100%); }
             .sidebar.open { transform: translateX(0); }
             #mobile-overlay.active { display: block; opacity: 1; top: 60px; }
             .main-content { margin-left: 0; padding: 20px; }
@@ -178,7 +191,7 @@
 </head>
 <body>
 
-    <!-- FOND ANIMÉ GPU -->
+    <!-- FOND SANS LAG -->
     <div id="animated-bg">
         <div class="aura aura-1"></div>
         <div class="aura aura-2"></div>
@@ -190,12 +203,10 @@
             <div class="logo">LifeSteal<span>FR</span></div>
         </div>
         <div class="nav-right">
-            <!-- Bouton Palette -->
-            <button class="icon-btn" id="themeBtn" title="Changer l'Aura">🎨</button>
-            <!-- Menu caché des couleurs -->
+            <button class="icon-btn" id="themeBtn">🎨</button>
             <div class="theme-menu" id="themeMenu"></div>
 
-            <div class="user-profile" id="userProfile" title="Modifier le Profil">
+            <div class="user-profile" id="userProfile">
                 <div class="avatar" id="userAvatar">A</div>
                 <span id="userNameDisplay">Anonyme</span>
             </div>
@@ -213,7 +224,7 @@
         <main class="main-content">
             <div id="inline-loader">
                 <div class="spinner"></div>
-                <div class="loader-text" id="loaderState">Extraction des données...</div>
+                <div class="loader-text" id="loaderState">Connexion aux archives...</div>
             </div>
             
             <div id="content" class="markdown-body" style="display: none;"></div>
@@ -222,7 +233,7 @@
 
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     <script>
-        // --- 1. INITIALISATION DU PROFIL ---
+        // INITIALISATION PROFIL
         const savedName = localStorage.getItem('username') || 'Visiteur';
         document.getElementById('userNameDisplay').innerText = savedName;
         document.getElementById('userAvatar').innerText = savedName.charAt(0).toUpperCase();
@@ -236,7 +247,7 @@
             }
         });
 
-        // --- 2. GESTION DES COULEURS ANIMES ---
+        // MENU DES COULEURS
         const palettes = [
             { id: 'ruby', color: '#f43f5e', title: 'Ruby Hoshino' },
             { id: 'ai', color: '#c026d3', title: 'Ai Hoshino' },
@@ -253,7 +264,6 @@
             const dot = document.createElement('div');
             dot.className = 'color-dot';
             dot.style.background = p.color;
-            dot.style.color = p.color; // Pour le hover box-shadow
             dot.title = p.title;
             dot.onclick = () => {
                 document.documentElement.setAttribute('data-theme', p.id);
@@ -269,21 +279,17 @@
         };
         document.addEventListener('click', () => themeMenu.classList.remove('show'));
 
-        // --- 3. FETCH ULTRA RAPIDE (DOM OFFLINE PATCH) ---
+        // CHARGEMENT DU TEXTE
         marked.setOptions({ gfm: true, breaks: true });
 
         fetch('https://api.fmhy.net/single-page')
             .then(res => res.text())
             .then(text => {
-                document.getElementById('loaderState').innerText = "Génération de l'univers...";
-                
-                // Petit délai pour laisser l'UI respirer
+                // Délai pour ne pas faire lagger l'UI
                 setTimeout(() => {
-                    // Patch Vitesse : On crée un conteneur fantôme en RAM
                     const ghostDiv = document.createElement('div');
                     ghostDiv.innerHTML = marked.parse(text);
 
-                    // Traitement des tables dans le conteneur fantôme (très rapide)
                     ghostDiv.querySelectorAll('table').forEach(table => {
                         const wrapper = document.createElement('div');
                         wrapper.className = 'table-wrapper';
@@ -291,9 +297,8 @@
                         wrapper.appendChild(table);
                     });
 
-                    // Génération du menu depuis le conteneur fantôme
                     const tocDiv = document.getElementById('toc');
-                    const fragment = document.createDocumentFragment(); // Patch performance
+                    const fragment = document.createDocumentFragment();
                     
                     ghostDiv.querySelectorAll('h1, h2, h3').forEach((heading, index) => {
                         if (!heading.id) heading.id = 'section-' + index;
@@ -310,35 +315,29 @@
                         fragment.appendChild(link);
                     });
                     
-                    tocDiv.appendChild(fragment); // Injection du sommaire en 1 fois
+                    tocDiv.appendChild(fragment);
 
-                    // Injection finale du gros contenu (1 seule manipulation du DOM !)
                     const contentDiv = document.getElementById('content');
-                    contentDiv.innerHTML = '';
                     contentDiv.appendChild(ghostDiv);
 
-                    // Révélation instantanée
                     document.getElementById('inline-loader').style.display = 'none';
                     contentDiv.style.display = 'block';
 
-                    // Restauration fluide du scroll
                     const savedScroll = localStorage.getItem('scrollPosition');
                     if (savedScroll) {
-                        requestAnimationFrame(() => window.scrollTo(0, parseInt(savedScroll)));
+                        setTimeout(() => window.scrollTo(0, parseInt(savedScroll)), 100);
                     }
                 }, 50);
             });
 
-        // --- 4. SAUVEGARDE DU SCROLL (Optimisé avec requestAnimationFrame) ---
         let isScrolling;
         window.addEventListener('scroll', () => {
             window.clearTimeout(isScrolling);
             isScrolling = setTimeout(() => {
                 localStorage.setItem('scrollPosition', window.scrollY);
-            }, 200);
+            }, 300);
         }, { passive: true });
 
-        // --- 5. LIENS SÉCURISÉS ---
         document.addEventListener('click', e => {
             const link = e.target.closest('a');
             if (link && !link.getAttribute('href').startsWith('#')) {
@@ -347,7 +346,7 @@
             }
         });
 
-        // --- 6. GESTION TACTILE PATCHÉE ---
+        // MENU TACTILE (SWIPE SÉCURISÉ)
         const sidebar = document.getElementById('sidebar');
         const overlay = document.getElementById('mobile-overlay');
         const menuBtn = document.getElementById('menuBtn');
@@ -367,8 +366,6 @@
         menuBtn.addEventListener('click', () => toggleMenu());
         overlay.addEventListener('click', () => toggleMenu(false));
 
-        // Patch : Le swipe n'est valide QUE s'il commence près du bord gauche de l'écran
-        // Ça évite de déclencher le menu quand on scroll un tableau vers la droite !
         let touchStartX = 0;
         let touchStartY = 0;
 
@@ -379,15 +376,11 @@
 
         document.addEventListener('touchend', e => {
             if (window.innerWidth > 900) return;
-            
             const diffX = e.changedTouches[0].screenX - touchStartX;
             const diffY = Math.abs(e.changedTouches[0].screenY - touchStartY);
 
-            // Si on glisse plus à l'horizontale qu'à la verticale
             if (diffY < 50) {
-                // Swipe pour OUVRIR (Doit partir du bord : < 40px)
                 if (diffX > 60 && touchStartX < 40) toggleMenu(true);
-                // Swipe pour FERMER
                 if (diffX < -60 && sidebar.classList.contains('open')) toggleMenu(false);
             }
         }, { passive: true });
