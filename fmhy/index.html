@@ -7,21 +7,23 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;900&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg-main: #09090b; /* Noir très profond */
-            --bg-card: #121214;
+            --bg-main: #09090b;
+            --bg-sidebar: #121214;
             --bg-element: #1c1c1f;
-            --accent: #ff3b3b; /* Rouge vif LifeSteal */
+            --accent: #ff3b3b;
             --accent-hover: #ff5f5f;
             --text-main: #e4e4e7;
             --text-muted: #a1a1aa;
             --border: #27272a;
         }
 
-        /* Scrollbar stylisée */
+        /* Scrollbar globale */
         ::-webkit-scrollbar { width: 8px; height: 8px; }
         ::-webkit-scrollbar-track { background: var(--bg-main); }
         ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
         ::-webkit-scrollbar-thumb:hover { background: var(--accent); }
+
+        * { box-sizing: border-box; }
 
         body {
             background-color: var(--bg-main);
@@ -29,158 +31,83 @@
             margin: 0;
             font-family: 'Inter', sans-serif;
             line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* --- LAYOUT PRINCIPAL (Sidebar + Contenu) --- */
+        .layout {
             display: flex;
-            justify-content: center;
+            min-height: 100vh;
         }
 
-        .container {
-            max-width: 1000px;
-            width: 100%;
-            margin: 40px 20px;
-            background: var(--bg-card);
-            border: 1px solid var(--border);
-            border-radius: 16px;
-            padding: 40px;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+        /* Menu Latéral (Sidebar) */
+        .sidebar {
+            width: 300px;
+            background-color: var(--bg-sidebar);
+            border-right: 1px solid var(--border);
+            position: fixed;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            overflow-y: auto;
+            padding: 20px;
+            z-index: 100;
+            transition: transform 0.3s ease;
         }
 
-        /* --- DESIGN DU CONTENU MARKDOWN --- */
-        .markdown-body {
-            font-size: 15px;
-        }
-
-        /* Titres */
-        .markdown-body h1 {
-            color: #fff;
-            font-size: 2.5em;
+        .sidebar-title {
+            font-size: 1.2em;
             font-weight: 900;
+            color: #fff;
             text-transform: uppercase;
-            border-bottom: 3px solid var(--accent);
+            border-bottom: 2px solid var(--accent);
             padding-bottom: 10px;
-            margin-bottom: 30px;
-            text-align: center;
-        }
-
-        .markdown-body h2 {
-            color: #fff;
-            font-size: 1.8em;
-            border-bottom: 1px solid var(--border);
-            padding-bottom: 8px;
-            margin-top: 50px;
-        }
-
-        .markdown-body h3 {
-            color: var(--accent-hover);
-            margin-top: 30px;
-        }
-
-        /* Liens */
-        .markdown-body a {
-            color: var(--accent);
-            text-decoration: none;
-            font-weight: 500;
-            word-break: break-word;
-            transition: color 0.2s, text-shadow 0.2s;
-        }
-
-        .markdown-body a:hover {
-            color: var(--accent-hover);
-            text-shadow: 0 0 8px rgba(255, 59, 59, 0.4);
-            text-decoration: underline;
-        }
-
-        /* Listes */
-        .markdown-body ul, .markdown-body ol {
-            padding-left: 20px;
             margin-bottom: 20px;
+            position: sticky;
+            top: 0;
+            background: var(--bg-sidebar);
+            padding-top: 10px;
         }
 
-        .markdown-body li {
-            margin-bottom: 6px;
-        }
-
-        /* Menus déroulants (Très utilisés par FMHY) */
-        .markdown-body details {
-            background: var(--bg-element);
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            padding: 12px 16px;
-            margin: 15px 0;
-        }
-
-        .markdown-body summary {
-            font-weight: 700;
-            color: #fff;
-            cursor: pointer;
-            outline: none;
-        }
-        
-        .markdown-body details[open] summary {
-            margin-bottom: 10px;
-            color: var(--accent);
-        }
-
-        /* Tableaux */
-        .table-wrapper {
-            overflow-x: auto;
-            margin: 20px 0;
-            border-radius: 8px;
-            border: 1px solid var(--border);
-        }
-
-        .markdown-body table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-
-        .markdown-body th {
-            background: var(--bg-element);
-            color: #fff;
-            text-align: left;
-            padding: 12px;
-            font-weight: 700;
-        }
-
-        .markdown-body td {
-            padding: 12px;
-            border-top: 1px solid var(--border);
-        }
-
-        /* Citations & Code */
-        .markdown-body blockquote {
-            margin: 20px 0;
-            padding: 15px 20px;
-            background: rgba(255, 59, 59, 0.05);
-            border-left: 4px solid var(--accent);
-            border-radius: 0 8px 8px 0;
+        .toc-link {
+            display: block;
+            text-decoration: none;
             color: var(--text-muted);
-        }
-
-        .markdown-body code {
-            background: var(--bg-element);
-            padding: 3px 6px;
-            border-radius: 4px;
-            font-family: monospace;
+            margin-bottom: 8px;
             font-size: 0.9em;
-            color: #ff8a8a;
+            transition: color 0.2s;
         }
 
-        .markdown-body img {
-            max-width: 100%;
-            border-radius: 8px;
+        .toc-link:hover { color: var(--accent); }
+        
+        /* Hiérarchie du sommaire */
+        .toc-h1 { font-weight: 700; color: #fff; margin-top: 15px; text-transform: uppercase; font-size: 0.95em; }
+        .toc-h2 { margin-left: 10px; }
+        .toc-h3 { margin-left: 20px; font-size: 0.85em; opacity: 0.8; }
+
+        /* Conteneur du texte */
+        .main-content {
+            flex: 1;
+            margin-left: 300px; /* Espace pour la sidebar */
+            padding: 40px;
+            max-width: 1200px;
         }
 
-        /* --- UI LOADER --- */
-        #loader {
+        /* --- ÉCRAN DE CHARGEMENT --- */
+        #loader-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: var(--bg-main);
             display: flex;
             flex-direction: column;
             align-items: center;
-            padding: 50px 0;
+            justify-content: center;
+            z-index: 9999;
         }
 
         .spinner {
-            width: 40px;
-            height: 40px;
+            width: 50px;
+            height: 50px;
             border: 4px solid var(--border);
             border-top-color: var(--accent);
             border-radius: 50%;
@@ -189,99 +116,200 @@
 
         @keyframes spin { to { transform: rotate(360deg); } }
 
-        .loader-text { margin-top: 15px; font-weight: 600; color: #fff; }
+        .loader-text { margin-top: 20px; font-weight: 700; font-size: 1.2em; color: #fff; }
         .loader-sub { color: var(--text-muted); font-size: 0.9em; margin-top: 5px; }
 
-        @media (max-width: 768px) {
-            .container { margin: 0; border-radius: 0; border: none; padding: 20px; }
-            .markdown-body h1 { font-size: 1.8em; }
+        /* --- STYLE DU CONTENU MARKDOWN --- */
+        .markdown-body h1, .markdown-body h2 {
+            color: #fff;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 8px;
+            margin-top: 40px;
+            scroll-margin-top: 20px; /* Pour que le menu n'écrase pas le titre */
+        }
+
+        .markdown-body h1 {
+            font-size: 2.5em; font-weight: 900;
+            border-bottom: 3px solid var(--accent);
+            text-transform: uppercase;
+        }
+
+        .markdown-body a {
+            color: var(--accent);
+            text-decoration: none;
+            word-break: break-word;
+        }
+        .markdown-body a:hover { text-decoration: underline; }
+
+        .markdown-body details {
+            background: var(--bg-element);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 12px 16px;
+            margin: 15px 0;
+        }
+        .markdown-body summary { font-weight: 700; color: #fff; cursor: pointer; }
+
+        .table-wrapper { overflow-x: auto; margin: 20px 0; border-radius: 8px; border: 1px solid var(--border); }
+        .markdown-body table { width: 100%; border-collapse: collapse; }
+        .markdown-body th { background: var(--bg-element); text-align: left; padding: 12px; color: #fff; }
+        .markdown-body td { padding: 12px; border-top: 1px solid var(--border); }
+
+        .markdown-body code {
+            background: var(--bg-element);
+            padding: 3px 6px;
+            border-radius: 4px;
+            color: #ff8a8a;
+        }
+
+        /* --- BOUTON MOBILE (Sommaire) --- */
+        #mobile-menu-btn {
+            display: none;
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            background: var(--accent);
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 30px;
+            font-weight: 700;
+            font-size: 1em;
+            box-shadow: 0 4px 15px rgba(255, 59, 59, 0.4);
+            cursor: pointer;
+            z-index: 200;
+        }
+
+        /* --- ADAPTATION MOBILE --- */
+        @media (max-width: 900px) {
+            .main-content { margin-left: 0; padding: 20px; }
+            
+            /* Sidebar cachée à gauche */
+            .sidebar { transform: translateX(-100%); box-shadow: 5px 0 25px rgba(0,0,0,0.8); }
+            
+            /* Classe pour ouvrir la sidebar */
+            .sidebar.open { transform: translateX(0); }
+            
+            #mobile-menu-btn { display: block; }
         }
     </style>
 </head>
 <body>
 
-    <div class="container">
-        <div id="loader">
-            <div class="spinner"></div>
-            <div class="loader-text">Récupération des données...</div>
-            <div class="loader-sub">Préparation de l'affichage en cours</div>
-        </div>
-        
-        <div id="content" class="markdown-body"></div>
+    <!-- Écran de chargement plein écran -->
+    <div id="loader-overlay">
+        <div class="spinner"></div>
+        <div class="loader-text">Génération de la bibliothèque...</div>
+        <div class="loader-sub">Cela peut prendre 1 à 3 secondes. Veuillez patienter.</div>
     </div>
+
+    <!-- Interface -->
+    <div class="layout">
+        
+        <!-- Menu latéral -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-title">Sommaire</div>
+            <nav id="toc">
+                <!-- Le menu sera généré ici en JS -->
+            </nav>
+        </aside>
+
+        <!-- Contenu -->
+        <main class="main-content">
+            <div id="content" class="markdown-body"></div>
+        </main>
+
+    </div>
+
+    <!-- Bouton pour afficher le sommaire sur mobile -->
+    <button id="mobile-menu-btn">☰ Sommaire</button>
 
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     <script>
-        // Configuration de base de Marked (Sans modifier les liens pour ne rien casser)
-        marked.setOptions({
-            gfm: true,
-            breaks: true
-        });
+        marked.setOptions({ gfm: true, breaks: true });
 
         const url = 'https://api.fmhy.net/single-page';
 
         fetch(url)
             .then(res => res.text())
             .then(text => {
-                // ASTUCE DE GÉNIE : On découpe le fichier de 1.6Mo à chaque sous-titre (##)
-                // Cela crée une liste de petits morceaux (chunks)
-                const chunks = text.split(/(?=^## )/gm);
-                let currentChunk = 0;
-                
+                // 1. On parse TOUT le texte d'un coup (rapide)
+                const html = marked.parse(text);
                 const contentDiv = document.getElementById('content');
-                const loader = document.getElementById('loader');
+                
+                // 2. On injecte dans le DOM (L'écran de chargement cache le freeze)
+                contentDiv.innerHTML = html;
 
-                // Fonction récursive pour injecter les morceaux un par un
-                function renderNextChunk() {
-                    if (currentChunk < chunks.length) {
-                        // On parse le petit morceau
-                        const html = marked.parse(chunks[currentChunk]);
-                        
-                        // On le met dans une div temporaire pour chercher les tableaux
-                        const tempDiv = document.createElement('div');
-                        tempDiv.innerHTML = html;
+                // 3. RESPONSIVE: On emballe les tableaux pour qu'ils soient scrollables
+                contentDiv.querySelectorAll('table').forEach(table => {
+                    const wrapper = document.createElement('div');
+                    wrapper.className = 'table-wrapper';
+                    table.parentNode.insertBefore(wrapper, table);
+                    wrapper.appendChild(table);
+                });
 
-                        // Rendre les tableaux "scrollables" sur mobile (Responsive)
-                        tempDiv.querySelectorAll('table').forEach(table => {
-                            const wrapper = document.createElement('div');
-                            wrapper.className = 'table-wrapper';
-                            table.parentNode.insertBefore(wrapper, table);
-                            wrapper.appendChild(table);
-                        });
-
-                        // On injecte le résultat dans la page
-                        contentDiv.appendChild(tempDiv);
-
-                        // Dès que le premier morceau (l'intro) est chargé, on cache le loader !
-                        if (currentChunk === 0) {
-                            loader.style.display = 'none';
-                        }
-
-                        currentChunk++;
-                        
-                        // On passe au morceau suivant avec un micro-délai de 10ms
-                        // Ça empêche le navigateur de freezer !
-                        setTimeout(renderNextChunk, 10);
+                // 4. GÉNÉRATION DU SOMMAIRE (TOC)
+                const tocDiv = document.getElementById('toc');
+                // On récupère les titres h1, h2 et h3 de la page
+                const headings = contentDiv.querySelectorAll('h1, h2, h3');
+                
+                headings.forEach((heading, index) => {
+                    // Si le titre n'a pas d'ID, on lui en crée un
+                    if (!heading.id) {
+                        heading.id = 'titre-' + index;
                     }
-                }
 
-                // On lance le processus
-                renderNextChunk();
+                    // On crée le lien pour le menu
+                    const link = document.createElement('a');
+                    link.href = '#' + heading.id;
+                    link.innerText = heading.innerText.replace('↑', '').trim(); // Nettoie le texte
+                    link.className = 'toc-link toc-' + heading.tagName.toLowerCase();
+                    
+                    // Comportement au clic
+                    link.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        document.getElementById(heading.id).scrollIntoView({ behavior: 'smooth' });
+                        // Si on est sur mobile, on referme le menu après un clic
+                        if (window.innerWidth <= 900) {
+                            document.getElementById('sidebar').classList.remove('open');
+                        }
+                    });
+
+                    tocDiv.appendChild(link);
+                });
+
+                // 5. Chargement terminé : on fait disparaître l'écran de chargement
+                setTimeout(() => {
+                    document.getElementById('loader-overlay').style.display = 'none';
+                }, 100); // Petit délai pour laisser au navigateur le temps d'afficher la page
             })
             .catch(err => {
-                document.getElementById('loader').innerHTML = "<span style='color:red; font-weight:bold;'>❌ Erreur de chargement. Veuillez rafraîchir.</span>";
+                document.querySelector('.loader-text').innerHTML = "<span style='color:red;'>❌ Erreur critique</span>";
+                document.querySelector('.loader-sub').innerText = "Impossible de charger les données.";
             });
 
-        // GESTION DES LIENS SECURISEE
-        // Au lieu de modifier Marked.js, on écoute les clics sur la page.
+        // --- GESTION DES LIENS EXTERNES ---
         document.addEventListener('click', function(e) {
-            // Si l'élément cliqué est un lien (ou dans un lien)
             const link = e.target.closest('a');
-            
-            // Si c'est un lien et qu'il commence par http (lien externe)
-            if (link && link.href.startsWith('http')) {
+            // Si c'est un lien normal (qui ne commence pas par # comme notre sommaire)
+            if (link && !link.getAttribute('href').startsWith('#')) {
                 link.setAttribute('target', '_blank');
                 link.setAttribute('rel', 'noopener noreferrer');
+            }
+        });
+
+        // --- GESTION DU MENU MOBILE ---
+        const sidebar = document.getElementById('sidebar');
+        const mobileBtn = document.getElementById('mobile-menu-btn');
+
+        mobileBtn.addEventListener('click', () => {
+            sidebar.classList.toggle('open');
+        });
+
+        // Fermer le menu si on clique en dehors (sur le texte)
+        document.querySelector('.main-content').addEventListener('click', () => {
+            if (window.innerWidth <= 900 && sidebar.classList.contains('open')) {
+                sidebar.classList.remove('open');
             }
         });
     </script>
