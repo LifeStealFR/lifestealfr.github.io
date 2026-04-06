@@ -2,245 +2,206 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>FMHY | LifeStealFR</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
-        :root {
+        /* --- SYSTÈME DE THÈMES (CSS VARIABLES) --- */
+        :root[data-theme="dark"] {
             --bg-main: #09090b;
             --bg-sidebar: #121214;
-            --bg-element: #1c1c1f;
-            --accent: #ff3b3b;
-            --accent-hover: #ff5f5f;
-            --text-main: #e4e4e7;
+            --bg-surface: #18181b;
+            --bg-hover: #27272a;
+            --accent: #ef4444; /* Rouge moderne */
+            --text-main: #f4f4f5;
             --text-muted: #a1a1aa;
             --border: #27272a;
+            --shadow: rgba(0, 0, 0, 0.5);
         }
 
-        /* Scrollbar globale */
-        ::-webkit-scrollbar { width: 8px; height: 8px; }
-        ::-webkit-scrollbar-track { background: var(--bg-main); }
-        ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
-        ::-webkit-scrollbar-thumb:hover { background: var(--accent); }
+        :root[data-theme="light"] {
+            --bg-main: #fafafa;
+            --bg-sidebar: #f4f4f5;
+            --bg-surface: #ffffff;
+            --bg-hover: #e4e4e7;
+            --accent: #dc2626;
+            --text-main: #18181b;
+            --text-muted: #52525b;
+            --border: #e4e4e7;
+            --shadow: rgba(0, 0, 0, 0.05);
+        }
 
-        * { box-sizing: border-box; }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
 
         body {
             background-color: var(--bg-main);
             color: var(--text-main);
-            margin: 0;
             font-family: 'Inter', sans-serif;
             line-height: 1.6;
             overflow-x: hidden;
+            transition: background-color 0.3s, color 0.3s;
         }
 
-        /* --- LAYOUT PRINCIPAL (Sidebar + Contenu) --- */
-        .layout {
-            display: flex;
-            min-height: 100vh;
+        /* Scrollbar moderne */
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--accent); }
+
+        /* --- NAVBAR (Barre du haut) --- */
+        .navbar {
+            position: fixed; top: 0; left: 0; right: 0; height: 60px;
+            background: var(--bg-surface);
+            border-bottom: 1px solid var(--border);
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 0 20px; z-index: 1000;
+            backdrop-filter: blur(10px);
         }
 
-        /* Menu Latéral (Sidebar) */
+        .nav-left { display: flex; align-items: center; gap: 15px; }
+        .menu-btn { background: none; border: none; color: var(--text-main); font-size: 24px; cursor: pointer; display: none; }
+        .logo { font-weight: 800; font-size: 1.2rem; letter-spacing: -0.5px; }
+        .logo span { color: var(--accent); }
+
+        .nav-right { display: flex; align-items: center; gap: 15px; }
+        .icon-btn { background: var(--bg-hover); border: none; color: var(--text-main); width: 35px; height: 35px; border-radius: 8px; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 1.1rem; transition: 0.2s; }
+        .icon-btn:hover { background: var(--accent); color: white; }
+        
+        .user-profile { display: flex; align-items: center; gap: 10px; cursor: pointer; padding: 5px 10px; border-radius: 8px; background: var(--bg-hover); }
+        .user-profile:hover { border-color: var(--accent); }
+        .avatar { width: 28px; height: 28px; background: var(--accent); border-radius: 50%; color: white; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 12px; }
+
+        /* --- LAYOUT --- */
+        .app-container { display: flex; margin-top: 60px; min-height: calc(100vh - 60px); }
+
+        /* --- SIDEBAR (Sommaire) --- */
         .sidebar {
-            width: 300px;
-            background-color: var(--bg-sidebar);
-            border-right: 1px solid var(--border);
-            position: fixed;
-            top: 0;
-            bottom: 0;
-            left: 0;
-            overflow-y: auto;
-            padding: 20px;
-            z-index: 100;
-            transition: transform 0.3s ease;
+            width: 280px; background: var(--bg-sidebar); border-right: 1px solid var(--border);
+            position: fixed; top: 60px; bottom: 0; left: 0; overflow-y: auto; padding: 20px 10px;
+            z-index: 900; transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
-        .sidebar-title {
-            font-size: 1.2em;
-            font-weight: 900;
-            color: #fff;
-            text-transform: uppercase;
-            border-bottom: 2px solid var(--accent);
-            padding-bottom: 10px;
-            margin-bottom: 20px;
-            position: sticky;
-            top: 0;
-            background: var(--bg-sidebar);
-            padding-top: 10px;
-        }
+        .toc-title { font-size: 0.8rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; margin-bottom: 15px; padding-left: 10px; }
 
         .toc-link {
-            display: block;
-            text-decoration: none;
-            color: var(--text-muted);
-            margin-bottom: 8px;
-            font-size: 0.9em;
-            transition: color 0.2s;
+            display: block; text-decoration: none; color: var(--text-muted);
+            padding: 6px 10px; border-radius: 6px; font-size: 0.9rem; transition: 0.2s;
+            white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
         }
-
-        .toc-link:hover { color: var(--accent); }
+        .toc-link:hover { background: var(--bg-hover); color: var(--text-main); }
+        .toc-link.active { background: rgba(239, 68, 68, 0.1); color: var(--accent); font-weight: 600; border-left: 3px solid var(--accent); }
         
-        /* Hiérarchie du sommaire */
-        .toc-h1 { font-weight: 700; color: #fff; margin-top: 15px; text-transform: uppercase; font-size: 0.95em; }
-        .toc-h2 { margin-left: 10px; }
-        .toc-h3 { margin-left: 20px; font-size: 0.85em; opacity: 0.8; }
+        .toc-h1 { font-weight: 600; color: var(--text-main); margin-top: 10px; }
+        .toc-h2 { margin-left: 15px; font-size: 0.85rem; }
+        .toc-h3 { margin-left: 30px; font-size: 0.8rem; opacity: 0.8; }
 
-        /* Conteneur du texte */
+        /* --- CONTENU --- */
         .main-content {
-            flex: 1;
-            margin-left: 300px; /* Espace pour la sidebar */
-            padding: 40px;
-            max-width: 1200px;
+            flex: 1; margin-left: 280px; padding: 40px; max-width: 1000px;
+            transition: margin-left 0.3s;
         }
 
-        /* --- ÉCRAN DE CHARGEMENT --- */
-        #loader-overlay {
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: var(--bg-main);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            z-index: 9999;
-        }
+        /* --- DESIGN MARKDOWN (Façon Notion/Docs) --- */
+        .markdown-body { font-size: 16px; color: var(--text-main); }
+        
+        .markdown-body h1 { font-size: 2.2em; font-weight: 800; border-bottom: 2px solid var(--border); padding-bottom: 10px; margin: 40px 0 20px; color: var(--text-main); }
+        .markdown-body h1:first-child { margin-top: 0; }
+        .markdown-body h2 { font-size: 1.5em; margin: 30px 0 15px; color: var(--accent); }
+        .markdown-body h3 { font-size: 1.2em; margin: 20px 0 10px; }
 
-        .spinner {
-            width: 50px;
-            height: 50px;
-            border: 4px solid var(--border);
-            border-top-color: var(--accent);
-            border-radius: 50%;
-            animation: spin 0.8s linear infinite;
-        }
+        .markdown-body a { color: var(--accent); text-decoration: none; font-weight: 500; border-bottom: 1px solid transparent; transition: 0.2s; word-break: break-word; }
+        .markdown-body a:hover { border-bottom-color: var(--accent); }
 
-        @keyframes spin { to { transform: rotate(360deg); } }
+        /* Les blocs "Détails" type Wiki */
+        .markdown-body details { background: var(--bg-surface); border: 1px solid var(--border); border-radius: 8px; margin: 15px 0; overflow: hidden; }
+        .markdown-body summary { background: var(--bg-hover); padding: 12px 15px; font-weight: 600; cursor: pointer; user-select: none; }
+        .markdown-body details[open] summary { border-bottom: 1px solid var(--border); }
+        .markdown-body details > div, .markdown-body details > p { padding: 15px; }
 
-        .loader-text { margin-top: 20px; font-weight: 700; font-size: 1.2em; color: #fff; }
-        .loader-sub { color: var(--text-muted); font-size: 0.9em; margin-top: 5px; }
-
-        /* --- STYLE DU CONTENU MARKDOWN --- */
-        .markdown-body h1, .markdown-body h2 {
-            color: #fff;
-            border-bottom: 1px solid var(--border);
-            padding-bottom: 8px;
-            margin-top: 40px;
-            scroll-margin-top: 20px; /* Pour que le menu n'écrase pas le titre */
-        }
-
-        .markdown-body h1 {
-            font-size: 2.5em; font-weight: 900;
-            border-bottom: 3px solid var(--accent);
-            text-transform: uppercase;
-        }
-
-        .markdown-body a {
-            color: var(--accent);
-            text-decoration: none;
-            word-break: break-word;
-        }
-        .markdown-body a:hover { text-decoration: underline; }
-
-        .markdown-body details {
-            background: var(--bg-element);
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            padding: 12px 16px;
-            margin: 15px 0;
-        }
-        .markdown-body summary { font-weight: 700; color: #fff; cursor: pointer; }
-
+        /* Tableaux */
         .table-wrapper { overflow-x: auto; margin: 20px 0; border-radius: 8px; border: 1px solid var(--border); }
-        .markdown-body table { width: 100%; border-collapse: collapse; }
-        .markdown-body th { background: var(--bg-element); text-align: left; padding: 12px; color: #fff; }
+        .markdown-body table { width: 100%; border-collapse: collapse; text-align: left; }
+        .markdown-body th { background: var(--bg-hover); padding: 12px; font-weight: 600; }
         .markdown-body td { padding: 12px; border-top: 1px solid var(--border); }
 
-        .markdown-body code {
-            background: var(--bg-element);
-            padding: 3px 6px;
-            border-radius: 4px;
-            color: #ff8a8a;
-        }
+        .markdown-body blockquote { border-left: 4px solid var(--accent); padding: 10px 20px; background: var(--bg-surface); margin: 20px 0; border-radius: 0 8px 8px 0; }
+        .markdown-body img { max-width: 100%; border-radius: 8px; margin: 20px 0; }
 
-        /* --- BOUTON MOBILE (Sommaire) --- */
-        #mobile-menu-btn {
-            display: none;
-            position: fixed;
-            bottom: 20px;
-            left: 20px;
-            background: var(--accent);
-            color: white;
-            border: none;
-            padding: 12px 20px;
-            border-radius: 30px;
-            font-weight: 700;
-            font-size: 1em;
-            box-shadow: 0 4px 15px rgba(255, 59, 59, 0.4);
-            cursor: pointer;
-            z-index: 200;
-        }
+        /* --- LOADER PREMIUM --- */
+        #loader { position: fixed; inset: 0; background: var(--bg-main); z-index: 9999; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+        .spinner { width: 40px; height: 40px; border: 3px solid var(--border); border-top-color: var(--accent); border-radius: 50%; animation: spin 1s linear infinite; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        .loader-text { margin-top: 20px; font-weight: 600; font-size: 1.1rem; }
 
-        /* --- ADAPTATION MOBILE --- */
+        /* --- MOBILE & TACTILE --- */
         @media (max-width: 900px) {
-            .main-content { margin-left: 0; padding: 20px; }
-            
-            /* Sidebar cachée à gauche */
-            .sidebar { transform: translateX(-100%); box-shadow: 5px 0 25px rgba(0,0,0,0.8); }
-            
-            /* Classe pour ouvrir la sidebar */
+            .menu-btn { display: block; }
+            .sidebar { transform: translateX(-100%); box-shadow: 10px 0 30px var(--shadow); }
             .sidebar.open { transform: translateX(0); }
-            
-            #mobile-menu-btn { display: block; }
+            .main-content { margin-left: 0; padding: 20px; width: 100%; }
         }
     </style>
 </head>
-<body>
+<body data-theme="dark">
 
-    <!-- Écran de chargement plein écran -->
-    <div id="loader-overlay">
+    <!-- Écran de chargement -->
+    <div id="loader">
         <div class="spinner"></div>
-        <div class="loader-text">Génération de la bibliothèque...</div>
-        <div class="loader-sub">Cela peut prendre 1 à 3 secondes. Veuillez patienter.</div>
+        <div class="loader-text">Synchronisation des données...</div>
     </div>
 
-    <!-- Interface -->
-    <div class="layout">
-        
-        <!-- Menu latéral -->
+    <!-- Barre de Navigation -->
+    <nav class="navbar">
+        <div class="nav-left">
+            <button class="menu-btn" id="menuBtn">☰</button>
+            <div class="logo">LifeSteal<span>FR</span></div>
+        </div>
+        <div class="nav-right">
+            <button class="icon-btn" id="themeToggle" title="Changer de thème">🌓</button>
+            <div class="user-profile" id="userProfile" title="Changer de pseudo">
+                <div class="avatar" id="userAvatar">A</div>
+                <span id="userNameDisplay">Anonyme</span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Application -->
+    <div class="app-container">
+        <!-- Sommaire -->
         <aside class="sidebar" id="sidebar">
-            <div class="sidebar-title">Sommaire</div>
-            <nav id="toc">
-                <!-- Le menu sera généré ici en JS -->
-            </nav>
+            <div class="toc-title">Explorateur</div>
+            <nav id="toc"></nav>
         </aside>
 
-        <!-- Contenu -->
+        <!-- Contenu Markdown -->
         <main class="main-content">
             <div id="content" class="markdown-body"></div>
         </main>
-
     </div>
-
-    <!-- Bouton pour afficher le sommaire sur mobile -->
-    <button id="mobile-menu-btn">☰ Sommaire</button>
 
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     <script>
-        marked.setOptions({ gfm: true, breaks: true });
+        // 1. INITIALISATION (Thème, Pseudo, Position)
+        const savedTheme = localStorage.getItem('theme') || 'dark';
+        document.body.setAttribute('data-theme', savedTheme);
+
+        const savedName = localStorage.getItem('username') || 'Visiteur';
+        document.getElementById('userNameDisplay').innerText = savedName;
+        document.getElementById('userAvatar').innerText = savedName.charAt(0).toUpperCase();
 
         const url = 'https://api.fmhy.net/single-page';
 
+        marked.setOptions({ gfm: true, breaks: true });
+
+        // 2. FETCH ET RENDU
         fetch(url)
             .then(res => res.text())
             .then(text => {
-                // 1. On parse TOUT le texte d'un coup (rapide)
                 const html = marked.parse(text);
                 const contentDiv = document.getElementById('content');
-                
-                // 2. On injecte dans le DOM (L'écran de chargement cache le freeze)
                 contentDiv.innerHTML = html;
 
-                // 3. RESPONSIVE: On emballe les tableaux pour qu'ils soient scrollables
+                // Emballer les tables
                 contentDiv.querySelectorAll('table').forEach(table => {
                     const wrapper = document.createElement('div');
                     wrapper.className = 'table-wrapper';
@@ -248,70 +209,116 @@
                     wrapper.appendChild(table);
                 });
 
-                // 4. GÉNÉRATION DU SOMMAIRE (TOC)
+                // Génération du menu TOC
                 const tocDiv = document.getElementById('toc');
-                // On récupère les titres h1, h2 et h3 de la page
                 const headings = contentDiv.querySelectorAll('h1, h2, h3');
                 
                 headings.forEach((heading, index) => {
-                    // Si le titre n'a pas d'ID, on lui en crée un
-                    if (!heading.id) {
-                        heading.id = 'titre-' + index;
-                    }
-
-                    // On crée le lien pour le menu
+                    if (!heading.id) heading.id = 'section-' + index;
+                    
                     const link = document.createElement('a');
                     link.href = '#' + heading.id;
-                    link.innerText = heading.innerText.replace('↑', '').trim(); // Nettoie le texte
-                    link.className = 'toc-link toc-' + heading.tagName.toLowerCase();
+                    link.innerText = heading.innerText.replace(/↑|►/g, '').trim();
+                    link.className = `toc-link toc-${heading.tagName.toLowerCase()}`;
                     
-                    // Comportement au clic
                     link.addEventListener('click', (e) => {
                         e.preventDefault();
-                        document.getElementById(heading.id).scrollIntoView({ behavior: 'smooth' });
-                        // Si on est sur mobile, on referme le menu après un clic
-                        if (window.innerWidth <= 900) {
-                            document.getElementById('sidebar').classList.remove('open');
-                        }
+                        heading.scrollIntoView({ behavior: 'smooth' });
+                        if (window.innerWidth <= 900) toggleMenu(false);
                     });
 
                     tocDiv.appendChild(link);
                 });
 
-                // 5. Chargement terminé : on fait disparaître l'écran de chargement
+                // Cacher le loader ET restaurer le scroll
                 setTimeout(() => {
-                    document.getElementById('loader-overlay').style.display = 'none';
-                }, 100); // Petit délai pour laisser au navigateur le temps d'afficher la page
-            })
-            .catch(err => {
-                document.querySelector('.loader-text').innerHTML = "<span style='color:red;'>❌ Erreur critique</span>";
-                document.querySelector('.loader-sub').innerText = "Impossible de charger les données.";
+                    document.getElementById('loader').style.display = 'none';
+                    const savedScroll = localStorage.getItem('scrollPosition');
+                    if (savedScroll) window.scrollTo(0, parseInt(savedScroll));
+                }, 150);
             });
 
-        // --- GESTION DES LIENS EXTERNES ---
-        document.addEventListener('click', function(e) {
+        // 3. SAUVEGARDE DE LA POSITION (Local Storage)
+        let scrollTimeout;
+        window.addEventListener('scroll', () => {
+            clearTimeout(scrollTimeout);
+            scrollTimeout = setTimeout(() => {
+                localStorage.setItem('scrollPosition', window.scrollY);
+            }, 200); // Sauvegarde toutes les 200ms lors du défilement
+        });
+
+        // 4. GESTION DES LIENS
+        document.addEventListener('click', e => {
             const link = e.target.closest('a');
-            // Si c'est un lien normal (qui ne commence pas par # comme notre sommaire)
-            if (link && !link.getAttribute('href').startsWith('#')) {
+            if (link && !link.href.includes('#')) {
                 link.setAttribute('target', '_blank');
-                link.setAttribute('rel', 'noopener noreferrer');
             }
         });
 
-        // --- GESTION DU MENU MOBILE ---
+        // 5. GESTION DU THÈME
+        document.getElementById('themeToggle').addEventListener('click', () => {
+            const currentTheme = document.body.getAttribute('data-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            document.body.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+        });
+
+        // 6. GESTION DU PSEUDO LOCAL
+        document.getElementById('userProfile').addEventListener('click', () => {
+            const currentName = localStorage.getItem('username') || '';
+            const newName = prompt("Choisis ton pseudo :", currentName);
+            if (newName && newName.trim() !== '') {
+                localStorage.setItem('username', newName.trim());
+                document.getElementById('userNameDisplay').innerText = newName.trim();
+                document.getElementById('userAvatar').innerText = newName.trim().charAt(0).toUpperCase();
+            }
+        });
+
+        // 7. GESTION MOBILE ET GESTES (SWIPE TACTILE)
         const sidebar = document.getElementById('sidebar');
-        const mobileBtn = document.getElementById('mobile-menu-btn');
+        const menuBtn = document.getElementById('menuBtn');
+        let touchStartX = 0;
+        let touchEndX = 0;
 
-        mobileBtn.addEventListener('click', () => {
-            sidebar.classList.toggle('open');
-        });
-
-        // Fermer le menu si on clique en dehors (sur le texte)
-        document.querySelector('.main-content').addEventListener('click', () => {
-            if (window.innerWidth <= 900 && sidebar.classList.contains('open')) {
-                sidebar.classList.remove('open');
+        function toggleMenu(forceState) {
+            if (forceState !== undefined) {
+                sidebar.classList.toggle('open', forceState);
+            } else {
+                sidebar.classList.toggle('open');
             }
+        }
+
+        menuBtn.addEventListener('click', () => toggleMenu());
+
+        // Fermer le menu si on clique sur le texte
+        document.querySelector('.main-content').addEventListener('click', () => {
+            if (window.innerWidth <= 900) toggleMenu(false);
         });
+
+        // Détection du Swipe (Gestes Poweramp)
+        document.addEventListener('touchstart', e => {
+            touchStartX = e.changedTouches[0].screenX;
+        }, { passive: true });
+
+        document.addEventListener('touchend', e => {
+            touchEndX = e.changedTouches[0].screenX;
+            handleSwipe();
+        }, { passive: true });
+
+        function handleSwipe() {
+            // Uniquement actif sur mobile
+            if (window.innerWidth > 900) return;
+
+            const diff = touchEndX - touchStartX;
+            // Swipe à droite (Ouvrir menu)
+            if (diff > 80 && touchStartX < 50) { 
+                toggleMenu(true);
+            }
+            // Swipe à gauche (Fermer menu)
+            if (diff < -80) {
+                toggleMenu(false);
+            }
+        }
     </script>
 </body>
 </html>
