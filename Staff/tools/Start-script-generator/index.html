@@ -3,9 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Générateur de Script de Démarrage Minecraft</title>
+    <title>Générateur de Script de Démarrage Minecraft Pro</title>
     <style>
-        /* Variables CSS pour un thème sombre moderne (façon PaperMC/Docs) */
         :root {
             --bg-color: #0f172a;
             --card-bg: #1e293b;
@@ -13,6 +12,7 @@
             --text-muted: #94a3b8;
             --accent: #38bdf8;
             --accent-hover: #0284c7;
+            --success: #10b981;
             --border: #334155;
             --code-bg: #0b1120;
         }
@@ -34,7 +34,7 @@
         }
 
         .container {
-            max-width: 1000px;
+            max-width: 1100px;
             width: 100%;
         }
 
@@ -60,9 +60,9 @@
             gap: 2rem;
         }
 
-        @media(min-width: 768px) {
+        @media(min-width: 850px) {
             .grid {
-                grid-template-columns: 1fr 1fr;
+                grid-template-columns: 350px 1fr;
             }
         }
 
@@ -71,7 +71,7 @@
             border: 1px solid var(--border);
             border-radius: 12px;
             padding: 2rem;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
         }
 
         h2 {
@@ -81,9 +81,17 @@
             padding-bottom: 0.5rem;
         }
 
-        /* Formulaires */
         .form-group {
             margin-bottom: 1.5rem;
+        }
+
+        .form-row {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .form-row > div {
+            flex: 1;
         }
 
         label {
@@ -91,6 +99,7 @@
             font-weight: 500;
             margin-bottom: 0.5rem;
             color: var(--text-main);
+            font-size: 0.95rem;
         }
 
         input[type="number"],
@@ -102,7 +111,7 @@
             border: 1px solid var(--border);
             border-radius: 8px;
             color: var(--text-main);
-            font-size: 1rem;
+            font-size: 0.95rem;
             transition: border-color 0.2s;
         }
 
@@ -111,18 +120,19 @@
             border-color: var(--accent);
         }
 
-        /* Toggle Switch stylisé */
         .toggle-container {
             display: flex;
-            align-items: center;
+            align-items: flex-start;
             justify-content: space-between;
         }
 
         .switch {
             position: relative;
             display: inline-block;
-            width: 50px;
-            height: 24px;
+            width: 44px;
+            height: 22px;
+            flex-shrink: 0;
+            margin-top: 4px;
         }
 
         .switch input {
@@ -139,19 +149,19 @@
             right: 0;
             bottom: 0;
             background-color: var(--border);
-            transition: .4s;
+            transition: .3s;
             border-radius: 34px;
         }
 
         .slider:before {
             position: absolute;
             content: "";
-            height: 18px;
-            width: 18px;
+            height: 16px;
+            width: 16px;
             left: 3px;
             bottom: 3px;
             background-color: white;
-            transition: .4s;
+            transition: .3s;
             border-radius: 50%;
         }
 
@@ -160,23 +170,87 @@
         }
 
         input:checked + .slider:before {
-            transform: translateX(26px);
+            transform: translateX(22px);
+        }
+
+        input:disabled + .slider {
+            background-color: #1e293b;
+            cursor: not-allowed;
+            opacity: 0.5;
         }
 
         .help-text {
             display: block;
-            font-size: 0.85rem;
+            font-size: 0.8rem;
             color: var(--text-muted);
-            margin-top: 0.25rem;
+            margin-top: 0.35rem;
         }
 
-        /* Zone de code */
         .code-container {
             position: relative;
             background-color: var(--code-bg);
             border-radius: 8px;
             border: 1px solid var(--border);
             overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+
+        .code-header {
+            background-color: #162032;
+            padding: 0.75rem 1rem;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .file-name {
+            font-family: monospace;
+            color: var(--accent);
+            font-weight: bold;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .btn {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border);
+            color: var(--text-main);
+            padding: 0.4rem 0.8rem;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 500;
+            font-size: 0.85rem;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+
+        .btn:hover:not(:disabled) {
+            background-color: var(--border);
+        }
+
+        .btn.primary {
+            background-color: var(--accent);
+            border-color: var(--accent);
+            color: #0f172a;
+        }
+
+        .btn.primary:hover {
+            background-color: var(--accent-hover);
+            border-color: var(--accent-hover);
+        }
+
+        .btn.success {
+            background-color: var(--success);
+            border-color: var(--success);
+            color: white;
         }
 
         pre {
@@ -187,41 +261,8 @@
             color: #a5b4fc;
             font-family: "Fira Code", Consolas, Monaco, monospace;
             font-size: 0.9rem;
-        }
-
-        .copy-btn {
-            position: absolute;
-            top: 0.5rem;
-            right: 0.5rem;
-            background-color: var(--card-bg);
-            border: 1px solid var(--border);
-            color: var(--text-main);
-            padding: 0.5rem 1rem;
-            border-radius: 6px;
-            cursor: pointer;
-            font-weight: 500;
-            transition: all 0.2s;
-        }
-
-        .copy-btn:hover {
-            background-color: var(--accent);
-            border-color: var(--accent);
-        }
-
-        .copy-btn.copied {
-            background-color: #10b981;
-            border-color: #10b981;
-            color: white;
-        }
-
-        .file-name {
-            display: inline-block;
-            margin-top: 1rem;
-            padding: 0.25rem 0.75rem;
-            background-color: var(--border);
-            border-radius: 4px;
-            font-size: 0.85rem;
-            font-family: monospace;
+            flex-grow: 1;
+            margin: 0;
         }
     </style>
 </head>
@@ -229,8 +270,8 @@
 
 <div class="container">
     <header>
-        <h1>Générateur de Script</h1>
-        <p class="subtitle">Créez facilement votre script de démarrage optimisé pour Minecraft (Paper, Purpur, etc.)</p>
+        <h1>Générateur de Script Pro</h1>
+        <p class="subtitle">Paper, Velocity, Purpur... Générez vos scripts de lancement optimisés en un clic.</p>
     </header>
 
     <div class="grid">
@@ -247,32 +288,49 @@
             </div>
 
             <div class="form-group">
-                <label for="ram">Mémoire RAM (en Go)</label>
-                <input type="number" id="ram" min="1" max="128" value="4">
-                <span class="help-text">Combien de gigaoctets allouer au serveur.</span>
+                <label for="software">Logiciel Serveur</label>
+                <select id="software">
+                    <option value="paper">Paper / Purpur / Spigot (Aikar's Flags)</option>
+                    <option value="velocity">Velocity (Proxy)</option>
+                    <option value="bungee">BungeeCord / Waterfall (Proxy)</option>
+                    <option value="vanilla">Vanilla / Fabric / Forge (Basique)</option>
+                </select>
+            </div>
+
+            <div class="form-row form-group">
+                <div>
+                    <label for="ram">Mémoire</label>
+                    <input type="number" id="ram" min="1" max="128" value="4" step="0.5">
+                </div>
+                <div>
+                    <label for="unit">Unité</label>
+                    <select id="unit">
+                        <option value="G">Go (Gigaoctets)</option>
+                        <option value="M">Mo (Mégaoctets)</option>
+                    </select>
+                </div>
             </div>
 
             <div class="form-group">
-                <label for="jarName">Nom du fichier JAR</label>
-                <input type="text" id="jarName" value="paper.jar">
-                <span class="help-text">Le nom exact de votre fichier exécutable (ex: server.jar).</span>
+                <label for="jarName">Fichier Exécutable</label>
+                <input type="text" id="jarName" value="server.jar">
             </div>
 
             <div class="form-group toggle-container">
                 <div>
-                    <label>Flags d'Aikar</label>
-                    <span class="help-text">Optimise le ramasse-miettes (GC) pour réduire les lags. Fortement recommandé.</span>
+                    <label>Auto-Restart (Boucle)</label>
+                    <span class="help-text">Redémarre le serveur automatiquement en cas de crash ou de /stop.</span>
                 </div>
                 <label class="switch">
-                    <input type="checkbox" id="aikar" checked>
+                    <input type="checkbox" id="restart">
                     <span class="slider"></span>
                 </label>
             </div>
 
-            <div class="form-group toggle-container">
+            <div class="form-group toggle-container" id="guiContainer">
                 <div>
                     <label>Interface GUI</label>
-                    <span class="help-text">Affiche la fenêtre blanche par défaut de Minecraft.</span>
+                    <span class="help-text">Afficher la console blanche par défaut (déconseillé).</span>
                 </div>
                 <label class="switch">
                     <input type="checkbox" id="gui">
@@ -282,14 +340,21 @@
         </div>
 
         <!-- Colonne Résultat -->
-        <div class="card" style="display: flex; flex-direction: column;">
-            <h2>Votre Script</h2>
-            <p style="margin-bottom: 1rem; color: var(--text-muted); font-size: 0.9rem;">
-                Copiez ce code et collez-le dans un fichier nommé <span id="fileNameDisplay" class="file-name">start.bat</span>.
-            </p>
-            
-            <div class="code-container" style="flex-grow: 1;">
-                <button class="copy-btn" id="copyBtn" onclick="copyCode()">Copier</button>
+        <div class="card" style="display: flex; flex-direction: column; padding: 0;">
+            <div class="code-container">
+                <div class="code-header">
+                    <span id="fileNameDisplay" class="file-name">start.bat</span>
+                    <div class="button-group">
+                        <button class="btn" id="copyBtn" onclick="copyCode()">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                            Copier
+                        </button>
+                        <button class="btn primary" id="dlBtn" onclick="downloadFile()">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+                            Télécharger
+                        </button>
+                    </div>
+                </div>
                 <pre><code id="outputCode"></code></pre>
             </div>
         </div>
@@ -297,87 +362,164 @@
 </div>
 
 <script>
-    // Les flags optimisés d'Aikar
-    const aikarFlags = "-XX:+UseG1GC -XX:+ParallelRefProcEnabled -XX:MaxGCPauseMillis=200 -XX:+UnlockExperimentalVMOptions -XX:+DisableExplicitGC -XX:+AlwaysPreTouch -XX:G1HeapWastePercent=5 -XX:G1MixedGCCountTarget=4 -XX:InitiatingHeapOccupancyPercent=15 -XX:G1MixedGCLiveThresholdPercent=90 -XX:G1RSetUpdatingPauseTimePercent=5 -XX:SurvivorRatio=32 -XX:+PerfDisableSharedMem -XX:MaxTenuringThreshold=1 -Dusing.aikars.flags=https://mcflags.emc.gs -Daikars.new.flags=true";
+    // Éléments DOM
+    const els = {
+        os: document.getElementById('os'),
+        software: document.getElementById('software'),
+        ram: document.getElementById('ram'),
+        unit: document.getElementById('unit'),
+        jar: document.getElementById('jarName'),
+        restart: document.getElementById('restart'),
+        gui: document.getElementById('gui'),
+        output: document.getElementById('outputCode'),
+        fileName: document.getElementById('fileNameDisplay'),
+        copyBtn: document.getElementById('copyBtn'),
+        guiContainer: document.getElementById('guiContainer')
+    };
 
-    // Récupération des éléments du DOM
-    const osSelect = document.getElementById('os');
-    const ramInput = document.getElementById('ram');
-    const jarInput = document.getElementById('jarName');
-    const aikarToggle = document.getElementById('aikar');
-    const guiToggle = document.getElementById('gui');
-    const outputCode = document.getElementById('outputCode');
-    const fileNameDisplay = document.getElementById('fileNameDisplay');
+    // Bases des flags
+    const flags = {
+        paper_base: "-XX:+UseG1GC -XX:+ParallelRefProcEnabled -XX:MaxGCPauseMillis=200 -XX:+UnlockExperimentalVMOptions -XX:+DisableExplicitGC -XX:+AlwaysPreTouch -XX:G1HeapWastePercent=5 -XX:G1MixedGCCountTarget=4 -XX:InitiatingHeapOccupancyPercent=15 -XX:G1MixedGCLiveThresholdPercent=90 -XX:G1RSetUpdatingPauseTimePercent=5 -XX:SurvivorRatio=32 -XX:+PerfDisableSharedMem -XX:MaxTenuringThreshold=1 -Dusing.aikars.flags=https://mcflags.emc.gs -Daikars.new.flags=true",
+        paper_large_ram: "-XX:G1NewSizePercent=40 -XX:G1MaxNewSizePercent=50 -XX:G1ReservePercent=15 -XX:InitiatingHeapOccupancyPercent=20",
+        paper_small_ram: "-XX:G1NewSizePercent=30 -XX:G1MaxNewSizePercent=40 -XX:G1ReservePercent=20",
+        velocity: "-XX:+UseG1GC -XX:G1HeapRegionSize=4M -XX:+UnlockExperimentalVMOptions -XX:+ParallelRefProcEnabled -XX:+AlwaysPreTouch -XX:MaxInlineLevel=15",
+        bungee: "-XX:+UseG1GC -XX:MaxGCPauseMillis=50 -XX:-UseAdaptiveSizePolicy -XX:CompileThreshold=100 -Dfile.encoding=UTF-8"
+    };
 
-    // Fonction de génération du script
-    function generateScript() {
-        const os = osSelect.value;
-        const ram = ramInput.value || 1;
-        const jar = jarInput.value || 'server.jar';
-        const useAikar = aikarToggle.checked;
-        const useGui = guiToggle.checked;
-
-        let script = "";
-
-        // En-tête OS
-        if (os === 'windows') {
-            script += "@echo off\n";
-            fileNameDisplay.textContent = "start.bat";
-        } else {
-            script += "#!/usr/bin/env sh\n";
-            fileNameDisplay.textContent = "start.sh";
-        }
-
-        // Commande Java
-        let javaCmd = `java -Xms${ram}G -Xmx${ram}G`;
-
-        // Ajout des flags
-        if (useAikar) {
-            javaCmd += ` ${aikarFlags}`;
-        }
-
-        // Ajout du jar
-        javaCmd += ` -jar ${jar}`;
-
-        // Ajout du NoGui
-        if (!useGui) {
-            javaCmd += " --nogui"; // Paper utilise souvent --nogui ou nogui
-        }
-
-        script += javaCmd + "\n";
-
-        // Fin de fichier OS
-        if (os === 'windows') {
-            script += "pause\n";
-        }
-
-        outputCode.textContent = script;
+    function updateUI() {
+        // Les proxys (Velocity/Bungee) n'ont pas de GUI
+        const isProxy = els.software.value === 'velocity' || els.software.value === 'bungee';
+        els.gui.disabled = isProxy;
+        if (isProxy) els.gui.checked = false;
+        els.guiContainer.style.opacity = isProxy ? '0.5' : '1';
+        
+        // Suggestion automatique de nom de jar
+        if (els.software.value === 'velocity' && els.jar.value === 'server.jar') els.jar.value = 'velocity.jar';
+        if (els.software.value === 'paper' && els.jar.value === 'velocity.jar') els.jar.value = 'paper.jar';
     }
 
-    // Fonction pour copier le code
+    function generateScript() {
+        updateUI();
+
+        const os = els.os.value;
+        const software = els.software.value;
+        const ram = els.ram.value || 1;
+        const unit = els.unit.value;
+        const jar = els.jar.value || 'server.jar';
+        const autoRestart = els.restart.checked;
+        const useGui = els.gui.checked;
+
+        // RAM pour calculs (Conversion en Go si en Mo)
+        const ramInGb = unit === 'G' ? parseFloat(ram) : parseFloat(ram) / 1024;
+
+        let script = "";
+        const ext = os === 'windows' ? ".bat" : ".sh";
+        els.fileName.textContent = `start${ext}`;
+
+        // 1. En-tête
+        if (os === 'windows') {
+            script += "@echo off\n";
+            script += "TITLE Minecraft Server\n";
+            if (autoRestart) script += ":start\n";
+        } else {
+            script += "#!/usr/bin/env bash\n";
+            if (autoRestart) script += "while true\ndo\n";
+        }
+
+        // 2. Commande Java
+        let cmd = `java -Xms${ram}${unit} -Xmx${ram}${unit}`;
+
+        // 3. Application des Flags selon logiciel
+        if (software === 'paper') {
+            cmd += ` ${flags.paper_base}`;
+            if (ramInGb >= 12) {
+                cmd += ` ${flags.paper_large_ram}`;
+            } else {
+                cmd += ` ${flags.paper_small_ram}`;
+            }
+        } else if (software === 'velocity') {
+            cmd += ` ${flags.velocity}`;
+        } else if (software === 'bungee') {
+            cmd += ` ${flags.bungee}`;
+        }
+
+        // 4. Ajout de l'exécutable
+        cmd += ` -jar ${jar}`;
+
+        // 5. Options de fin (NoGUI)
+        if (!useGui && software !== 'velocity' && software !== 'bungee') {
+            cmd += " --nogui";
+        }
+
+        // Indentation pour la boucle Linux
+        if (os === 'linux' && autoRestart) {
+            script += `    ${cmd}\n`;
+        } else {
+            script += `${cmd}\n`;
+        }
+
+        // 6. Gestion du redémarrage
+        if (autoRestart) {
+            if (os === 'windows') {
+                script += "echo Serveur en cours de redemarrage... Appuyez sur CTRL+C pour annuler.\n";
+                script += "timeout /t 5\n";
+                script += "goto start\n";
+            } else {
+                script += '    echo "Le serveur va redemarrer dans 5 secondes. Appuyez sur CTRL+C pour annuler."\n';
+                script += "    sleep 5\n";
+                script += "done\n";
+            }
+        } else {
+            // Pas d'auto-restart = on met en pause à la fin pour voir les erreurs
+            if (os === 'windows') {
+                script += "pause\n";
+            }
+        }
+
+        els.output.textContent = script;
+    }
+
+    // Copier le texte
     function copyCode() {
-        const textToCopy = outputCode.textContent;
-        navigator.clipboard.writeText(textToCopy).then(() => {
-            const btn = document.getElementById('copyBtn');
-            btn.textContent = "Copié !";
-            btn.classList.add('copied');
+        navigator.clipboard.writeText(els.output.textContent).then(() => {
+            const originalText = els.copyBtn.innerHTML;
+            els.copyBtn.classList.add('success');
+            els.copyBtn.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg> Copié !';
             
             setTimeout(() => {
-                btn.textContent = "Copier";
-                btn.classList.remove('copied');
+                els.copyBtn.classList.remove('success');
+                els.copyBtn.innerHTML = originalText;
             }, 2000);
         });
     }
 
-    // Écouteurs d'événements pour mettre à jour en temps réel
-    osSelect.addEventListener('change', generateScript);
-    ramInput.addEventListener('input', generateScript);
-    jarInput.addEventListener('input', generateScript);
-    aikarToggle.addEventListener('change', generateScript);
-    guiToggle.addEventListener('change', generateScript);
+    // Télécharger le fichier
+    function downloadFile() {
+        const text = els.output.textContent;
+        const filename = els.fileName.textContent;
+        const blob = new Blob([text], { type: 'text/plain' });
+        const url = URL.createObjectURL(blob);
+        
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = filename;
+        document.body.appendChild(a);
+        a.click();
+        
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+    }
 
-    // Génération initiale au chargement de la page
-    window.onload = generateScript;
+    // Écouteurs d'événements
+    Object.values(els).forEach(el => {
+        if(el && (el.tagName === 'INPUT' || el.tagName === 'SELECT')) {
+            el.addEventListener('input', generateScript);
+            el.addEventListener('change', generateScript);
+        }
+    });
+
+    // Init
+    generateScript();
 </script>
 
 </body>
