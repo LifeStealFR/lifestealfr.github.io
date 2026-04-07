@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Générateur de Script de Démarrage Minecraft</title>
+    <style>
+        /* Variables CSS pour un thème sombre moderne (façon PaperMC/Docs) */
+        :root {
+            --bg-color: #0f172a;
+            --card-bg: #1e293b;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --accent: #38bdf8;
+            --accent-hover: #0284c7;
+            --border: #334155;
+            --code-bg: #0b1120;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            line-height: 1.6;
+            padding: 2rem 1rem;
+            display: flex;
+            justify-content: center;
+        }
+
+        .container {
+            max-width: 1000px;
+            width: 100%;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        h1 {
+            color: var(--accent);
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        p.subtitle {
+            color: var(--text-muted);
+            font-size: 1.1rem;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 2rem;
+        }
+
+        @media(min-width: 768px) {
+            .grid {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        .card {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 2rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+
+        h2 {
+            font-size: 1.25rem;
+            margin-bottom: 1.5rem;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 0.5rem;
+        }
+
+        /* Formulaires */
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        label {
+            display: block;
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+            color: var(--text-main);
+        }
+
+        input[type="number"],
+        input[type="text"],
+        select {
+            width: 100%;
+            padding: 0.75rem;
+            background-color: var(--bg-color);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            color: var(--text-main);
+            font-size: 1rem;
+            transition: border-color 0.2s;
+        }
+
+        input:focus, select:focus {
+            outline: none;
+            border-color: var(--accent);
+        }
+
+        /* Toggle Switch stylisé */
+        .toggle-container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 50px;
+            height: 24px;
+        }
+
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: var(--border);
+            transition: .4s;
+            border-radius: 34px;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 18px;
+            width: 18px;
+            left: 3px;
+            bottom: 3px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+
+        input:checked + .slider {
+            background-color: var(--accent);
+        }
+
+        input:checked + .slider:before {
+            transform: translateX(26px);
+        }
+
+        .help-text {
+            display: block;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            margin-top: 0.25rem;
+        }
+
+        /* Zone de code */
+        .code-container {
+            position: relative;
+            background-color: var(--code-bg);
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            overflow: hidden;
+        }
+
+        pre {
+            padding: 1.5rem;
+            overflow-x: auto;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            color: #a5b4fc;
+            font-family: "Fira Code", Consolas, Monaco, monospace;
+            font-size: 0.9rem;
+        }
+
+        .copy-btn {
+            position: absolute;
+            top: 0.5rem;
+            right: 0.5rem;
+            background-color: var(--card-bg);
+            border: 1px solid var(--border);
+            color: var(--text-main);
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+
+        .copy-btn:hover {
+            background-color: var(--accent);
+            border-color: var(--accent);
+        }
+
+        .copy-btn.copied {
+            background-color: #10b981;
+            border-color: #10b981;
+            color: white;
+        }
+
+        .file-name {
+            display: inline-block;
+            margin-top: 1rem;
+            padding: 0.25rem 0.75rem;
+            background-color: var(--border);
+            border-radius: 4px;
+            font-size: 0.85rem;
+            font-family: monospace;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <h1>Générateur de Script</h1>
+        <p class="subtitle">Créez facilement votre script de démarrage optimisé pour Minecraft (Paper, Purpur, etc.)</p>
+    </header>
+
+    <div class="grid">
+        <!-- Colonne Formulaire -->
+        <div class="card">
+            <h2>Configuration</h2>
+            
+            <div class="form-group">
+                <label for="os">Système d'exploitation</label>
+                <select id="os">
+                    <option value="windows">Windows (.bat)</option>
+                    <option value="linux">Linux / macOS (.sh)</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="ram">Mémoire RAM (en Go)</label>
+                <input type="number" id="ram" min="1" max="128" value="4">
+                <span class="help-text">Combien de gigaoctets allouer au serveur.</span>
+            </div>
+
+            <div class="form-group">
+                <label for="jarName">Nom du fichier JAR</label>
+                <input type="text" id="jarName" value="paper.jar">
+                <span class="help-text">Le nom exact de votre fichier exécutable (ex: server.jar).</span>
+            </div>
+
+            <div class="form-group toggle-container">
+                <div>
+                    <label>Flags d'Aikar</label>
+                    <span class="help-text">Optimise le ramasse-miettes (GC) pour réduire les lags. Fortement recommandé.</span>
+                </div>
+                <label class="switch">
+                    <input type="checkbox" id="aikar" checked>
+                    <span class="slider"></span>
+                </label>
+            </div>
+
+            <div class="form-group toggle-container">
+                <div>
+                    <label>Interface GUI</label>
+                    <span class="help-text">Affiche la fenêtre blanche par défaut de Minecraft.</span>
+                </div>
+                <label class="switch">
+                    <input type="checkbox" id="gui">
+                    <span class="slider"></span>
+                </label>
+            </div>
+        </div>
+
+        <!-- Colonne Résultat -->
+        <div class="card" style="display: flex; flex-direction: column;">
+            <h2>Votre Script</h2>
+            <p style="margin-bottom: 1rem; color: var(--text-muted); font-size: 0.9rem;">
+                Copiez ce code et collez-le dans un fichier nommé <span id="fileNameDisplay" class="file-name">start.bat</span>.
+            </p>
+            
+            <div class="code-container" style="flex-grow: 1;">
+                <button class="copy-btn" id="copyBtn" onclick="copyCode()">Copier</button>
+                <pre><code id="outputCode"></code></pre>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Les flags optimisés d'Aikar
+    const aikarFlags = "-XX:+UseG1GC -XX:+ParallelRefProcEnabled -XX:MaxGCPauseMillis=200 -XX:+UnlockExperimentalVMOptions -XX:+DisableExplicitGC -XX:+AlwaysPreTouch -XX:G1HeapWastePercent=5 -XX:G1MixedGCCountTarget=4 -XX:InitiatingHeapOccupancyPercent=15 -XX:G1MixedGCLiveThresholdPercent=90 -XX:G1RSetUpdatingPauseTimePercent=5 -XX:SurvivorRatio=32 -XX:+PerfDisableSharedMem -XX:MaxTenuringThreshold=1 -Dusing.aikars.flags=https://mcflags.emc.gs -Daikars.new.flags=true";
+
+    // Récupération des éléments du DOM
+    const osSelect = document.getElementById('os');
+    const ramInput = document.getElementById('ram');
+    const jarInput = document.getElementById('jarName');
+    const aikarToggle = document.getElementById('aikar');
+    const guiToggle = document.getElementById('gui');
+    const outputCode = document.getElementById('outputCode');
+    const fileNameDisplay = document.getElementById('fileNameDisplay');
+
+    // Fonction de génération du script
+    function generateScript() {
+        const os = osSelect.value;
+        const ram = ramInput.value || 1;
+        const jar = jarInput.value || 'server.jar';
+        const useAikar = aikarToggle.checked;
+        const useGui = guiToggle.checked;
+
+        let script = "";
+
+        // En-tête OS
+        if (os === 'windows') {
+            script += "@echo off\n";
+            fileNameDisplay.textContent = "start.bat";
+        } else {
+            script += "#!/usr/bin/env sh\n";
+            fileNameDisplay.textContent = "start.sh";
+        }
+
+        // Commande Java
+        let javaCmd = `java -Xms${ram}G -Xmx${ram}G`;
+
+        // Ajout des flags
+        if (useAikar) {
+            javaCmd += ` ${aikarFlags}`;
+        }
+
+        // Ajout du jar
+        javaCmd += ` -jar ${jar}`;
+
+        // Ajout du NoGui
+        if (!useGui) {
+            javaCmd += " --nogui"; // Paper utilise souvent --nogui ou nogui
+        }
+
+        script += javaCmd + "\n";
+
+        // Fin de fichier OS
+        if (os === 'windows') {
+            script += "pause\n";
+        }
+
+        outputCode.textContent = script;
+    }
+
+    // Fonction pour copier le code
+    function copyCode() {
+        const textToCopy = outputCode.textContent;
+        navigator.clipboard.writeText(textToCopy).then(() => {
+            const btn = document.getElementById('copyBtn');
+            btn.textContent = "Copié !";
+            btn.classList.add('copied');
+            
+            setTimeout(() => {
+                btn.textContent = "Copier";
+                btn.classList.remove('copied');
+            }, 2000);
+        });
+    }
+
+    // Écouteurs d'événements pour mettre à jour en temps réel
+    osSelect.addEventListener('change', generateScript);
+    ramInput.addEventListener('input', generateScript);
+    jarInput.addEventListener('input', generateScript);
+    aikarToggle.addEventListener('change', generateScript);
+    guiToggle.addEventListener('change', generateScript);
+
+    // Génération initiale au chargement de la page
+    window.onload = generateScript;
+</script>
+
+</body>
+</html>
