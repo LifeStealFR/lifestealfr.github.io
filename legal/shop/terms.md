@@ -28,7 +28,6 @@ Cette licence s'applique à toutes nos ressources proposées gratuitement.
 #### 🔸 Licence Premium (Ressources Payantes)
 Cette licence est débloquée suite à l'achat d'un produit.
 * **Un seul achat pour tous vos serveurs.**  Tant que vous en êtes le propriétaire, vous pouvez utiliser la ressource partout sans limite.
-* Si vous possédez plusieurs projets totalement distincts, vous devez acquérir une nouvelle licence.
 
 ---
 
