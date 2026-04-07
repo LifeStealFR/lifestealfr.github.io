@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Documentation API - LifestealMC</title>
+    
+    <!-- 1. STYLE GITHUB (CSS) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/github-markdown-css/5.2.0/github-markdown.min.css">
+    <!-- 2. COLORATION DU CODE (Highlight.js) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github-dark.min.css">
+    
+    <style>
+        body { box-sizing: border-box; min-width: 200px; max-width: 980px; margin: 0 auto; padding: 45px; background-color: #f6f8fa; }
+        .markdown-body { padding: 45px; background-color: white; border: 1px solid #d0d7de; border-radius: 10px; box-shadow: 0 8px 24px rgba(149,157,165,0.2); }
+        @media (max-width: 767px) { body { padding: 15px; } .markdown-body { padding: 15px; } }
+        #loader { text-align: center; font-family: sans-serif; margin-top: 50px; color: #666; }
+    </style>
+</head>
+<body>
+
+    <div id="loader">🔄 Chargement de la documentation...</div>
+    
+    <!-- ZONE D'AFFICHAGE -->
+    <article id="content" class="markdown-body" style="display: none;"></article>
+
+    <!-- SCRIPTS -->
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+
+    <script>
+        // --- CONFIGURATION ---
+        // Remplace 'api.md' par le nom de ton fichier markdown dans le dépôt
+        const MD_FILE = 'api.md'; 
+
+        async function loadMarkdown() {
+            try {
+                const response = await fetch(MD_FILE);
+                if (!response.ok) throw new Error("Fichier non trouvé");
+                
+                const markdown = await response.text();
+                
+                // Configuration de Marked pour utiliser Highlight.js (coloration code)
+                marked.setOptions({
+                    highlight: function(code, lang) {
+                        const language = hljs.getLanguage(lang) ? lang : 'plaintext';
+                        return hljs.highlight(code, { language }).value;
+                    },
+                    langPrefix: 'hljs language-'
+                });
+
+                // Conversion et affichage
+                document.getElementById('content').innerHTML = marked.parse(markdown);
+                document.getElementById('loader').style.display = 'none';
+                document.getElementById('content').style.display = 'block';
+                
+                // Appliquer la coloration après le rendu
+                hljs.highlightAll();
+
+            } catch (error) {
+                document.getElementById('loader').innerHTML = `<h1 style="color:red">❌ Erreur</h1><p>${error.message}</p>`;
+            }
+        }
+
+        loadMarkdown();
+    </script>
+</body>
+</html>
