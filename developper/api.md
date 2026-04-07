@@ -1,6 +1,6 @@
 # 🌐 Référence API Complète - LifestealFR
 
-Bienvenue dans la documentation exhaustive de l'API LifestealMC. Ce document liste l'intégralité des points de terminaison générés par le CMS Azuriom et ses plugins (`ApiExtender`, `ApiLimiter`, `SkinApi`, `Shop`, etc.).
+Bienvenue dans la documentation exhaustive de l'API LifestealFR. Ce document liste l'intégralité des points de terminaison générés par le CMS Azuriom et ses plugins (`ApiExtender`, `ApiLimiter`, `SkinApi`, `Shop`, etc.).
 
 > **URL de base :** `https://lifestealmc.fr/`  
 > **Format :** `JSON` par défaut.  
