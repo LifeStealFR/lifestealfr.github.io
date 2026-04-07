@@ -5,125 +5,131 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>LifestealFR | Developer Docs</title>
     
-    <!-- Polices et Icones -->
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
-    <!-- Coloration de code (Tokyo Night Theme) -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/tokyo-night-dark.min.css">
 
     <style>
-        body { font-family: 'Inter', sans-serif; background-color: #0b0e14; color: #e2e8f0; }
-        
-        /* Personnalisation du rendu Markdown */
-        #content h1 { @apply text-4xl font-bold mb-6 text-white border-b border-gray-800 pb-4; }
-        #content h2 { @apply text-2xl font-semibold mt-10 mb-4 text-blue-400; }
-        #content h3 { @apply text-xl font-medium mt-8 mb-2 text-indigo-300; }
-        #content p { @apply text-gray-400 leading-relaxed mb-4; }
-        
-        /* Tableaux stylés */
-        #content table { @apply w-full text-left border-collapse my-6 rounded-lg overflow-hidden; }
-        #content th { @apply bg-gray-800/50 p-4 text-gray-200 font-semibold border-b border-gray-700; }
-        #content td { @apply p-4 border-b border-gray-800/50 bg-gray-900/30; }
-        
-        /* Blocs de code */
-        #content pre { @apply rounded-xl border border-gray-800 my-6 shadow-2xl !bg-[#1a1b26]; }
-        #content code:not(pre code) { @apply bg-blue-500/10 text-blue-400 px-1.5 py-0.5 rounded font-mono text-sm; }
-        
-        /* Scrollbar */
-        ::-webkit-scrollbar { width: 8px; }
-        ::-webkit-scrollbar-track { background: #0b0e14; }
-        ::-webkit-scrollbar-thumb { background: #1f2937; border-radius: 10px; }
-        ::-webkit-scrollbar-thumb:hover { background: #374151; }
-
-        .glass { background: rgba(17, 24, 39, 0.7); backdrop-filter: blur(12px); border-bottom: 1px solid rgba(255, 255, 255, 0.05); }
+        body { font-family: 'Inter', sans-serif; background-color: #0b0e14; color: #e2e8f0; scroll-behavior: smooth; }
+        .glass { background: rgba(17, 24, 39, 0.8); backdrop-filter: blur(12px); border-bottom: 1px solid rgba(255, 255, 255, 0.05); }
         .gradient-text { background: linear-gradient(90deg, #60a5fa, #a78bfa); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        
+        /* Rendu Markdown */
+        #content h1 { @apply text-4xl font-extrabold mb-8 text-white border-b border-gray-800 pb-4 flex items-center; }
+        #content h2 { @apply text-2xl font-bold mt-12 mb-6 text-blue-400 flex items-center; }
+        #content h3 { @apply text-xl font-semibold mt-8 mb-4 text-indigo-300 flex items-center; }
+        #content p { @apply text-gray-400 leading-relaxed mb-4 text-lg; }
+        #content ul { @apply list-disc list-inside mb-6 space-y-2 text-gray-400; }
+        
+        /* Tableaux */
+        #content table { @apply w-full text-left border-collapse my-8 rounded-xl overflow-hidden shadow-2xl; }
+        #content th { @apply bg-gray-800/80 p-4 text-gray-200 font-bold border-b border-gray-700 uppercase text-xs tracking-widest; }
+        #content td { @apply p-4 border-b border-gray-800/50 bg-gray-900/40 text-gray-300; }
+        
+        /* Blocs de Code */
+        #content pre { @apply relative rounded-xl border border-gray-800 my-8 shadow-2xl !bg-[#1a1b26] p-5; }
+        #content code:not(pre code) { @apply bg-blue-500/20 text-blue-300 px-2 py-0.5 rounded font-mono text-sm border border-blue-500/30; }
+        
+        /* Bouton Copier */
+        .copy-btn { @apply absolute top-3 right-3 bg-gray-800 hover:bg-gray-700 text-gray-400 hover:text-white px-3 py-1.5 rounded-lg text-xs transition-all border border-gray-700; }
     </style>
 </head>
 <body class="antialiased">
 
-    <!-- NAVBAR MOBILE-FRIENDLY -->
     <nav class="sticky top-0 z-50 glass px-6 py-4">
         <div class="max-w-5xl mx-auto flex justify-between items-center">
             <div class="flex items-center gap-3">
-                <div class="w-10 h-10 bg-blue-600 rounded-lg flex items-center justify-center shadow-lg shadow-blue-500/20">
-                    <i class="fas fa-terminal text-white text-xl"></i>
+                <div class="w-10 h-10 bg-gradient-to-br from-blue-600 to-indigo-600 rounded-xl flex items-center justify-center shadow-lg shadow-blue-500/20">
+                    <i class="fas fa-code text-white text-xl"></i>
                 </div>
-                <span class="text-xl font-bold tracking-tight">Lifesteal<span class="gradient-text">MC</span> <span class="text-xs uppercase bg-gray-800 px-2 py-1 rounded ml-2 text-gray-400">API</span></span>
+                <span class="text-xl font-bold tracking-tight">Lifesteal<span class="gradient-text">MC</span> <span class="text-[10px] uppercase bg-blue-500/20 text-blue-400 border border-blue-500/30 px-2 py-0.5 rounded ml-2">Dev API</span></span>
             </div>
-            <div class="hidden md:flex gap-6 text-sm font-medium text-gray-400">
-                <a href="https://lifestealmc.fr" class="hover:text-white transition">Retour au site</a>
-                <a href="#" class="hover:text-white transition text-blue-400">Documentation</a>
-            </div>
+            <a href="https://lifestealmc.fr" class="text-sm font-medium text-gray-400 hover:text-white transition flex items-center gap-2">
+                <i class="fas fa-arrow-left text-xs"></i> Retour au site
+            </a>
         </div>
     </nav>
 
     <main class="max-w-5xl mx-auto px-6 py-12">
-        <!-- LOADER -->
-        <div id="loader" class="flex flex-col items-center justify-center py-20">
-            <div class="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
-            <p class="mt-4 text-gray-500 font-medium animate-pulse">Chargement des données...</p>
+        <div id="loader" class="flex flex-col items-center justify-center py-32">
+            <div class="relative w-16 h-16">
+                <div class="absolute top-0 left-0 w-full h-full border-4 border-blue-500/20 rounded-full"></div>
+                <div class="absolute top-0 left-0 w-full h-full border-4 border-t-blue-500 rounded-full animate-spin"></div>
+            </div>
+            <p class="mt-6 text-gray-500 font-medium tracking-widest uppercase text-xs">Synchronisation des données...</p>
         </div>
 
-        <!-- CONTENT AREA -->
-        <article id="content" class="hidden animate-in fade-in duration-700"></article>
+        <article id="content" class="hidden animate-in fade-in slide-in-from-bottom-4 duration-1000"></article>
     </main>
 
-    <footer class="max-w-5xl mx-auto px-6 py-12 border-t border-gray-900 text-center text-gray-600 text-sm">
-        &copy; 2024 LifestealMC. Tous droits réservés. <br>
-        <span class="mt-2 block italic text-gray-700 font-mono italic text-blue-900/50 text-xs">Propulsé par Azuriom & API-Extender</span>
+    <footer class="max-w-5xl mx-auto px-6 py-20 border-t border-gray-900 text-center">
+        <p class="text-gray-600 text-sm">&copy; 2024 LifestealMC Network. Tous droits réservés.</p>
+        <div class="flex justify-center gap-6 mt-6 text-gray-500 text-xl">
+            <i class="fab fa-discord hover:text-blue-400 cursor-pointer transition"></i>
+            <i class="fab fa-github hover:text-white cursor-pointer transition"></i>
+        </div>
     </footer>
 
-    <!-- SCRIPTS -->
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
 
     <script>
-        // CONFIGURATION : Le lien vers ton fichier Markdown (api.md)
         const MD_FILE = 'api.md'; 
 
-        async function fetchDocs() {
+        async function init() {
             try {
                 const response = await fetch(MD_FILE);
-                if (!response.ok) throw new Error("Fichier .md introuvable.");
+                if (!response.ok) throw new Error("Fichier api.md non trouvé.");
                 const markdown = await response.text();
 
-                // Custom Render pour ajouter des icones auto sur les titres
                 const renderer = new marked.Renderer();
-                renderer.heading = function(text, level) {
-                    const icons = { 1: 'fa-book', 2: 'fa-bolt', 3: 'fa-code' };
-                    const icon = icons[level] || 'fa-chevron-right';
-                    return `<h${level} id="${text.toLowerCase().replace(/[^\w]+/g, '-')}"><i class="fas ${icon} mr-3 opacity-30 text-sm"></i>${text}</h${level}>`;
+                
+                // --- FIX : Nouvelle signature pour Marked 12+ ---
+                renderer.heading = ({ text, depth }) => {
+                    const icons = { 1: 'fa-book', 2: 'fa-bolt', 3: 'fa-terminal' };
+                    const icon = icons[depth] || 'fa-chevron-right';
+                    return `<h${depth}><i class="fas ${icon} mr-4 opacity-20 text-blue-500"></i>${text}</h${depth}>`;
                 };
 
-                marked.setOptions({
-                    renderer: renderer,
-                    highlight: function(code, lang) {
-                        return hljs.highlightAuto(code).value;
-                    },
-                    breaks: true,
-                    gfm: true
-                });
+                // Rendu des blocs de code avec bouton copier
+                renderer.code = ({ text, lang }) => {
+                    const validLang = !!(lang && hljs.getLanguage(lang));
+                    const highlighted = validLang ? hljs.highlight(text, { language: lang }).value : text;
+                    return `
+                        <div class="relative group">
+                            <button onclick="copyCode(this)" class="copy-btn opacity-0 group-hover:opacity-100">
+                                <i class="far fa-copy mr-1"></i> Copier
+                            </button>
+                            <pre><code class="hljs language-${lang}">${highlighted}</code></pre>
+                        </div>`;
+                };
+
+                marked.setOptions({ renderer });
 
                 document.getElementById('content').innerHTML = marked.parse(markdown);
-                document.getElementById('loader').classList.add('hidden');
+                document.getElementById('loader').style.display = 'none';
                 document.getElementById('content').classList.remove('hidden');
                 
-                // Coloration du code
-                hljs.highlightAll();
-
             } catch (err) {
                 document.getElementById('loader').innerHTML = `
-                    <div class="bg-red-500/10 border border-red-500/50 p-6 rounded-xl text-center">
-                        <i class="fas fa-circle-exclamation text-3xl text-red-500 mb-4"></i>
-                        <h2 class="text-xl font-bold text-white">Erreur de chargement</h2>
-                        <p class="text-red-400 mt-2">${err.message}</p>
+                    <div class="p-8 bg-red-500/5 border border-red-500/20 rounded-2xl text-center">
+                        <i class="fas fa-exclamation-triangle text-4xl text-red-500 mb-4"></i>
+                        <h2 class="text-xl font-bold text-white">Erreur Fatale</h2>
+                        <p class="text-red-400/80 mt-2 font-mono text-sm">${err.message}</p>
                     </div>`;
             }
         }
 
-        fetchDocs();
+        // Fonction pour copier le code
+        function copyCode(btn) {
+            const code = btn.parentElement.querySelector('code').innerText;
+            navigator.clipboard.writeText(code);
+            btn.innerHTML = '<i class="fas fa-check text-green-500"></i> Copié !';
+            setTimeout(() => { btn.innerHTML = '<i class="far fa-copy mr-1"></i> Copier'; }, 2000);
+        }
+
+        init();
     </script>
 </body>
 </html>
