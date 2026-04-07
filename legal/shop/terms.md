@@ -9,7 +9,7 @@ Ce document définit vos droits d'utilisation sur l'ensemble des ressources num�
 
 | Type d'Usage | 🍃 Ressource Gratuite (Free) | 💎 Ressource Premium (Payante) |
 | :--- | :---: | :---: |
-| **Utilisation sur un Serveur/Network** | ✅ Autorisé | ✅ Autorisé (1 seul Network) |
+| **Utilisation sur un Serveur/Network** | ✅ Autorisé | ✅ Autorisé |
 | **Modification des fichiers/code** | ✅ Autorisé | ✅ Autorisé (Usage privé) |
 | **Support Technique** | ❌ Non garanti | ✅ Inclus (Acheteur vérifié) |
 | **Partage du fichier (Leaking)** | ❌ STRICTEMENT INTERDIT | ❌ STRICTEMENT INTERDIT |
@@ -27,7 +27,7 @@ Cette licence s'applique à toutes nos ressources proposées gratuitement.
 
 #### 🔸 Licence Premium (Ressources Payantes)
 Cette licence est débloquée suite à l'achat d'un produit.
-* **Un achat = Une licence (Un Network).** Vous êtes autorisé à utiliser la ressource sur l'ensemble des serveurs reliés à votre propre Network (BungeeCord/Velocity).
+* **Un seul achat pour tous vos serveurs.**  Tant que vous en êtes le propriétaire, vous pouvez utiliser la ressource partout sans limite.
 * Si vous possédez plusieurs projets totalement distincts, vous devez acquérir une nouvelle licence.
 
 ---
