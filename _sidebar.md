@@ -11,5 +11,7 @@
       * **Support**
         * **English**
           * [Ticket](Staff/wiki/Support/English/Ticket.md)
+    * **Tools**
+      * **Start Script Generator**
 * **PLAYER**
   * [Reglement Discord](player/reglement-discord.md)
