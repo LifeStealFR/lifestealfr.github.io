@@ -10,9 +10,9 @@ Le type de mention (ping) est strictement lié au nombre de **membres réels** (
 | Palier | Mention (Ping) | Pré-requis | Salon de Diffusion |
 | :--- | :--- | :--- | :--- |
 | **Bronze** | `Aucune` | **50+** membres réels | `『🤝』partenariat` |
-| **Argent** | `@Notification Partenariat` | **80+** membres réels | `『🤝』partenariat` |
-| **Or** | `@here` | **100+** membres réels | `『🤝』partenariat` |
-| **Diamant** | `@everyone` | **150+** membres réels | `『🤝』partenariat` |
+| **Argent** | `@Notification Partenariat` | **100+** membres réels | `『🤝』partenariat` |
+| **Or** | `@here` | **180+** membres réels | `『🤝』partenariat` |
+| **Diamant** | `@everyone` | **250+** membres réels | `『🤝』partenariat` |
 
 ---
 
