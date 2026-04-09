@@ -1,7 +1,6 @@
 * [🏠 Accueil](README.md)
 
 * [Invitation](Invitation.md)
-* [Membres](Membres.md)
 * [Casier Judiciaire](casier-judiciaire.md)
 * [Charte Staff](charte-staff.md)
 * [Convocations](convocations.md)
