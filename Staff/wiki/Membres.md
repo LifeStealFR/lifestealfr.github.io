@@ -25,7 +25,7 @@ Besoin d'aide, d'une licence spécifique ou d'une commande personnalisée ? Voic
 ### DarKLapin
 * **Pseudo Discord :** `_0lapin0_`
 * **Pseudo Minecraft :** `DarKLapin`
-* **Rôle :** Administrateur Réseau & Support
+* **Rôle :** Administrateur Réseau & Support & Partenariat
 ### `_LeNinja_`
 * **Pseudo Discord :** `.leninja_`
 * **Pseudo Minecraft :** `_LeNinja_`
