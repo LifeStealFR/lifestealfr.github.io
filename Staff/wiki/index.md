@@ -1,0 +1,43 @@
+# 👥 Contact Staff & Administration
+
+Besoin d'aide, d'une licence spécifique ou d'une commande personnalisée ? Voici les membres officiels à contacter pour le projet LifeStealFR.
+
+---
+
+## 👑 Fondateur & Direction
+### AngmarRoiSorcier
+* **Pseudo Discord :** `angmarroisorcie`
+* **Pseudo Minecraft :** `AngmarRoiSorcier`
+* **Rôle :** Owner
+### Flokyxxs
+* **Pseudo Discord :** `tattane_`
+* **Pseudo Minecraft :** `Just_Floky`
+* **Rôle :** Owner
+### `_Rafou_`
+* **Pseudo Discord :** `rafou_le_fou_off`
+* **Pseudo Minecraft :** `_Rafou_`
+* **Rôle :** Administrateur+ Réseau & Support
+## 🛡️ Administration Générale
+### Saguasay
+* **Pseudo Discord :** `saguasay`
+* **Pseudo Minecraft :** `0x_Saguasay`
+* **Rôle :** Administrateur Réseau & Support
+### DarKLapin
+* **Pseudo Discord :** `_0lapin0_`
+* **Pseudo Minecraft :** `DarKLapin`
+* **Rôle :** Administrateur Réseau & Support
+### `_LeNinja_`
+* **Pseudo Discord :** `.leninja_`
+* **Pseudo Minecraft :** `_LeNinja_`
+* **Rôle :** Responsable
+## 🛡️ Modération & Support
+
+
+---
+
+## ⚠️ Rappel de Sécurité
+* Le staff de **LifeStealFR** ne vous demandera **jamais** votre mot de passe ou vos fichiers personnels.
+
+---
+
+> **Note :** Si vous avez acheté une licence Premium et que vous avez une question technique sur la ressource, merci de contacter directement l'Administrateur sur Discord.
