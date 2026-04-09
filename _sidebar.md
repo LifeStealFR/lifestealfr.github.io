@@ -8,6 +8,8 @@
       * [Convocations](Staff/wiki/convocations.md)
       * **Tickets**
         * [Types De Ticket](Staff/wiki/tickets/types-de-ticket.md)
+      * **Partenariats**
+        * [Criteres Pour Partenariats](Staff/wiki/partenariats/criteres-pour-partenariats.md)
       * **Support**
         * **English**
           * [Ticket](Staff/wiki/Support/English/Ticket.md)
