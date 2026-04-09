@@ -3,7 +3,10 @@ name: UPDATE STAFF WIKI
 on:
   push:
     paths:
-      - 'Staff/wiki/**' # S'active pour n'importe quelle modif dans ce dossier (fichiers, sous-dossiers, scripts)
+      # Déclenche le script pour TOUT changement dans Staff/wiki (racine incluse)
+      - 'Staff/wiki/**' 
+  # Permet de le lancer à la main dans l'onglet "Actions" si besoin de debug
+  workflow_dispatch: 
 
 jobs:
   build:
@@ -14,13 +17,17 @@ jobs:
     steps:
       - name: 📥 Clonage des données
         uses: actions/checkout@v4
+        with:
+          # Important pour que l'action puisse push les modifications
+          fetch-depth: 0 
         
-      - name: 🐍 Installation de Python
+      - name: 🐍 Configuration de Python
         uses: actions/setup-python@v5
         with:
           python-version: '3.x'
         
       - name: ⚙️ Lancement du Cardinal Script
+        # On s'assure de lancer le script depuis la racine du repo
         run: python Staff/wiki/scan.py
         
       - name: 💾 Sauvegarde du nouveau Menu
@@ -28,5 +35,3 @@ jobs:
         with:
           commit_message: "🤖 [SYS] Auto-update Menu Navigation"
           file_pattern: 'Staff/wiki/_sidebar.md'
-          # Force le commit même si le script n'a pas changé le fichier
-          skip_dirty_check: false
