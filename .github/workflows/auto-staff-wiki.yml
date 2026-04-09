@@ -3,8 +3,7 @@ name: UPDATE STAFF WIKI
 on:
   push:
     paths:
-      - 'Staff/wiki/**/*.md' # S'active uniquement pour les fichiers dans Staff/wiki
-      - 'Staff/wiki/scan.py'
+      - 'Staff/wiki/**' # S'active pour n'importe quelle modif dans ce dossier (fichiers, sous-dossiers, scripts)
 
 jobs:
   build:
@@ -16,6 +15,11 @@ jobs:
       - name: 📥 Clonage des données
         uses: actions/checkout@v4
         
+      - name: 🐍 Installation de Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+        
       - name: ⚙️ Lancement du Cardinal Script
         run: python Staff/wiki/scan.py
         
@@ -23,4 +27,6 @@ jobs:
         uses: stefanzweifel/git-auto-commit-action@v5
         with:
           commit_message: "🤖 [SYS] Auto-update Menu Navigation"
-          file_pattern: Staff/wiki/_sidebar.md
+          file_pattern: 'Staff/wiki/_sidebar.md'
+          # Force le commit même si le script n'a pas changé le fichier
+          skip_dirty_check: false
