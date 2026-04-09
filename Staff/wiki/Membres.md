@@ -37,7 +37,3 @@ Besoin d'aide, d'une licence spécifique ou d'une commande personnalisée ? Voic
 
 ## ⚠️ Rappel de Sécurité
 * Le staff de **LifeStealFR** ne vous demandera **jamais** votre mot de passe ou vos fichiers personnels.
-
----
-
-> **Note :** Si vous avez acheté une licence Premium et que vous avez une question technique sur la ressource, merci de contacter directement l'Administrateur sur Discord.
