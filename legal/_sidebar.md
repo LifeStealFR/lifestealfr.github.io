@@ -1,9 +1,11 @@
-*[🏠 Accueil](README.md)
+* [🏠 Accueil](README.md)
 
 * [Branding](branding.md)
 * [Contact](contact.md)
 * [Copyright](copyright.md)
-* **Branding**
+* **Discord**
+  * **Bot**
+    * [Privacy Policy](discord/bot/privacy_policy.md)
 * **Shop**
   * [Terms](shop/terms.md)
 * **Staff**
