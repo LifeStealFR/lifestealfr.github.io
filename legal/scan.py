@@ -1,61 +1,66 @@
 import os
 
-# Détecte AUTOMATIQUEMENT le dossier exact où se trouve scan.py (Staff/wiki)
-# Ça évite tous les bugs de chemins ou de majuscules sur GitHub Actions !
-WIKI_DIR = os.path.dirname(os.path.abspath(__file__))
+# On définit explicitement les dossiers par rapport à la racine du repo
+REPO_ROOT = os.getcwd()
+WIKI_REL_PATH = "legal"
+WIKI_DIR = os.path.join(REPO_ROOT, WIKI_REL_PATH)
 SIDEBAR_FILE = os.path.join(WIKI_DIR, '_sidebar.md')
 
+def get_sidebar_content(current_dir, level=0):
+    content = []
+    indent = "  " * level
+    
+    if not os.path.exists(current_dir):
+        return []
+
+    items = sorted(os.listdir(current_dir))
+
+    # 1. FICHIERS du dossier actuel
+    for item in items:
+        path = os.path.join(current_dir, item)
+        if os.path.isfile(path) and item.endswith('.md'):
+            # On ignore les fichiers de config et le README racine
+            if item.startswith('_') or (level == 0 and item.lower() == 'readme.md'):
+                continue
+            
+            name = item.replace('.md', '').replace('-', ' ').replace('_', ' ').title()
+            # Calcul du lien relatif par rapport au dossier WIKI_DIR pour Docsify
+            rel_link = os.path.relpath(path, WIKI_DIR).replace('\\', '/')
+            content.append(f"{indent}* [{name}]({rel_link})")
+
+    # 2. SOUS-DOSSIERS (Récursivité)
+    for item in items:
+        path = os.path.join(current_dir, item)
+        if os.path.isdir(path) and not item.startswith('.'):
+            folder_name = item.replace('-', ' ').replace('_', ' ').title()
+            # On vérifie s'il y a des fichiers .md dedans avant d'ajouter le dossier
+            sub_content = get_sidebar_content(path, level + 1)
+            if sub_content:
+                content.append(f"{indent}* **{folder_name}**")
+                content.extend(sub_content)
+            
+    return content
+
 def generate_sidebar():
-    # On ouvre le fichier (ou on le crée)
+    print(f"🔍 Scan du dossier : {WIKI_DIR}")
+    
+    # En-tête du sidebar
+    full_sidebar = ["* [🏠 Accueil](README.md)", ""]
+    
+    # Génération
+    content = get_sidebar_content(WIKI_DIR)
+    
+    if not content:
+        print("⚠️ Aucun fichier Markdown trouvé !")
+        return
+
+    full_sidebar.extend(content)
+    
+    # Écriture
     with open(SIDEBAR_FILE, 'w', encoding='utf-8') as f:
-        # Lien d'accueil (ATTENTION : l'espace après l'étoile '* ' est obligatoire en Markdown)
-        f.write('*[🏠 Accueil](README.md)\n\n')
-        
-        # On parcourt les sous-dossiers à partir de là où se trouve scan.py
-        for root, dirs, files in os.walk(WIKI_DIR):
-            
-            # On ignore les dossiers système cachés (comme .git ou .github)
-            dirs[:] = [d for d in dirs if not d.startswith('.')]
-            
-            # Tri alphabétique
-            dirs.sort()
-            files.sort()
-            
-            # Calcul de la position actuelle par rapport au dossier source
-            rel_dir = os.path.relpath(root, WIKI_DIR)
-            
-            if rel_dir == '.':
-                depth = 0
-            else:
-                depth = rel_dir.count(os.sep) + 1
-                # 2 espaces par niveau de profondeur pour Docsify
-                indent = '  ' * (depth - 1) 
-                
-                # Nom du dossier affiché dans le menu
-                folder_name = os.path.basename(root).replace('-', ' ').title()
-                f.write(f'{indent}* **{folder_name}**\n')
-            
-            # Indentation pour les fichiers (décalés sous leur dossier)
-            file_indent = '  ' * depth if rel_dir != '.' else ''
-            
-            # Ajout des fichiers Markdown
-            for file in files:
-                if file.endswith('.md') and file not in ['_sidebar.md']:
-                    # On ne remet pas l'accueil principal
-                    if rel_dir == '.' and file.lower() == 'readme.md':
-                        continue 
-                        
-                    # On crée le lien parfait pour Docsify
-                    full_path = os.path.join(root, file)
-                    rel_path = os.path.relpath(full_path, WIKI_DIR).replace('\\', '/')
-                    
-                    # On nettoie le nom (ex: "commandes-admin.md" devient "Commandes Admin")
-                    name = file.replace('.md', '').replace('-', ' ').title()
-                    
-                    # On écrit la ligne
-                    f.write(f'{file_indent}* [{name}]({rel_path})\n')
-                    
-    print(f"✅ Menu généré avec succès dans : {SIDEBAR_FILE}")
+        f.write("\n".join(full_sidebar))
+    
+    print(f"✅ Terminé ! {len(content)} entrées dans {SIDEBAR_FILE}")
 
 if __name__ == "__main__":
     generate_sidebar()
