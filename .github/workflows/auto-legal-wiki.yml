@@ -1,10 +1,12 @@
-name: UPDATE LEGAL LIFESTEAL
+name: UPDATE LEGAL WIKI
 
 on:
   push:
     paths:
-      - 'legal/**/*.md' # S'active uniquement pour les fichiers dans Staff/wiki
-      - 'legal/scan.py'
+      # Déclenche le script pour TOUT changement dans Staff/wiki (racine incluse)
+      - 'legal/**' 
+  # Permet de le lancer à la main dans l'onglet "Actions" si besoin de debug
+  workflow_dispatch: 
 
 jobs:
   build:
@@ -15,12 +17,21 @@ jobs:
     steps:
       - name: 📥 Clonage des données
         uses: actions/checkout@v4
+        with:
+          # Important pour que l'action puisse push les modifications
+          fetch-depth: 0 
+        
+      - name: 🐍 Configuration de Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
         
       - name: ⚙️ Lancement du Cardinal Script
+        # On s'assure de lancer le script depuis la racine du repo
         run: python legal/scan.py
         
       - name: 💾 Sauvegarde du nouveau Menu
         uses: stefanzweifel/git-auto-commit-action@v5
         with:
           commit_message: "🤖 [SYS] Auto-update Menu Navigation"
-          file_pattern: legal/_sidebar.md
+          file_pattern: 'legal/_sidebar.md'
