@@ -48,7 +48,7 @@ L'IA n'est pas limitée à sa date d'entraînement. Elle possède une fenêtre o
 
 | Caractéristique | IA Classique | LifeSteal Agentic AI |
 | :--- | :---: | :---: |
-| Connaissance du présent | ❌ Non (Limitée à 2023/24) | ✅ Oui (Web Search 2025+) |
+| Connaissance du présent | ❌ Non (Limitée à 2024/25) | ✅ Oui (Web Search 2026+) |
 | Analyse de schémas/images | ❌ Rarement | ✅ Oui (Multimodal) |
 | Raisonnement logique | ⚠️ Aléatoire | ✅ Structuré (Thinking Mode) |
 | Précision du code | ⚠️ Moyenne | ✅ Haute (CodeGemma) |
