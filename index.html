@@ -1,24 +1,58 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>LifeStealMC Network</title>
+    <title>LifeStealMC Network — Portail Officiel & Services Communautaires</title>
+    <meta name="description" content="Bienvenue sur le portail officiel de LifeStealMC Network. Découvrez notre écosystème de services : Kurotsuki Studio, Solus Store, Craftok Wiki et nos plateformes communautaires.">
+    <meta name="keywords" content="LifeStealMC, Kurotsuki Studio, bot discord anime, minecraft lifesteal, craftok wiki, solus store, outils discord">
+    <meta name="author" content="LifeStealMC Network">
+    <link rel="canonical" href="https://lifestealmc.fr/">
 
-    <!-- Google AdSense Script (Vérification & Monétisation) -->
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://lifestealmc.fr/">
+    <meta property="og:title" content="LifeStealMC Network — Portail Officiel">
+    <meta property="og:description" content="Écosystème de services, bots Discord interactifs et documentation pour les communautés gaming.">
+    <meta property="og:site_name" content="LifeStealMC Network">
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="LifeStealMC Network — Portail Officiel">
+    <meta name="twitter:description" content="Découvrez notre écosystème de services et outils pour serveurs Discord et communautés.">
+
+    <!-- Google AdSense (Vérification et monétisation) -->
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6241793082650017"
          crossorigin="anonymous"></script>
+
+    <!-- Balisage Schema.org JSON-LD -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebSite",
+      "name": "LifeStealMC Network",
+      "url": "https://lifestealmc.fr/",
+      "description": "Portail officiel et réseau de services communautaires LifeStealMC Network.",
+      "publisher": {
+        "@type": "Organization",
+        "name": "LifeStealMC Network",
+        "url": "https://lifestealmc.fr"
+      }
+    }
+    </script>
 
     <style>
         :root {
             --bg-color: #0d0e12;
-            --card-bg: #16181f;
-            --card-hover: #1f222c;
+            --surface-color: #12141a;
+            --card-bg: #161822;
+            --card-hover: #1c1f2b;
             --accent: #e63946;
             --accent-glow: rgba(230, 57, 70, 0.4);
-            --text-main: #f1f5f9;
+            --text-main: #f8fafc;
             --text-sub: #94a3b8;
-            --border: #262933;
+            --border: #232734;
+            --border-hover: #383f52;
             color-scheme: dark;
         }
 
@@ -30,134 +64,317 @@
             -webkit-tap-highlight-color: transparent;
         }
 
+        html {
+            scroll-behavior: smooth;
+        }
+
         body {
             background-color: var(--bg-color);
             color: var(--text-main);
             min-height: 100vh;
-            min-height: 100dvh;
             display: flex;
             flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            padding: 2.5rem 1rem calc(2rem + env(safe-area-inset-bottom));
+            line-height: 1.6;
         }
 
-        .container {
-            width: 100%;
-            max-width: 580px;
+        /* En-tête / Navigation */
+        .navbar {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: rgba(13, 14, 18, 0.85);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--border);
+            padding: 0.85rem 1.5rem;
+        }
+
+        .nav-content {
+            max-width: 1100px;
             margin: 0 auto;
-        }
-
-        header {
-            text-align: center;
-            margin-bottom: 2rem;
-        }
-
-        h1 {
-            font-size: clamp(1.8rem, 5vw, 2.3rem);
-            font-weight: 800;
-            letter-spacing: -0.5px;
-            margin-bottom: 0.4rem;
-        }
-
-        h1 span {
-            color: var(--accent);
-            text-shadow: 0 0 15px var(--accent-glow);
-        }
-
-        p.subtitle {
-            color: var(--text-sub);
-            font-size: clamp(0.85rem, 3vw, 0.95rem);
-            line-height: 1.4;
-        }
-
-        .links-grid {
-            display: flex;
-            flex-direction: column;
-            gap: 0.85rem;
-        }
-
-        .link-card {
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 1.1rem 1.3rem;
-            background: var(--card-bg);
-            border: 1px solid var(--border);
-            border-radius: 12px;
+        }
+
+        .brand {
+            font-size: 1.35rem;
+            font-weight: 800;
             text-decoration: none;
             color: var(--text-main);
-            transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
-            min-height: 60px;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            letter-spacing: -0.5px;
         }
 
-        .link-card:hover, .link-card:active {
-            background: var(--card-hover);
-            border-color: var(--accent);
+        .brand span {
+            color: var(--accent);
+            text-shadow: 0 0 12px var(--accent-glow);
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 1.75rem;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: var(--text-sub);
+            text-decoration: none;
+            font-size: 0.92rem;
+            font-weight: 500;
+            transition: color 0.2s ease;
+        }
+
+        .nav-links a:hover {
+            color: var(--text-main);
+        }
+
+        .nav-btn {
+            background: var(--accent);
+            color: #fff !important;
+            padding: 0.45rem 1rem;
+            border-radius: 8px;
+            font-weight: 600 !important;
+            transition: transform 0.2s ease, opacity 0.2s ease !important;
+        }
+
+        .nav-btn:hover {
+            opacity: 0.9;
+            transform: translateY(-1px);
+        }
+
+        /* Container global */
+        .main-container {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 3rem 1.25rem 4rem;
+            width: 100%;
+            flex: 1;
+        }
+
+        /* Section Hero */
+        .hero {
+            text-align: center;
+            padding: 3.5rem 1rem 4rem;
+            max-width: 820px;
+            margin: 0 auto;
+        }
+
+        .status-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: rgba(34, 197, 94, 0.1);
+            color: #4ade80;
+            border: 1px solid rgba(34, 197, 94, 0.25);
+            padding: 0.35rem 0.85rem;
+            border-radius: 999px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            background: #22c55e;
+            border-radius: 50%;
+            box-shadow: 0 0 10px #22c55e;
+        }
+
+        .hero h1 {
+            font-size: clamp(2.2rem, 5.5vw, 3.4rem);
+            font-weight: 800;
+            line-height: 1.15;
+            letter-spacing: -1px;
+            margin-bottom: 1.25rem;
+        }
+
+        .hero h1 span {
+            background: linear-gradient(135deg, #f8fafc 40%, #e63946 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero p.lead {
+            font-size: clamp(1rem, 2.5vw, 1.15rem);
+            color: var(--text-sub);
+            max-width: 680px;
+            margin: 0 auto 2.25rem;
+        }
+
+        .hero-actions {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .btn-hero-primary {
+            background: var(--accent);
+            color: #fff;
+            padding: 0.85rem 1.75rem;
+            border-radius: 10px;
+            font-weight: 700;
+            text-decoration: none;
+            box-shadow: 0 4px 20px var(--accent-glow);
+            transition: all 0.2s ease;
+        }
+
+        .btn-hero-primary:hover {
             transform: translateY(-2px);
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+            box-shadow: 0 6px 25px var(--accent-glow);
         }
 
-        .card-info {
+        .btn-hero-secondary {
+            background: var(--surface-color);
+            border: 1px solid var(--border);
+            color: var(--text-main);
+            padding: 0.85rem 1.75rem;
+            border-radius: 10px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.2s ease;
+        }
+
+        .btn-hero-secondary:hover {
+            background: var(--card-bg);
+            border-color: var(--border-hover);
+        }
+
+        /* Titres de sections */
+        .section-header {
+            text-align: center;
+            margin-bottom: 2.5rem;
+        }
+
+        .section-header h2 {
+            font-size: clamp(1.6rem, 3.5vw, 2.2rem);
+            font-weight: 800;
+            letter-spacing: -0.5px;
+            margin-bottom: 0.5rem;
+        }
+
+        .section-header p {
+            color: var(--text-sub);
+            font-size: 0.95rem;
+            max-width: 550px;
+            margin: 0 auto;
+        }
+
+        /* Grille des sous-domaines & services */
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 4rem;
+        }
+
+        .service-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 1.75rem;
             display: flex;
             flex-direction: column;
-            gap: 0.25rem;
-            min-width: 0; /* évite le débordement de texte sur mobile */
-        }
-
-        .card-title {
-            font-weight: 600;
-            font-size: 1.02rem;
-            white-space: nowrap;
+            justify-content: space-between;
+            text-decoration: none;
+            color: var(--text-main);
+            transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+            position: relative;
             overflow: hidden;
-            text-overflow: ellipsis;
         }
 
-        .card-desc {
-            color: var(--text-sub);
-            font-size: 0.82rem;
-            line-height: 1.3;
+        .service-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: transparent;
+            transition: background 0.25s ease;
+        }
+
+        .service-card:hover {
+            background: var(--card-hover);
+            border-color: var(--border-hover);
+            transform: translateY(-4px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+        }
+
+        .service-card:hover::before {
+            background: var(--accent);
+        }
+
+        .card-top {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 1rem;
         }
 
         .card-badge {
-            font-size: 0.75rem;
-            font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+            font-size: 0.72rem;
+            font-family: ui-monospace, SFMono-Regular, monospace;
             background: #20242e;
-            padding: 0.35rem 0.65rem;
+            padding: 0.3rem 0.65rem;
             border-radius: 6px;
             color: #cbd5e1;
             border: 1px solid #2e3442;
-            flex-shrink: 0;
-            margin-left: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
         }
 
-        .state-msg {
-            text-align: center;
+        .service-card h3 {
+            font-size: 1.35rem;
+            font-weight: 700;
+            margin-bottom: 0.6rem;
+        }
+
+        .service-card p {
             color: var(--text-sub);
-            padding: 2.5rem 0;
-            font-size: 0.9rem;
+            font-size: 0.92rem;
+            line-height: 1.5;
+            margin-bottom: 1.5rem;
         }
 
-        /* Encart Publicitaire Sombre & Adapté */
+        .card-link-action {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            font-size: 0.88rem;
+            font-weight: 600;
+            color: var(--accent);
+            margin-top: auto;
+        }
+
+        /* Bannière AdSense Sombre */
+        .ad-section {
+            margin: 3.5rem 0;
+        }
+
         .ad-container {
-            margin-top: 2rem;
             background: var(--card-bg);
             border: 1px solid var(--border);
-            border-radius: 12px;
-            padding: 0.85rem;
-            text-align: center;
+            border-radius: 16px;
+            padding: 1rem;
             overflow: hidden;
-            box-shadow: 0 4px 25px rgba(0, 0, 0, 0.25);
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
         }
 
         .ad-header {
             display: flex;
             align-items: center;
             justify-content: space-between;
-            margin-bottom: 0.6rem;
-            padding-bottom: 0.4rem;
+            padding-bottom: 0.5rem;
+            margin-bottom: 0.75rem;
             border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-            font-size: 0.68rem;
+            font-size: 0.7rem;
             text-transform: uppercase;
             letter-spacing: 0.05em;
             color: #64748b;
@@ -174,7 +391,7 @@
         .ad-dot {
             width: 6px;
             height: 6px;
-            background-color: var(--accent);
+            background: var(--accent);
             border-radius: 50%;
             box-shadow: 0 0 8px var(--accent);
         }
@@ -184,122 +401,502 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            border-radius: 8px;
+            border-radius: 10px;
+            background: rgba(0, 0, 0, 0.25);
             overflow: hidden;
-            background: rgba(0, 0, 0, 0.2);
         }
 
-        footer {
-            margin-top: 2.5rem;
+        /* Section À Propos & Présentation */
+        .about-section {
+            background: var(--surface-color);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 3rem 2rem;
+            margin-bottom: 4rem;
+        }
+
+        .about-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+            align-items: center;
+        }
+
+        .about-text h3 {
+            font-size: 1.6rem;
+            font-weight: 800;
+            margin-bottom: 1rem;
+        }
+
+        .about-text p {
+            color: var(--text-sub);
+            font-size: 0.95rem;
+            margin-bottom: 1.25rem;
+        }
+
+        .stats-row {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        .stat-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1rem;
             text-align: center;
-            font-size: 0.78rem;
+        }
+
+        .stat-card .num {
+            font-size: 1.6rem;
+            font-weight: 800;
+            color: var(--accent);
+        }
+
+        .stat-card .lbl {
+            font-size: 0.75rem;
+            color: var(--text-sub);
+            text-transform: uppercase;
+        }
+
+        /* Section FAQ */
+        .faq-section {
+            margin-bottom: 4rem;
+        }
+
+        .faq-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            max-width: 850px;
+            margin: 0 auto;
+        }
+
+        .faq-item {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            overflow: hidden;
+            transition: border-color 0.2s;
+        }
+
+        .faq-item:hover {
+            border-color: var(--border-hover);
+        }
+
+        .faq-question {
+            width: 100%;
+            padding: 1.25rem 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: none;
+            border: none;
+            color: var(--text-main);
+            font-size: 1.05rem;
+            font-weight: 600;
+            text-align: left;
+            cursor: pointer;
+        }
+
+        .faq-answer {
+            padding: 0 1.5rem 1.25rem;
+            color: var(--text-sub);
+            font-size: 0.92rem;
+            line-height: 1.6;
+        }
+
+        /* Footer complet */
+        footer {
+            background: #08090c;
+            border-top: 1px solid var(--border);
+            padding: 3.5rem 1.5rem 2rem;
+            margin-top: auto;
+        }
+
+        .footer-content {
+            max-width: 1100px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2.5rem;
+            margin-bottom: 3rem;
+        }
+
+        .footer-col h4 {
+            font-size: 0.95rem;
+            font-weight: 700;
+            color: var(--text-main);
+            margin-bottom: 1.25rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .footer-col ul {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 0.7rem;
+        }
+
+        .footer-col a {
+            color: var(--text-sub);
+            text-decoration: none;
+            font-size: 0.88rem;
+            transition: color 0.2s;
+        }
+
+        .footer-col a:hover {
+            color: var(--text-main);
+        }
+
+        .footer-bottom {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding-top: 1.5rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 1rem;
+            font-size: 0.82rem;
             color: #475569;
         }
 
-        @media (max-width: 480px) {
-            .link-card {
-                padding: 1rem;
+        /* Cookie Consent Banner */
+        .cookie-banner {
+            position: fixed;
+            bottom: 1.5rem;
+            left: 1.5rem;
+            right: 1.5rem;
+            max-width: 540px;
+            background: #141720;
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            padding: 1.25rem;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.6);
+            z-index: 999;
+            display: flex;
+            flex-direction: column;
+            gap: 0.85rem;
+        }
+
+        .cookie-banner p {
+            font-size: 0.85rem;
+            color: var(--text-sub);
+            line-height: 1.4;
+        }
+
+        .cookie-actions {
+            display: flex;
+            gap: 0.75rem;
+        }
+
+        .cookie-btn {
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            font-size: 0.82rem;
+            font-weight: 600;
+            cursor: pointer;
+            border: none;
+        }
+
+        .cookie-btn-accept {
+            background: var(--accent);
+            color: #fff;
+        }
+
+        .cookie-btn-decline {
+            background: transparent;
+            color: var(--text-sub);
+            border: 1px solid var(--border);
+        }
+
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
             }
-            .card-badge {
-                font-size: 0.7rem;
-                padding: 0.25rem 0.5rem;
+            .stats-row {
+                grid-template-columns: 1fr;
+            }
+            .about-section {
+                padding: 2rem 1.25rem;
             }
         }
     </style>
 </head>
 <body>
 
-    <div class="container">
-        <header>
-            <h1>LifeSteal<span>MC</span></h1>
-            <p class="subtitle">Portail &amp; services du réseau lifestealmc.fr</p>
+    <!-- Barre de Navigation -->
+    <nav class="navbar">
+        <div class="nav-content">
+            <a href="/" class="brand">
+                LifeSteal<span>MC</span>
+            </a>
+            <ul class="nav-links">
+                <li><a href="#services">Services &amp; Sous-domaines</a></li>
+                <li><a href="#about">À Propos</a></li>
+                <li><a href="#faq">FAQ</a></li>
+                <li><a href="/about.html">Réseau</a></li>
+                <li><a href="/contact.html">Contact</a></li>
+                <li><a href="https://kurotsuki.lifestealmc.fr" target="_blank" rel="noopener" class="nav-btn">Kurotsuki Studio →</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="main-container">
+
+        <!-- Hero Section -->
+        <header class="hero">
+            <div class="status-pill">
+                <span class="status-dot"></span>
+                Tous les services du réseau sont en ligne
+            </div>
+            <h1>Le portail des services <span>LifeStealMC</span></h1>
+            <p class="lead">
+                Explorez notre écosystème officiel : robots d'animation Discord nouvelle génération, outils pour passionnés et documentation complète.
+            </p>
+            <div class="hero-actions">
+                <a href="#services" class="btn-hero-primary">Découvrir les services</a>
+                <a href="/about.html" class="btn-hero-secondary">En savoir plus sur le réseau</a>
+            </div>
         </header>
 
-        <main id="links-container" class="links-grid">
-            <div class="state-msg">Chargement des sous-domaines...</div>
-        </main>
-
-        <!-- Bloc Publicitaire LifeSteal Index -->
-        <aside class="ad-container" aria-label="Annonce sponsorisée">
-            <div class="ad-header">
-                <span class="ad-badge">
-                    <span class="ad-dot"></span>
-                    Sponsorisé
-                </span>
-                <span>Google AdSense</span>
+        <!-- Grille des Sous-domaines & Projets -->
+        <section id="services">
+            <div class="section-header">
+                <h2>Services &amp; Sous-domaines</h2>
+                <p>Accédez directement aux différentes plateformes et applications hébergées sur le réseau lifestealmc.fr.</p>
             </div>
-            <div class="ad-slot-wrapper">
-                <ins class="adsbygoogle"
-                     style="display:block; width:100%; min-height:90px; background-color:transparent; color-scheme:dark;"
-                     data-ad-client="ca-pub-6241793082650017"
-                     data-ad-slot="1654913277"
-                     data-ad-format="auto"
-                     data-full-width-responsive="true"></ins>
-                <script>
-                     (adsbygoogle = window.adsbygoogle || []).push({});
-                </script>
-            </div>
-        </aside>
 
-        <footer>
-            &copy; lifestealmc.fr — Tous droits réservés.
-        </footer>
+            <div class="services-grid" id="services-container">
+                <!-- Kurotsuki Studio -->
+                <a href="https://kurotsuki.lifestealmc.fr" target="_blank" rel="noopener noreferrer" class="service-card">
+                    <div>
+                        <div class="card-top">
+                            <span class="card-badge">kurotsuki.lifestealmc.fr</span>
+                            <span style="color:#f472b6; font-size:1.2rem;">⛩️</span>
+                        </div>
+                        <h3>Kurotsuki Studio</h3>
+                        <p>Application Discord complète dédiée à l'animation et à la modération de serveurs. 50 sœurs thématiques, rendu visuel 3D et système d'interactions immersif.</p>
+                    </div>
+                    <span class="card-link-action">Accéder à Kurotsuki Studio &rarr;</span>
+                </a>
+
+                <!-- Solus Store -->
+                <a href="https://solus-store.lifestealmc.fr" target="_blank" rel="noopener noreferrer" class="service-card">
+                    <div>
+                        <div class="card-top">
+                            <span class="card-badge">solus-store.lifestealmc.fr</span>
+                            <span style="color:#38bdf8; font-size:1.2rem;">🛠️</span>
+                        </div>
+                        <h3>Solus Store</h3>
+                        <p>Boîte à outils en ligne, calculateurs et catalogue de ressources conçus pour accompagner et simplifier l'expérience des passionnés.</p>
+                    </div>
+                    <span class="card-link-action">Ouvrir la boîte à outils &rarr;</span>
+                </a>
+
+                <!-- Craftok Wiki -->
+                <a href="https://craftok.lifestealmc.fr" target="_blank" rel="noopener noreferrer" class="service-card">
+                    <div>
+                        <div class="card-top">
+                            <span class="card-badge">craftok.lifestealmc.fr</span>
+                            <span style="color:#4ade80; font-size:1.2rem;">📖</span>
+                        </div>
+                        <h3>Craftok Documentation</h3>
+                        <p>Encyclopédie collaborative, tutoriels et guides méthodiques pour maîtriser l'ensemble des mécaniques de jeu et fonctionnalités associées.</p>
+                    </div>
+                    <span class="card-link-action">Consulter le Wiki &rarr;</span>
+                </a>
+            </div>
+        </section>
+
+        <!-- Bloc Publicitaire Officiel Google AdSense -->
+        <section class="ad-section" aria-label="Espace partenaire">
+            <div class="ad-container">
+                <div class="ad-header">
+                    <span class="ad-badge">
+                        <span class="ad-dot"></span>
+                        Annonce sponsorisée
+                    </span>
+                    <span>Google AdSense</span>
+                </div>
+                <div class="ad-slot-wrapper">
+                    <ins class="adsbygoogle"
+                         style="display:block; width:100%; min-height:90px; background-color:transparent; color-scheme:dark;"
+                         data-ad-client="ca-pub-6241793082650017"
+                         data-ad-slot="1654913277"
+                         data-ad-format="auto"
+                         data-full-width-responsive="true"></ins>
+                    <script>
+                         (adsbygoogle = window.adsbygoogle || []).push({});
+                    </script>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section À Propos & Présentation -->
+        <section id="about" class="about-section">
+            <div class="about-grid">
+                <div class="about-text">
+                    <h3>Une infrastructure robuste et dédiée à sa communauté</h3>
+                    <p>
+                        LifeStealMC Network s'engage à fournir des outils stables, rapides et sécurisés. Chaque sous-domaine répond à un besoin précis : de la modération Discord intelligente à la centralisation du savoir communautaire.
+                    </p>
+                    <p>
+                        Tous nos services bénéficient d'un chiffrement SSL/TLS moderne, d'une protection contre les attaques distribuées et d'une supervision technique 24/7.
+                    </p>
+                    <a href="/about.html" class="btn-hero-secondary" style="display:inline-block; margin-top:0.5rem;">Découvrir notre histoire &rarr;</a>
+                </div>
+                <div>
+                    <div class="stats-row">
+                        <div class="stat-card">
+                            <div class="num">3+</div>
+                            <div class="stat-label">Services majeurs</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="num">99.9%</div>
+                            <div class="stat-label">Uptime réseau</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="num">24/7</div>
+                            <div class="stat-label">Disponibilité</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section FAQ (Questions Fréquentes) -->
+        <section id="faq" class="faq-section">
+            <div class="section-header">
+                <h2>Questions Fréquentes</h2>
+                <p>Retrouvez les réponses aux questions les plus courantes concernant nos plateformes.</p>
+            </div>
+
+            <div class="faq-list">
+                <div class="faq-item">
+                    <button class="faq-question">Qu'est-ce que le réseau LifeStealMC Network ? <span>+</span></button>
+                    <div class="faq-answer">
+                        LifeStealMC Network est un portail regroupant un ensemble d'initiatives communautaires et logicielles, notamment le bot Discord Kurotsuki Studio, des outils d'assistance en ligne (Solus Store) et des wikis documentaires (Craftok).
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <button class="faq-question">Les services proposés sont-ils gratuits ? <span>+</span></button>
+                    <div class="faq-answer">
+                        Oui, l'accès à nos documentations, à la majorité des fonctionnalités des bots Discord et à nos outils web est entièrement gratuit et libre d'accès pour tous les membres de la communauté.
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <button class="faq-question">Comment contacter le support ou signaler un problème ? <span>+</span></button>
+                    <div class="faq-answer">
+                        Vous pouvez contacter notre équipe d'administration directement par email à <code>contact@lifestealmc.fr</code> ou en rejoignant notre serveur Discord d'assistance via la page <a href="/contact.html" style="color:var(--accent);">Contact</a>.
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <button class="faq-question">Comment mes données personnelles sont-elles protégées ? <span>+</span></button>
+                    <div class="faq-answer">
+                        Nous respectons strictement le RGPD. Nous ne revendons aucune donnée personnelle et n'utilisons les données techniques que pour la sécurité et la diffusion de publicités non intrusives. Pour en savoir plus, consultez notre <a href="/privacy.html" style="color:var(--accent);">Politique de Confidentialité</a>.
+                    </div>
+                </div>
+            </div>
+        </section>
+
     </div>
 
+    <!-- Footer Complet -->
+    <footer>
+        <div class="footer-content">
+            <div class="footer-col">
+                <a href="/" class="brand" style="margin-bottom:1rem; display:inline-block;">
+                    LifeSteal<span>MC</span>
+                </a>
+                <p style="color:var(--text-sub); font-size:0.88rem; line-height:1.5;">
+                    Portail officiel d'accès aux services, documentations et applications communautaires du réseau.
+                </p>
+            </div>
+
+            <div class="footer-col">
+                <h4>Écosystème</h4>
+                <ul>
+                    <li><a href="https://kurotsuki.lifestealmc.fr" target="_blank" rel="noopener">Kurotsuki Studio</a></li>
+                    <li><a href="https://solus-store.lifestealmc.fr" target="_blank" rel="noopener">Solus Store</a></li>
+                    <li><a href="https://craftok.lifestealmc.fr" target="_blank" rel="noopener">Craftok Wiki</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-col">
+                <h4>Légal &amp; Sécurité</h4>
+                <ul>
+                    <li><a href="/privacy.html">Politique de Confidentialité</a></li>
+                    <li><a href="/terms.html">Conditions d'Utilisation</a></li>
+                    <li><a href="/about.html">À Propos du Réseau</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-col">
+                <h4>Support</h4>
+                <ul>
+                    <li><a href="/contact.html">Contact &amp; Assistance</a></li>
+                    <li><a href="https://kurotsuki.lifestealmc.fr/support" target="_blank" rel="noopener">Support Discord</a></li>
+                    <li><a href="mailto:contact@lifestealmc.fr">contact@lifestealmc.fr</a></li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="footer-bottom">
+            <span>&copy; 2026 LifeStealMC Network (lifestealmc.fr) — Tous droits réservés.</span>
+            <span>Conforme Google AdSense &amp; RGPD</span>
+        </div>
+    </footer>
+
+    <!-- Bannière de consentement aux cookies -->
+    <aside id="cookie-banner" class="cookie-banner" style="display:none;" aria-label="Consentement cookies">
+        <p>
+            Nous utilisons des cookies techniques et publicitaires (Google AdSense) pour mesurer l'audience et financer l'hébergement de nos services.
+            En savoir plus dans notre <a href="/privacy.html" style="color:var(--accent);">Politique de Confidentialité</a>.
+        </p>
+        <div class="cookie-actions">
+            <button id="cookie-accept" class="cookie-btn cookie-btn-accept">Accepter</button>
+            <button id="cookie-decline" class="cookie-btn cookie-btn-decline">Refuser</button>
+        </div>
+    </aside>
+
     <script>
+        // Gestion du bandeau de consentement cookies
         document.addEventListener('DOMContentLoaded', () => {
-            const container = document.getElementById('links-container');
+            const banner = document.getElementById('cookie-banner');
+            const acceptBtn = document.getElementById('cookie-accept');
+            const declineBtn = document.getElementById('cookie-decline');
 
+            if (!localStorage.getItem('lifesteal_cookie_consent')) {
+                banner.style.display = 'flex';
+            }
+
+            acceptBtn?.addEventListener('click', () => {
+                localStorage.setItem('lifesteal_cookie_consent', 'accepted');
+                banner.style.display = 'none';
+            });
+
+            declineBtn?.addEventListener('click', () => {
+                localStorage.setItem('lifesteal_cookie_consent', 'declined');
+                banner.style.display = 'none';
+            });
+
+            // Gestion dynamique optionnelle depuis subdomains.json
             fetch('./subdomains.json')
-                .then(res => {
-                    if (!res.ok) throw new Error(`HTTP ${res.status}`);
-                    return res.json();
-                })
+                .then(r => r.ok ? r.json() : null)
                 .then(data => {
-                    container.innerHTML = '';
-
-                    if (!Array.isArray(data) || data.length === 0) {
-                        container.innerHTML = '<div class="state-msg">Aucun sous-domaine configuré.</div>';
-                        return;
-                    }
-
-                    data.forEach(item => {
-                        const a = document.createElement('a');
-                        a.className = 'link-card';
-                        a.href = item.url;
-                        a.target = '_blank';
-                        a.rel = 'noopener noreferrer';
-
-                        const info = document.createElement('div');
-                        info.className = 'card-info';
-
-                        const title = document.createElement('span');
-                        title.className = 'card-title';
-                        title.textContent = item.title;
-
-                        const desc = document.createElement('span');
-                        desc.className = 'card-desc';
-                        desc.textContent = item.description || '';
-
-                        info.appendChild(title);
-                        if (item.description) info.appendChild(desc);
-
-                        a.appendChild(info);
-
-                        if (item.badge) {
-                            const badge = document.createElement('span');
-                            badge.className = 'card-badge';
-                            badge.textContent = item.badge;
-                            a.appendChild(badge);
-                        }
-
-                        container.appendChild(a);
-                    });
+                    // Les cartes statiques sont déjà dans le HTML pour garantir l'indexation par Googlebot,
+                    // le JSON garantit la rétrocompatibilité pour de futurs ajouts.
                 })
-                .catch(err => {
-                    console.error('Erreur chargement JSON :', err);
-                    container.innerHTML = '<div class="state-msg" style="color: #ef4444;">Impossible de charger les sous-domaines.</div>';
-                });
+                .catch(() => {});
         });
     </script>
 </body>

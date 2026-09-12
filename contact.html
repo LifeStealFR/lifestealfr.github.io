@@ -1,0 +1,173 @@
+﻿<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Contact & Support — LifeStealMC Network</title>
+    <meta name="description" content="Contactez l'équipe d'administration du réseau LifeStealMC Network pour toute question ou demande de support.">
+    <link rel="canonical" href="https://lifestealmc.fr/contact.html">
+
+    <!-- Google AdSense -->
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6241793082650017"
+         crossorigin="anonymous"></script>
+
+    <style>
+        :root {
+            --bg-color: #0d0e12;
+            --card-bg: #16181f;
+            --accent: #e63946;
+            --text-main: #f1f5f9;
+            --text-sub: #94a3b8;
+            --border: #262933;
+            color-scheme: dark;
+        }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        }
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            min-height: 100vh;
+            padding: 2.5rem 1.25rem;
+            line-height: 1.7;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        .back-nav {
+            margin-bottom: 2rem;
+        }
+        .back-nav a {
+            color: var(--accent);
+            text-decoration: none;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.95rem;
+            transition: opacity 0.2s;
+        }
+        .back-nav a:hover { opacity: 0.8; }
+        h1 {
+            font-size: clamp(2rem, 4vw, 2.5rem);
+            font-weight: 800;
+            margin-bottom: 0.5rem;
+        }
+        .date {
+            color: var(--text-sub);
+            font-size: 0.9rem;
+            margin-bottom: 2.5rem;
+        }
+        .contact-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        .contact-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 2rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+        h2 {
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin-bottom: 0.75rem;
+            color: var(--text-main);
+        }
+        p {
+            color: var(--text-sub);
+            font-size: 0.95rem;
+            margin-bottom: 1.25rem;
+        }
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0.75rem 1.5rem;
+            border-radius: 10px;
+            background: var(--accent);
+            color: #fff;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.95rem;
+            transition: all 0.2s ease;
+            width: fit-content;
+        }
+        .btn:hover {
+            opacity: 0.9;
+            transform: translateY(-2px);
+        }
+        .btn-secondary {
+            background: #232734;
+            color: var(--text-main);
+            border: 1px solid var(--border);
+        }
+        .btn-secondary:hover {
+            background: #2b3040;
+        }
+        .faq-box {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 2rem;
+            margin-top: 1rem;
+        }
+        footer {
+            margin-top: 3rem;
+            text-align: center;
+            color: #555e6d;
+            font-size: 0.85rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="back-nav">
+            <a href="/">← Retour à l'accueil LifeStealMC</a>
+        </div>
+
+        <h1>Contact & Support</h1>
+        <p class="date">Une question, un partenariat ou besoin d'assistance ? Nous sommes à votre écoute.</p>
+
+        <div class="contact-grid">
+            <div class="contact-card">
+                <div>
+                    <h2>Communauté Discord</h2>
+                    <p>Rejoignez notre serveur communautaire officiel pour échanger directement avec l'équipe et ouvrir un ticket de support en temps réel.</p>
+                </div>
+                <a href="https://kurotsuki.lifestealmc.fr/support" target="_blank" rel="noopener noreferrer" class="btn">
+                    Rejoindre le Support Discord
+                </a>
+            </div>
+
+            <div class="contact-card">
+                <div>
+                    <h2>Par Email</h2>
+                    <p>Pour toute demande administrative, légale, commerciale ou liée à la gestion de vos données personnelles :</p>
+                </div>
+                <a href="mailto:contact@lifestealmc.fr" class="btn btn-secondary">
+                    contact@lifestealmc.fr
+                </a>
+            </div>
+        </div>
+
+        <div class="faq-box">
+            <h2>Délai de réponse</h2>
+            <p>Notre équipe s'engage à traiter l'ensemble des sollicitations dans un délai moyen de <strong>24 à 48 heures ouvrées</strong>. Pour les urgences techniques liées aux services Discord, privilégiez le salon de support en direct.</p>
+        </div>
+
+        <footer>
+            &copy; 2026 LifeStealMC Network (lifestealmc.fr) — Tous droits réservés.
+        </footer>
+    </div>
+</body>
+</html>
