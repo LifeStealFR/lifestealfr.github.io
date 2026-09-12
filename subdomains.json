@@ -1,0 +1,20 @@
+[
+  {
+    "title": "Kurotsuki",
+    "description": "Bot Discord & services associés",
+    "url": "https://kurotsuki.lifestealmc.fr",
+    "badge": "kurotsuki"
+  },
+  {
+    "title": "Solus Store",
+    "description": "Boîte à outils en ligne & ressources",
+    "url": "https://solus-store.lifestealmc.fr",
+    "badge": "tool"
+  },
+  {
+    "title": "Craftok Wiki",
+    "description": "Documentation et guides du serveur",
+    "url": "https://craftok.lifestealmc.fr",
+    "badge": "wiki"
+  }
+]
