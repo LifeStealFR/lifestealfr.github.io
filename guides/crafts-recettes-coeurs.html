@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Encyclopédie des Crafts : Cœurs, Fragments & Balises — LifeStealMC</title>
+    <meta name="description" content="Toutes les recettes et diagrammes de craft du mode LifeSteal Minecraft : comment fabriquer des fragments de cœur, des cœurs complets et des balises de réanimation.">
+    <meta name="keywords" content="craft coeur lifesteal, recette lifesteal, fragment de coeur minecraft, balise de reanimation lifesteal, revive beacon craft">
+    <meta name="author" content="LifeStealMC Editorial Team">
+    <link rel="canonical" href="https://lifestealmc.fr/guides/crafts-recettes-coeurs.html">
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="https://lifestealmc.fr/guides/crafts-recettes-coeurs.html">
+    <meta property="og:title" content="Encyclopédie des Crafts : Cœurs, Fragments & Balises — LifeStealMC">
+    <meta property="og:description" content="Recettes complètes, coûts en ressources et guides d'optimisation pour fabriquer vos cœurs et balises de réanimation.">
+    <meta property="og:site_name" content="LifeStealMC Network">
+
+    <!-- Schema.org Article JSON-LD -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Article",
+      "headline": "Encyclopédie des Crafts : Cœurs, Fragments et Balises de Réanimation",
+      "description": "Recettes complètes et optimisations d'artisanat pour les cœurs et balises LifeSteal Minecraft.",
+      "author": {
+        "@type": "Organization",
+        "name": "LifeStealMC Editorial Team",
+        "url": "https://lifestealmc.fr"
+      },
+      "publisher": {
+        "@type": "Organization",
+        "name": "LifeStealMC Network",
+        "url": "https://lifestealmc.fr"
+      },
+      "datePublished": "2026-09-23",
+      "dateModified": "2026-09-23",
+      "mainEntityOfPage": "https://lifestealmc.fr/guides/crafts-recettes-coeurs.html"
+    }
+    </script>
+
+    <!-- Google AdSense -->
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6241793082650017" crossorigin="anonymous"></script>
+
+    <style>
+        :root {
+            --bg-color: #0d0e12;
+            --surface-color: #12141a;
+            --card-bg: #161822;
+            --accent: #e63946;
+            --accent-glow: rgba(230, 57, 70, 0.4);
+            --text-main: #f8fafc;
+            --text-sub: #94a3b8;
+            --border: #232734;
+            --border-hover: #383f52;
+            color-scheme: dark;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+        body { background-color: var(--bg-color); color: var(--text-main); min-height: 100vh; display: flex; flex-direction: column; line-height: 1.75; }
+
+        .navbar { position: sticky; top: 0; z-index: 100; background: rgba(13, 14, 18, 0.9); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); padding: 0.85rem 1.5rem; }
+        .nav-content { max-width: 1100px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; }
+        .brand { font-size: 1.35rem; font-weight: 800; text-decoration: none; color: var(--text-main); display: flex; align-items: center; gap: 0.4rem; }
+        .brand span { color: var(--accent); }
+        .nav-links { display: flex; align-items: center; gap: 1.5rem; list-style: none; }
+        .nav-links a { color: var(--text-sub); text-decoration: none; font-size: 0.92rem; font-weight: 500; transition: color 0.2s; }
+        .nav-links a:hover { color: var(--text-main); }
+        .nav-btn { background: var(--accent); color: #fff !important; padding: 0.45rem 1rem; border-radius: 8px; font-weight: 600 !important; }
+
+        .article-container { max-width: 860px; margin: 0 auto; padding: 2.5rem 1.25rem 4rem; width: 100%; flex: 1; }
+
+        .breadcrumb { display: flex; align-items: center; gap: 0.5rem; font-size: 0.85rem; color: var(--text-sub); margin-bottom: 2rem; }
+        .breadcrumb a { color: var(--accent); text-decoration: none; }
+
+        .article-header { margin-bottom: 2.5rem; border-bottom: 1px solid var(--border); padding-bottom: 2rem; }
+        .tag-badge { background: rgba(251, 191, 36, 0.15); color: #fbbf24; border: 1px solid rgba(251, 191, 36, 0.3); padding: 0.3rem 0.75rem; border-radius: 999px; font-size: 0.8rem; font-weight: 700; text-transform: uppercase; display: inline-block; margin-bottom: 1rem; }
+        h1 { font-size: clamp(2rem, 4vw, 2.75rem); font-weight: 800; line-height: 1.2; letter-spacing: -0.5px; margin-bottom: 1rem; }
+        .article-meta { display: flex; align-items: center; gap: 1.5rem; color: var(--text-sub); font-size: 0.88rem; flex-wrap: wrap; }
+
+        /* Sommaire */
+        .toc-box { background: var(--surface-color); border: 1px solid var(--border); border-radius: 14px; padding: 1.5rem; margin-bottom: 2.5rem; }
+        .toc-title { font-weight: 700; margin-bottom: 0.75rem; font-size: 1.05rem; }
+        .toc-list { list-style: none; display: flex; flex-direction: column; gap: 0.5rem; }
+        .toc-list a { color: var(--text-sub); text-decoration: none; font-size: 0.92rem; }
+        .toc-list a:hover { color: var(--accent); }
+
+        /* Contenu */
+        .content h2 { font-size: 1.6rem; font-weight: 700; margin: 2.5rem 0 1rem; color: var(--text-main); border-left: 4px solid var(--accent); padding-left: 0.75rem; }
+        .content h3 { font-size: 1.25rem; font-weight: 600; margin: 1.75rem 0 0.75rem; color: #e2e8f0; }
+        .content p { color: #cbd5e1; margin-bottom: 1.25rem; font-size: 1.02rem; }
+        .content ul { padding-left: 1.5rem; margin-bottom: 1.5rem; color: #cbd5e1; }
+        .content li { margin-bottom: 0.6rem; }
+
+        /* Crafting Grid Visuelle 3x3 */
+        .crafting-box { background: #1a1d26; border: 2px solid #2e3444; border-radius: 14px; padding: 1.5rem; margin: 2rem 0; display: flex; flex-direction: column; gap: 1rem; align-items: center; }
+        .grid-3x3 { display: grid; grid-template-columns: repeat(3, 64px); grid-template-rows: repeat(3, 64px); gap: 6px; background: #0f1117; padding: 10px; border-radius: 10px; border: 2px solid #232734; }
+        .slot { background: #1c1f2b; border: 1px solid #33394a; border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: 1.7rem; font-weight: bold; position: relative; user-select: none; }
+        .slot:hover { background: #262b3b; border-color: var(--accent); }
+        .craft-arrow { font-size: 2rem; color: var(--accent); }
+        .craft-result { display: flex; align-items: center; gap: 1.5rem; }
+        .result-slot { width: 80px; height: 80px; background: #202432; border: 2px solid var(--accent); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 2.5rem; box-shadow: 0 0 20px var(--accent-glow); }
+        .craft-desc { font-size: 0.95rem; color: var(--text-sub); text-align: center; max-width: 500px; margin-top: 0.5rem; }
+
+        .callout { background: rgba(56, 189, 248, 0.08); border-left: 4px solid #38bdf8; border-radius: 0 10px 10px 0; padding: 1.25rem 1.5rem; margin: 2rem 0; }
+        .callout-title { font-weight: 700; font-size: 0.95rem; margin-bottom: 0.4rem; color: #38bdf8; }
+        .callout p { margin-bottom: 0; font-size: 0.95rem; color: #e2e8f0; }
+
+        .table-wrapper { overflow-x: auto; margin: 2rem 0; border: 1px solid var(--border); border-radius: 12px; }
+        table { width: 100%; border-collapse: collapse; text-align: left; font-size: 0.95rem; }
+        th { background: #161922; padding: 1rem; font-weight: 700; color: var(--text-main); border-bottom: 1px solid var(--border); }
+        td { padding: 1rem; border-bottom: 1px solid var(--border); color: #cbd5e1; }
+        tr:last-child td { border-bottom: none; }
+
+        .author-card { background: var(--surface-color); border: 1px solid var(--border); border-radius: 16px; padding: 1.75rem; display: flex; gap: 1.25rem; align-items: center; margin-top: 3.5rem; }
+        .author-avatar { width: 60px; height: 60px; border-radius: 50%; background: #232734; display: flex; align-items: center; justify-content: center; font-size: 1.8rem; border: 2px solid var(--accent); }
+        .author-info h4 { font-size: 1.05rem; font-weight: 700; margin-bottom: 0.25rem; }
+        .author-info p { font-size: 0.88rem; color: var(--text-sub); margin-bottom: 0; }
+
+        .ad-container { background: var(--card-bg); border: 1px solid var(--border); border-radius: 14px; padding: 1rem; margin: 3rem 0; text-align: center; }
+        .ad-header { font-size: 0.7rem; color: #64748b; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.5rem; }
+
+        footer { background: #08090c; border-top: 1px solid var(--border); padding: 3rem 1.5rem 2rem; margin-top: auto; }
+        .footer-content { max-width: 1100px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 2rem; }
+        .footer-col h4 { font-size: 0.95rem; font-weight: 700; margin-bottom: 1rem; text-transform: uppercase; }
+        .footer-col ul { list-style: none; display: flex; flex-direction: column; gap: 0.5rem; font-size: 0.88rem; }
+        .footer-col a { color: var(--text-sub); text-decoration: none; }
+        .footer-bottom { max-width: 1100px; margin: 2rem auto 0; padding-top: 1.5rem; border-top: 1px solid rgba(255,255,255,0.05); font-size: 0.82rem; color: #475569; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 1rem; }
+
+        @media (max-width: 768px) { .nav-links { display: none; } }
+    </style>
+</head>
+<body>
+
+    <nav class="navbar">
+        <div class="nav-content">
+            <a href="/" class="brand">LifeSteal<span>MC</span></a>
+            <ul class="nav-links">
+                <li><a href="/">Accueil</a></li>
+                <li><a href="/guides/">Guides &amp; Tutoriels</a></li>
+                <li><a href="/tools/">Outils</a></li>
+                <li><a href="/wiki/">Base de Connaissances</a></li>
+                <li><a href="/about.html">À Propos</a></li>
+                <li><a href="/contact.html">Contact</a></li>
+                <li><a href="https://kurotsuki.lifestealmc.fr" target="_blank" rel="noopener" class="nav-btn">Kurotsuki Studio →</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="article-container">
+        <div class="breadcrumb">
+            <a href="/">Accueil</a> <span>/</span> <a href="/guides/">Guides</a> <span>/</span> <span>Crafts &amp; Recettes</span>
+        </div>
+
+        <article>
+            <header class="article-header">
+                <span class="tag-badge">Encyclopédie des Crafts</span>
+                <h1>Encyclopédie des Crafts : Cœurs, Fragments et Balises de Réanimation</h1>
+                <div class="article-meta">
+                    <span>📅 Mis à jour le 23 Septembre 2026</span>
+                    <span>⏱️ 8 minutes de lecture</span>
+                    <span>✍️ Rédigé par le Staff LifeStealMC</span>
+                </div>
+            </header>
+
+            <div class="toc-box">
+                <div class="toc-title">📑 Sommaire du guide</div>
+                <ul class="toc-list">
+                    <li><a href="#coeur-standard">1. Craft du Cœur Complet (Standard Tier)</a></li>
+                    <li><a href="#fragments">2. Les Fragments de Cœur : Obtention &amp; Assemblage</a></li>
+                    <li><a href="#balise">3. La Balise de Réanimation (Revive Beacon)</a></li>
+                    <li><a href="#couts">4. Tableau d'Équivalence &amp; Coûts en Ressources</a></li>
+                    <li><a href="#optimisation">5. Stratégies de Farm Recommandées</a></li>
+                </ul>
+            </div>
+
+            <div class="content">
+                <h2 id="coeur-standard">1. Craft du Cœur Complet (Standard Tier)</h2>
+                <p>
+                    Le <strong>Cœur LifeSteal</strong> est un item consommable à usage unique. En effectuant un clic droit avec le cœur en main, votre barre de vie maximale augmente de façon permanente de +1 conteneur de cœur (+2 points de vie).
+                </p>
+
+                <!-- Crafting Grid Cœur -->
+                <div class="crafting-box">
+                    <div class="craft-result">
+                        <div class="grid-3x3">
+                            <div class="slot" title="Lingot de Netherite">🪙</div>
+                            <div class="slot" title="Bloc d'Or">🟡</div>
+                            <div class="slot" title="Lingot de Netherite">🪙</div>
+
+                            <div class="slot" title="Bloc d'Or">🟡</div>
+                            <div class="slot" title="Étoile du Nether">⭐</div>
+                            <div class="slot" title="Bloc d'Or">🟡</div>
+
+                            <div class="slot" title="Lingot de Netherite">🪙</div>
+                            <div class="slot" title="Bloc d'Or">🟡</div>
+                            <div class="slot" title="Lingot de Netherite">🪙</div>
+                        </div>
+                        <div class="craft-arrow">➔</div>
+                        <div class="result-slot" title="Cœur LifeSteal Consommable">❤️</div>
+                    </div>
+                    <div class="craft-desc">
+                        <strong>Recette Standard :</strong> 4 Lingots de Netherite, 4 Blocs d'Or et 1 Étoile du Nether.
+                    </div>
+                </div>
+
+                <div class="callout">
+                    <div class="callout-title">💡 Astuce de consommation</div>
+                    <p>Ne consommez jamais un cœur pendant un combat si vos PV actuels sont au maximum, car cela pourrait vous distraire. Consommez vos cœurs en lieu sûr avant de partir en expédition.</p>
+                </div>
+
+                <!-- AdSense In-Article -->
+                <div class="ad-container">
+                    <div class="ad-header">Annonce Partenaire</div>
+                    <ins class="adsbygoogle"
+                         style="display:block; text-align:center;"
+                         data-ad-layout="in-article"
+                         data-ad-format="fluid"
+                         data-ad-client="ca-pub-6241793082650017"
+                         data-ad-slot="1654913277"></ins>
+                    <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+                </div>
+
+                <h2 id="fragments">2. Les Fragments de Cœur : Obtention &amp; Assemblage</h2>
+                <p>
+                    Sur les serveurs disposant de la variante progressive, les cœurs complets ne peuvent être fabriqués directement : il est d'abord nécessaire de rassembler <strong>4 Fragments de Cœur (Heart Shards)</strong>.
+                </p>
+                <ul>
+                    <li><strong>Sources de loot naturelles :</strong> Coffres de Forteresse du Nether (5% de chance), Cités de l'End (12% de chance) et Monuments sous-marins.</li>
+                    <li><strong>Loot de boss :</strong> Chaque Wither éliminé garantit 1 Fragment de Cœur en plus de son Étoile du Nether.</li>
+                    <li><strong>Assemblage :</strong> 4 Fragments de Cœur disposés en croix entourant 4 Blocs de Diamant produisent 1 Cœur Complet.</li>
+                </ul>
+
+                <h2 id="balise">3. La Balise de Réanimation (Revive Beacon)</h2>
+                <p>
+                    La <strong>Balise de Réanimation</strong> est le seul artefact capable de briser le bannissement temporaire d'un joueur tombé à 0 cœur. En plaçant la balise au sol et en insérant le pseudo de la personne éliminée dans l'interface, celle-ci est téléportée instantanément sur la balise avec 1 cœur de vie de départ.
+                </p>
+
+                <!-- Crafting Grid Balise -->
+                <div class="crafting-box">
+                    <div class="craft-result">
+                        <div class="grid-3x3">
+                            <div class="slot" title="Totem d'Immortalité">🗿</div>
+                            <div class="slot" title="Cœur LifeSteal">❤️</div>
+                            <div class="slot" title="Totem d'Immortalité">🗿</div>
+
+                            <div class="slot" title="Cœur LifeSteal">❤️</div>
+                            <div class="slot" title="Balise (Beacon)">✨</div>
+                            <div class="slot" title="Cœur LifeSteal">❤️</div>
+
+                            <div class="slot" title="Totem d'Immortalité">🗿</div>
+                            <div class="slot" title="Cœur LifeSteal">❤️</div>
+                            <div class="slot" title="Totem d'Immortalité">🗿</div>
+                        </div>
+                        <div class="craft-arrow">➔</div>
+                        <div class="result-slot" title="Balise de Réanimation">🏮</div>
+                    </div>
+                    <div class="craft-desc">
+                        <strong>Recette Balise :</strong> 1 Balise Vanilla, 4 Cœurs LifeSteal et 4 Totems d'Immortalité.
+                    </div>
+                </div>
+
+                <h2 id="couts">4. Tableau d'Équivalence &amp; Coûts en Ressources</h2>
+                <div class="table-wrapper">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Objet</th>
+                                <th>Composants Requis</th>
+                                <th>Coût Minier Estimé</th>
+                                <th>Priorité de Craft</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Fragment de Cœur</strong></td>
+                                <td>Loot Wither ou Coffres de Bastion</td>
+                                <td>1 Wither Fight</td>
+                                <td>Haute (Early-game)</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Cœur LifeSteal</strong></td>
+                                <td>4 Netherite + 4 Blocs d'Or + 1 Nether Star</td>
+                                <td>16 Débris Antiques + 36 Lingots d'Or</td>
+                                <td>Indispensable (Mid-game)</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Balise de Réanimation</strong></td>
+                                <td>4 Cœurs + 4 Totems + 1 Beacon</td>
+                                <td>64 Débris Antiques + Raid Farm</td>
+                                <td>Stratégique (Guild Wars)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <h2 id="optimisation">5. Stratégies de Farm Recommandées</h2>
+                <p>
+                    Pour produire efficacement vos cœurs sans vous exposer inutilement :
+                </p>
+                <ol>
+                    <li><strong>Créez une usine à or (Gold Farm) sur le toit du Nether :</strong> Vous obtiendrez des coffres entiers de pépites et lingots d'or en quelques heures.</li>
+                    <li><strong>Minez aux coordonnées Y = -58 pour les diamants et Y = 14 pour la netherite :</strong> Utilisez la méthode des lits ou de la TNT pour maximiser le dégagement de blocs par minute.</li>
+                    <li><strong>Automatisez une Raid Farm :</strong> Les totems d'immortalité sont indispensables tant pour le PvP que pour l'assemblage des balises de réanimation.</li>
+                </ol>
+            </div>
+
+            <!-- Auteur -->
+            <div class="author-card">
+                <div class="author-avatar">⚒️</div>
+                <div class="author-info">
+                    <h4>Rédigé par le Comité Éditorial LifeStealMC</h4>
+                    <p>Spécialistes de l'économie Minecraft, du game balance et des optimisations de survie multijoueur.</p>
+                </div>
+            </div>
+        </article>
+    </div>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-col">
+                <h4>LifeStealMC Network</h4>
+                <p style="color:var(--text-sub); font-size:0.88rem;">Portail officiel d'accès aux guides, outils et documentations communautaires.</p>
+            </div>
+            <div class="footer-col">
+                <h4>Rubriques</h4>
+                <ul>
+                    <li><a href="/guides/">Guides &amp; Tutoriels</a></li>
+                    <li><a href="/tools/">Outils &amp; Calculateurs</a></li>
+                    <li><a href="/wiki/">Base de Connaissances</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h4>Légal</h4>
+                <ul>
+                    <li><a href="/privacy.html">Politique de Confidentialité</a></li>
+                    <li><a href="/terms.html">Conditions d'Utilisation</a></li>
+                    <li><a href="/about.html">À Propos</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h4>Support</h4>
+                <ul>
+                    <li><a href="/contact.html">Contact &amp; Assistance</a></li>
+                    <li><a href="mailto:contact@lifestealmc.fr">contact@lifestealmc.fr</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <span>&copy; 2026 LifeStealMC Network — Tous droits réservés.</span>
+            <span>Conforme Google AdSense &amp; RGPD</span>
+        </div>
+    </footer>
+
+</body>
+</html>

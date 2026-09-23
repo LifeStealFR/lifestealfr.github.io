@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Simulateur & Calculateur de Coeurs LifeSteal SMP — LifeStealMC</title>
+    <meta name="description" content="Simulateur interactif de coeurs LifeSteal : calculez votre jauge de santé, les victoires/défaites, les coûts en ressources de craft et vos seuils de survie.">
+    <meta name="keywords" content="calculateur lifesteal, simulateur coeurs lifesteal, calculatrice coeurs minecraft, craft coeur lifesteal cout">
+    <link rel="canonical" href="https://lifestealmc.fr/tools/calculateur-coeurs.html">
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://lifestealmc.fr/tools/calculateur-coeurs.html">
+    <meta property="og:title" content="Simulateur & Calculateur de Coeurs LifeSteal SMP">
+    <meta property="og:description" content="Outil interactif pour calculer en temps réel vos coeurs restants, vos coûts de craft et votre résistance en PvP.">
+    <meta property="og:site_name" content="LifeStealMC Network">
+
+    <!-- Schema.org WebApplication JSON-LD -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "Simulateur de Coeurs LifeSteal",
+      "applicationCategory": "GameApplication",
+      "operatingSystem": "All",
+      "browserRequirements": "Requires JavaScript. Requires HTML5.",
+      "description": "Calculateur dynamique de points de vie et d'économie de craft pour serveurs Minecraft LifeSteal SMP.",
+      "url": "https://lifestealmc.fr/tools/calculateur-coeurs.html"
+    }
+    </script>
+
+    <!-- Google AdSense -->
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6241793082650017" crossorigin="anonymous"></script>
+
+    <style>
+        :root {
+            --bg-color: #0d0e12;
+            --surface-color: #12141a;
+            --card-bg: #161822;
+            --accent: #e63946;
+            --accent-glow: rgba(230, 57, 70, 0.4);
+            --text-main: #f8fafc;
+            --text-sub: #94a3b8;
+            --border: #232734;
+            --border-hover: #383f52;
+            color-scheme: dark;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+        body { background-color: var(--bg-color); color: var(--text-main); min-height: 100vh; display: flex; flex-direction: column; line-height: 1.6; }
+
+        .navbar { position: sticky; top: 0; z-index: 100; background: rgba(13, 14, 18, 0.9); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); padding: 0.85rem 1.5rem; }
+        .nav-content { max-width: 1100px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; }
+        .brand { font-size: 1.35rem; font-weight: 800; text-decoration: none; color: var(--text-main); display: flex; align-items: center; gap: 0.4rem; }
+        .brand span { color: var(--accent); }
+        .nav-links { display: flex; align-items: center; gap: 1.5rem; list-style: none; }
+        .nav-links a { color: var(--text-sub); text-decoration: none; font-size: 0.92rem; font-weight: 500; transition: color 0.2s; }
+        .nav-links a:hover { color: var(--text-main); }
+        .nav-btn { background: var(--accent); color: #fff !important; padding: 0.45rem 1rem; border-radius: 8px; font-weight: 600 !important; }
+
+        .main-container { max-width: 960px; margin: 0 auto; padding: 2.5rem 1.25rem 4rem; width: 100%; flex: 1; }
+
+        .breadcrumb { display: flex; align-items: center; gap: 0.5rem; font-size: 0.85rem; color: var(--text-sub); margin-bottom: 2rem; }
+        .breadcrumb a { color: var(--accent); text-decoration: none; }
+
+        .tool-header { text-align: center; margin-bottom: 2.5rem; }
+        .tool-header h1 { font-size: clamp(1.8rem, 3.5vw, 2.5rem); font-weight: 800; margin-bottom: 0.75rem; }
+        .tool-header p { color: var(--text-sub); max-width: 620px; margin: 0 auto; font-size: 1rem; }
+
+        .calculator-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; margin-bottom: 2.5rem; }
+        @media (max-width: 800px) { .calculator-grid { grid-template-columns: 1fr; } }
+
+        .panel { background: var(--card-bg); border: 1px solid var(--border); border-radius: 16px; padding: 1.75rem; }
+        .panel-title { font-size: 1.2rem; font-weight: 700; margin-bottom: 1.25rem; display: flex; align-items: center; gap: 0.5rem; }
+
+        .form-group { margin-bottom: 1.25rem; }
+        .form-label { display: block; font-size: 0.88rem; font-weight: 600; color: #cbd5e1; margin-bottom: 0.4rem; }
+        .form-hint { font-size: 0.78rem; color: var(--text-sub); margin-top: 0.25rem; }
+        .form-input { width: 100%; background: #0c0e14; border: 1px solid var(--border); border-radius: 8px; padding: 0.7rem 0.9rem; color: #fff; font-size: 0.95rem; font-weight: 600; outline: none; transition: border-color 0.2s; }
+        .form-input:focus { border-color: var(--accent); }
+
+        .stat-box { background: #0c0e14; border: 1px solid var(--border); border-radius: 12px; padding: 1.25rem; text-align: center; margin-bottom: 1.25rem; }
+        .stat-value { font-size: 2.5rem; font-weight: 800; color: var(--accent); line-height: 1.1; margin-bottom: 0.25rem; }
+        .stat-label { font-size: 0.85rem; color: var(--text-sub); text-transform: uppercase; font-weight: 600; }
+
+        .hearts-display { display: flex; flex-wrap: wrap; gap: 6px; justify-content: center; margin: 1.5rem 0; min-height: 40px; padding: 0.75rem; background: #08090d; border-radius: 10px; border: 1px solid var(--border); }
+        .heart-icon { font-size: 1.5rem; animation: pulse 0.3s ease; }
+        .heart-empty { opacity: 0.2; filter: grayscale(1); }
+
+        .status-badge { display: inline-block; padding: 0.4rem 1rem; border-radius: 999px; font-weight: 700; font-size: 0.85rem; text-transform: uppercase; margin-top: 0.5rem; }
+        .status-safe { background: rgba(74, 222, 128, 0.15); color: #4ade80; border: 1px solid rgba(74, 222, 128, 0.3); }
+        .status-warning { background: rgba(251, 191, 36, 0.15); color: #fbbf24; border: 1px solid rgba(251, 191, 36, 0.3); }
+        .status-danger { background: rgba(239, 68, 68, 0.2); color: #ef4444; border: 1px solid rgba(239, 68, 68, 0.4); }
+
+        .info-table { width: 100%; border-collapse: collapse; margin-top: 1rem; font-size: 0.9rem; }
+        .info-table td { padding: 0.6rem 0.5rem; border-bottom: 1px solid var(--border); }
+        .info-table tr:last-child td { border-bottom: none; }
+        .info-table .label { color: var(--text-sub); }
+        .info-table .val { text-align: right; font-weight: 700; color: #fff; }
+
+        .ad-container { background: var(--card-bg); border: 1px solid var(--border); border-radius: 14px; padding: 1rem; margin: 3rem 0; text-align: center; }
+        .ad-header { font-size: 0.7rem; color: #64748b; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.5rem; }
+
+        footer { background: #08090c; border-top: 1px solid var(--border); padding: 3rem 1.5rem 2rem; margin-top: auto; }
+        .footer-content { max-width: 1100px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 2rem; }
+        .footer-col h4 { font-size: 0.95rem; font-weight: 700; margin-bottom: 1rem; text-transform: uppercase; }
+        .footer-col ul { list-style: none; display: flex; flex-direction: column; gap: 0.5rem; font-size: 0.88rem; }
+        .footer-col a { color: var(--text-sub); text-decoration: none; }
+        .footer-bottom { max-width: 1100px; margin: 2rem auto 0; padding-top: 1.5rem; border-top: 1px solid rgba(255,255,255,0.05); font-size: 0.82rem; color: #475569; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 1rem; }
+
+        @media (max-width: 768px) { .nav-links { display: none; } }
+    </style>
+</head>
+<body>
+
+    <nav class="navbar">
+        <div class="nav-content">
+            <a href="../index.html" class="brand">⚡ LifeSteal<span>MC</span></a>
+            <ul class="nav-links">
+                <li><a href="../index.html">Accueil</a></li>
+                <li><a href="../guides/index.html">Guides & Docs</a></li>
+                <li><a href="index.html" style="color:#fff;">Outils & Simulateurs</a></li>
+                <li><a href="../wiki/index.html">Wiki</a></li>
+                <li><a href="../about.html">À propos</a></li>
+                <li><a href="https://discord.gg/votre-invite" class="nav-btn">Rejoindre Discord</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <main class="main-container">
+        <nav class="breadcrumb">
+            <a href="../index.html">Accueil</a> &rsaquo; 
+            <a href="index.html">Outils</a> &rsaquo; 
+            <span>Simulateur de Coeurs</span>
+        </nav>
+
+        <header class="tool-header">
+            <h1>❤️ Simulateur de Coeurs LifeSteal SMP</h1>
+            <p>Ajustez vos victoires, défaites et crafts pour prévisualiser en direct votre santé maximale, votre résistance aux coups d'épée et le coût en ressources.</p>
+        </header>
+
+        <div class="calculator-grid">
+            <!-- Left Input Panel -->
+            <div class="panel">
+                <div class="panel-title">⚙️ Paramètres du Joueur</div>
+
+                <div class="form-group">
+                    <label class="form-label" for="baseHearts">Coeurs de départ du serveur :</label>
+                    <input type="number" id="baseHearts" class="form-input" value="10" min="1" max="40">
+                    <div class="form-hint">Standard : 10 coeurs (20 HP)</div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="maxHearts">Plafond maximal de coeurs (Cap) :</label>
+                    <input type="number" id="maxHearts" class="form-input" value="20" min="10" max="50">
+                    <div class="form-hint">Limite serveur paramétrée par les admins (généralement 20 ou 30)</div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="kills">Joueurs éliminés (Kills PvP) :</label>
+                    <input type="number" id="kills" class="form-input" value="3" min="0" max="100">
+                    <div class="form-hint">+1 coeur volé par victime</div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="deaths">Morts subies (PvP ou PvE) :</label>
+                    <input type="number" id="deaths" class="form-input" value="1" min="0" max="100">
+                    <div class="form-hint">-1 coeur perdu à chaque mort</div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="crafted">Coeurs craftés consommés :</label>
+                    <input type="number" id="crafted" class="form-input" value="0" min="0" max="50">
+                    <div class="form-hint">Coeurs fabriqués via le craft officiel</div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="withdrawn">Coeurs extraits sous forme d'items (/withdraw) :</label>
+                    <input type="number" id="withdrawn" class="form-input" value="0" min="0" max="50">
+                    <div class="form-hint">Coeurs retirés de votre barre de vie pour le commerce</div>
+                </div>
+            </div>
+
+            <!-- Right Results Panel -->
+            <div class="panel">
+                <div class="panel-title">📊 Résultats & Simulation</div>
+
+                <div class="stat-box">
+                    <div class="stat-value" id="totalHeartsDisplay">12</div>
+                    <div class="stat-label">Coeurs Actuels (<span id="totalHPDisplay">24</span> PV)</div>
+                    <div id="statusBadge" class="status-badge status-safe">En sécurité</div>
+                </div>
+
+                <div class="hearts-display" id="heartsIcons"></div>
+
+                <table class="info-table">
+                    <tr>
+                        <td class="label">Morts avant Élimination/Ban :</td>
+                        <td class="val" id="deathsToBan">12 morts</td>
+                    </tr>
+                    <tr>
+                        <td class="label">Coups Épée Netherite T5 (critique ~15 PV) :</td>
+                        <td class="val" id="hitsNetherite">~2 coups</td>
+                    </tr>
+                    <tr>
+                        <td class="label">Ratio K/D effectif :</td>
+                        <td class="val" id="kdRatio">3.00</td>
+                    </tr>
+                    <tr>
+                        <td class="label">Netherite Scraps pour crafter <span id="craftCountLabel">0</span> coeur(s) :</td>
+                        <td class="val" id="scrapsNeeded">0</td>
+                    </tr>
+                    <tr>
+                        <td class="label">Totems d'Immortalité requis :</td>
+                        <td class="val" id="totemsNeeded">0</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+
+        <!-- AdSense Slot -->
+        <div class="ad-container">
+            <div class="ad-header">Annonce Partenaire</div>
+            <ins class="adsbygoogle"
+                 style="display:block"
+                 data-ad-client="ca-pub-6241793082650017"
+                 data-ad-slot="1654913277"
+                 data-ad-format="auto"
+                 data-full-width-responsive="true"></ins>
+            <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+        </div>
+    </main>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-col">
+                <h4>⚡ LifeStealMC</h4>
+                <p style="color: var(--text-sub); font-size: 0.88rem;">Portail francophone communautaire et technique pour joueurs Minecraft et gérants de serveurs Discord.</p>
+            </div>
+            <div class="footer-col">
+                <h4>📚 Guides & Docs</h4>
+                <ul>
+                    <li><a href="../guides/guide-lifesteal-debutant.html">Guide Débutant LifeSteal</a></li>
+                    <li><a href="../guides/crafts-recettes-coeurs.html">Crafts & Recettes Coeurs</a></li>
+                    <li><a href="../guides/optimisation-serveur-minecraft.html">Optimisation Serveur</a></li>
+                    <li><a href="../guides/securite-anti-raid-discord.html">Sécurité Anti-Raid Discord</a></li>
+                    <li><a href="../guides/strategie-pvp-lifesteal.html">Stratégies PvP Avancées</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h4>🛠️ Outils</h4>
+                <ul>
+                    <li><a href="calculateur-coeurs.html">Simulateur de Coeurs</a></li>
+                    <li><a href="generateur-embed-discord.html">Générateur Embed Discord</a></li>
+                    <li><a href="calculateur-xp-enchantements.html">Calculateur XP & Enclume</a></li>
+                    <li><a href="../wiki/lexique-termes-gaming.html">Lexique Gaming</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h4>⚖️ Légal</h4>
+                <ul>
+                    <li><a href="../about.html">À propos de l'équipe</a></li>
+                    <li><a href="../privacy.html">Politique de Confidentialité</a></li>
+                    <li><a href="../terms.html">Conditions d'Utilisation</a></li>
+                    <li><a href="../contact.html">Contact</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <span>&copy; 2026 LifeStealMC Network. Tous droits réservés.</span>
+            <span>Non affilié à Mojang Studios ni à Discord Inc.</span>
+        </div>
+    </footer>
+
+    <script>
+        function recalculate() {
+            const base = parseInt(document.getElementById('baseHearts').value) || 0;
+            const maxCap = parseInt(document.getElementById('maxHearts').value) || 20;
+            const kills = parseInt(document.getElementById('kills').value) || 0;
+            const deaths = parseInt(document.getElementById('deaths').value) || 0;
+            const crafted = parseInt(document.getElementById('crafted').value) || 0;
+            const withdrawn = parseInt(document.getElementById('withdrawn').value) || 0;
+
+            let currentHearts = base + kills - deaths + crafted - withdrawn;
+            if (currentHearts > maxCap) currentHearts = maxCap;
+
+            const isDead = currentHearts <= 0;
+            const totalHP = Math.max(0, currentHearts * 2);
+
+            document.getElementById('totalHeartsDisplay').textContent = isDead ? "0" : currentHearts;
+            document.getElementById('totalHPDisplay').textContent = isDead ? "0" : totalHP;
+            document.getElementById('deathsToBan').textContent = isDead ? "Éliminé (0 coeur)" : `${currentHearts} mort(s)`;
+
+            const badge = document.getElementById('statusBadge');
+            if (isDead) {
+                badge.className = "status-badge status-danger";
+                badge.textContent = "☠️ Éliminé / Banni";
+            } else if (currentHearts <= 3) {
+                badge.className = "status-badge status-danger";
+                badge.textContent = "⚠️ Danger Critique (Proche du ban)";
+            } else if (currentHearts <= 7) {
+                badge.className = "status-badge status-warning";
+                badge.textContent = "⚡ Vulnérable";
+            } else {
+                badge.className = "status-badge status-safe";
+                badge.textContent = "🛡️ En sécurité";
+            }
+
+            // Hearts visual render
+            const container = document.getElementById('heartsIcons');
+            container.innerHTML = '';
+            if (isDead) {
+                container.innerHTML = '<span style="color:#ef4444;font-weight:bold;">Joueur spectateur ou banni temporairement</span>';
+            } else {
+                for (let i = 0; i < currentHearts; i++) {
+                    const span = document.createElement('span');
+                    span.className = 'heart-icon';
+                    span.textContent = '❤️';
+                    container.appendChild(span);
+                }
+            }
+
+            // Hits Netherite calculation (without armor rough estimate / with prot 4)
+            const hits = Math.ceil(totalHP / 14);
+            document.getElementById('hitsNetherite').textContent = isDead ? "0 coup" : `~${hits} coup(s) directs`;
+
+            // KD Ratio
+            const kd = deaths === 0 ? kills.toFixed(2) : (kills / deaths).toFixed(2);
+            document.getElementById('kdRatio').textContent = kd;
+
+            // Craft resources needed
+            document.getElementById('craftCountLabel').textContent = crafted;
+            document.getElementById('scrapsNeeded').textContent = `${crafted * 4} Scraps (${crafted} Lingot(s))`;
+            document.getElementById('totemsNeeded').textContent = `${crafted * 1} Totem(s)`;
+        }
+
+        ['baseHearts', 'maxHearts', 'kills', 'deaths', 'crafted', 'withdrawn'].forEach(id => {
+            document.getElementById(id).addEventListener('input', recalculate);
+        });
+
+        recalculate();
+    </script>
+</body>
+</html>

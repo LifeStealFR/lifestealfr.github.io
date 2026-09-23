@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Guide Technique d'Optimisation Serveur Minecraft Paper & Purpur 1.21+ — LifeStealMC</title>
+    <meta name="description" content="Guide expert d'optimisation pour serveurs Minecraft Paper et Purpur 1.21+. Atteindre 20 TPS constants : Aikar Flags JVM, paper-world-defaults, entités, ticks et chunk loading.">
+    <meta name="keywords" content="optimisation serveur minecraft, paper 1.21 optimisation, aikar flags jvm, purpur lag fix, 20 tps minecraft, paper-world-defaults">
+    <meta name="author" content="LifeStealMC Sysadmin Team">
+    <link rel="canonical" href="https://lifestealmc.fr/guides/optimisation-serveur-minecraft.html">
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="https://lifestealmc.fr/guides/optimisation-serveur-minecraft.html">
+    <meta property="og:title" content="Guide Technique d'Optimisation Serveur Minecraft Paper & Purpur 1.21+">
+    <meta property="og:description" content="Paramétrage expert pour 20 TPS constants, réduction des latences et optimisation du Garbage Collector.">
+    <meta property="og:site_name" content="LifeStealMC Network">
+
+    <!-- Schema.org Article JSON-LD -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "TechArticle",
+      "headline": "Guide Technique d'Optimisation Serveur Minecraft Paper et Purpur 1.21+",
+      "description": "Guide technique approfondi pour optimiser les performances des serveurs Minecraft multijoueurs.",
+      "author": {
+        "@type": "Organization",
+        "name": "LifeStealMC Sysadmin Team",
+        "url": "https://lifestealmc.fr"
+      },
+      "publisher": {
+        "@type": "Organization",
+        "name": "LifeStealMC Network",
+        "url": "https://lifestealmc.fr"
+      },
+      "datePublished": "2026-09-23",
+      "dateModified": "2026-09-23",
+      "mainEntityOfPage": "https://lifestealmc.fr/guides/optimisation-serveur-minecraft.html"
+    }
+    </script>
+
+    <!-- Google AdSense -->
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6241793082650017" crossorigin="anonymous"></script>
+
+    <style>
+        :root {
+            --bg-color: #0d0e12;
+            --surface-color: #12141a;
+            --card-bg: #161822;
+            --accent: #38bdf8;
+            --accent-glow: rgba(56, 189, 248, 0.4);
+            --text-main: #f8fafc;
+            --text-sub: #94a3b8;
+            --border: #232734;
+            --border-hover: #383f52;
+            color-scheme: dark;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+        body { background-color: var(--bg-color); color: var(--text-main); min-height: 100vh; display: flex; flex-direction: column; line-height: 1.75; }
+
+        .navbar { position: sticky; top: 0; z-index: 100; background: rgba(13, 14, 18, 0.9); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); padding: 0.85rem 1.5rem; }
+        .nav-content { max-width: 1100px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; }
+        .brand { font-size: 1.35rem; font-weight: 800; text-decoration: none; color: var(--text-main); display: flex; align-items: center; gap: 0.4rem; }
+        .brand span { color: #e63946; }
+        .nav-links { display: flex; align-items: center; gap: 1.5rem; list-style: none; }
+        .nav-links a { color: var(--text-sub); text-decoration: none; font-size: 0.92rem; font-weight: 500; transition: color 0.2s; }
+        .nav-links a:hover { color: var(--text-main); }
+        .nav-btn { background: #e63946; color: #fff !important; padding: 0.45rem 1rem; border-radius: 8px; font-weight: 600 !important; }
+
+        .article-container { max-width: 860px; margin: 0 auto; padding: 2.5rem 1.25rem 4rem; width: 100%; flex: 1; }
+
+        .breadcrumb { display: flex; align-items: center; gap: 0.5rem; font-size: 0.85rem; color: var(--text-sub); margin-bottom: 2rem; }
+        .breadcrumb a { color: var(--accent); text-decoration: none; }
+
+        .article-header { margin-bottom: 2.5rem; border-bottom: 1px solid var(--border); padding-bottom: 2rem; }
+        .tag-badge { background: rgba(56, 189, 248, 0.15); color: #38bdf8; border: 1px solid rgba(56, 189, 248, 0.3); padding: 0.3rem 0.75rem; border-radius: 999px; font-size: 0.8rem; font-weight: 700; text-transform: uppercase; display: inline-block; margin-bottom: 1rem; }
+        h1 { font-size: clamp(2rem, 4vw, 2.75rem); font-weight: 800; line-height: 1.2; letter-spacing: -0.5px; margin-bottom: 1rem; }
+        .article-meta { display: flex; align-items: center; gap: 1.5rem; color: var(--text-sub); font-size: 0.88rem; flex-wrap: wrap; }
+
+        .toc-box { background: var(--surface-color); border: 1px solid var(--border); border-radius: 14px; padding: 1.5rem; margin-bottom: 2.5rem; }
+        .toc-title { font-weight: 700; margin-bottom: 0.75rem; font-size: 1.05rem; }
+        .toc-list { list-style: none; display: flex; flex-direction: column; gap: 0.5rem; }
+        .toc-list a { color: var(--text-sub); text-decoration: none; font-size: 0.92rem; }
+        .toc-list a:hover { color: var(--accent); }
+
+        .content h2 { font-size: 1.6rem; font-weight: 700; margin: 2.5rem 0 1rem; color: var(--text-main); border-left: 4px solid var(--accent); padding-left: 0.75rem; }
+        .content h3 { font-size: 1.25rem; font-weight: 600; margin: 1.75rem 0 0.75rem; color: #e2e8f0; }
+        .content p { color: #cbd5e1; margin-bottom: 1.25rem; font-size: 1.02rem; }
+        .content ul, .content ol { padding-left: 1.5rem; margin-bottom: 1.5rem; color: #cbd5e1; }
+        .content li { margin-bottom: 0.6rem; }
+
+        /* Code Block */
+        pre { background: #0f1117; border: 1px solid #232734; border-radius: 10px; padding: 1.25rem; overflow-x: auto; font-family: ui-monospace, SFMono-Regular, monospace; font-size: 0.88rem; color: #38bdf8; margin: 1.5rem 0; line-height: 1.5; }
+        code { font-family: ui-monospace, SFMono-Regular, monospace; background: rgba(56, 189, 248, 0.1); color: #38bdf8; padding: 0.2rem 0.4rem; border-radius: 4px; font-size: 0.88rem; }
+
+        .callout { background: rgba(56, 189, 248, 0.08); border-left: 4px solid #38bdf8; border-radius: 0 10px 10px 0; padding: 1.25rem 1.5rem; margin: 2rem 0; }
+        .callout-title { font-weight: 700; font-size: 0.95rem; margin-bottom: 0.4rem; color: #38bdf8; }
+        .callout p { margin-bottom: 0; font-size: 0.95rem; color: #e2e8f0; }
+
+        .table-wrapper { overflow-x: auto; margin: 2rem 0; border: 1px solid var(--border); border-radius: 12px; }
+        table { width: 100%; border-collapse: collapse; text-align: left; font-size: 0.95rem; }
+        th { background: #161922; padding: 1rem; font-weight: 700; color: var(--text-main); border-bottom: 1px solid var(--border); }
+        td { padding: 1rem; border-bottom: 1px solid var(--border); color: #cbd5e1; }
+        tr:last-child td { border-bottom: none; }
+
+        .author-card { background: var(--surface-color); border: 1px solid var(--border); border-radius: 16px; padding: 1.75rem; display: flex; gap: 1.25rem; align-items: center; margin-top: 3.5rem; }
+        .author-avatar { width: 60px; height: 60px; border-radius: 50%; background: #232734; display: flex; align-items: center; justify-content: center; font-size: 1.8rem; border: 2px solid var(--accent); }
+        .author-info h4 { font-size: 1.05rem; font-weight: 700; margin-bottom: 0.25rem; }
+        .author-info p { font-size: 0.88rem; color: var(--text-sub); margin-bottom: 0; }
+
+        .ad-container { background: var(--card-bg); border: 1px solid var(--border); border-radius: 14px; padding: 1rem; margin: 3rem 0; text-align: center; }
+        .ad-header { font-size: 0.7rem; color: #64748b; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.5rem; }
+
+        footer { background: #08090c; border-top: 1px solid var(--border); padding: 3rem 1.5rem 2rem; margin-top: auto; }
+        .footer-content { max-width: 1100px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 2rem; }
+        .footer-col h4 { font-size: 0.95rem; font-weight: 700; margin-bottom: 1rem; text-transform: uppercase; }
+        .footer-col ul { list-style: none; display: flex; flex-direction: column; gap: 0.5rem; font-size: 0.88rem; }
+        .footer-col a { color: var(--text-sub); text-decoration: none; }
+        .footer-bottom { max-width: 1100px; margin: 2rem auto 0; padding-top: 1.5rem; border-top: 1px solid rgba(255,255,255,0.05); font-size: 0.82rem; color: #475569; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 1rem; }
+
+        @media (max-width: 768px) { .nav-links { display: none; } }
+    </style>
+</head>
+<body>
+
+    <nav class="navbar">
+        <div class="nav-content">
+            <a href="/" class="brand">LifeSteal<span>MC</span></a>
+            <ul class="nav-links">
+                <li><a href="/">Accueil</a></li>
+                <li><a href="/guides/">Guides &amp; Tutoriels</a></li>
+                <li><a href="/tools/">Outils</a></li>
+                <li><a href="/wiki/">Base de Connaissances</a></li>
+                <li><a href="/about.html">À Propos</a></li>
+                <li><a href="/contact.html">Contact</a></li>
+                <li><a href="https://kurotsuki.lifestealmc.fr" target="_blank" rel="noopener" class="nav-btn">Kurotsuki Studio →</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="article-container">
+        <div class="breadcrumb">
+            <a href="/">Accueil</a> <span>/</span> <a href="/guides/">Guides</a> <span>/</span> <span>Optimisation Serveur Minecraft</span>
+        </div>
+
+        <article>
+            <header class="article-header">
+                <span class="tag-badge">Administration Système &amp; Performance</span>
+                <h1>Guide Technique d'Optimisation Serveur Minecraft Paper &amp; Purpur 1.21+</h1>
+                <div class="article-meta">
+                    <span>📅 Mis à jour le 23 Septembre 2026</span>
+                    <span>⏱️ 14 minutes de lecture</span>
+                    <span>✍️ Rédigé par l'Équipe Sysadmin LifeStealMC</span>
+                </div>
+            </header>
+
+            <div class="toc-box">
+                <div class="toc-title">📑 Sommaire du guide</div>
+                <ul class="toc-list">
+                    <li><a href="#intro">1. Comprendre les 20 TPS et le MSPT</a></li>
+                    <li><a href="#jvm">2. Les Flags JVM Aikar Flags (Java 21+)</a></li>
+                    <li><a href="#server-prop">3. Optimisation de server.properties</a></li>
+                    <li><a href="#paper-config">4. Configuration experte : paper-world-defaults.yml</a></li>
+                    <li><a href="#spigot-bukkit">5. Réglages des entités dans spigot.yml et bukkit.yml</a></li>
+                    <li><a href="#plugins">6. Outils de Profilage : Spark &amp; Timings</a></li>
+                </ul>
+            </div>
+
+            <div class="content">
+                <h2 id="intro">1. Comprendre les 20 TPS et le MSPT</h2>
+                <p>
+                    Le moteur de Minecraft est cadencé par une boucle de tick : un serveur en parfait état de fonctionnement exécute exactement <strong>20 ticks par seconde (20 TPS)</strong>, soit 1 tick toutes les <strong>50 millisecondes</strong>.
+                </p>
+                <p>
+                    L'indicateur le plus précis de la santé de votre serveur n'est pas le TPS (qui est une moyenne différée), mais le <strong>MSPT (Milliseconds Per Tick)</strong> :
+                </p>
+                <ul>
+                    <li><strong>MSPT &lt; 40 ms :</strong> Performances idéales, le serveur dispose d'une marge de calcul de 20%.</li>
+                    <li><strong>MSPT entre 45 et 50 ms :</strong> Charge limite, risque d'apparition de micro-saccades en PvP.</li>
+                    <li><strong>MSPT &gt; 50 ms :</strong> Le serveur est en surcharge critique, le TPS commence à chuter en dessous de 20.</li>
+                </ul>
+
+                <!-- AdSense In-Article -->
+                <div class="ad-container">
+                    <div class="ad-header">Annonce Partenaire</div>
+                    <ins class="adsbygoogle"
+                         style="display:block; text-align:center;"
+                         data-ad-layout="in-article"
+                         data-ad-format="fluid"
+                         data-ad-client="ca-pub-6241793082650017"
+                         data-ad-slot="1654913277"></ins>
+                    <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+                </div>
+
+                <h2 id="jvm">2. Les Flags JVM Aikar Flags (Java 21+)</h2>
+                <p>
+                    L'utilisation des <strong>Aikar Flags</strong> avec le ramasse-miettes (Garbage Collector) <strong>G1GC</strong> est indispensable pour éviter les pauses de GC (GC pauses) qui figent le serveur pendant plusieurs centaines de millisecondes.
+                </p>
+                <pre><code>java -Xms12G -Xmx12G -XX:+UseG1GC -XX:+ParallelRefProcEnabled -XX:MaxGCPauseMillis=200 \
+-XX:+UnlockExperimentalVMOptions -XX:+DisableExplicitGC -XX:+AlwaysPreTouch \
+-XX:G1NewSizePercent=30 -XX:G1MaxNewSizePercent=40 -XX:G1ReservePercent=20 \
+-XX:G1HeapWastePercent=5 -XX:G1MixedGCCountTarget=4 -XX:InitiatingHeapOccupancyPercent=15 \
+-XX:G1MixedGCLiveThresholdPercent=90 -XX:G1RSetUpdatingPauseTimePercent=5 \
+-XX:SurvivorRatio=32 -XX:+PerfDisableSharedMem -XX:MaxTenuringThreshold=1 \
+-Dusing.aikars.flags=https://mcflags.emc.gs -Daikars.new.flags=true \
+-jar paper-1.21.jar --nogui</code></pre>
+
+                <h2 id="server-prop">3. Optimisation de server.properties</h2>
+                <div class="table-wrapper">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Paramètre</th>
+                                <th>Valeur par défaut</th>
+                                <th>Valeur Optimisée</th>
+                                <th>Impact Performance</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><code>view-distance</code></td>
+                                <td>10</td>
+                                <td><strong>6 - 8</strong></td>
+                                <td>Réduit drastiquement le nombre de chunks chargés simultanément.</td>
+                            </tr>
+                            <tr>
+                                <td><code>simulation-distance</code></td>
+                                <td>10</td>
+                                <td><strong>4 - 5</strong></td>
+                                <td>Limite les ticks d'entités aux seuls chunks proches des joueurs.</td>
+                            </tr>
+                            <tr>
+                                <td><code>network-compression-threshold</code></td>
+                                <td>256</td>
+                                <td><strong>512</strong></td>
+                                <td>Soulage le CPU en compressant moins de petits paquets réseau.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <h2 id="paper-config">4. Configuration experte : paper-world-defaults.yml</h2>
+                <p>
+                    Depuis les versions 1.19+, Paper centralise la configuration des mondes dans le dossier <code>config/paper-world-defaults.yml</code>. Voici les ajustements recommandés pour un serveur multijoueur haute charge :
+                </p>
+                <pre><code>chunks:
+  auto-save-interval: 6000 # Sauvegarde toutes les 5 min au lieu de 45 sec
+  max-auto-save-chunks-per-tick: 8
+  prevent-moving-into-unloaded-chunks: true
+
+entities:
+  spawning:
+    despawn-ranges:
+      monster:
+        soft: 28
+        hard: 56
+    per-player-mob-spawns: true # Répartition équitable des monstres par joueur
+
+tick-rates:
+  sensor:
+    villager:
+      secondarypoisensor: 80 # Réduit les calculs des villageois
+  behavior:
+    villager:
+      validatenearbypoi: 60</code></pre>
+
+                <h2 id="spigot-bukkit">5. Réglages des entités dans spigot.yml et bukkit.yml</h2>
+                <p>Dans <code>spigot.yml</code> :</p>
+                <ul>
+                    <li><code>entity-tracking-range.players: 48</code> (au lieu de 48-64)</li>
+                    <li><code>entity-tracking-range.monsters: 32</code> (au lieu de 48)</li>
+                    <li><code>merge-radius.item: 4.0</code> (fusionne les items au sol pour réduire le nombre d'entités)</li>
+                    <li><code>merge-radius.exp: 6.0</code> (fusionne les orbes d'expérience)</li>
+                </ul>
+
+                <h2 id="plugins">6. Outils de Profilage : Spark &amp; Timings</h2>
+                <p>
+                    Pour diagnostiquer précisément la cause d'une baisse de TPS sur votre serveur en production :
+                </p>
+                <ol>
+                    <li>Installez le plugin officiel <strong>Spark</strong> (ou tapez <code>/spark health</code>).</li>
+                    <li>Lancez un profilage en direct pendant les heures de pointe : <code>/spark sampler --duration 60</code>.</li>
+                    <li>Analysez le rapport généré pour identifier les entités, chunks ou plugins monopolisant le CPU.</li>
+                </ol>
+            </div>
+
+            <!-- Auteur -->
+            <div class="author-card">
+                <div class="author-avatar">🖥️</div>
+                <div class="author-info">
+                    <h4>Rédigé par le Pôle Infrastructure &amp; DevOps LifeStealMC</h4>
+                    <p>Administration de clusters Linux, supervision Grafana/Prometheus et gestion de serveurs de jeu à forte affluence.</p>
+                </div>
+            </div>
+        </article>
+    </div>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-col">
+                <h4>LifeStealMC Network</h4>
+                <p style="color:var(--text-sub); font-size:0.88rem;">Portail officiel d'accès aux guides, outils et documentations communautaires.</p>
+            </div>
+            <div class="footer-col">
+                <h4>Rubriques</h4>
+                <ul>
+                    <li><a href="/guides/">Guides &amp; Tutoriels</a></li>
+                    <li><a href="/tools/">Outils &amp; Calculateurs</a></li>
+                    <li><a href="/wiki/">Base de Connaissances</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h4>Légal</h4>
+                <ul>
+                    <li><a href="/privacy.html">Politique de Confidentialité</a></li>
+                    <li><a href="/terms.html">Conditions d'Utilisation</a></li>
+                    <li><a href="/about.html">À Propos</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h4>Support</h4>
+                <ul>
+                    <li><a href="/contact.html">Contact &amp; Assistance</a></li>
+                    <li><a href="mailto:contact@lifestealmc.fr">contact@lifestealmc.fr</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <span>&copy; 2026 LifeStealMC Network — Tous droits réservés.</span>
+            <span>Conforme Google AdSense &amp; RGPD</span>
+        </div>
+    </footer>
+
+</body>
+</html>

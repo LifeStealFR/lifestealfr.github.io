@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Guide Déploiement Bot Discord 24/7 : Node.js, PM2 & Hébergement — LifeStealMC</title>
+    <meta name="description" content="Guide expert 2026 pour héberger et déployer un bot Discord 24/7 : Gateway Intents, Discord.js v14+, gestionnaire PM2, Docker, Pterodactyl et gestion des pannes.">
+    <meta name="keywords" content="deploiement bot discord, hebergement bot discord 24/7, discord js v14, pm2 discord bot, gateway intents discord, bot discord vps pterodactyl">
+    <meta name="author" content="LifeStealMC Dev Team">
+    <link rel="canonical" href="https://lifestealmc.fr/guides/deploiement-bot-discord-2026.html">
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="https://lifestealmc.fr/guides/deploiement-bot-discord-2026.html">
+    <meta property="og:title" content="Guide Déploiement Bot Discord 24/7 : Node.js, PM2 & Hébergement">
+    <meta property="og:description" content="Architecture, configuration des intents, conteneurisation et monitoring pour garder votre bot Discord en ligne 24/7 sans interruption.">
+    <meta property="og:site_name" content="LifeStealMC Network">
+
+    <!-- Schema.org Article JSON-LD -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "TechArticle",
+      "headline": "Guide Déploiement Bot Discord 24/7 : Node.js, PM2, Docker et Bonnes Pratiques",
+      "description": "Manuel technique d'hébergement pour développeurs Discord : Intents, persistance PM2, gestion d'erreurs et scalabilité.",
+      "author": {
+        "@type": "Organization",
+        "name": "LifeStealMC Dev Team",
+        "url": "https://lifestealmc.fr"
+      },
+      "publisher": {
+        "@type": "Organization",
+        "name": "LifeStealMC Network",
+        "url": "https://lifestealmc.fr"
+      },
+      "datePublished": "2026-09-23",
+      "dateModified": "2026-09-23",
+      "mainEntityOfPage": "https://lifestealmc.fr/guides/deploiement-bot-discord-2026.html"
+    }
+    </script>
+
+    <!-- Google AdSense -->
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6241793082650017" crossorigin="anonymous"></script>
+
+    <style>
+        :root {
+            --bg-color: #0d0e12;
+            --surface-color: #12141a;
+            --card-bg: #161822;
+            --accent: #38bdf8;
+            --accent-glow: rgba(56, 189, 248, 0.4);
+            --text-main: #f8fafc;
+            --text-sub: #94a3b8;
+            --border: #232734;
+            --border-hover: #383f52;
+            color-scheme: dark;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+        body { background-color: var(--bg-color); color: var(--text-main); min-height: 100vh; display: flex; flex-direction: column; line-height: 1.75; }
+
+        .navbar { position: sticky; top: 0; z-index: 100; background: rgba(13, 14, 18, 0.9); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); padding: 0.85rem 1.5rem; }
+        .nav-content { max-width: 1100px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; }
+        .brand { font-size: 1.35rem; font-weight: 800; text-decoration: none; color: var(--text-main); display: flex; align-items: center; gap: 0.4rem; }
+        .brand span { color: #e63946; }
+        .nav-links { display: flex; align-items: center; gap: 1.5rem; list-style: none; }
+        .nav-links a { color: var(--text-sub); text-decoration: none; font-size: 0.92rem; font-weight: 500; transition: color 0.2s; }
+        .nav-links a:hover { color: var(--text-main); }
+        .nav-btn { background: #e63946; color: #fff !important; padding: 0.45rem 1rem; border-radius: 8px; font-weight: 600 !important; }
+
+        .article-container { max-width: 860px; margin: 0 auto; padding: 2.5rem 1.25rem 4rem; width: 100%; flex: 1; }
+
+        .breadcrumb { display: flex; align-items: center; gap: 0.5rem; font-size: 0.85rem; color: var(--text-sub); margin-bottom: 2rem; }
+        .breadcrumb a { color: var(--accent); text-decoration: none; }
+
+        .article-header { margin-bottom: 2.5rem; border-bottom: 1px solid var(--border); padding-bottom: 2rem; }
+        .tag-badge { background: rgba(56, 189, 248, 0.15); color: #38bdf8; border: 1px solid rgba(56, 189, 248, 0.3); padding: 0.3rem 0.75rem; border-radius: 999px; font-size: 0.8rem; font-weight: 700; text-transform: uppercase; display: inline-block; margin-bottom: 1rem; }
+        h1 { font-size: clamp(2rem, 4vw, 2.75rem); font-weight: 800; line-height: 1.2; letter-spacing: -0.5px; margin-bottom: 1rem; }
+        .article-meta { display: flex; align-items: center; gap: 1.5rem; color: var(--text-sub); font-size: 0.88rem; flex-wrap: wrap; }
+
+        .toc-box { background: var(--surface-color); border: 1px solid var(--border); border-radius: 14px; padding: 1.5rem; margin-bottom: 2.5rem; }
+        .toc-title { font-weight: 700; margin-bottom: 0.75rem; font-size: 1.05rem; }
+        .toc-list { list-style: none; display: flex; flex-direction: column; gap: 0.5rem; }
+        .toc-list a { color: var(--text-sub); text-decoration: none; font-size: 0.92rem; }
+        .toc-list a:hover { color: var(--accent); }
+
+        .content h2 { font-size: 1.6rem; font-weight: 700; margin: 2.5rem 0 1rem; color: var(--text-main); border-left: 4px solid var(--accent); padding-left: 0.75rem; }
+        .content h3 { font-size: 1.25rem; font-weight: 600; margin: 1.75rem 0 0.75rem; color: #e2e8f0; }
+        .content p { color: #cbd5e1; margin-bottom: 1.25rem; font-size: 1.02rem; }
+        .content ul, .content ol { padding-left: 1.5rem; margin-bottom: 1.5rem; color: #cbd5e1; }
+        .content li { margin-bottom: 0.6rem; }
+
+        .code-block { background: #08090d; border: 1px solid var(--border); border-radius: 10px; padding: 1.25rem; font-family: "Consolas", "Fira Code", monospace; font-size: 0.9rem; color: #38bdf8; overflow-x: auto; margin-bottom: 1.5rem; line-height: 1.5; }
+        .code-comment { color: #64748b; }
+        .code-kw { color: #f43f5e; }
+        .code-str { color: #34d399; }
+
+        .callout { background: rgba(56, 189, 248, 0.08); border-left: 4px solid #38bdf8; border-radius: 0 10px 10px 0; padding: 1.25rem 1.5rem; margin: 2rem 0; }
+        .callout-title { font-weight: 700; font-size: 0.95rem; margin-bottom: 0.4rem; color: #38bdf8; }
+        .callout p { margin-bottom: 0; font-size: 0.95rem; color: #e2e8f0; }
+
+        .author-card { background: var(--surface-color); border: 1px solid var(--border); border-radius: 16px; padding: 1.75rem; display: flex; gap: 1.25rem; align-items: center; margin-top: 3.5rem; }
+        .author-avatar { width: 60px; height: 60px; border-radius: 50%; background: #232734; display: flex; align-items: center; justify-content: center; font-size: 1.8rem; border: 2px solid var(--accent); }
+        .author-info h4 { font-size: 1.05rem; font-weight: 700; margin-bottom: 0.25rem; }
+        .author-info p { font-size: 0.88rem; color: var(--text-sub); margin-bottom: 0; }
+
+        .ad-container { background: var(--card-bg); border: 1px solid var(--border); border-radius: 14px; padding: 1rem; margin: 3rem 0; text-align: center; }
+        .ad-header { font-size: 0.7rem; color: #64748b; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.5rem; }
+
+        footer { background: #08090c; border-top: 1px solid var(--border); padding: 3rem 1.5rem 2rem; margin-top: auto; }
+        .footer-content { max-width: 1100px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 2rem; }
+        .footer-col h4 { font-size: 0.95rem; font-weight: 700; margin-bottom: 1rem; text-transform: uppercase; }
+        .footer-col ul { list-style: none; display: flex; flex-direction: column; gap: 0.5rem; font-size: 0.88rem; }
+        .footer-col a { color: var(--text-sub); text-decoration: none; }
+        .footer-bottom { max-width: 1100px; margin: 2rem auto 0; padding-top: 1.5rem; border-top: 1px solid rgba(255,255,255,0.05); font-size: 0.82rem; color: #475569; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 1rem; }
+
+        @media (max-width: 768px) { .nav-links { display: none; } }
+    </style>
+</head>
+<body>
+
+    <nav class="navbar">
+        <div class="nav-content">
+            <a href="../index.html" class="brand">⚡ LifeSteal<span>MC</span></a>
+            <ul class="nav-links">
+                <li><a href="../index.html">Accueil</a></li>
+                <li><a href="index.html" style="color:#fff;">Guides & Docs</a></li>
+                <li><a href="../tools/index.html">Outils & Simulateurs</a></li>
+                <li><a href="../wiki/index.html">Wiki</a></li>
+                <li><a href="../about.html">À propos</a></li>
+                <li><a href="https://discord.gg/votre-invite" class="nav-btn">Rejoindre Discord</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <main class="article-container">
+        <nav class="breadcrumb">
+            <a href="../index.html">Accueil</a> &rsaquo; 
+            <a href="index.html">Guides</a> &rsaquo; 
+            <span>Déploiement Bot Discord 24/7</span>
+        </nav>
+
+        <header class="article-header">
+            <span class="tag-badge">Discord & DevOps</span>
+            <h1>Déploiement Bot Discord 24/7 : Architecture, PM2, Docker et Production</h1>
+            <div class="article-meta">
+                <span>✍️ Rédigé par l'équipe Tech LifeStealMC</span>
+                <span>📅 23 Septembre 2026</span>
+                <span>⏱️ Temps de lecture : 11 min</span>
+            </div>
+        </header>
+
+        <div class="toc-box">
+            <div class="toc-title">📋 Sommaire du Guide</div>
+            <ul class="toc-list">
+                <li><a href="#prerequis">1. Prérequis et Architecture Recommandée</a></li>
+                <li><a href="#intents">2. Configuration des Gateway Intents (Discord.js v14)</a></li>
+                <li><a href="#erreurs">3. Gestion Robuste des Exceptions et Crashs</a></li>
+                <li><a href="#pm2">4. Déploiement Professionnel avec PM2 (Process Manager)</a></li>
+                <li><a href="#docker">5. Conteneurisation Docker & Fichier Compose</a></li>
+                <li><a href="#pterodactyl">6. Déploiement sur Panel Pterodactyl</a></li>
+                <li><a href="#monitoring">7. Bonnes Pratiques de Monitoring et Rate Limits</a></li>
+            </ul>
+        </div>
+
+        <article class="content">
+            <p>Développer un bot Discord sur son ordinateur local avec <code>node index.js</code> est parfait pour les tests. Cependant, lorsqu'il s'agit d'offrir une expérience fluide à des centaines ou des milliers de joueurs sur une communauté Minecraft ou LifeSteal, un bot doit tourner sans interruption 24h/24, résister aux micro-coupures de l'API Discord, et redémarrer automatiquement après une erreur inattendue.</p>
+
+            <h2 id="prerequis">1. Prérequis et Architecture Recommandée</h2>
+            <p>Pour assurer une disponibilité de 99.9%, évitez d'héberger votre bot sur votre PC personnel ou sur des plateformes éphémères gratuites qui mettent le processus en veille après quelques minutes d'inactivité. Voici l'environnement recommandé :</p>
+            <ul>
+                <li><strong>Runtime :</strong> Node.js version 20 LTS ou 22 LTS (évitez les versions impaires en production).</li>
+                <li><strong>Système d'exploitation :</strong> Linux Ubuntu Server 22.04 / 24.04 LTS ou Debian 12.</li>
+                <li><strong>Ressources minimales :</strong> 1 vCPU, 512 Mo à 1 Go de RAM (largement suffisant pour un bot servant jusqu'à 50 000 membres si le cache est optimisé).</li>
+                <li><strong>Gestionnaire de variables :</strong> Fichier <code>.env</code> non synchronisé sur Git (protégez impérativement votre <code>DISCORD_TOKEN</code>).</li>
+            </ul>
+
+            <h2 id="intents">2. Configuration des Gateway Intents (Discord.js v14)</h2>
+            <p>Depuis la v14 de Discord.js, les Gateway Intents doivent être déclarés explicitement. Demander trop d'intents inutiles surcharge la mémoire vive et consomme du trafic réseau inutile. Ne déclarez que ceux dont votre bot a rigoureusement besoin :</p>
+
+            <div class="code-block">
+<span class="code-comment">// bot.js - Initialisation optimisée Discord.js v14+</span>
+<span class="code-kw">const</span> { Client, GatewayIntentBits, Partials } = require(<span class="code-str">'discord.js'</span>);
+require(<span class="code-str">'dotenv'</span>).config();
+
+<span class="code-kw">const</span> client = <span class="code-kw">new</span> Client({
+    intents: [
+        GatewayIntentBits.Guilds,
+        GatewayIntentBits.GuildMessages,
+        GatewayIntentBits.GuildMembers, <span class="code-comment">// Requis pour l'accueil/rôles automatiques (Privileged Intent)</span>
+        GatewayIntentBits.MessageContent <span class="code-comment">// Uniquement si vous lisez le texte des messages (Privileged Intent)</span>
+    ],
+    partials: [Partials.Message, Partials.Channel, Partials.Reaction],
+    sweepers: {
+        <span class="code-comment">// Nettoyage périodique du cache pour éviter les fuites mémoire</span>
+        messages: { interval: 3600, lifetime: 1800 }
+    }
+});
+
+client.once(<span class="code-str">'ready'</span>, () => {
+    console.log(`[BOT] Connecté sous l'identifiant ${client.user.tag}`);
+});
+
+client.login(process.env.DISCORD_TOKEN);
+            </div>
+
+            <div class="callout">
+                <div class="callout-title">⚠️ Attention aux Privileged Gateway Intents</div>
+                <p>Si votre bot a besoin de <code>GuildMembers</code> ou <code>MessageContent</code>, vous devez impérativement les activer dans le <a href="https://discord.com/developers/applications" target="_blank" rel="noopener" style="color:#38bdf8;">Discord Developer Portal</a> sous l'onglet <em>Bot &rarr; Privileged Gateway Intents</em>, sous peine de recevoir une erreur <code>Disallowed Intents</code> au lancement.</p>
+            </div>
+
+            <!-- AdSense Responsive Block -->
+            <div class="ad-container">
+                <div class="ad-header">Annonce Partenaire</div>
+                <ins class="adsbygoogle"
+                     style="display:block"
+                     data-ad-client="ca-pub-6241793082650017"
+                     data-ad-slot="1654913277"
+                     data-ad-format="auto"
+                     data-full-width-responsive="true"></ins>
+                <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+            </div>
+
+            <h2 id="erreurs">3. Gestion Robuste des Exceptions et Crashs</h2>
+            <p>Une promesse rejetée sans <code>catch</code> (Uncaught Promise Rejection) peut faire crasher instantanément tout le processus Node.js. Pour éviter cela, écoutez systématiquement les gestionnaires d'erreurs globaux :</p>
+
+            <div class="code-block">
+<span class="code-comment">// Gestion globale des exceptions pour empêcher l'arrêt inopiné</span>
+process.on(<span class="code-str">'unhandledRejection'</span>, (reason, promise) => {
+    console.error(<span class="code-str">'[ANTI-CRASH] Promesse rejetée non gérée :'</span>, reason);
+});
+
+process.on(<span class="code-str">'uncaughtException'</span>, (err, origin) => {
+    console.error(`[ANTI-CRASH] Exception non interceptée : ${err.message}`);
+    console.error(origin);
+});
+            </div>
+
+            <h2 id="pm2">4. Déploiement Professionnel avec PM2 (Process Manager)</h2>
+            <p>PM2 est le gestionnaire de processus standard pour Node.js. Il surveille le bot, le relance instantanément s'il plante, redémarre le bot au reboot de la machine physique, et conserve un historique détaillé des logs.</p>
+
+            <h3>Installation et Démarrage :</h3>
+            <div class="code-block">
+<span class="code-comment"># 1. Installation globale de PM2</span>
+npm install -g pm2
+
+<span class="code-comment"># 2. Démarrage du bot avec attribution d'un nom</span>
+pm2 start index.js --name "lifesteal-discord-bot"
+
+<span class="code-comment"># 3. Sauvegarde de la liste des processus actifs</span>
+pm2 save
+
+<span class="code-comment"># 4. Configuration du démarrage automatique au boot du serveur</span>
+pm2 startup
+            </div>
+
+            <h3>Commandes Utiles PM2 :</h3>
+            <ul>
+                <li><code>pm2 logs lifesteal-discord-bot</code> : Voir les logs console en direct.</li>
+                <li><code>pm2 restart lifesteal-discord-bot</code> : Redémarrage à chaud.</li>
+                <li><code>pm2 monit</code> : Interface graphique dans le terminal affichant la RAM et le CPU en temps réel.</li>
+            </ul>
+
+            <h2 id="docker">5. Conteneurisation Docker & Fichier Compose</h2>
+            <p>Pour un déploiement 100% reproductible et isolé, la conteneurisation avec Docker est la solution idéale :</p>
+
+            <div class="code-block">
+<span class="code-comment"># Dockerfile</span>
+FROM node:20-alpine
+WORKDIR /app
+COPY package*.json ./
+RUN npm ci --only=production
+COPY . .
+CMD ["node", "index.js"]
+            </div>
+
+            <p>Et votre fichier <code>docker-compose.yml</code> :</p>
+            <div class="code-block">
+version: '3.8'
+services:
+  discord-bot:
+    build: .
+    container_name: bot-production
+    restart: unless-stopped
+    env_file:
+      - .env
+    mem_limit: 512m
+            </div>
+
+            <h2 id="pterodactyl">6. Déploiement sur Panel Pterodactyl</h2>
+            <p>Si vous utilisez un hébergeur gaming ou un panel Pterodactyl (NodeJS Generic Egg) :</p>
+            <ol>
+                <li>Définissez <code>index.js</code> ou <code>bot.js</code> comme <strong>Main File</strong> dans les paramètres de démarrage.</li>
+                <li>Vérifiez que la version de Node.js sélectionnée dans le panel est au minimum la version 18 (idéalement 20 ou 22).</li>
+                <li>Ne committez jamais le dossier <code>node_modules</code> : laissez le panel exécuter <code>npm install</code> lors de l'installation.</li>
+            </ol>
+
+            <h2 id="monitoring">7. Bonnes Pratiques de Monitoring et Rate Limits</h2>
+            <p>L'API Discord impose des limites de requêtes (Rate Limits) strictes :</p>
+            <ul>
+                <li><strong>50 requêtes par seconde par route globale.</strong> Évitez d'envoyer des messages en boucle infinie sans délai.</li>
+                <li><strong>Ne stockez pas de tokens d'authentification en clair dans le code.</strong> Utilisez impérativement <code>process.env.DISCORD_TOKEN</code>.</li>
+                <li><strong>Mettez en place un Webhook d'alerte :</strong> En cas d'erreur critique, votre gestionnaire d'exception peut envoyer un embed sur un salon privé réservé aux administrateurs.</li>
+            </ul>
+        </article>
+
+        <!-- Author Card for E-E-A-T -->
+        <div class="author-card">
+            <div class="author-avatar">🤖</div>
+            <div class="author-info">
+                <h4>LifeStealMC Dev Team</h4>
+                <p>Équipe de développement backend et infrastructure de LifeStealMC. Experts en architectures Node.js, bots Discord haute disponibilité et intégration API Minecraft.</p>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-col">
+                <h4>⚡ LifeStealMC</h4>
+                <p style="color: var(--text-sub); font-size: 0.88rem;">Le portail d'information et d'outils d'élite pour les communautés Minecraft LifeSteal et serveurs Discord francophones.</p>
+            </div>
+            <div class="footer-col">
+                <h4>📚 Guides & Docs</h4>
+                <ul>
+                    <li><a href="guide-lifesteal-debutant.html">Guide Débutant LifeSteal</a></li>
+                    <li><a href="crafts-recettes-coeurs.html">Crafts & Recettes Coeurs</a></li>
+                    <li><a href="optimisation-serveur-minecraft.html">Optimisation Serveur</a></li>
+                    <li><a href="securite-anti-raid-discord.html">Sécurité Anti-Raid Discord</a></li>
+                    <li><a href="strategie-pvp-lifesteal.html">Stratégies PvP Avancées</a></li>
+                    <li><a href="deploiement-bot-discord-2026.html">Déploiement Bot Discord 24/7</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h4>🛠️ Outils</h4>
+                <ul>
+                    <li><a href="../tools/calculateur-coeurs.html">Simulateur de Coeurs LifeSteal</a></li>
+                    <li><a href="../tools/generateur-embed-discord.html">Générateur d'Embeds Discord</a></li>
+                    <li><a href="../tools/calculateur-xp-enchantements.html">Calculateur XP & Enclume</a></li>
+                    <li><a href="../wiki/lexique-termes-gaming.html">Lexique Gaming</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h4>⚖️ Légal</h4>
+                <ul>
+                    <li><a href="../about.html">À propos de l'équipe</a></li>
+                    <li><a href="../privacy.html">Politique de Confidentialité</a></li>
+                    <li><a href="../terms.html">Conditions d'Utilisation</a></li>
+                    <li><a href="../contact.html">Contact</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <span>&copy; 2026 LifeStealMC Network. Tous droits réservés.</span>
+            <span>Non affilié à Mojang Studios ni à Discord Inc.</span>
+        </div>
+    </footer>
+
+</body>
+</html>

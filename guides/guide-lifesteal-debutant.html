@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Guide Ultime du Mode LifeSteal : Règles, Cœurs et Stratégies — LifeStealMC</title>
+    <meta name="description" content="Guide complet et détaillé pour débuter et triompher sur un serveur Minecraft LifeSteal. Comprendre le vol de cœurs, l'élimination à 0 cœur, les réanimations et les alliances.">
+    <meta name="keywords" content="guide lifesteal minecraft, regles lifesteal, comment fonctionne lifesteal, vol de coeur minecraft, elimination lifesteal, serveur lifesteal smp">
+    <meta name="author" content="LifeStealMC Editorial Team">
+    <link rel="canonical" href="https://lifestealmc.fr/guides/guide-lifesteal-debutant.html">
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="https://lifestealmc.fr/guides/guide-lifesteal-debutant.html">
+    <meta property="og:title" content="Guide Ultime du Mode LifeSteal : Règles, Cœurs et Stratégies">
+    <meta property="og:description" content="Toutes les clés pour maîtriser le mode LifeSteal Minecraft : mécanique de cœurs, craft, réanimations et pièges à éviter.">
+    <meta property="og:site_name" content="LifeStealMC Network">
+
+    <!-- Schema.org Article JSON-LD -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Article",
+      "headline": "Guide Ultime du Mode LifeSteal : Règles, Cœurs et Stratégies de Survie",
+      "description": "Guide complet et détaillé pour comprendre et maîtriser les mécaniques du mode LifeSteal Minecraft.",
+      "author": {
+        "@type": "Organization",
+        "name": "LifeStealMC Editorial Team",
+        "url": "https://lifestealmc.fr"
+      },
+      "publisher": {
+        "@type": "Organization",
+        "name": "LifeStealMC Network",
+        "url": "https://lifestealmc.fr"
+      },
+      "datePublished": "2026-09-23",
+      "dateModified": "2026-09-23",
+      "mainEntityOfPage": "https://lifestealmc.fr/guides/guide-lifesteal-debutant.html"
+    }
+    </script>
+
+    <!-- Google AdSense -->
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6241793082650017" crossorigin="anonymous"></script>
+
+    <style>
+        :root {
+            --bg-color: #0d0e12;
+            --surface-color: #12141a;
+            --card-bg: #161822;
+            --accent: #e63946;
+            --accent-glow: rgba(230, 57, 70, 0.4);
+            --text-main: #f8fafc;
+            --text-sub: #94a3b8;
+            --border: #232734;
+            --border-hover: #383f52;
+            color-scheme: dark;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+        body { background-color: var(--bg-color); color: var(--text-main); min-height: 100vh; display: flex; flex-direction: column; line-height: 1.75; }
+
+        .navbar { position: sticky; top: 0; z-index: 100; background: rgba(13, 14, 18, 0.9); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); padding: 0.85rem 1.5rem; }
+        .nav-content { max-width: 1100px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; }
+        .brand { font-size: 1.35rem; font-weight: 800; text-decoration: none; color: var(--text-main); display: flex; align-items: center; gap: 0.4rem; }
+        .brand span { color: var(--accent); }
+        .nav-links { display: flex; align-items: center; gap: 1.5rem; list-style: none; }
+        .nav-links a { color: var(--text-sub); text-decoration: none; font-size: 0.92rem; font-weight: 500; transition: color 0.2s; }
+        .nav-links a:hover { color: var(--text-main); }
+        .nav-btn { background: var(--accent); color: #fff !important; padding: 0.45rem 1rem; border-radius: 8px; font-weight: 600 !important; }
+
+        .article-container { max-width: 860px; margin: 0 auto; padding: 2.5rem 1.25rem 4rem; width: 100%; flex: 1; }
+
+        .breadcrumb { display: flex; align-items: center; gap: 0.5rem; font-size: 0.85rem; color: var(--text-sub); margin-bottom: 2rem; }
+        .breadcrumb a { color: var(--accent); text-decoration: none; }
+
+        .article-header { margin-bottom: 2.5rem; border-bottom: 1px solid var(--border); padding-bottom: 2rem; }
+        .tag-badge { background: rgba(230, 57, 70, 0.15); color: var(--accent); border: 1px solid rgba(230, 57, 70, 0.3); padding: 0.3rem 0.75rem; border-radius: 999px; font-size: 0.8rem; font-weight: 700; text-transform: uppercase; display: inline-block; margin-bottom: 1rem; }
+        h1 { font-size: clamp(2rem, 4vw, 2.75rem); font-weight: 800; line-height: 1.2; letter-spacing: -0.5px; margin-bottom: 1rem; }
+        .article-meta { display: flex; align-items: center; gap: 1.5rem; color: var(--text-sub); font-size: 0.88rem; flex-wrap: wrap; }
+
+        /* Sommaire */
+        .toc-box { background: var(--surface-color); border: 1px solid var(--border); border-radius: 14px; padding: 1.5rem; margin-bottom: 2.5rem; }
+        .toc-title { font-weight: 700; margin-bottom: 0.75rem; font-size: 1.05rem; display: flex; align-items: center; gap: 0.5rem; }
+        .toc-list { list-style: none; display: flex; flex-direction: column; gap: 0.5rem; }
+        .toc-list a { color: var(--text-sub); text-decoration: none; font-size: 0.92rem; transition: color 0.2s; }
+        .toc-list a:hover { color: var(--accent); }
+
+        /* Contenu */
+        .content h2 { font-size: 1.6rem; font-weight: 700; margin: 2.5rem 0 1rem; color: var(--text-main); border-left: 4px solid var(--accent); padding-left: 0.75rem; }
+        .content h3 { font-size: 1.25rem; font-weight: 600; margin: 1.75rem 0 0.75rem; color: #e2e8f0; }
+        .content p { color: #cbd5e1; margin-bottom: 1.25rem; font-size: 1.02rem; }
+        .content ul, .content ol { padding-left: 1.5rem; margin-bottom: 1.5rem; color: #cbd5e1; }
+        .content li { margin-bottom: 0.6rem; }
+
+        .callout { background: rgba(56, 189, 248, 0.08); border-left: 4px solid #38bdf8; border-radius: 0 10px 10px 0; padding: 1.25rem 1.5rem; margin: 2rem 0; }
+        .callout-warning { background: rgba(230, 57, 70, 0.08); border-left-color: var(--accent); }
+        .callout-title { font-weight: 700; font-size: 0.95rem; margin-bottom: 0.4rem; color: #38bdf8; }
+        .callout-warning .callout-title { color: var(--accent); }
+        .callout p { margin-bottom: 0; font-size: 0.95rem; color: #e2e8f0; }
+
+        /* Tableau comparatif */
+        .table-wrapper { overflow-x: auto; margin: 2rem 0; border: 1px solid var(--border); border-radius: 12px; }
+        table { width: 100%; border-collapse: collapse; text-align: left; font-size: 0.95rem; }
+        th { background: #161922; padding: 1rem; font-weight: 700; color: var(--text-main); border-bottom: 1px solid var(--border); }
+        td { padding: 1rem; border-bottom: 1px solid var(--border); color: #cbd5e1; }
+        tr:last-child td { border-bottom: none; }
+        tr:hover td { background: rgba(255,255,255,0.02); }
+
+        /* Carte Auteur */
+        .author-card { background: var(--surface-color); border: 1px solid var(--border); border-radius: 16px; padding: 1.75rem; display: flex; gap: 1.25rem; align-items: center; margin-top: 3.5rem; }
+        .author-avatar { width: 60px; height: 60px; border-radius: 50%; background: #232734; display: flex; align-items: center; justify-content: center; font-size: 1.8rem; border: 2px solid var(--accent); }
+        .author-info h4 { font-size: 1.05rem; font-weight: 700; margin-bottom: 0.25rem; }
+        .author-info p { font-size: 0.88rem; color: var(--text-sub); margin-bottom: 0; }
+
+        /* Liens connexes */
+        .related-section { margin-top: 3.5rem; padding-top: 2rem; border-top: 1px solid var(--border); }
+        .related-section h3 { font-size: 1.3rem; margin-bottom: 1.25rem; }
+        .related-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 1rem; }
+        .related-card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 12px; padding: 1.25rem; text-decoration: none; color: var(--text-main); transition: all 0.2s; }
+        .related-card:hover { transform: translateY(-3px); border-color: var(--accent); }
+        .related-card h4 { font-size: 0.98rem; font-weight: 600; margin-bottom: 0.4rem; }
+        .related-card span { font-size: 0.82rem; color: var(--accent); font-weight: 600; }
+
+        /* AdSense Slot */
+        .ad-container { background: var(--card-bg); border: 1px solid var(--border); border-radius: 14px; padding: 1rem; margin: 3rem 0; text-align: center; }
+        .ad-header { font-size: 0.7rem; color: #64748b; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.5rem; }
+
+        footer { background: #08090c; border-top: 1px solid var(--border); padding: 3rem 1.5rem 2rem; margin-top: auto; }
+        .footer-content { max-width: 1100px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 2rem; }
+        .footer-col h4 { font-size: 0.95rem; font-weight: 700; margin-bottom: 1rem; text-transform: uppercase; }
+        .footer-col ul { list-style: none; display: flex; flex-direction: column; gap: 0.5rem; font-size: 0.88rem; }
+        .footer-col a { color: var(--text-sub); text-decoration: none; }
+        .footer-bottom { max-width: 1100px; margin: 2rem auto 0; padding-top: 1.5rem; border-top: 1px solid rgba(255,255,255,0.05); font-size: 0.82rem; color: #475569; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 1rem; }
+
+        @media (max-width: 768px) { .nav-links { display: none; } }
+    </style>
+</head>
+<body>
+
+    <nav class="navbar">
+        <div class="nav-content">
+            <a href="/" class="brand">LifeSteal<span>MC</span></a>
+            <ul class="nav-links">
+                <li><a href="/">Accueil</a></li>
+                <li><a href="/guides/">Guides &amp; Tutoriels</a></li>
+                <li><a href="/tools/">Outils</a></li>
+                <li><a href="/wiki/">Base de Connaissances</a></li>
+                <li><a href="/about.html">À Propos</a></li>
+                <li><a href="/contact.html">Contact</a></li>
+                <li><a href="https://kurotsuki.lifestealmc.fr" target="_blank" rel="noopener" class="nav-btn">Kurotsuki Studio →</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="article-container">
+        <div class="breadcrumb">
+            <a href="/">Accueil</a> <span>/</span> <a href="/guides/">Guides</a> <span>/</span> <span>Guide Ultime LifeSteal</span>
+        </div>
+
+        <article>
+            <header class="article-header">
+                <span class="tag-badge">Minecraft LifeSteal SMP</span>
+                <h1>Guide Ultime du Mode LifeSteal : Règles, Cœurs et Stratégies de Survie</h1>
+                <div class="article-meta">
+                    <span>📅 Mis à jour le 23 Septembre 2026</span>
+                    <span>⏱️ 10 minutes de lecture</span>
+                    <span>✍️ Rédigé par le Staff LifeStealMC</span>
+                </div>
+            </header>
+
+            <!-- Sommaire -->
+            <div class="toc-box">
+                <div class="toc-title">📑 Sommaire du guide</div>
+                <ul class="toc-list">
+                    <li><a href="#principe">1. Qu'est-ce que le mode LifeSteal Minecraft ?</a></li>
+                    <li><a href="#mecaniques">2. Mécanique de gain et de perte de cœurs</a></li>
+                    <li><a href="#elimination">3. Le Seuil d'Élimination (0 Cœur) et le Ban Temporaire</a></li>
+                    <li><a href="#crafts">4. Comment fabriquer des cœurs artificiels ?</a></li>
+                    <li><a href="#reanimation">5. La Balise de Réanimation (Revive Beacon)</a></li>
+                    <li><a href="#strategies">6. 5 Stratégies incontournables pour débuter et survivre</a></li>
+                </ul>
+            </div>
+
+            <!-- Contenu -->
+            <div class="content">
+                <h2 id="principe">1. Qu'est-ce que le mode LifeSteal Minecraft ?</h2>
+                <p>
+                    Le <strong>LifeSteal SMP</strong> est l'un des modes de survie multijoueur les plus intenses et compétitifs de l'histoire de Minecraft. Créé à l'origine comme une variante hardcore scénarisée, le concept repose sur une règle fondamentale et impitoyable : <strong>votre barre de vie maximale est votre ressource la plus précieuse</strong>.
+                </p>
+                <p>
+                    Contrairement à un serveur Vanilla où chaque joueur possède immuablement 10 cœurs (20 points de vie), en LifeSteal, chaque élimination directe d'un autre joueur vous octroie <strong>+1 cœur permanent</strong>, tandis que la victime <strong>perd définitivement -1 cœur</strong>.
+                </p>
+
+                <div class="callout">
+                    <div class="callout-title">💡 Règle d'or</div>
+                    <p>La mort par environnement (monstres, lave, chute) ne fait généralement pas perdre de cœur selon la configuration du serveur. Seule une élimination directe infligée par un autre joueur transfère un cœur.</p>
+                </div>
+
+                <!-- AdSense In-Article -->
+                <div class="ad-container">
+                    <div class="ad-header">Annonce Partenaire</div>
+                    <ins class="adsbygoogle"
+                         style="display:block; text-align:center;"
+                         data-ad-layout="in-article"
+                         data-ad-format="fluid"
+                         data-ad-client="ca-pub-6241793082650017"
+                         data-ad-slot="1654913277"></ins>
+                    <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+                </div>
+
+                <h2 id="mecaniques">2. Mécanique de gain et de perte de cœurs</h2>
+                <p>
+                    Lorsqu'un duel PvP se conclut par la mort de l'un des participants, le système applique un transfert instantané :
+                </p>
+                <ul>
+                    <li><strong>Le Vainqueur :</strong> Sa barre de vie maximale augmente immédiatement d'un conteneur de cœur (+2 PV). Sur la plupart des serveurs, la limite maximale autorisée se situe entre <strong>20 et 30 cœurs</strong> (40 à 60 PV).</li>
+                    <li><strong>Le Vaincu :</strong> Sa barre de vie maximale diminue d'un conteneur de cœur (-2 PV) lors de sa réapparition.</li>
+                </ul>
+
+                <div class="table-wrapper">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Nombre de Cœurs</th>
+                                <th>Statut du Joueur</th>
+                                <th>Niveau de Risque</th>
+                                <th>Recommandation Tactique</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>1 à 4 cœurs</strong></td>
+                                <td>Zone Critique (Danger de mort)</td>
+                                <td>Extrême</td>
+                                <td>Retrait immédiat en base cachée, farm de cœurs en PVE.</td>
+                            </tr>
+                            <tr>
+                                <td><strong>5 à 9 cœurs</strong></td>
+                                <td>Vulnérable</td>
+                                <td>Élevé</td>
+                                <td>Éviter les duels ouverts, privilégier le minage et les totems.</td>
+                            </tr>
+                            <tr>
+                                <td><strong>10 cœurs</strong></td>
+                                <td>Niveau Standard</td>
+                                <td>Modéré</td>
+                                <td>Équipement complet diamant/netherite conseillé avant tout combat.</td>
+                            </tr>
+                            <tr>
+                                <td><strong>15 à 20+ cœurs</strong></td>
+                                <td>Colosse / Juggernaut</td>
+                                <td>Faible</td>
+                                <td>Capable d'absorber des coups critiques massifs et des explosions.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <h2 id="elimination">3. Le Seuil d'Élimination (0 Cœur) et le Ban Temporaire</h2>
+                <p>
+                    Que se passe-t-il lorsqu'un joueur tombe à <strong>0 cœur</strong> ? C'est ici que réside la dimension hardcore du mode : le joueur est déclaré <em>éliminé</em> et reçoit un <strong>bannissement temporaire ou définitif</strong> du serveur.
+                </p>
+                <div class="callout callout-warning">
+                    <div class="callout-title">⚠️ Sanction d'Élimination</div>
+                    <p>À 0 cœur, vous ne pouvez plus vous reconnecter au monde tant qu'un allié ou un membre de votre faction n'a pas activé une <strong>Balise de Réanimation</strong> en votre honneur.</p>
+                </div>
+
+                <h2 id="crafts">4. Comment fabriquer des cœurs artificiels ?</h2>
+                <p>
+                    Pour compenser des pertes ou se préparer avant une guerre de factions, les serveurs LifeSteal intègrent des recettes d'artisanat personnalisées. La recette classique nécessite des matériaux rares et coûteux du Nether et de l'End :
+                </p>
+                <ul>
+                    <li><strong>Fragments de Cœur :</strong> S'obtiennent en farmant des boss (Wither, Ender Dragon) ou dans les coffres de Bastions et de Cités de l'End.</li>
+                    <li><strong>Cœur Complet :</strong> Nécessite généralement 4 Netherite Ingots, 4 Blocs d'Or compressés et 1 Étoile du Nether au centre de l'établi.</li>
+                </ul>
+                <p>
+                    Pour retrouver l'intégralité des diagrammes de craft exacts, consultez notre <a href="/guides/crafts-recettes-coeurs.html" style="color:var(--accent); font-weight:600;">Guide Complet des Crafts &amp; Recettes</a>.
+                </p>
+
+                <h2 id="reanimation">5. La Balise de Réanimation (Revive Beacon)</h2>
+                <p>
+                    La Balise de Réanimation est l'objet le plus stratégique du jeu. Elle permet de ressusciter un coéquipier banni après avoir perdu tous ses cœurs.
+                </p>
+                <p>
+                    Son utilisation demande une préparation minutieuse : l'activation émet souvent un rayon lumineux visible à plusieurs centaines de blocs et déclenche une alerte sonore globale sur le serveur. Les factions ennemies peuvent ainsi tenter d'interrompre le rituel pour s'emparer de la balise !
+                </p>
+
+                <h2 id="strategies">6. 5 Stratégies incontournables pour débuter et survivre</h2>
+                <ol>
+                    <li><strong>Construisez votre base à plus de 10 000 blocs du spawn :</strong> Dans l'Overworld comme dans le Nether, éloignez-vous impérativement des axes de coordonnées principaux (X=0, Z=0) pour éviter les traqueurs.</li>
+                    <li><strong>Privilégiez la survie souterraine :</strong> Ne laissez aucune structure apparente en surface. Masquez vos entrées sous des étangs ou des blocs naturels à l'aide de passages secrets à piston.</li>
+                    <li><strong>Ayez toujours au moins 2 Totems d'Immortalité :</strong> Gardez constamment un totem dans la main gauche (off-hand) et au moins un totem de secours dans la barre d'accès rapide.</li>
+                    <li><strong>Ne provoquez jamais de duel sans potions splash de vitesse 2 et force 2 :</strong> La mobilité est l'élément qui fait la différence entre la fuite réussie et la perte d'un cœur.</li>
+                    <li><strong>Utilisez notre simulateur en ligne :</strong> Calculez vos chances de survie face aux armes de vos adversaires grâce à notre <a href="/tools/calculateur-coeurs.html" style="color:var(--accent); font-weight:600;">Calculateur de Cœurs LifeSteal</a>.</li>
+                </ol>
+            </div>
+
+            <!-- Auteur -->
+            <div class="author-card">
+                <div class="author-avatar">🛡️</div>
+                <div class="author-info">
+                    <h4>Rédigé par le Comité Éditorial LifeStealMC</h4>
+                    <p>Experts en mécaniques de jeu multijoueur, administration de serveurs Minecraft et compétitions PvP depuis 2021.</p>
+                </div>
+            </div>
+
+            <!-- Guides connexes -->
+            <div class="related-section">
+                <h3>Poursuivez votre lecture</h3>
+                <div class="related-grid">
+                    <a href="/guides/crafts-recettes-coeurs.html" class="related-card">
+                        <h4>Encyclopédie des Crafts : Cœurs &amp; Balises</h4>
+                        <span>Consulter les recettes →</span>
+                    </a>
+                    <a href="/guides/strategie-pvp-lifesteal.html" class="related-card">
+                        <h4>Stratégies Avancées de Combat PvP</h4>
+                        <span>Découvrir les tactiques →</span>
+                    </a>
+                    <a href="/tools/calculateur-coeurs.html" class="related-card">
+                        <h4>Calculateur Interactif de Cœurs</h4>
+                        <span>Lancer l'outil →</span>
+                    </a>
+                </div>
+            </div>
+        </article>
+    </div>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-col">
+                <h4>LifeStealMC Network</h4>
+                <p style="color:var(--text-sub); font-size:0.88rem;">Portail officiel d'accès aux guides, outils et documentations communautaires.</p>
+            </div>
+            <div class="footer-col">
+                <h4>Rubriques</h4>
+                <ul>
+                    <li><a href="/guides/">Guides &amp; Tutoriels</a></li>
+                    <li><a href="/tools/">Outils &amp; Calculateurs</a></li>
+                    <li><a href="/wiki/">Base de Connaissances</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h4>Légal</h4>
+                <ul>
+                    <li><a href="/privacy.html">Politique de Confidentialité</a></li>
+                    <li><a href="/terms.html">Conditions d'Utilisation</a></li>
+                    <li><a href="/about.html">À Propos</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h4>Support</h4>
+                <ul>
+                    <li><a href="/contact.html">Contact &amp; Assistance</a></li>
+                    <li><a href="mailto:contact@lifestealmc.fr">contact@lifestealmc.fr</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <span>&copy; 2026 LifeStealMC Network — Tous droits réservés.</span>
+            <span>Conforme Google AdSense &amp; RGPD</span>
+        </div>
+    </footer>
+
+</body>
+</html>

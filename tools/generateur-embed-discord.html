@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Générateur d'Embed Discord WYSIWYG & Visualiseur JSON — LifeStealMC</title>
+    <meta name="description" content="Créez, personnalisez et prévisualisez vos Embeds Discord en direct. Exportez en JSON ou code Discord.js v14 en un clic. 100% gratuit et sans inscription.">
+    <meta name="keywords" content="generateur embed discord, discord embed builder, creer embed discord, discord js embed v14, discord webhook embed preview">
+    <link rel="canonical" href="https://lifestealmc.fr/tools/generateur-embed-discord.html">
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://lifestealmc.fr/tools/generateur-embed-discord.html">
+    <meta property="og:title" content="Générateur d'Embed Discord WYSIWYG & Visualiseur">
+    <meta property="og:description" content="Construisez vos messages riches Discord avec prévisualisation en temps réel et export de code instantané.">
+    <meta property="og:site_name" content="LifeStealMC Network">
+
+    <!-- Schema.org WebApplication JSON-LD -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "Générateur d'Embeds Discord",
+      "applicationCategory": "DeveloperApplication",
+      "operatingSystem": "All",
+      "browserRequirements": "Requires JavaScript. Requires HTML5.",
+      "description": "Constructeur d'Embeds Discord avec rendu visuel en temps réel et export de code JSON / Discord.js.",
+      "url": "https://lifestealmc.fr/tools/generateur-embed-discord.html"
+    }
+    </script>
+
+    <!-- Google AdSense -->
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6241793082650017" crossorigin="anonymous"></script>
+
+    <style>
+        :root {
+            --bg-color: #0d0e12;
+            --surface-color: #12141a;
+            --card-bg: #161822;
+            --accent: #5865F2;
+            --accent-glow: rgba(88, 101, 242, 0.4);
+            --text-main: #f8fafc;
+            --text-sub: #94a3b8;
+            --border: #232734;
+            --border-hover: #383f52;
+            color-scheme: dark;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+        body { background-color: var(--bg-color); color: var(--text-main); min-height: 100vh; display: flex; flex-direction: column; }
+
+        .navbar { position: sticky; top: 0; z-index: 100; background: rgba(13, 14, 18, 0.9); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); padding: 0.85rem 1.5rem; }
+        .nav-content { max-width: 1200px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; }
+        .brand { font-size: 1.35rem; font-weight: 800; text-decoration: none; color: var(--text-main); display: flex; align-items: center; gap: 0.4rem; }
+        .brand span { color: #e63946; }
+        .nav-links { display: flex; align-items: center; gap: 1.5rem; list-style: none; }
+        .nav-links a { color: var(--text-sub); text-decoration: none; font-size: 0.92rem; font-weight: 500; transition: color 0.2s; }
+        .nav-links a:hover { color: var(--text-main); }
+        .nav-btn { background: #e63946; color: #fff !important; padding: 0.45rem 1rem; border-radius: 8px; font-weight: 600 !important; }
+
+        .main-container { max-width: 1200px; margin: 0 auto; padding: 2.5rem 1.25rem 4rem; width: 100%; flex: 1; }
+
+        .breadcrumb { display: flex; align-items: center; gap: 0.5rem; font-size: 0.85rem; color: var(--text-sub); margin-bottom: 2rem; }
+        .breadcrumb a { color: var(--accent); text-decoration: none; }
+
+        .tool-header { text-align: center; margin-bottom: 2.5rem; }
+        .tool-header h1 { font-size: clamp(1.8rem, 3.5vw, 2.5rem); font-weight: 800; margin-bottom: 0.75rem; }
+        .tool-header p { color: var(--text-sub); max-width: 650px; margin: 0 auto; }
+
+        .editor-grid { display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 2rem; margin-bottom: 2.5rem; }
+        @media (max-width: 900px) { .editor-grid { grid-template-columns: 1fr; } }
+
+        .panel { background: var(--card-bg); border: 1px solid var(--border); border-radius: 16px; padding: 1.75rem; }
+        .panel-title { font-size: 1.15rem; font-weight: 700; margin-bottom: 1.25rem; }
+
+        .form-group { margin-bottom: 1rem; }
+        .form-label { display: block; font-size: 0.85rem; font-weight: 600; color: #cbd5e1; margin-bottom: 0.35rem; }
+        .form-input, .form-textarea { width: 100%; background: #0c0e14; border: 1px solid var(--border); border-radius: 8px; padding: 0.65rem 0.85rem; color: #fff; font-size: 0.9rem; outline: none; transition: border-color 0.2s; font-family: inherit; }
+        .form-textarea { resize: vertical; min-height: 80px; }
+        .form-input:focus, .form-textarea:focus { border-color: var(--accent); }
+
+        .color-picker-wrap { display: flex; align-items: center; gap: 0.75rem; }
+        .color-input { width: 44px; height: 38px; border: none; border-radius: 6px; cursor: pointer; background: transparent; }
+
+        /* Discord Preview Area */
+        .discord-preview-container { background: #313338; border-radius: 12px; padding: 1.5rem; font-family: "gg sans", "Noto Sans", "Helvetica Neue", Helvetica, Arial, sans-serif; color: #dbdee1; }
+        .discord-message-header { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.75rem; }
+        .bot-avatar { width: 40px; height: 40px; border-radius: 50%; background: #5865F2; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; font-weight: bold; color: #fff; }
+        .bot-name { font-weight: 600; color: #f2f3f5; font-size: 1rem; }
+        .bot-tag { background: #5865F2; color: #fff; font-size: 0.65rem; font-weight: 700; padding: 1px 4px; border-radius: 4px; margin-left: 4px; text-transform: uppercase; }
+        .msg-time { font-size: 0.75rem; color: #949ba4; margin-left: 6px; }
+
+        .discord-embed {
+            background: #2b2d31;
+            border-left: 4px solid #5865F2;
+            border-radius: 4px;
+            padding: 0.75rem 1rem;
+            max-width: 520px;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            font-size: 0.875rem;
+        }
+
+        .embed-author { font-size: 0.8rem; font-weight: 600; color: #f2f3f5; display: flex; align-items: center; gap: 0.4rem; }
+        .embed-title { font-size: 1rem; font-weight: 700; color: #00a8fc; text-decoration: none; }
+        .embed-desc { color: #dbdee1; line-height: 1.4; white-space: pre-wrap; font-size: 0.875rem; }
+        .embed-fields { display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.5rem; margin-top: 0.4rem; }
+        .embed-field-title { font-weight: 700; color: #f2f3f5; font-size: 0.82rem; margin-bottom: 2px; }
+        .embed-field-val { color: #dbdee1; font-size: 0.8rem; }
+        .embed-footer { font-size: 0.75rem; color: #949ba4; margin-top: 0.4rem; display: flex; align-items: center; gap: 0.4rem; }
+
+        /* Code Export Area */
+        .code-export-box { margin-top: 2rem; background: #08090d; border: 1px solid var(--border); border-radius: 12px; padding: 1.25rem; }
+        .code-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem; }
+        .code-tabs { display: flex; gap: 0.5rem; }
+        .tab-btn { background: #161822; border: 1px solid var(--border); color: var(--text-sub); padding: 0.35rem 0.8rem; border-radius: 6px; font-size: 0.8rem; cursor: pointer; }
+        .tab-btn.active { background: var(--accent); color: #fff; border-color: var(--accent); font-weight: 600; }
+        .copy-btn { background: #232734; border: 1px solid #383f52; color: #fff; padding: 0.35rem 0.85rem; border-radius: 6px; font-size: 0.8rem; cursor: pointer; font-weight: 600; transition: background 0.2s; }
+        .copy-btn:hover { background: #383f52; }
+        .code-content { font-family: "Consolas", monospace; font-size: 0.85rem; color: #38bdf8; white-space: pre-wrap; word-break: break-all; max-height: 250px; overflow-y: auto; background: #040507; padding: 1rem; border-radius: 8px; }
+
+        .ad-container { background: var(--card-bg); border: 1px solid var(--border); border-radius: 14px; padding: 1rem; margin: 3rem 0; text-align: center; }
+        .ad-header { font-size: 0.7rem; color: #64748b; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.5rem; }
+
+        footer { background: #08090c; border-top: 1px solid var(--border); padding: 3rem 1.5rem 2rem; margin-top: auto; }
+        .footer-content { max-width: 1100px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 2rem; }
+        .footer-col h4 { font-size: 0.95rem; font-weight: 700; margin-bottom: 1rem; text-transform: uppercase; }
+        .footer-col ul { list-style: none; display: flex; flex-direction: column; gap: 0.5rem; font-size: 0.88rem; }
+        .footer-col a { color: var(--text-sub); text-decoration: none; }
+        .footer-bottom { max-width: 1100px; margin: 2rem auto 0; padding-top: 1.5rem; border-top: 1px solid rgba(255,255,255,0.05); font-size: 0.82rem; color: #475569; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 1rem; }
+
+        @media (max-width: 768px) { .nav-links { display: none; } }
+    </style>
+</head>
+<body>
+
+    <nav class="navbar">
+        <div class="nav-content">
+            <a href="../index.html" class="brand">⚡ LifeSteal<span>MC</span></a>
+            <ul class="nav-links">
+                <li><a href="../index.html">Accueil</a></li>
+                <li><a href="../guides/index.html">Guides & Docs</a></li>
+                <li><a href="index.html" style="color:#fff;">Outils & Simulateurs</a></li>
+                <li><a href="../wiki/index.html">Wiki</a></li>
+                <li><a href="../about.html">À propos</a></li>
+                <li><a href="https://discord.gg/votre-invite" class="nav-btn">Rejoindre Discord</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <main class="main-container">
+        <nav class="breadcrumb">
+            <a href="../index.html">Accueil</a> &rsaquo; 
+            <a href="index.html">Outils</a> &rsaquo; 
+            <span>Générateur d'Embed Discord</span>
+        </nav>
+
+        <header class="tool-header">
+            <h1>🤖 Générateur d'Embed Discord & Prévisualiseur</h1>
+            <p>Concevez visuellement vos messages d'annonces, règlements et embeds bot en temps réel avec export immédiat en JSON ou Discord.js v14.</p>
+        </header>
+
+        <div class="editor-grid">
+            <!-- Form Controls -->
+            <div class="panel">
+                <div class="panel-title">✏️ Éditeur d'Embed</div>
+
+                <div class="form-group">
+                    <label class="form-label" for="embedAuthor">Auteur de l'Embed :</label>
+                    <input type="text" id="embedAuthor" class="form-input" value="⚡ LifeStealMC Annonces" placeholder="Ex: Annonce Officielle">
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="embedTitle">Titre de l'Embed :</label>
+                    <input type="text" id="embedTitle" class="form-input" value="Saison 4 LifeSteal : Ouverture Imminente !" placeholder="Titre de votre annonce">
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="embedDescription">Description / Corps du message :</label>
+                    <textarea id="embedDescription" class="form-textarea" rows="4">Bienvenue sur la Saison 4 ! Découvrez les nouveaux crafts de coeurs, la zone de guerre PvP et le système anti-triche renforcé.
+
+Rejoignez-nous dès 18h00 sur play.lifestealmc.fr !</textarea>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="embedColor">Couleur de la bordure :</label>
+                    <div class="color-picker-wrap">
+                        <input type="color" id="embedColor" class="color-input" value="#e63946">
+                        <input type="text" id="embedColorHex" class="form-input" value="#e63946" style="max-width: 120px;">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Champ 1 (Titre & Valeur) :</label>
+                    <input type="text" id="f1Title" class="form-input" value="🌐 IP du Serveur" style="margin-bottom: 0.35rem;">
+                    <input type="text" id="f1Val" class="form-input" value="play.lifestealmc.fr (1.21.x)">
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Champ 2 (Titre & Valeur) :</label>
+                    <input type="text" id="f2Title" class="form-input" value="⏰ Heure du Lancement" style="margin-bottom: 0.35rem;">
+                    <input type="text" id="f2Val" class="form-input" value="Ce Samedi à 18h00 UTC+2">
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="embedFooter">Pied de page (Footer) :</label>
+                    <input type="text" id="embedFooter" class="form-input" value="LifeStealMC • L'expérience SMP Ultime" placeholder="Texte de bas de page">
+                </div>
+            </div>
+
+            <!-- Live Preview -->
+            <div>
+                <div class="panel-title" style="margin-bottom: 1rem;">👁️ Prévisualisation en Direct</div>
+                <div class="discord-preview-container">
+                    <div class="discord-message-header">
+                        <div class="bot-avatar">🤖</div>
+                        <div>
+                            <span class="bot-name">LifeSteal Bot</span>
+                            <span class="bot-tag">BOT</span>
+                            <span class="msg-time">Aujourd'hui à 12:00</span>
+                        </div>
+                    </div>
+
+                    <div class="discord-embed" id="previewEmbed">
+                        <div class="embed-author" id="prevAuthor">⚡ LifeStealMC Annonces</div>
+                        <div class="embed-title" id="prevTitle">Saison 4 LifeSteal : Ouverture Imminente !</div>
+                        <div class="embed-desc" id="prevDesc">Bienvenue sur la Saison 4 !</div>
+                        <div class="embed-fields">
+                            <div>
+                                <div class="embed-field-title" id="prevF1Title">🌐 IP du Serveur</div>
+                                <div class="embed-field-val" id="prevF1Val">play.lifestealmc.fr</div>
+                            </div>
+                            <div>
+                                <div class="embed-field-title" id="prevF2Title">⏰ Heure</div>
+                                <div class="embed-field-val" id="prevF2Val">Ce Samedi</div>
+                            </div>
+                        </div>
+                        <div class="embed-footer" id="prevFooter">LifeStealMC • L'expérience SMP Ultime</div>
+                    </div>
+                </div>
+
+                <!-- Code Export Box -->
+                <div class="code-export-box">
+                    <div class="code-header">
+                        <div class="code-tabs">
+                            <button class="tab-btn active" id="tabJson" onclick="switchTab('json')">JSON Webhook</button>
+                            <button class="tab-btn" id="tabDjs" onclick="switchTab('djs')">Discord.js v14</button>
+                        </div>
+                        <button class="copy-btn" onclick="copyCode()">📋 Copier</button>
+                    </div>
+                    <pre class="code-content" id="codeOutput"></pre>
+                </div>
+            </div>
+        </div>
+
+        <!-- AdSense Slot -->
+        <div class="ad-container">
+            <div class="ad-header">Annonce Partenaire</div>
+            <ins class="adsbygoogle"
+                 style="display:block"
+                 data-ad-client="ca-pub-6241793082650017"
+                 data-ad-slot="1654913277"
+                 data-ad-format="auto"
+                 data-full-width-responsive="true"></ins>
+            <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+        </div>
+    </main>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-col">
+                <h4>⚡ LifeStealMC</h4>
+                <p style="color: var(--text-sub); font-size: 0.88rem;">Portail francophone communautaire et technique pour joueurs Minecraft et gérants de serveurs Discord.</p>
+            </div>
+            <div class="footer-col">
+                <h4>📚 Guides & Docs</h4>
+                <ul>
+                    <li><a href="../guides/guide-lifesteal-debutant.html">Guide Débutant LifeSteal</a></li>
+                    <li><a href="../guides/crafts-recettes-coeurs.html">Crafts & Recettes Coeurs</a></li>
+                    <li><a href="../guides/optimisation-serveur-minecraft.html">Optimisation Serveur</a></li>
+                    <li><a href="../guides/securite-anti-raid-discord.html">Sécurité Anti-Raid Discord</a></li>
+                    <li><a href="../guides/strategie-pvp-lifesteal.html">Stratégies PvP Avancées</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h4>🛠️ Outils</h4>
+                <ul>
+                    <li><a href="calculateur-coeurs.html">Simulateur de Coeurs</a></li>
+                    <li><a href="generateur-embed-discord.html">Générateur Embed Discord</a></li>
+                    <li><a href="calculateur-xp-enchantements.html">Calculateur XP & Enclume</a></li>
+                    <li><a href="../wiki/lexique-termes-gaming.html">Lexique Gaming</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h4>⚖️ Légal</h4>
+                <ul>
+                    <li><a href="../about.html">À propos de l'équipe</a></li>
+                    <li><a href="../privacy.html">Politique de Confidentialité</a></li>
+                    <li><a href="../terms.html">Conditions d'Utilisation</a></li>
+                    <li><a href="../contact.html">Contact</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <span>&copy; 2026 LifeStealMC Network. Tous droits réservés.</span>
+            <span>Non affilié à Mojang Studios ni à Discord Inc.</span>
+        </div>
+    </footer>
+
+    <script>
+        let currentMode = 'json';
+
+        function updateEmbed() {
+            const author = document.getElementById('embedAuthor').value;
+            const title = document.getElementById('embedTitle').value;
+            const desc = document.getElementById('embedDescription').value;
+            const color = document.getElementById('embedColor').value;
+            const f1Title = document.getElementById('f1Title').value;
+            const f1Val = document.getElementById('f1Val').value;
+            const f2Title = document.getElementById('f2Title').value;
+            const f2Val = document.getElementById('f2Val').value;
+            const footer = document.getElementById('embedFooter').value;
+
+            document.getElementById('prevAuthor').textContent = author;
+            document.getElementById('prevTitle').textContent = title;
+            document.getElementById('prevDesc').textContent = desc;
+            document.getElementById('previewEmbed').style.borderLeftColor = color;
+            document.getElementById('prevF1Title').textContent = f1Title;
+            document.getElementById('prevF1Val').textContent = f1Val;
+            document.getElementById('prevF2Title').textContent = f2Title;
+            document.getElementById('prevF2Val').textContent = f2Val;
+            document.getElementById('prevFooter').textContent = footer;
+
+            renderCode();
+        }
+
+        function switchTab(mode) {
+            currentMode = mode;
+            document.getElementById('tabJson').className = mode === 'json' ? 'tab-btn active' : 'tab-btn';
+            document.getElementById('tabDjs').className = mode === 'djs' ? 'tab-btn active' : 'tab-btn';
+            renderCode();
+        }
+
+        function renderCode() {
+            const author = document.getElementById('embedAuthor').value;
+            const title = document.getElementById('embedTitle').value;
+            const desc = document.getElementById('embedDescription').value;
+            const color = document.getElementById('embedColor').value;
+            const f1Title = document.getElementById('f1Title').value;
+            const f1Val = document.getElementById('f1Val').value;
+            const f2Title = document.getElementById('f2Title').value;
+            const f2Val = document.getElementById('f2Val').value;
+            const footer = document.getElementById('embedFooter').value;
+
+            const colorInt = parseInt(color.replace('#', ''), 16);
+
+            if (currentMode === 'json') {
+                const jsonObj = {
+                    embeds: [{
+                        author: { name: author },
+                        title: title,
+                        description: desc,
+                        color: colorInt,
+                        fields: [
+                            { name: f1Title, value: f1Val, inline: true },
+                            { name: f2Title, value: f2Val, inline: true }
+                        ],
+                        footer: { text: footer }
+                    }]
+                };
+                document.getElementById('codeOutput').textContent = JSON.stringify(jsonObj, null, 2);
+            } else {
+                const djsCode = `const { EmbedBuilder } = require('discord.js');
+
+const embed = new EmbedBuilder()
+    .setColor('${color}')
+    .setAuthor({ name: ${JSON.stringify(author)} })
+    .setTitle(${JSON.stringify(title)})
+    .setDescription(${JSON.stringify(desc)})
+    .addFields(
+        { name: ${JSON.stringify(f1Title)}, value: ${JSON.stringify(f1Val)}, inline: true },
+        { name: ${JSON.stringify(f2Title)}, value: ${JSON.stringify(f2Val)}, inline: true }
+    )
+    .setFooter({ text: ${JSON.stringify(footer)} });
+
+channel.send({ embeds: [embed] });`;
+                document.getElementById('codeOutput').textContent = djsCode;
+            }
+        }
+
+        function copyCode() {
+            const text = document.getElementById('codeOutput').textContent;
+            navigator.clipboard.writeText(text).then(() => {
+                alert('Code copié dans le presse-papiers !');
+            });
+        }
+
+        document.getElementById('embedColor').addEventListener('input', (e) => {
+            document.getElementById('embedColorHex').value = e.target.value;
+            updateEmbed();
+        });
+        document.getElementById('embedColorHex').addEventListener('input', (e) => {
+            document.getElementById('embedColor').value = e.target.value;
+            updateEmbed();
+        });
+
+        ['embedAuthor', 'embedTitle', 'embedDescription', 'f1Title', 'f1Val', 'f2Title', 'f2Val', 'embedFooter'].forEach(id => {
+            document.getElementById(id).addEventListener('input', updateEmbed);
+        });
+
+        updateEmbed();
+    </script>
+</body>
+</html>

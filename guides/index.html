@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Guides & Tutoriels Gaming — LifeStealMC Network</title>
+    <meta name="description" content="Découvrez notre collection complète de guides experts pour Minecraft LifeSteal, optimisation de serveurs Paper, sécurité Discord et stratégies PvP.">
+    <meta name="keywords" content="guides lifesteal, tutoriels minecraft, optimisation serveur paper, securite discord, pvp lifesteal, bots discord">
+    <meta name="author" content="LifeStealMC Editorial Team">
+    <link rel="canonical" href="https://lifestealmc.fr/guides/">
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://lifestealmc.fr/guides/">
+    <meta property="og:title" content="Guides & Tutoriels Gaming — LifeStealMC Network">
+    <meta property="og:description" content="Guides techniques, tutoriels pas-à-pas et stratégies avancées rédigés par nos experts gaming.">
+    <meta property="og:site_name" content="LifeStealMC Network">
+
+    <!-- Google AdSense -->
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6241793082650017" crossorigin="anonymous"></script>
+
+    <style>
+        :root {
+            --bg-color: #0d0e12;
+            --surface-color: #12141a;
+            --card-bg: #161822;
+            --card-hover: #1c1f2b;
+            --accent: #e63946;
+            --accent-glow: rgba(230, 57, 70, 0.4);
+            --text-main: #f8fafc;
+            --text-sub: #94a3b8;
+            --border: #232734;
+            --border-hover: #383f52;
+            color-scheme: dark;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+        body { background-color: var(--bg-color); color: var(--text-main); min-height: 100vh; display: flex; flex-direction: column; line-height: 1.6; }
+
+        /* Navbar */
+        .navbar { position: sticky; top: 0; z-index: 100; background: rgba(13, 14, 18, 0.9); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); padding: 0.85rem 1.5rem; }
+        .nav-content { max-width: 1100px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; }
+        .brand { font-size: 1.35rem; font-weight: 800; text-decoration: none; color: var(--text-main); display: flex; align-items: center; gap: 0.4rem; }
+        .brand span { color: var(--accent); }
+        .nav-links { display: flex; align-items: center; gap: 1.5rem; list-style: none; }
+        .nav-links a { color: var(--text-sub); text-decoration: none; font-size: 0.92rem; font-weight: 500; transition: color 0.2s; }
+        .nav-links a:hover, .nav-links a.active { color: var(--text-main); }
+        .nav-btn { background: var(--accent); color: #fff !important; padding: 0.45rem 1rem; border-radius: 8px; font-weight: 600 !important; }
+
+        .container { max-width: 1100px; margin: 0 auto; padding: 3rem 1.25rem 4rem; width: 100%; flex: 1; }
+
+        .breadcrumb { display: flex; align-items: center; gap: 0.5rem; font-size: 0.85rem; color: var(--text-sub); margin-bottom: 1.5rem; }
+        .breadcrumb a { color: var(--accent); text-decoration: none; }
+
+        .header-section { text-align: center; margin-bottom: 3rem; }
+        .header-section h1 { font-size: clamp(2rem, 4.5vw, 3rem); font-weight: 800; margin-bottom: 0.75rem; letter-spacing: -0.5px; }
+        .header-section p { color: var(--text-sub); font-size: 1.05rem; max-width: 650px; margin: 0 auto; }
+
+        /* Filtres */
+        .filter-bar { display: flex; justify-content: center; gap: 0.75rem; margin-bottom: 2.5rem; flex-wrap: wrap; }
+        .filter-btn { background: var(--card-bg); border: 1px solid var(--border); color: var(--text-sub); padding: 0.5rem 1.25rem; border-radius: 999px; font-size: 0.88rem; font-weight: 600; cursor: pointer; transition: all 0.2s; }
+        .filter-btn:hover, .filter-btn.active { background: var(--accent); color: #fff; border-color: var(--accent); }
+
+        /* Grille des guides */
+        .guides-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 1.5rem; }
+        .guide-card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 16px; padding: 1.75rem; display: flex; flex-direction: column; justify-content: space-between; text-decoration: none; color: var(--text-main); transition: all 0.25s ease; position: relative; overflow: hidden; }
+        .guide-card:hover { transform: translateY(-4px); background: var(--card-hover); border-color: var(--border-hover); box-shadow: 0 10px 30px rgba(0,0,0,0.4); }
+        .guide-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: transparent; transition: background 0.25s; }
+        .guide-card:hover::before { background: var(--accent); }
+
+        .card-meta { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1rem; font-size: 0.78rem; color: var(--text-sub); }
+        .card-badge { background: #20242e; padding: 0.25rem 0.65rem; border-radius: 6px; color: #cbd5e1; font-weight: 600; text-transform: uppercase; font-size: 0.72rem; }
+        .guide-card h2 { font-size: 1.25rem; font-weight: 700; margin-bottom: 0.6rem; line-height: 1.35; }
+        .guide-card p { color: var(--text-sub); font-size: 0.9rem; line-height: 1.5; margin-bottom: 1.5rem; }
+        .card-footer { display: flex; align-items: center; justify-content: space-between; margin-top: auto; padding-top: 1rem; border-top: 1px solid rgba(255,255,255,0.05); font-size: 0.85rem; font-weight: 600; color: var(--accent); }
+
+        /* Bloc pub AdSense */
+        .ad-container { background: var(--card-bg); border: 1px solid var(--border); border-radius: 16px; padding: 1rem; margin: 3rem 0; text-align: center; }
+        .ad-header { font-size: 0.7rem; color: #64748b; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.5rem; }
+
+        footer { background: #08090c; border-top: 1px solid var(--border); padding: 3rem 1.5rem 2rem; margin-top: auto; }
+        .footer-content { max-width: 1100px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 2rem; }
+        .footer-col h4 { font-size: 0.95rem; font-weight: 700; margin-bottom: 1rem; text-transform: uppercase; }
+        .footer-col ul { list-style: none; display: flex; flex-direction: column; gap: 0.5rem; font-size: 0.88rem; }
+        .footer-col a { color: var(--text-sub); text-decoration: none; }
+        .footer-col a:hover { color: var(--text-main); }
+        .footer-bottom { max-width: 1100px; margin: 2rem auto 0; padding-top: 1.5rem; border-top: 1px solid rgba(255,255,255,0.05); font-size: 0.82rem; color: #475569; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 1rem; }
+
+        @media (max-width: 768px) { .nav-links { display: none; } }
+    </style>
+</head>
+<body>
+
+    <nav class="navbar">
+        <div class="nav-content">
+            <a href="/" class="brand">LifeSteal<span>MC</span></a>
+            <ul class="nav-links">
+                <li><a href="/">Accueil</a></li>
+                <li><a href="/guides/" class="active">Guides &amp; Tutoriels</a></li>
+                <li><a href="/tools/">Outils</a></li>
+                <li><a href="/wiki/">Base de Connaissances</a></li>
+                <li><a href="/about.html">À Propos</a></li>
+                <li><a href="/contact.html">Contact</a></li>
+                <li><a href="https://kurotsuki.lifestealmc.fr" target="_blank" rel="noopener" class="nav-btn">Kurotsuki Studio →</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="breadcrumb">
+            <a href="/">Accueil</a> <span>/</span> <span>Guides &amp; Tutoriels</span>
+        </div>
+
+        <header class="header-section">
+            <h1>Centre de Guides &amp; Tutoriels Experts</h1>
+            <p>Articles détaillés, stratégies de jeu, optimisations techniques et documentations pour maîtriser le mode LifeSteal et l'écosystème Discord.</p>
+        </header>
+
+        <div class="filter-bar">
+            <button class="filter-btn active" data-filter="all">Tous les guides</button>
+            <button class="filter-btn" data-filter="minecraft">Minecraft &amp; LifeSteal</button>
+            <button class="filter-btn" data-filter="technique">Serveurs &amp; Optimisation</button>
+            <button class="filter-btn" data-filter="discord">Discord &amp; Sécurité</button>
+        </div>
+
+        <div class="guides-grid">
+            <!-- Guide 1 : Débutant LifeSteal -->
+            <a href="/guides/guide-lifesteal-debutant.html" class="guide-card" data-category="minecraft">
+                <div>
+                    <div class="card-meta">
+                        <span class="card-badge" style="color:#f87171;">Minecraft LifeSteal</span>
+                        <span>⏱️ 10 min de lecture</span>
+                    </div>
+                    <h2>Guide Ultime du Mode LifeSteal : Règles, Cœurs et Stratégies de Survie</h2>
+                    <p>Découvrez le fonctionnement complet du vol de cœurs en PvP, les mécaniques d'élimination à 0 cœur, les réanimations et les tactiques essentielles pour survivre.</p>
+                </div>
+                <div class="card-footer">
+                    <span>Par l'Équipe LifeStealMC</span>
+                    <span>Lire le guide →</span>
+                </div>
+            </a>
+
+            <!-- Guide 2 : Crafts & Recettes de Cœurs -->
+            <a href="/guides/crafts-recettes-coeurs.html" class="guide-card" data-category="minecraft">
+                <div>
+                    <div class="card-meta">
+                        <span class="card-badge" style="color:#fbbf24;">Crafts &amp; Recettes</span>
+                        <span>⏱️ 8 min de lecture</span>
+                    </div>
+                    <h2>Encyclopédie des Crafts : Cœurs, Fragments et Balises de Réanimation</h2>
+                    <p>Toutes les recettes détaillées pas-à-pas : fragments de cœur, cœurs d'or compressés, coût en ressources netherite et optimisation de farm.</p>
+                </div>
+                <div class="card-footer">
+                    <span>Par l'Équipe LifeStealMC</span>
+                    <span>Lire le guide →</span>
+                </div>
+            </a>
+
+            <!-- Guide 3 : Optimisation Serveur -->
+            <a href="/guides/optimisation-serveur-minecraft.html" class="guide-card" data-category="technique">
+                <div>
+                    <div class="card-meta">
+                        <span class="card-badge" style="color:#38bdf8;">Serveur &amp; Sysadmin</span>
+                        <span>⏱️ 14 min de lecture</span>
+                    </div>
+                    <h2>Guide Technique d'Optimisation Serveur Minecraft Paper &amp; Purpur 1.21+</h2>
+                    <p>Optimisez vos 20 TPS constants : réglages fins de paper-world-defaults, bukkit, spigot, entités, ticks, garbage collector Aikar Flags et anti-lag.</p>
+                </div>
+                <div class="card-footer">
+                    <span>Par l'Équipe Sysadmin</span>
+                    <span>Lire le guide →</span>
+                </div>
+            </a>
+
+            <!-- Guide 4 : Sécurité Discord -->
+            <a href="/guides/securite-anti-raid-discord.html" class="guide-card" data-category="discord">
+                <div>
+                    <div class="card-meta">
+                        <span class="card-badge" style="color:#a78bfa;">Sécurité Discord</span>
+                        <span>⏱️ 11 min de lecture</span>
+                    </div>
+                    <h2>Sécurisation Discord &amp; Anti-Raid : Protéger son Serveur des Attaques</h2>
+                    <p>Guide complet pour configurer la hiérarchie des rôles, la protection 2FA, les permissions webhooks, le filtrage des faux liens Nitro et la mitigation de raids massifs.</p>
+                </div>
+                <div class="card-footer">
+                    <span>Par l'Équipe Sécurité</span>
+                    <span>Lire le guide →</span>
+                </div>
+            </a>
+
+            <!-- Guide 5 : Stratégies PvP -->
+            <a href="/guides/strategie-pvp-lifesteal.html" class="guide-card" data-category="minecraft">
+                <div>
+                    <div class="card-meta">
+                        <span class="card-badge" style="color:#4ade80;">PvP &amp; Combat</span>
+                        <span>⏱️ 9 min de lecture</span>
+                    </div>
+                    <h2>Stratégies Avancées de Combat PvP en LifeSteal : Cristaux, Ancres et Potions</h2>
+                    <p>Maîtrisez le Crystal PvP, le placement des Respawn Anchors dans l'Overworld, la gestion de l'off-hand avec les totems et le contrôle d'inventaire rapide.</p>
+                </div>
+                <div class="card-footer">
+                    <span>Par l'Équipe LifeStealMC</span>
+                    <span>Lire le guide →</span>
+                </div>
+            </a>
+
+            <!-- Guide 6 : Déploiement Bot Discord -->
+            <a href="/guides/deploiement-bot-discord-2026.html" class="guide-card" data-category="discord">
+                <div>
+                    <div class="card-meta">
+                        <span class="card-badge" style="color:#f472b6;">Développement</span>
+                        <span>⏱️ 12 min de lecture</span>
+                    </div>
+                    <h2>Déploiement et Architecture d'un Bot Discord Moderne en 2026</h2>
+                    <p>Bonnes pratiques pour concevoir et déployer un bot Node.js résilient : Gateway Intents v10, handlers d'interactions, gestionnaire de processus PM2 et hébergement VPS/Pterodactyl.</p>
+                </div>
+                <div class="card-footer">
+                    <span>Par l'Équipe Dev</span>
+                    <span>Lire le guide →</span>
+                </div>
+            </a>
+        </div>
+
+        <!-- AdSense Slot -->
+        <div class="ad-container">
+            <div class="ad-header">Espace Partenaire — Google AdSense</div>
+            <ins class="adsbygoogle"
+                 style="display:block"
+                 data-ad-client="ca-pub-6241793082650017"
+                 data-ad-slot="1654913277"
+                 data-ad-format="auto"
+                 data-full-width-responsive="true"></ins>
+            <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+        </div>
+    </div>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-col">
+                <h4>LifeStealMC Network</h4>
+                <p style="color:var(--text-sub); font-size:0.88rem;">Portail officiel d'accès aux guides, outils et documentations communautaires.</p>
+            </div>
+            <div class="footer-col">
+                <h4>Rubriques</h4>
+                <ul>
+                    <li><a href="/guides/">Guides &amp; Tutoriels</a></li>
+                    <li><a href="/tools/">Outils &amp; Calculateurs</a></li>
+                    <li><a href="/wiki/">Base de Connaissances</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h4>Légal</h4>
+                <ul>
+                    <li><a href="/privacy.html">Politique de Confidentialité</a></li>
+                    <li><a href="/terms.html">Conditions d'Utilisation</a></li>
+                    <li><a href="/about.html">À Propos</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h4>Support</h4>
+                <ul>
+                    <li><a href="/contact.html">Contact &amp; Assistance</a></li>
+                    <li><a href="mailto:contact@lifestealmc.fr">contact@lifestealmc.fr</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <span>&copy; 2026 LifeStealMC Network — Tous droits réservés.</span>
+            <span>Conforme Google AdSense &amp; RGPD</span>
+        </div>
+    </footer>
+
+    <script>
+        // Filtrage dynamique
+        document.querySelectorAll('.filter-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                const cat = btn.getAttribute('data-filter');
+                document.querySelectorAll('.guide-card').forEach(card => {
+                    if (cat === 'all' || card.getAttribute('data-category') === cat) {
+                        card.style.display = 'flex';
+                    } else {
+                        card.style.display = 'none';
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
