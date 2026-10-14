@@ -227,21 +227,21 @@ footer{margin-top:4rem;background:#060608;border-top:1px solid var(--border-soft
             <h3>Sentinelle de modération</h3>
             <p>Pipeline de modération programmable : listes de règles versionnées, files d'examen manuel, actions graduées (avertissement, mute temporaire, bannissement) et journal d'audit horodaté. Chaque décision automatique est traçable et réversible, avec seuils anti-faux-positifs configurables par communauté.</p>
             <div class="spacer"></div>
-            <a class="btn-line" href="#documentation">Voir le guide webhooks &amp; accès API</a>
+            <a class="btn-line" href="guides/securisation-webhooks-api/">Voir le guide webhooks &amp; accès API</a>
           </div>
           <div class="card">
             <span class="tag tag-zinc">API · Interopérabilité</span>
             <h3>API Gateway unifiée</h3>
             <p>Point d'entrée unique devant nos micro-services : authentification par clés d'API à périmètre restreint, quotas par client, validation stricte des payloads, réponses d'erreur normalisées et journalisation centralisée. Les intégrations tierces consomment une seule base d'URL versionnée au lieu de N services disparates.</p>
             <div class="spacer"></div>
-            <a class="btn-line" href="#guide-2">Lire les bonnes pratiques de sécurisation</a>
+            <a class="btn-line" href="guides/securisation-webhooks-api/">Lire les bonnes pratiques de sécurisation</a>
           </div>
           <div class="card">
             <span class="tag tag-zinc">Observabilité</span>
             <h3>Dashboard de monitoring</h3>
             <p>Vue temps réel de la santé de la plateforme : latence médiane et p95 par route, taux d'erreur 5xx, consommation mémoire des workers Node.js, état des files d'attente et historique des incidents. Alertes seuillées et pages de statut générées à partir des mêmes sondes que celles utilisées en production.</p>
             <div class="spacer"></div>
-            <a class="btn-line" href="#guide-3">Lire le guide infrastructure &amp; monitoring</a>
+            <a class="btn-line" href="guides/infrastructure-nodejs-nextjs/">Lire le guide infrastructure &amp; monitoring</a>
           </div>
         </div>
       </div>
@@ -256,144 +256,42 @@ footer{margin-top:4rem;background:#060608;border-top:1px solid var(--border-soft
         <p>Trois articles complets, rédigés par l'équipe et maintenus avec la plateforme. Ils documentent exactement les choix d'architecture appliqués à nos bots, à notre passerelle d'API et à notre infrastructure.</p>
       </div>
       <nav class="toc" aria-label="Sommaire de la documentation">
-        <h3>Sommaire</h3>
+        <h3>Sommaire — articles complets</h3>
         <ol>
-          <li><a href="#guide-1">Guide 1 — Architecture et déploiement d'un bot Discord moderne en production</a></li>
-          <li><a href="#guide-2">Guide 2 — Sécurisation des webhooks et gestion des accès API</a></li>
-          <li><a href="#guide-3">Guide 3 — Bonnes pratiques d'infrastructure pour micro-services Node.js &amp; Next.js</a></li>
+          <li><a href="guides/architecture-bot-discord-production/">Guide 1 — Architecture et déploiement d'un bot Discord moderne en production</a></li>
+          <li><a href="guides/securisation-webhooks-api/">Guide 2 — Sécurisation des webhooks et gestion des accès API</a></li>
+          <li><a href="guides/infrastructure-nodejs-nextjs/">Guide 3 — Bonnes pratiques d'infrastructure pour micro-services Node.js &amp; Next.js</a></li>
         </ol>
       </nav>
 
-      <article class="guide" id="guide-1">
-        <p class="meta">Guide 1 · Bots Discord · Production · ~520 mots</p>
-        <h3>Architecture et déploiement d'un bot Discord moderne en production</h3>
-        <p>Un bot Discord qui dépasse le stade du prototype doit être pensé comme un service distribué : connexion résiliente à la passerelle Discord, séparation stricte entre la logique métier et la couche transport, et supervision du cycle de vie des processus. Avec Discord.js v14, la première décision structurante concerne les <em>Gateway Intents</em> : ne souscrivez qu'aux intents strictement nécessaires (par exemple <code>Guilds</code>, <code>GuildMembers</code> et <code>GuildMessages</code> si la modération l'exige) afin de réduire la surface mémoire et de rester conforme au principe du moindre privilège. Les intents privilégiés se déclarent explicitement dans le portail développeur et doivent être justifiés fonctionnellement.</p>
-        <h4>Structurer le code : commandes, événements et services</h4>
-        <p>Organisez le projet en trois couches. La couche <em>transport</em> (client Discord.js, enregistrement des slash commands, gestionnaires d'événements) ne contient aucune règle métier. La couche <em>services</em> expose des fonctions pures et testables (modération, planification, persistance). La couche <em>infrastructure</em> regroupe la configuration, les clients base de données et les files d'attente. Les commandes slash sont enregistrées via l'API REST de Discord au déploiement, jamais à chaque démarrage, afin d'éviter les limites de taux. Stockez les identifiants d'application et les tokens exclusivement dans des variables d'environnement injectées au runtime.</p>
-        <h4>Sharding et cycle de vie des processus</h4>
-        <p>Au-delà d'environ 2 500 guildes, Discord impose le sharding : la charge de la passerelle est répartie sur plusieurs processus (shards) coordonnés par un gestionnaire. Prévoyez dès le départ un <code>ShardingManager</code> qui surveille les redémarrages, propage les arrêts gracieux (SIGTERM) et répercute les variables d'environnement à chaque shard. Chaque shard expose une sonde de santé locale (statut de connexion, latence heartbeat, nombre de guildes) remontée vers le superviseur. Un arrêt gracieux ferme les connexions base de données, termine les tâches planifiées en cours et confirme la fin du traitement avant de quitter : c'est ce qui évite les doubles réponses et les états corrompus lors des mises à jour.</p>
-        <h4>Conteneurisation et PM2 : une stratégie de déploiement reproductible</h4>
-        <p>En production, figez les dépendances avec un <code>package-lock.json</code> versionné et construisez une image Docker minimale (base Node.js LTS slim, utilisateur non-root, healthcheck HTTP). Pour les hôtes Linux classiques sans orchestrateur, PM2 reste un gestionnaire de processus robuste : redémarrage automatique, mode cluster pour les workers stateless, rotation des journaux et démarrage au boot via <code>pm2 startup</code>. La configuration ci-dessous illustre un déploiement canonique avec variables d'environnement séparées par environnement :</p>
-<pre><code>// ecosystem.config.js — déploiement PM2 du bot et de son shard manager
-module.exports = {
-  apps: [{
-    name: "kurotsuki-shards",
-    script: "./src/shard-manager.js",
-    instances: 1,
-    exec_mode: "fork",
-    watch: false,
-    max_memory_restart: "512M",
-    restart_delay: 5000,
-    exp_backoff_restart_delay: 100,
-    env_production: {
-      NODE_ENV: "production",
-      DISCORD_TOKEN: process.env.DISCORD_TOKEN,
-      DATABASE_URL: process.env.DATABASE_URL,
-      LOG_LEVEL: "info"
-    }
-  }]
-};</code></pre>
-<pre><code># Dockerfile minimal — image reproductible, utilisateur non-root
-FROM node:20-bookworm-slim
-WORKDIR /app
-COPY package*.json ./
-RUN npm ci --omit=dev
-COPY src ./src
-RUN useradd -r bot && chown -R bot:bot /app
-USER bot
-HEALTHCHECK --interval=30s --timeout=5s CMD node ./src/healthcheck.js
-CMD ["node", "./src/shard-manager.js"]</code></pre>
-        <div class="callout"><strong>Checklist de mise en production :</strong> intents minimaux déclarés, commandesslash enregistrées au déploiement, secrets hors du dépôt, healthcheck exposé, journaux centralisés avec identifiant de shard, sauvegardes de la base avant chaque migration, et procédure de rollback testée.</div>
-        <h4>Tests, charge et exploitation courante</h4>
-        <p>Avant chaque mise en production, exécutez les tests unitaires des services, un test de contrat sur l'enregistrement des commandes et un test de charge modéré sur les routes les plus sollicitées (statuts, classements, modération). En exploitation, surveillez la latence du heartbeat de la passerelle, la taille des files d'événements et la consommation mémoire par shard : une dérive lente signale généralement une fuite (écouteurs non retirés, temporisateurs oubliés) plutôt qu'un pic de trafic. Versionnez chaque image Docker par commit, conservez les trois dernières versions déployables et documentez la procédure de retour arrière afin qu'un rollback reste une opération d'une commande, même en pleine soirée d'activité communautaire.</p>
-      </article>
+      <div class="grid grid-3">
+        <div class="card">
+          <span class="tag tag-violet">Guide 1 · Bots Discord</span>
+          <h3>Architecture et déploiement d'un bot Discord en production</h3>
+          <p>Discord.js v14, Gateway Intents minimaux, structuration en couches, sharding, image Docker reproductible et supervision PM2 : la méthode exacte appliquée à nos bots, dont Kurotsuki Studio.</p>
+          <p class="mini">Article complet · ~550 mots · 2 blocs de configuration</p>
+          <div class="spacer"></div>
+          <a class="btn-kuro" href="guides/architecture-bot-discord-production/">Lire le guide complet &rarr;</a>
+        </div>
 
-      <article class="guide" id="guide-2">
-        <p class="meta">Guide 2 · Sécurité · Webhooks &amp; API · ~510 mots</p>
-        <h3>Sécurisation des webhooks et gestion des accès API</h3>
-        <p>Les webhooks et les clés d'API sont les portes d'entrée les plus exposées d'une plateforme communautaire : ils reçoivent des appels depuis l'extérieur, souvent sans session utilisateur, et exécutent des effets de bord (publication de messages, déclenchement de modération, écritures en base). La règle fondamentale est de ne jamais faire confiance au réseau : chaque requête entrante doit être authentifiée, horodatée, limitée en débit et journalisée, même lorsqu'elle provient d'un partenaire connu.</p>
-        <h4>Valider les payloads : signature, horodatage et schéma</h4>
-        <p>Exigez une signature HMAC-SHA256 calculée sur le corps brut de la requête avec un secret partagé, transmise dans un en-tête dédié (par exemple <code>X-Signature-256: sha256=…</code>). Comparez les signatures en temps constant pour empêcher les attaques par canal temporel, et rejetez toute requête dont l'horodatage (<code>X-Timestamp</code>) s'écarte de plus de cinq minutes de l'horloge serveur afin de neutraliser les attaques par rejeu. Validez ensuite le JSON contre un schéma strict : types, longueurs maximales, énumérations fermées et refus des champs inconnus. Un payload qui échoue à la validation reçoit une erreur 400 générique, sans détail interne exploitable.</p>
-        <h4>Mitigation des abus : quotas, allowlists et idempotence</h4>
-        <p>Appliquez une limitation de débit par clé d'API et par adresse IP (par exemple 60 requêtes/minute avec file d'attente et en-têtes <code>Retry-After</code>), et durcissez les routes sensibles (envoi de messages, sanctions) avec des quotas séparés plus restrictifs. Lorsque l'émetteur dispose d'adresses IP stables, ajoutez une allowlist réseau en défense complémentaire — jamais en substitut de la signature. Rendez les opérations critiques idempotentes via une clé d'idempotence (<code>Idempotency-Key</code>) conservée 24 heures : toute répétition accidentelle ou malveillante retourne la réponse d'origine sans réexécuter l'effet de bord.</p>
-        <h4>Secrets, en-têtes HTTP et rotation</h4>
-        <p>Stockez les secrets de webhook et les clés d'API dans un gestionnaire de secrets ou, a minima, dans des variables d'environnement injectées au déploiement — jamais dans le dépôt ni dans les journaux. Attribuez à chaque intégration sa propre clé à périmètre restreint (lecture seule vs écriture, guildes autorisées) afin qu'une compromission reste circonscrite. Faites tourner les secrets au moins une fois par an et immédiatement après tout incident, en maintenant brièvement deux secrets actifs (primaire + précédent) pour une rotation sans interruption. Côté réponses, exposez des en-têtes de sécurité systématiques et des erreurs normalisées sans fuite d'implémentation :</p>
-<pre><code>// Middleware Express — vérification HMAC + fraîcheur + rate limit (extrait)
-import crypto from "node:crypto";
+        <div class="card">
+          <span class="tag tag-blue">Guide 2 · Sécurité API</span>
+          <h3>Sécurisation des webhooks et gestion des accès API</h3>
+          <p>Signatures HMAC en temps constant, horodatage anti-rejeu, validation stricte des payloads, quotas par clé, idempotence et rotation des secrets : les six contrôles appliqués sur notre API Gateway.</p>
+          <p class="mini">Article complet · ~530 mots · 2 blocs de code</p>
+          <div class="spacer"></div>
+          <a class="btn-kuro" href="guides/securisation-webhooks-api/">Lire le guide complet &rarr;</a>
+        </div>
 
-const SECRET = process.env.WEBHOOK_SECRET;
-const WINDOW_MS = 5 * 60 * 1000;
-
-export function verifyWebhook(req, res, next) {
-  const sig = req.headers["x-signature-256"];   // "sha256=&lt;hex&gt;"
-  const ts = Number(req.headers["x-timestamp"]);
-  if (!sig || !Number.isFinite(ts)) return res.status(401).json({ error: "unauthorized" });
-  if (Math.abs(Date.now() - ts) &gt; WINDOW_MS) return res.status(401).json({ error: "stale_request" });
-  const expected = "sha256=" + crypto.createHmac("sha256", SECRET).update(req.rawBody).digest("hex");
-  const a = Buffer.from(expected), b = Buffer.from(String(sig));
-  if (a.length !== b.length || !crypto.timingSafeEqual(a, b)) {
-    return res.status(401).json({ error: "unauthorized" });
-  }
-  next();
-}</code></pre>
-<pre><code># En-têtes de réponse recommandés (Nginx ou middleware applicatif)
-add_header X-Content-Type-Options "nosniff" always;
-add_header Referrer-Policy "strict-origin-when-cross-origin" always;
-add_header Permissions-Policy "camera=(), microphone=(), geolocation=()" always;</code></pre>
-        <div class="callout"><strong>Journalisation :</strong> consignez l'identifiant de clé, la route, le code de statut et la latence — jamais le secret ni le corps complet. Corrélez ces journaux avec le dashboard de monitoring pour détecter les pics d'appels illégitimes avant qu'ils ne deviennent des incidents.</div>
-        <h4>Réponse à incident et rotation des secrets</h4>
-        <p>En cas de suspicion de compromission (pics d'appels anormaux, erreurs 401 massives suivies de succès, signalement d'un partenaire), révoquez immédiatement la clé concernée, générez-en une nouvelle à périmètre identique et diffusez-la par un canal sécurisé distinct du dépôt de code. Analysez ensuite les journaux sur une fenêtre de sept jours pour identifier les appels illégitimes et leurs effets, puis consignez l'incident : horodatage, clé concernée, requêtes incriminées, mesures correctives et date de rotation suivante. Cette discipline transforme chaque alerte en renforcement durable : règles de validation resserrées, quotas ajustés et périmètres de clés réduits au strict nécessaire.</p>
-      </article>
-
-      <article class="guide" id="guide-3">
-        <p class="meta">Guide 3 · Infrastructure · Node.js &amp; Next.js · ~530 mots</p>
-        <h3>Bonnes pratiques d'infrastructure pour micro-services Node.js &amp; Next.js</h3>
-        <p>Exploiter plusieurs micro-services Node.js et une application Next.js en production exige une infrastructure prévisible : un point d'entrée unique qui termine TLS et répartit la charge, des politiques de cache explicites par type de contenu, des sondes de santé qui pilotent réellement le routage, et des sauvegardes dont la restauration est testée. L'objectif n'est pas la sophistication mais la reprise sur panne mesurée en minutes, avec des causes d'incident identifiables dans les journaux et les métriques.</p>
-        <h4>Reverse proxy Nginx : TLS, routage et garde-fous</h4>
-        <p>Placez Nginx en frontal : il termine TLS (configuration moderne, HSTS, redirections HTTP vers HTTPS), route par préfixe (<code>/</code> vers Next.js, <code>/api/</code> vers la passerelle, <code>/healthz</code> vers les sondes) et applique des garde-fous globaux — taille maximale de corps, timeouts amont, limitation de débit par IP et mise en tampon des réponses lentes. Activez la compression Brotli/Gzip uniquement pour les contenus textuels et excluez les flux déjà compressés. Chaque service amont déclare une sonde (<code>GET /healthz</code> répondant 200 en moins de 300 ms avec vérification base de données) ; tout amont en échec est temporairement exclu du pool, ce qui transforme un déploiement défectueux en dégradation partielle plutôt qu'en panne totale.</p>
-        <h4>Stratégie de cache : distinguer le statique, le dynamique et l'API</h4>
-        <p>Servez les assets Next.js compilés (<code>/_next/static/</code>) avec un cache long et immuable, les pages statiques avec revalidation courte, et ne mettez jamais en cache par défaut les réponses d'API authentifiées. Pour les endpoints publics coûteux (classements, statistiques), ajoutez un cache applicatif de courte durée (30 à 120 secondes) avec clé incluant la version et la langue, et exposez des en-têtes <code>Cache-Control</code> et <code>ETag</code> explicites. Invalidez par versionnage d'URL plutôt que par purge manuelle : c'est la seule stratégie qui reste fiable à 3 heures du matin pendant un incident.</p>
-        <h4>Monitoring de latence et reprise sur panne</h4>
-        <p>Mesurez la latence côté serveur par route (médiane p50, p95, p99) et côté client (Web Vitals pour Next.js : LCP, INP, CLS), avec des alertes sur le p95 et sur le taux d'erreur 5xx plutôt que sur des moyennes qui masquent les dégradations. Centralisez les journaux structurés (JSON avec <code>requestId</code>, route, statut, durée) et corrélez-les avec les métriques : un pic de p99 sans erreur applicative oriente vers la base ou le réseau, un pic d'erreurs 5xx vers un déploiement récent. Automatisez les sauvegardes quotidiennes de la base et des volumes persistants, chiffrez-les au repos, conservez-les hors site et — point critique — restaurez-les chaque trimestre sur un environnement isolé pour prouver qu'elles fonctionnent. Documentez enfin une procédure de reprise en une page : ordre de redémarrage des services, commandes de rollback, contacts d'astreinte et critères de fin d'incident.</p>
-<pre><code># /etc/nginx/conf.d/platform.conf — frontal TLS + routage + garde-fous (extrait)
-upstream nextjs { server 127.0.0.1:3000 max_fails=2 fail_timeout=15s; }
-upstream gateway { server 127.0.0.1:4000 max_fails=2 fail_timeout=15s; }
-
-server {
-  listen 443 ssl http2;
-  server_name lifestealmc.fr;
-
-  client_max_body_size 2m;
-  limit_req_zone $binary_remote_addr zone=api:10m rate=30r/s;
-
-  location /_next/static/ {
-    proxy_pass http://nextjs;
-    proxy_cache_valid 200 30d;
-    add_header Cache-Control "public, max-age=2592000, immutable" always;
-  }
-  location /api/ {
-    limit_req zone=api burst=20 nodelay;
-    proxy_pass http://gateway;
-    proxy_read_timeout 15s;
-    proxy_set_header X-Request-Id $request_id;
-  }
-  location = /healthz { proxy_pass http://gateway; access_log off; }
-  location / { proxy_pass http://nextjs; }
-}</code></pre>
-<pre><code># Sonde applicative minimale (Node.js) — binaire pour le proxy et l'orchestrateur
-import http from "node:http";
-import { checkDatabase } from "./db.js";
-
-http.createServer(async (req, res) =&gt; {
-  if (req.url !== "/healthz") { res.writeHead(404).end(); return; }
-  const t0 = Date.now();
-  try {
-    await Promise.race([checkDatabase(), new Promise((_, r) =&gt; setTimeout(() =&gt; r(new Error("timeout")), 250))]);
-    res.writeHead(200, { "content-type": "application/json" }).end(JSON.stringify({ ok: true, ms: Date.now() - t0 }));
-  } catch { res.writeHead(503, { "content-type": "application/json" }).end(JSON.stringify({ ok: false })); }
-}).listen(4000);</code></pre>
-        <div class="callout"><strong>Objectifs de reprise :</strong> RTO inférieur à 15 minutes via redémarrage ordonné et rollback d'image versionnée ; RPO inférieur à 24 heures via sauvegardes quotidiennes testées. Chaque incident se conclut par un post-mortem d'une page : chronologie, cause racine, correctif et action préventive datée.</div>
-      </article>
+        <div class="card">
+          <span class="tag tag-zinc">Guide 3 · Infrastructure</span>
+          <h3>Infrastructure Node.js &amp; Next.js</h3>
+          <p>Frontal Nginx unique (TLS, routage, garde-fous), cache différencié par contenu, monitoring p50/p95/p99, sauvegardes chiffrées testées chaque trimestre et reprise sur panne en 15 minutes.</p>
+          <p class="mini">Article complet · ~500 mots · 2 blocs de configuration</p>
+          <div class="spacer"></div>
+          <a class="btn-kuro" href="guides/infrastructure-nodejs-nextjs/">Lire le guide complet &rarr;</a>
+        </div>
+      </div>
     </div>
   </section>
 
@@ -407,29 +305,15 @@ http.createServer(async (req, res) =&gt; {
       <div class="legal-grid">
         <div class="legal-card" id="confidentialite">
           <h3>Politique de confidentialité</h3>
-          <p><em>Dernière mise à jour : 14 octobre 2026. Responsable de publication : Studio Network — contact@lifestealmc.fr.</em></p>
-          <h4>1. Données que nous traitons</h4>
-          <p>Ce portail est un site vitrine statique : il ne crée pas de compte, ne propose pas de formulaire d'inscription et ne collecte pas directement d'identifiants. Lorsque vous nous écrivez à l'adresse de support, nous traitons votre adresse email et le contenu de votre message uniquement pour répondre à votre demande et assurer le suivi du support. Les journaux techniques d'hébergement (GitHub Pages) peuvent enregistrer des données de connexion standard (adresse IP, horodatage, pages consultées) à des fins de sécurité et de lutte contre les abus.</p>
-          <h4>2. Cookies d'analyse et services publicitaires Google AdSense</h4>
-          <p>Nous utilisons des <strong>cookies d'analyse et de mesure d'audience</strong> pour comprendre la fréquentation du portail (pages vues, provenance approximative, type d'appareil) et améliorer la documentation. Si les annonces Google AdSense sont activées, <strong>Google et ses partenaires peuvent déposer des cookies publicitaires</strong> (personnalisation des annonces, mesure des performances, lutte contre la fraude) et traiter des identifiants en ligne conformément à la <strong>politique de confidentialité de Google</strong>. Vous pouvez refuser ou retirer votre consentement à tout moment depuis les paramètres de votre navigateur (blocage des cookies tiers, navigation privée) et via les <strong>paramètres des annonces Google</strong> ; le site reste consultable, seules la personnalisation et certaines mesures peuvent être dégradées.</p>
-          <h4>3. Base légale, durées et partage</h4>
-          <ul>
-            <li><strong>Base légale :</strong> consentement pour les cookies non essentiels ; intérêt légitime (sécurité, support) et exécution de mesures précontractuelles pour les échanges de support.</li>
-            <li><strong>Durées :</strong> cookies d'analyse jusqu'à 13 mois maximum ; messages de support conservés 24 mois puis supprimés ou anonymisés.</li>
-            <li><strong>Partage :</strong> aucune vente de données. Sous-traitants strictement nécessaires : hébergeur statique (GitHub Pages) et, le cas échéant, Google (AdSense/mesure) agissant selon ses propres conditions.</li>
-          </ul>
-          <h4>4. Vos droits</h4>
-          <p>Conformément au RGPD, vous disposez des droits d'accès, de rectification, d'effacement, de limitation, d'opposition et de portabilité sur les données vous concernant, ainsi que du droit d'introduire une réclamation auprès de votre autorité de contrôle. Exercez vos droits par email à <a href="mailto:contact@lifestealmc.fr">contact@lifestealmc.fr</a> en précisant l'objet de la demande ; une réponse vous est apportée sous un mois.</p>
+          <p>Site vitrine sans compte : seules les données de support et les journaux techniques d'hébergement sont traités. Cookies d'analyse et cookies publicitaires Google AdSense, durées de conservation et droits RGPD détaillés dans la politique complète.</p>
+          <p><em>Dernière mise à jour : 14 octobre 2026.</em></p>
+          <a class="btn-line" href="privacy/">Lire la politique complète &rarr;</a>
         </div>
         <div>
           <div class="legal-card" id="conditions">
             <h3>Conditions d'utilisation</h3>
-            <h4>1. Objet et accès</h4>
-            <p>lifestealmc.fr fournit un portail d'information, une vitrine de projets et une documentation technique. L'accès est gratuit, sans inscription, et requiert une connexion internet et un navigateur à jour. Nous pouvons faire évoluer les contenus, les ancres et la présentation sans préavis pour maintenir la qualité éditoriale.</p>
-            <h4>2. Propriété intellectuelle et usages autorisés</h4>
-            <p>Les textes, guides et extraits de code publiés sur ce portail sont mis à disposition pour un usage personnel, pédagogique et professionnel interne, avec citation de la source. Toute reproduction massive, revente en l'état ou présentation trompeuse comme contenu officiel tiers est interdite. Les marques, logos et applications tierces (dont Discord) appartiennent à leurs détenteurs respectifs ; ce portail n'est affilié à aucun éditeur de plateforme.</p>
-            <h4>3. Responsabilités</h4>
-            <p>La documentation est fournie « en l'état » à titre informatif : testez systématiquement les configurations et extraits de code dans un environnement isolé avant production. Nous ne saurions être tenus responsables des dommages indirects liés à une mauvaise application des guides, à une interruption d'hébergement ou à un contenu tiers accessible via les liens sortants (dont le sous-domaine Kurotsuki). Tout usage abusif (intrusion, spam, contournement des quotas d'API) expose son auteur aux mesures techniques et légales applicables.</p>
+            <p>Accès gratuit sans inscription. Contenus mis à disposition pour usage personnel, pédagogique et professionnel interne avec citation de la source. Documentation fournie « en l'état » : à tester en environnement isolé. Comportements abusifs (intrusion, spam, contournement de quotas) sanctionnés.</p>
+            <a class="btn-line" href="terms/">Lire les conditions complètes &rarr;</a>
           </div>
           <div class="contact-band" id="contact">
             <div>
@@ -437,6 +321,7 @@ http.createServer(async (req, res) =&gt; {
               <p>Questions sur les projets, signalement d'erreur dans la documentation, demande d'exercice de vos droits ou partenariat : écrivez-nous. Indiquez la page concernée et, si possible, une capture d'écran et votre environnement (navigateur, OS).</p>
             </div>
             <a class="mail" href="mailto:contact@lifestealmc.fr">contact@lifestealmc.fr</a>
+            <p style="width:100%; margin-top:.8rem;"><a href="contact/" style="color:#c4b5fd; font-size:.88rem;">Voir la page contact : délais, sujets traités &rarr;</a> · <a href="about/" style="color:#c4b5fd; font-size:.88rem;">À propos du studio &rarr;</a></p>
           </div>
         </div>
       </div>
@@ -462,16 +347,16 @@ http.createServer(async (req, res) =&gt; {
     <div>
       <h4>Guides &amp; contact</h4>
       <ul>
-        <li><a href="#guide-1">Bot Discord en production</a></li>
-        <li><a href="#guide-2">Webhooks &amp; accès API</a></li>
-        <li><a href="#guide-3">Infra Node.js &amp; Next.js</a></li>
+        <li><a href="guides/architecture-bot-discord-production/">Bot Discord en production</a></li>
+        <li><a href="guides/securisation-webhooks-api/">Webhooks &amp; accès API</a></li>
+        <li><a href="guides/infrastructure-nodejs-nextjs/">Infra Node.js &amp; Next.js</a></li>
         <li><a href="mailto:contact@lifestealmc.fr">contact@lifestealmc.fr</a></li>
       </ul>
     </div>
   </div>
   <div class="foot-bottom">
     <span>© 2026 Studio Network. Tous droits réservés.</span>
-    <span><a href="/ads.txt">ads.txt</a> · <a href="#confidentialite">Confidentialité</a> · <a href="#conditions">Conditions</a> · <a href="#haut">Haut de page ↑</a></span>
+    <span><a href="/ads.txt">ads.txt</a> · <a href="privacy/">Confidentialité</a> · <a href="terms/">Conditions</a> · <a href="about/">À propos</a> · <a href="#haut">Haut de page ↑</a></span>
   </div>
 </footer>
 </body>

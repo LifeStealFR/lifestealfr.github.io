@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Architecture et déploiement d'un Bot Discord moderne en production — Studio Network</title>
+<meta name="description" content="Guide complet : structurer un bot Discord Discord.js v14 (intents, couches, sharding), le conteneuriser avec Docker et l'exploiter en production avec PM2, healthchecks et rollback.">
+<link rel="canonical" href="https://lifestealmc.fr/guides/architecture-bot-discord-production/">
+<meta name="google-adsense-account" content="ca-pub-6241793082650017">
+<meta name="robots" content="index, follow">
+<meta name="author" content="Studio Network">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://lifestealmc.fr/guides/architecture-bot-discord-production/">
+<meta property="og:title" content="Architecture et déploiement d'un Bot Discord moderne en production">
+<meta property="og:description" content="Discord.js v14, Gateway Intents, sharding, Docker, PM2 : le guide d'exploitation appliqué à nos bots, dont Kurotsuki Studio.">
+<meta property="og:site_name" content="Studio Network">
+<meta property="og:locale" content="fr_FR">
+<meta name="theme-color" content="#09090b">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "TechArticle",
+  "headline": "Architecture et déploiement d'un Bot Discord moderne en production",
+  "description": "Structurer, conteneuriser et exploiter un bot Discord Discord.js v14 en production : intents, sharding, Docker, PM2.",
+  "inLanguage": "fr-FR",
+  "author": { "@type": "Organization", "name": "Studio Network", "url": "https://lifestealmc.fr/" },
+  "publisher": { "@type": "Organization", "name": "Studio Network", "url": "https://lifestealmc.fr/" },
+  "mainEntityOfPage": "https://lifestealmc.fr/guides/architecture-bot-discord-production/"
+}
+</script>
+<style>
+:root{--bg:#09090b;--surface:#101014;--surface-2:#14141b;--card:#17171f;--border:#26262f;--border-soft:#1f1f28;--text:#f4f4f5;--muted:#a1a1aa;--faint:#71717a;--violet:#8b5cf6;--violet-soft:rgba(139,92,246,.14);--blue:#38bdf8;--radius:14px;--max:860px;color-scheme:dark}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;line-height:1.75;min-height:100vh;display:flex;flex-direction:column;-webkit-font-smoothing:antialiased}
+a{color:var(--blue)}
+header.nav{position:sticky;top:0;z-index:100;background:rgba(9,9,11,.88);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-bottom:1px solid var(--border-soft)}
+.nav-inner{max-width:1120px;margin:0 auto;padding:.85rem 1.25rem;display:flex;align-items:center;justify-content:space-between;gap:1rem}
+.brand{display:flex;align-items:center;gap:.6rem;text-decoration:none;color:var(--text);font-weight:800;font-size:1.05rem}
+.brand-mark{width:32px;height:32px;border-radius:10px;display:inline-flex;align-items:center;justify-content:center;background:linear-gradient(135deg,var(--violet),#4f46e5 55%,#0284c7)}
+nav.links{display:flex;align-items:center;gap:1.3rem;list-style:none}
+nav.links a{color:var(--muted);text-decoration:none;font-size:.9rem;font-weight:500}
+nav.links a:hover{color:var(--text)}
+main{flex:1;width:100%}
+.wrap{max-width:var(--max);margin:0 auto;padding:2.5rem 1.25rem 3rem}
+.crumb{font-size:.82rem;color:var(--faint);margin-bottom:1.5rem}
+.crumb a{color:#c4b5fd;text-decoration:none}
+.crumb a:hover{text-decoration:underline}
+.meta{font-size:.76rem;color:var(--faint);text-transform:uppercase;letter-spacing:.06em;font-weight:700;margin-bottom:.5rem}
+h1{font-size:clamp(1.7rem,4vw,2.4rem);line-height:1.2;letter-spacing:-.015em;margin-bottom:1rem}
+.lead{color:#d4d4d8;font-size:1.02rem;margin-bottom:1rem}
+article h2{font-size:1.25rem;margin:2rem 0 .7rem;letter-spacing:-.01em}
+article p{color:#c9c9d1;font-size:.96rem;margin-bottom:1rem}
+article p strong{color:#fff}
+pre{background:#0b0b10;border:1px solid var(--border);border-radius:10px;padding:1rem 1.2rem;overflow-x:auto;margin:1rem 0 1.3rem;font-size:.82rem;line-height:1.6}
+code{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;color:#d8b4fe}
+pre code{color:#e4e4e7}
+.callout{border-left:3px solid var(--violet);background:var(--violet-soft);padding:.9rem 1.1rem;border-radius:0 10px 10px 0;font-size:.9rem;color:#ddd6fe;margin:1rem 0 1.2rem}
+.pager{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-top:2.5rem}
+@media(max-width:700px){.pager{grid-template-columns:1fr}}
+.pager a{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:1.1rem 1.3rem;text-decoration:none;display:block}
+.pager a:hover{border-color:#52525b}
+.pager span{display:block;font-size:.75rem;color:var(--faint);text-transform:uppercase;letter-spacing:.06em;font-weight:700}
+.pager b{color:var(--text);font-size:.95rem}
+.related{background:var(--surface-2);border:1px solid var(--border);border-radius:var(--radius);padding:1.4rem 1.6rem;margin-top:1.5rem}
+.related h2{font-size:1rem;margin:0 0 .6rem}
+.related ul{list-style:none;display:flex;flex-direction:column;gap:.4rem;font-size:.9rem}
+footer{margin-top:2rem;background:#060608;border-top:1px solid var(--border-soft)}
+.foot-inner{max-width:1120px;margin:0 auto;padding:2.2rem 1.25rem;display:grid;grid-template-columns:1.2fr 1fr 1fr;gap:2rem}
+@media(max-width:800px){.foot-inner{grid-template-columns:1fr}nav.links{display:none}}
+.foot-inner h3{font-size:.85rem;text-transform:uppercase;letter-spacing:.08em;margin-bottom:.9rem;color:#e4e4e7}
+.foot-inner ul{list-style:none;display:flex;flex-direction:column;gap:.5rem;font-size:.88rem}
+.foot-inner a{color:var(--muted);text-decoration:none}
+.foot-inner a:hover{color:#fff}
+.foot-inner p{color:var(--faint);font-size:.87rem}
+.foot-bottom{max-width:1120px;margin:0 auto;padding:1.2rem 1.25rem 1.8rem;border-top:1px solid rgba(255,255,255,.06);display:flex;justify-content:space-between;gap:1rem;flex-wrap:wrap;font-size:.82rem;color:var(--faint)}
+.foot-bottom a{color:var(--muted)}
+</style>
+</head>
+<body>
+<header class="nav" id="haut">
+  <div class="nav-inner">
+    <a class="brand" href="../../index.html#haut" aria-label="Studio et Projets — accueil"><span class="brand-mark" aria-hidden="true">◈</span><span>Studio &amp; Projets</span></a>
+    <nav aria-label="Navigation principale">
+      <ul class="links">
+        <li><a href="../../index.html#ecosysteme">Écosystème</a></li>
+        <li><a href="../../index.html#kurotsuki">Kurotsuki Bot</a></li>
+        <li><a href="../../index.html#documentation">Documentation</a></li>
+        <li><a href="../../index.html#legal">Légal</a></li>
+      </ul>
+    </nav>
+  </div>
+</header>
+<main>
+  <div class="wrap">
+    <nav class="crumb" aria-label="Fil d'Ariane"><a href="../../index.html#haut">Accueil</a> › <a href="../../index.html#documentation">Documentation</a> › <span>Bot Discord en production</span></nav>
+    <article>
+      <p class="meta">Guide 1 · Bots Discord · Production · Équipe Studio Network</p>
+      <h1>Architecture et déploiement d'un Bot Discord moderne en production</h1>
+      <p class="lead">Ce guide documente la méthode exacte appliquée à nos bots — dont <a href="https://kurotsuki.lifestealmc.fr/en-US">Kurotsuki Studio</a> — pour passer d'un prototype à un service exploité 24/7 : choix des intents, structuration du code, sharding, conteneurisation Docker et supervision par PM2. Public visé : développeurs Node.js ayant déjà manipulé Discord.js et souhaitant industrialiser leur bot.</p>
+      <p>Un bot Discord qui dépasse le stade du prototype doit être pensé comme un service distribué : connexion résiliente à la passerelle Discord, séparation stricte entre la logique métier et la couche transport, et supervision du cycle de vie des processus. Avec Discord.js v14, la première décision structurante concerne les <em>Gateway Intents</em> : ne souscrivez qu'aux intents strictement nécessaires (par exemple <code>Guilds</code>, <code>GuildMembers</code> et <code>GuildMessages</code> si la modération l'exige) afin de réduire la surface mémoire et de rester conforme au principe du moindre privilège. Les intents privilégiés se déclarent explicitement dans le portail développeur et doivent être justifiés fonctionnellement.</p>
+      <h2>Structurer le code : commandes, événements et services</h2>
+      <p>Organisez le projet en trois couches. La couche <em>transport</em> (client Discord.js, enregistrement des slash commands, gestionnaires d'événements) ne contient aucune règle métier. La couche <em>services</em> expose des fonctions pures et testables (modération, planification, persistance). La couche <em>infrastructure</em> regroupe la configuration, les clients base de données et les files d'attente. Les commandes slash sont enregistrées via l'API REST de Discord au déploiement, jamais à chaque démarrage, afin d'éviter les limites de taux. Stockez les identifiants d'application et les tokens exclusivement dans des variables d'environnement injectées au runtime.</p>
+      <h2>Sharding et cycle de vie des processus</h2>
+      <p>Au-delà d'environ 2 500 guildes, Discord impose le sharding : la charge de la passerelle est répartie sur plusieurs processus (shards) coordonnés par un gestionnaire. Prévoyez dès le départ un <code>ShardingManager</code> qui surveille les redémarrages, propage les arrêts gracieux (SIGTERM) et répercute les variables d'environnement à chaque shard. Chaque shard expose une sonde de santé locale (statut de connexion, latence heartbeat, nombre de guildes) remontée vers le superviseur. Un arrêt gracieux ferme les connexions base de données, termine les tâches planifiées en cours et confirme la fin du traitement avant de quitter : c'est ce qui évite les doubles réponses et les états corrompus lors des mises à jour.</p>
+      <h2>Conteneurisation et PM2 : une stratégie de déploiement reproductible</h2>
+      <p>En production, figez les dépendances avec un <code>package-lock.json</code> versionné et construisez une image Docker minimale (base Node.js LTS slim, utilisateur non-root, healthcheck HTTP). Pour les hôtes Linux classiques sans orchestrateur, PM2 reste un gestionnaire de processus robuste : redémarrage automatique, mode cluster pour les workers stateless, rotation des journaux et démarrage au boot via <code>pm2 startup</code>. La configuration ci-dessous illustre un déploiement canonique avec variables d'environnement séparées par environnement :</p>
+<pre><code>// ecosystem.config.js — déploiement PM2 du bot et de son shard manager
+module.exports = {
+  apps: [{
+    name: "kurotsuki-shards",
+    script: "./src/shard-manager.js",
+    instances: 1,
+    exec_mode: "fork",
+    watch: false,
+    max_memory_restart: "512M",
+    restart_delay: 5000,
+    exp_backoff_restart_delay: 100,
+    env_production: {
+      NODE_ENV: "production",
+      DISCORD_TOKEN: process.env.DISCORD_TOKEN,
+      DATABASE_URL: process.env.DATABASE_URL,
+      LOG_LEVEL: "info"
+    }
+  }]
+};</code></pre>
+<pre><code># Dockerfile minimal — image reproductible, utilisateur non-root
+FROM node:20-bookworm-slim
+WORKDIR /app
+COPY package*.json ./
+RUN npm ci --omit=dev
+COPY src ./src
+RUN useradd -r bot && chown -R bot:bot /app
+USER bot
+HEALTHCHECK --interval=30s --timeout=5s CMD node ./src/healthcheck.js
+CMD ["node", "./src/shard-manager.js"]</code></pre>
+      <div class="callout"><strong>Checklist de mise en production :</strong> intents minimaux déclarés, commandes slash enregistrées au déploiement, secrets hors du dépôt, healthcheck exposé, journaux centralisés avec identifiant de shard, sauvegardes de la base avant chaque migration, et procédure de rollback testée.</div>
+      <h2>Tests, charge et exploitation courante</h2>
+      <p>Avant chaque mise en production, exécutez les tests unitaires des services, un test de contrat sur l'enregistrement des commandes et un test de charge modéré sur les routes les plus sollicitées (statuts, classements, modération). En exploitation, surveillez la latence du heartbeat de la passerelle, la taille des files d'événements et la consommation mémoire par shard : une dérive lente signale généralement une fuite (écouteurs non retirés, temporisateurs oubliés) plutôt qu'un pic de trafic. Versionnez chaque image Docker par commit, conservez les trois dernières versions déployables et documentez la procédure de retour arrière afin qu'un rollback reste une opération d'une commande, même en pleine soirée d'activité communautaire.</p>
+      <h2>À retenir</h2>
+      <p>Un bot fiable en production repose sur trois piliers : des intents minimaux et justifiés, une séparation stricte transport / services / infrastructure, et un cycle de vie supervisé (sharding, arrêts gracieux, healthchecks, rollback versionné). Une fois le bot stable, sécurisez ses points d'entrée externes — webhooks et clés d'API — en suivant notre <a href="../securisation-webhooks-api/">guide 2 sur la sécurisation des webhooks</a>, puis fiabilisez l'hébergement global avec le <a href="../infrastructure-nodejs-nextjs/">guide 3 sur l'infrastructure Node.js &amp; Next.js</a>.</p>
+    </article>
+    <nav class="pager" aria-label="Navigation entre guides">
+      <a href="../../index.html#documentation"><span>← Sommaire</span><b>Retour à la documentation</b></a>
+      <a href="../securisation-webhooks-api/"><span>Guide suivant →</span><b>Sécurisation des webhooks et accès API</b></a>
+    </nav>
+    <aside class="related" aria-label="Contenus liés">
+      <h2>Pour aller plus loin</h2>
+      <ul>
+        <li><a href="../infrastructure-nodejs-nextjs/">Guide 3 — Infrastructure Node.js &amp; Next.js (Nginx, cache, monitoring)</a></li>
+        <li><a href="https://kurotsuki.lifestealmc.fr/en-US">Kurotsuki Studio — le bot opéré avec cette architecture</a></li>
+        <li><a href="../../about/">À propos du Studio Network</a></li>
+      </ul>
+    </aside>
+  </div>
+</main>
+<footer>
+  <div class="foot-inner">
+    <div>
+      <h3>◈ Studio &amp; Projets</h3>
+      <p>Portail officiel lifestealmc.fr — studio d'outils web, bots Discord, API Gateway et infrastructure.</p>
+    </div>
+    <div>
+      <h3>Guides</h3>
+      <ul>
+        <li><a href="../architecture-bot-discord-production/">Bot Discord en production</a></li>
+        <li><a href="../securisation-webhooks-api/">Webhooks &amp; accès API</a></li>
+        <li><a href="../infrastructure-nodejs-nextjs/">Infra Node.js &amp; Next.js</a></li>
+      </ul>
+    </div>
+    <div>
+      <h3>Légal &amp; contact</h3>
+      <ul>
+        <li><a href="../../about/">À propos</a></li>
+        <li><a href="../../privacy/">Confidentialité</a></li>
+        <li><a href="../../terms/">Conditions d'utilisation</a></li>
+        <li><a href="../../contact/">Contact</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="foot-bottom">
+    <span>© 2026 Studio Network. Tous droits réservés.</span>
+    <span><a href="/ads.txt">ads.txt</a> · <a href="../../index.html#haut">Accueil ↑</a></span>
+  </div>
+</footer>
+</body>
+</html>

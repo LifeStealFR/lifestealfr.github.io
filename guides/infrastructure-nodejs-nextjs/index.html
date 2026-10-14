@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Bonnes pratiques d'infrastructure pour micro-services Node.js &amp; Next.js — Studio Network</title>
+<meta name="description" content="Guide complet : reverse proxy Nginx (TLS, routage, garde-fous), stratégie de cache, monitoring de latence p50/p95/p99, sauvegardes testées et reprise sur panne.">
+<link rel="canonical" href="https://lifestealmc.fr/guides/infrastructure-nodejs-nextjs/">
+<meta name="google-adsense-account" content="ca-pub-6241793082650017">
+<meta name="robots" content="index, follow">
+<meta name="author" content="Studio Network">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://lifestealmc.fr/guides/infrastructure-nodejs-nextjs/">
+<meta property="og:title" content="Infrastructure pour micro-services Node.js &amp; Next.js">
+<meta property="og:description" content="Nginx, cache, monitoring de latence et reprise sur panne : l'infrastructure qui héberge nos bots, API et dashboards.">
+<meta property="og:site_name" content="Studio Network">
+<meta property="og:locale" content="fr_FR">
+<meta name="theme-color" content="#09090b">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "TechArticle",
+  "headline": "Bonnes pratiques d'infrastructure pour micro-services Node.js & Next.js",
+  "description": "Frontal Nginx, politiques de cache, monitoring de latence et reprise sur panne pour services Node.js et applications Next.js.",
+  "inLanguage": "fr-FR",
+  "author": { "@type": "Organization", "name": "Studio Network", "url": "https://lifestealmc.fr/" },
+  "publisher": { "@type": "Organization", "name": "Studio Network", "url": "https://lifestealmc.fr/" },
+  "mainEntityOfPage": "https://lifestealmc.fr/guides/infrastructure-nodejs-nextjs/"
+}
+</script>
+<style>
+:root{--bg:#09090b;--surface:#101014;--surface-2:#14141b;--card:#17171f;--border:#26262f;--border-soft:#1f1f28;--text:#f4f4f5;--muted:#a1a1aa;--faint:#71717a;--violet:#8b5cf6;--violet-soft:rgba(139,92,246,.14);--blue:#38bdf8;--radius:14px;--max:860px;color-scheme:dark}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;line-height:1.75;min-height:100vh;display:flex;flex-direction:column;-webkit-font-smoothing:antialiased}
+a{color:var(--blue)}
+header.nav{position:sticky;top:0;z-index:100;background:rgba(9,9,11,.88);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-bottom:1px solid var(--border-soft)}
+.nav-inner{max-width:1120px;margin:0 auto;padding:.85rem 1.25rem;display:flex;align-items:center;justify-content:space-between;gap:1rem}
+.brand{display:flex;align-items:center;gap:.6rem;text-decoration:none;color:var(--text);font-weight:800;font-size:1.05rem}
+.brand-mark{width:32px;height:32px;border-radius:10px;display:inline-flex;align-items:center;justify-content:center;background:linear-gradient(135deg,var(--violet),#4f46e5 55%,#0284c7)}
+nav.links{display:flex;align-items:center;gap:1.3rem;list-style:none}
+nav.links a{color:var(--muted);text-decoration:none;font-size:.9rem;font-weight:500}
+nav.links a:hover{color:var(--text)}
+main{flex:1;width:100%}
+.wrap{max-width:var(--max);margin:0 auto;padding:2.5rem 1.25rem 3rem}
+.crumb{font-size:.82rem;color:var(--faint);margin-bottom:1.5rem}
+.crumb a{color:#c4b5fd;text-decoration:none}
+.crumb a:hover{text-decoration:underline}
+.meta{font-size:.76rem;color:var(--faint);text-transform:uppercase;letter-spacing:.06em;font-weight:700;margin-bottom:.5rem}
+h1{font-size:clamp(1.7rem,4vw,2.4rem);line-height:1.2;letter-spacing:-.015em;margin-bottom:1rem}
+.lead{color:#d4d4d8;font-size:1.02rem;margin-bottom:1rem}
+article h2{font-size:1.25rem;margin:2rem 0 .7rem;letter-spacing:-.01em}
+article p{color:#c9c9d1;font-size:.96rem;margin-bottom:1rem}
+article p strong{color:#fff}
+pre{background:#0b0b10;border:1px solid var(--border);border-radius:10px;padding:1rem 1.2rem;overflow-x:auto;margin:1rem 0 1.3rem;font-size:.82rem;line-height:1.6}
+code{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;color:#d8b4fe}
+pre code{color:#e4e4e7}
+.callout{border-left:3px solid var(--violet);background:var(--violet-soft);padding:.9rem 1.1rem;border-radius:0 10px 10px 0;font-size:.9rem;color:#ddd6fe;margin:1rem 0 1.2rem}
+.pager{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-top:2.5rem}
+@media(max-width:700px){.pager{grid-template-columns:1fr}}
+.pager a{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:1.1rem 1.3rem;text-decoration:none;display:block}
+.pager a:hover{border-color:#52525b}
+.pager span{display:block;font-size:.75rem;color:var(--faint);text-transform:uppercase;letter-spacing:.06em;font-weight:700}
+.pager b{color:var(--text);font-size:.95rem}
+.related{background:var(--surface-2);border:1px solid var(--border);border-radius:var(--radius);padding:1.4rem 1.6rem;margin-top:1.5rem}
+.related h2{font-size:1rem;margin:0 0 .6rem}
+.related ul{list-style:none;display:flex;flex-direction:column;gap:.4rem;font-size:.9rem}
+footer{margin-top:2rem;background:#060608;border-top:1px solid var(--border-soft)}
+.foot-inner{max-width:1120px;margin:0 auto;padding:2.2rem 1.25rem;display:grid;grid-template-columns:1.2fr 1fr 1fr;gap:2rem}
+@media(max-width:800px){.foot-inner{grid-template-columns:1fr}nav.links{display:none}}
+.foot-inner h3{font-size:.85rem;text-transform:uppercase;letter-spacing:.08em;margin-bottom:.9rem;color:#e4e4e7}
+.foot-inner ul{list-style:none;display:flex;flex-direction:column;gap:.5rem;font-size:.88rem}
+.foot-inner a{color:var(--muted);text-decoration:none}
+.foot-inner a:hover{color:#fff}
+.foot-inner p{color:var(--faint);font-size:.87rem}
+.foot-bottom{max-width:1120px;margin:0 auto;padding:1.2rem 1.25rem 1.8rem;border-top:1px solid rgba(255,255,255,.06);display:flex;justify-content:space-between;gap:1rem;flex-wrap:wrap;font-size:.82rem;color:var(--faint)}
+.foot-bottom a{color:var(--muted)}
+</style>
+</head>
+<body>
+<header class="nav" id="haut">
+  <div class="nav-inner">
+    <a class="brand" href="../../index.html#haut" aria-label="Studio et Projets — accueil"><span class="brand-mark" aria-hidden="true">◈</span><span>Studio &amp; Projets</span></a>
+    <nav aria-label="Navigation principale">
+      <ul class="links">
+        <li><a href="../../index.html#ecosysteme">Écosystème</a></li>
+        <li><a href="../../index.html#kurotsuki">Kurotsuki Bot</a></li>
+        <li><a href="../../index.html#documentation">Documentation</a></li>
+        <li><a href="../../index.html#legal">Légal</a></li>
+      </ul>
+    </nav>
+  </div>
+</header>
+<main>
+  <div class="wrap">
+    <nav class="crumb" aria-label="Fil d'Ariane"><a href="../../index.html#haut">Accueil</a> › <a href="../../index.html#documentation">Documentation</a> › <span>Infrastructure Node.js &amp; Next.js</span></nav>
+    <article>
+      <p class="meta">Guide 3 · Infrastructure · Node.js &amp; Next.js · Équipe Studio Network</p>
+      <h1>Bonnes pratiques d'infrastructure pour micro-services Node.js &amp; Next.js</h1>
+      <p class="lead">Ce guide décrit l'infrastructure qui héberge réellement nos services : le bot <a href="https://kurotsuki.lifestealmc.fr/en-US">Kurotsuki Studio</a>, notre API Gateway et nos dashboards. Un seul frontal Nginx, des règles de cache explicites, des sondes qui pilotent le routage et des sauvegardes dont la restauration est prouvée. Public visé : développeurs et administrateurs exploitant des services Node.js sur Linux.</p>
+      <p>L'objectif n'est pas la sophistication mais la reprise sur panne mesurée en minutes, avec des causes d'incident identifiables dans les journaux et les métriques.</p>
+      <h2>Reverse proxy Nginx : TLS, routage et garde-fous</h2>
+      <p>Placez Nginx en frontal : il termine TLS (configuration moderne, HSTS, redirections HTTP vers HTTPS), route par préfixe (<code>/</code> vers Next.js, <code>/api/</code> vers la passerelle, <code>/healthz</code> vers les sondes) et applique des garde-fous globaux — taille maximale de corps, timeouts amont, limitation de débit par IP et mise en tampon des réponses lentes. Activez la compression Brotli/Gzip uniquement pour les contenus textuels et excluez les flux déjà compressés. Chaque service amont déclare une sonde (<code>GET /healthz</code> répondant 200 en moins de 300 ms avec vérification base de données) ; tout amont en échec est temporairement exclu du pool, ce qui transforme un déploiement défectueux en dégradation partielle plutôt qu'en panne totale.</p>
+      <h2>Stratégie de cache : distinguer le statique, le dynamique et l'API</h2>
+      <p>Servez les assets Next.js compilés (<code>/_next/static/</code>) avec un cache long et immuable, les pages statiques avec revalidation courte, et ne mettez jamais en cache par défaut les réponses d'API authentifiées. Pour les endpoints publics coûteux (classements, statistiques), ajoutez un cache applicatif de courte durée (30 à 120 secondes) avec clé incluant la version et la langue, et exposez des en-têtes <code>Cache-Control</code> et <code>ETag</code> explicites. Invalidez par versionnage d'URL plutôt que par purge manuelle : c'est la seule stratégie qui reste fiable à 3 heures du matin pendant un incident.</p>
+      <h2>Monitoring de latence et reprise sur panne</h2>
+      <p>Mesurez la latence côté serveur par route (médiane p50, p95, p99) et côté client (Web Vitals pour Next.js : LCP, INP, CLS), avec des alertes sur le p95 et sur le taux d'erreur 5xx plutôt que sur des moyennes qui masquent les dégradations. Centralisez les journaux structurés (JSON avec <code>requestId</code>, route, statut, durée) et corrélez-les avec les métriques : un pic de p99 sans erreur applicative oriente vers la base ou le réseau, un pic d'erreurs 5xx vers un déploiement récent. Automatisez les sauvegardes quotidiennes de la base et des volumes persistants, chiffrez-les au repos, conservez-les hors site et — point critique — restaurez-les chaque trimestre sur un environnement isolé pour prouver qu'elles fonctionnent. Documentez enfin une procédure de reprise en une page : ordre de redémarrage des services, commandes de rollback, contacts d'astreinte et critères de fin d'incident.</p>
+<pre><code># /etc/nginx/conf.d/platform.conf — frontal TLS + routage + garde-fous (extrait)
+upstream nextjs { server 127.0.0.1:3000 max_fails=2 fail_timeout=15s; }
+upstream gateway { server 127.0.0.1:4000 max_fails=2 fail_timeout=15s; }
+
+server {
+  listen 443 ssl http2;
+  server_name lifestealmc.fr;
+
+  client_max_body_size 2m;
+  limit_req_zone $binary_remote_addr zone=api:10m rate=30r/s;
+
+  location /_next/static/ {
+    proxy_pass http://nextjs;
+    proxy_cache_valid 200 30d;
+    add_header Cache-Control "public, max-age=2592000, immutable" always;
+  }
+  location /api/ {
+    limit_req zone=api burst=20 nodelay;
+    proxy_pass http://gateway;
+    proxy_read_timeout 15s;
+    proxy_set_header X-Request-Id $request_id;
+  }
+  location = /healthz { proxy_pass http://gateway; access_log off; }
+  location / { proxy_pass http://nextjs; }
+}</code></pre>
+<pre><code># Sonde applicative minimale (Node.js) — binaire pour le proxy et l'orchestrateur
+import http from "node:http";
+import { checkDatabase } from "./db.js";
+
+http.createServer(async (req, res) =&gt; {
+  if (req.url !== "/healthz") { res.writeHead(404).end(); return; }
+  const t0 = Date.now();
+  try {
+    await Promise.race([checkDatabase(), new Promise((_, r) =&gt; setTimeout(() =&gt; r(new Error("timeout")), 250))]);
+    res.writeHead(200, { "content-type": "application/json" }).end(JSON.stringify({ ok: true, ms: Date.now() - t0 }));
+  } catch { res.writeHead(503, { "content-type": "application/json" }).end(JSON.stringify({ ok: false })); }
+}).listen(4000);</code></pre>
+      <div class="callout"><strong>Objectifs de reprise :</strong> RTO inférieur à 15 minutes via redémarrage ordonné et rollback d'image versionnée ; RPO inférieur à 24 heures via sauvegardes quotidiennes testées. Chaque incident se conclut par un post-mortem d'une page : chronologie, cause racine, correctif et action préventive datée.</div>
+      <h2>À retenir</h2>
+      <p>Un frontal unique qui termine TLS et applique les garde-fous, un cache différencié par type de contenu, des sondes qui excluent réellement les amonts défaillants, et des sauvegardes restaurées chaque trimestre : c'est ce socle qui permet d'exploiter sereinement les services décrits dans le <a href="../architecture-bot-discord-production/">guide 1 (bots Discord)</a> et de faire respecter les contrôles du <a href="../securisation-webhooks-api/">guide 2 (webhooks &amp; API)</a>. Pour toute question d'exploitation, notre <a href="../../contact/">support</a> répond sous quelques jours ouvrés.</p>
+    </article>
+    <nav class="pager" aria-label="Navigation entre guides">
+      <a href="../securisation-webhooks-api/"><span>← Guide précédent</span><b>Webhooks &amp; accès API</b></a>
+      <a href="../../index.html#documentation"><span>Sommaire →</span><b>Retour à la documentation</b></a>
+    </nav>
+    <aside class="related" aria-label="Contenus liés">
+      <h2>Pour aller plus loin</h2>
+      <ul>
+        <li><a href="../../index.html#ecosysteme">Le dashboard de monitoring dans notre écosystème</a></li>
+        <li><a href="../../about/">Notre méthodologie d'exploitation — à propos</a></li>
+        <li><a href="../../terms/">Conditions d'utilisation du portail</a></li>
+      </ul>
+    </aside>
+  </div>
+</main>
+<footer>
+  <div class="foot-inner">
+    <div>
+      <h3>◈ Studio &amp; Projets</h3>
+      <p>Portail officiel lifestealmc.fr — studio d'outils web, bots Discord, API Gateway et infrastructure.</p>
+    </div>
+    <div>
+      <h3>Guides</h3>
+      <ul>
+        <li><a href="../architecture-bot-discord-production/">Bot Discord en production</a></li>
+        <li><a href="../securisation-webhooks-api/">Webhooks &amp; accès API</a></li>
+        <li><a href="../infrastructure-nodejs-nextjs/">Infra Node.js &amp; Next.js</a></li>
+      </ul>
+    </div>
+    <div>
+      <h3>Légal &amp; contact</h3>
+      <ul>
+        <li><a href="../../about/">À propos</a></li>
+        <li><a href="../../privacy/">Confidentialité</a></li>
+        <li><a href="../../terms/">Conditions d'utilisation</a></li>
+        <li><a href="../../contact/">Contact</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="foot-bottom">
+    <span>© 2026 Studio Network. Tous droits réservés.</span>
+    <span><a href="/ads.txt">ads.txt</a> · <a href="../../index.html#haut">Accueil ↑</a></span>
+  </div>
+</footer>
+</body>
+</html>

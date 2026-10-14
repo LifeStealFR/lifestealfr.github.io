@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Sécurisation des Webhooks et gestion des accès API — Studio Network</title>
+<meta name="description" content="Guide complet : signatures HMAC, horodatage anti-rejeu, validation des payloads, quotas, idempotence, rotation des secrets et en-têtes HTTP pour webhooks et API.">
+<link rel="canonical" href="https://lifestealmc.fr/guides/securisation-webhooks-api/">
+<meta name="google-adsense-account" content="ca-pub-6241793082650017">
+<meta name="robots" content="index, follow">
+<meta name="author" content="Studio Network">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://lifestealmc.fr/guides/securisation-webhooks-api/">
+<meta property="og:title" content="Sécurisation des Webhooks et gestion des accès API">
+<meta property="og:description" content="HMAC, anti-rejeu, quotas, idempotence, rotation des secrets : sécuriser les portes d'entrée de la plateforme.">
+<meta property="og:site_name" content="Studio Network">
+<meta property="og:locale" content="fr_FR">
+<meta name="theme-color" content="#09090b">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "TechArticle",
+  "headline": "Sécurisation des Webhooks et gestion des accès API",
+  "description": "Authentifier, horodater, limiter et journaliser chaque appel entrant : signatures HMAC, quotas, idempotence et rotation des secrets.",
+  "inLanguage": "fr-FR",
+  "author": { "@type": "Organization", "name": "Studio Network", "url": "https://lifestealmc.fr/" },
+  "publisher": { "@type": "Organization", "name": "Studio Network", "url": "https://lifestealmc.fr/" },
+  "mainEntityOfPage": "https://lifestealmc.fr/guides/securisation-webhooks-api/"
+}
+</script>
+<style>
+:root{--bg:#09090b;--surface:#101014;--surface-2:#14141b;--card:#17171f;--border:#26262f;--border-soft:#1f1f28;--text:#f4f4f5;--muted:#a1a1aa;--faint:#71717a;--violet:#8b5cf6;--violet-soft:rgba(139,92,246,.14);--blue:#38bdf8;--radius:14px;--max:860px;color-scheme:dark}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;line-height:1.75;min-height:100vh;display:flex;flex-direction:column;-webkit-font-smoothing:antialiased}
+a{color:var(--blue)}
+header.nav{position:sticky;top:0;z-index:100;background:rgba(9,9,11,.88);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-bottom:1px solid var(--border-soft)}
+.nav-inner{max-width:1120px;margin:0 auto;padding:.85rem 1.25rem;display:flex;align-items:center;justify-content:space-between;gap:1rem}
+.brand{display:flex;align-items:center;gap:.6rem;text-decoration:none;color:var(--text);font-weight:800;font-size:1.05rem}
+.brand-mark{width:32px;height:32px;border-radius:10px;display:inline-flex;align-items:center;justify-content:center;background:linear-gradient(135deg,var(--violet),#4f46e5 55%,#0284c7)}
+nav.links{display:flex;align-items:center;gap:1.3rem;list-style:none}
+nav.links a{color:var(--muted);text-decoration:none;font-size:.9rem;font-weight:500}
+nav.links a:hover{color:var(--text)}
+main{flex:1;width:100%}
+.wrap{max-width:var(--max);margin:0 auto;padding:2.5rem 1.25rem 3rem}
+.crumb{font-size:.82rem;color:var(--faint);margin-bottom:1.5rem}
+.crumb a{color:#c4b5fd;text-decoration:none}
+.crumb a:hover{text-decoration:underline}
+.meta{font-size:.76rem;color:var(--faint);text-transform:uppercase;letter-spacing:.06em;font-weight:700;margin-bottom:.5rem}
+h1{font-size:clamp(1.7rem,4vw,2.4rem);line-height:1.2;letter-spacing:-.015em;margin-bottom:1rem}
+.lead{color:#d4d4d8;font-size:1.02rem;margin-bottom:1rem}
+article h2{font-size:1.25rem;margin:2rem 0 .7rem;letter-spacing:-.01em}
+article p{color:#c9c9d1;font-size:.96rem;margin-bottom:1rem}
+article p strong{color:#fff}
+pre{background:#0b0b10;border:1px solid var(--border);border-radius:10px;padding:1rem 1.2rem;overflow-x:auto;margin:1rem 0 1.3rem;font-size:.82rem;line-height:1.6}
+code{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;color:#d8b4fe}
+pre code{color:#e4e4e7}
+.callout{border-left:3px solid var(--violet);background:var(--violet-soft);padding:.9rem 1.1rem;border-radius:0 10px 10px 0;font-size:.9rem;color:#ddd6fe;margin:1rem 0 1.2rem}
+.pager{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-top:2.5rem}
+@media(max-width:700px){.pager{grid-template-columns:1fr}}
+.pager a{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:1.1rem 1.3rem;text-decoration:none;display:block}
+.pager a:hover{border-color:#52525b}
+.pager span{display:block;font-size:.75rem;color:var(--faint);text-transform:uppercase;letter-spacing:.06em;font-weight:700}
+.pager b{color:var(--text);font-size:.95rem}
+.related{background:var(--surface-2);border:1px solid var(--border);border-radius:var(--radius);padding:1.4rem 1.6rem;margin-top:1.5rem}
+.related h2{font-size:1rem;margin:0 0 .6rem}
+.related ul{list-style:none;display:flex;flex-direction:column;gap:.4rem;font-size:.9rem}
+footer{margin-top:2rem;background:#060608;border-top:1px solid var(--border-soft)}
+.foot-inner{max-width:1120px;margin:0 auto;padding:2.2rem 1.25rem;display:grid;grid-template-columns:1.2fr 1fr 1fr;gap:2rem}
+@media(max-width:800px){.foot-inner{grid-template-columns:1fr}nav.links{display:none}}
+.foot-inner h3{font-size:.85rem;text-transform:uppercase;letter-spacing:.08em;margin-bottom:.9rem;color:#e4e4e7}
+.foot-inner ul{list-style:none;display:flex;flex-direction:column;gap:.5rem;font-size:.88rem}
+.foot-inner a{color:var(--muted);text-decoration:none}
+.foot-inner a:hover{color:#fff}
+.foot-inner p{color:var(--faint);font-size:.87rem}
+.foot-bottom{max-width:1120px;margin:0 auto;padding:1.2rem 1.25rem 1.8rem;border-top:1px solid rgba(255,255,255,.06);display:flex;justify-content:space-between;gap:1rem;flex-wrap:wrap;font-size:.82rem;color:var(--faint)}
+.foot-bottom a{color:var(--muted)}
+</style>
+</head>
+<body>
+<header class="nav" id="haut">
+  <div class="nav-inner">
+    <a class="brand" href="../../index.html#haut" aria-label="Studio et Projets — accueil"><span class="brand-mark" aria-hidden="true">◈</span><span>Studio &amp; Projets</span></a>
+    <nav aria-label="Navigation principale">
+      <ul class="links">
+        <li><a href="../../index.html#ecosysteme">Écosystème</a></li>
+        <li><a href="../../index.html#kurotsuki">Kurotsuki Bot</a></li>
+        <li><a href="../../index.html#documentation">Documentation</a></li>
+        <li><a href="../../index.html#legal">Légal</a></li>
+      </ul>
+    </nav>
+  </div>
+</header>
+<main>
+  <div class="wrap">
+    <nav class="crumb" aria-label="Fil d'Ariane"><a href="../../index.html#haut">Accueil</a> › <a href="../../index.html#documentation">Documentation</a> › <span>Webhooks &amp; accès API</span></nav>
+    <article>
+      <p class="meta">Guide 2 · Sécurité · Webhooks &amp; API · Équipe Studio Network</p>
+      <h1>Sécurisation des Webhooks et gestion des accès API</h1>
+      <p class="lead">Les webhooks et les clés d'API sont les portes d'entrée les plus exposées de notre plateforme : publication de messages, déclenchement de modération, écritures en base. Ce guide décrit les contrôles appliqués sur notre API Gateway — la même passerelle qui dessert <a href="https://kurotsuki.lifestealmc.fr/en-US">Kurotsuki Studio</a> et nos utilitaires de modération. Public visé : développeurs backend exposant des endpoints à des partenaires ou à des services tiers.</p>
+      <p>La règle fondamentale est de ne jamais faire confiance au réseau : chaque requête entrante doit être authentifiée, horodatée, limitée en débit et journalisée, même lorsqu'elle provient d'un partenaire connu.</p>
+      <h2>Valider les payloads : signature, horodatage et schéma</h2>
+      <p>Exigez une signature HMAC-SHA256 calculée sur le corps brut de la requête avec un secret partagé, transmise dans un en-tête dédié (par exemple <code>X-Signature-256: sha256=…</code>). Comparez les signatures en temps constant pour empêcher les attaques par canal temporel, et rejetez toute requête dont l'horodatage (<code>X-Timestamp</code>) s'écarte de plus de cinq minutes de l'horloge serveur afin de neutraliser les attaques par rejeu. Validez ensuite le JSON contre un schéma strict : types, longueurs maximales, énumérations fermées et refus des champs inconnus. Un payload qui échoue à la validation reçoit une erreur 400 générique, sans détail interne exploitable.</p>
+      <h2>Mitigation des abus : quotas, allowlists et idempotence</h2>
+      <p>Appliquez une limitation de débit par clé d'API et par adresse IP (par exemple 60 requêtes/minute avec file d'attente et en-têtes <code>Retry-After</code>), et durcissez les routes sensibles (envoi de messages, sanctions) avec des quotas séparés plus restrictifs. Lorsque l'émetteur dispose d'adresses IP stables, ajoutez une allowlist réseau en défense complémentaire — jamais en substitut de la signature. Rendez les opérations critiques idempotentes via une clé d'idempotence (<code>Idempotency-Key</code>) conservée 24 heures : toute répétition accidentelle ou malveillante retourne la réponse d'origine sans réexécuter l'effet de bord.</p>
+      <h2>Secrets, en-têtes HTTP et rotation</h2>
+      <p>Stockez les secrets de webhook et les clés d'API dans un gestionnaire de secrets ou, a minima, dans des variables d'environnement injectées au déploiement — jamais dans le dépôt ni dans les journaux. Attribuez à chaque intégration sa propre clé à périmètre restreint (lecture seule vs écriture, guildes autorisées) afin qu'une compromission reste circonscrite. Faites tourner les secrets au moins une fois par an et immédiatement après tout incident, en maintenant brièvement deux secrets actifs (primaire + précédent) pour une rotation sans interruption. Côté réponses, exposez des en-têtes de sécurité systématiques et des erreurs normalisées sans fuite d'implémentation :</p>
+<pre><code>// Middleware Express — vérification HMAC + fraîcheur + rate limit (extrait)
+import crypto from "node:crypto";
+
+const SECRET = process.env.WEBHOOK_SECRET;
+const WINDOW_MS = 5 * 60 * 1000;
+
+export function verifyWebhook(req, res, next) {
+  const sig = req.headers["x-signature-256"];   // "sha256=&lt;hex&gt;"
+  const ts = Number(req.headers["x-timestamp"]);
+  if (!sig || !Number.isFinite(ts)) return res.status(401).json({ error: "unauthorized" });
+  if (Math.abs(Date.now() - ts) &gt; WINDOW_MS) return res.status(401).json({ error: "stale_request" });
+  const expected = "sha256=" + crypto.createHmac("sha256", SECRET).update(req.rawBody).digest("hex");
+  const a = Buffer.from(expected), b = Buffer.from(String(sig));
+  if (a.length !== b.length || !crypto.timingSafeEqual(a, b)) {
+    return res.status(401).json({ error: "unauthorized" });
+  }
+  next();
+}</code></pre>
+<pre><code># En-têtes de réponse recommandés (Nginx ou middleware applicatif)
+add_header X-Content-Type-Options "nosniff" always;
+add_header Referrer-Policy "strict-origin-when-cross-origin" always;
+add_header Permissions-Policy "camera=(), microphone=(), geolocation=()" always;</code></pre>
+      <div class="callout"><strong>Journalisation :</strong> consignez l'identifiant de clé, la route, le code de statut et la latence — jamais le secret ni le corps complet. Corrélez ces journaux avec le dashboard de monitoring pour détecter les pics d'appels illégitimes avant qu'ils ne deviennent des incidents.</div>
+      <h2>Réponse à incident et rotation des secrets</h2>
+      <p>En cas de suspicion de compromission (pics d'appels anormaux, erreurs 401 massives suivies de succès, signalement d'un partenaire), révoquez immédiatement la clé concernée, générez-en une nouvelle à périmètre identique et diffusez-la par un canal sécurisé distinct du dépôt de code. Analysez ensuite les journaux sur une fenêtre de sept jours pour identifier les appels illégitimes et leurs effets, puis consignez l'incident : horodatage, clé concernée, requêtes incriminées, mesures correctives et date de rotation suivante. Cette discipline transforme chaque alerte en renforcement durable : règles de validation resserrées, quotas ajustés et périmètres de clés réduits au strict nécessaire.</p>
+      <h2>À retenir</h2>
+      <p>Authentifier (HMAC en temps constant), horodater (fenêtre anti-rejeu de 5 minutes), valider (schéma strict), limiter (quotas par clé et par IP), idempotenter (clés 24 h) et journaliser sans les secrets : ces six contrôles couvrent l'essentiel des attaques contre webhooks et API. Ils se déploient derrière le frontal décrit dans notre <a href="../infrastructure-nodejs-nextjs/">guide 3 sur l'infrastructure (Nginx, garde-fous, sondes)</a>, et protègent les services construits selon le <a href="../architecture-bot-discord-production/">guide 1 sur l'architecture des bots Discord</a>.</p>
+    </article>
+    <nav class="pager" aria-label="Navigation entre guides">
+      <a href="../architecture-bot-discord-production/"><span>← Guide précédent</span><b>Bot Discord en production</b></a>
+      <a href="../infrastructure-nodejs-nextjs/"><span>Guide suivant →</span><b>Infrastructure Node.js &amp; Next.js</b></a>
+    </nav>
+    <aside class="related" aria-label="Contenus liés">
+      <h2>Pour aller plus loin</h2>
+      <ul>
+        <li><a href="../../index.html#ecosysteme">L'API Gateway unifiée dans notre écosystème</a></li>
+        <li><a href="../../privacy/">Politique de confidentialité (données &amp; cookies)</a></li>
+        <li><a href="../../contact/">Signaler une faille ou un abus — contact support</a></li>
+      </ul>
+    </aside>
+  </div>
+</main>
+<footer>
+  <div class="foot-inner">
+    <div>
+      <h3>◈ Studio &amp; Projets</h3>
+      <p>Portail officiel lifestealmc.fr — studio d'outils web, bots Discord, API Gateway et infrastructure.</p>
+    </div>
+    <div>
+      <h3>Guides</h3>
+      <ul>
+        <li><a href="../architecture-bot-discord-production/">Bot Discord en production</a></li>
+        <li><a href="../securisation-webhooks-api/">Webhooks &amp; accès API</a></li>
+        <li><a href="../infrastructure-nodejs-nextjs/">Infra Node.js &amp; Next.js</a></li>
+      </ul>
+    </div>
+    <div>
+      <h3>Légal &amp; contact</h3>
+      <ul>
+        <li><a href="../../about/">À propos</a></li>
+        <li><a href="../../privacy/">Confidentialité</a></li>
+        <li><a href="../../terms/">Conditions d'utilisation</a></li>
+        <li><a href="../../contact/">Contact</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="foot-bottom">
+    <span>© 2026 Studio Network. Tous droits réservés.</span>
+    <span><a href="/ads.txt">ads.txt</a> · <a href="../../index.html#haut">Accueil ↑</a></span>
+  </div>
+</footer>
+</body>
+</html>
