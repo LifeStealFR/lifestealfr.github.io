@@ -2,4 +2,3 @@
 Allow: /
 
 Sitemap: https://lifestealmc.fr/sitemap.xml
-Host: https://lifestealmc.fr

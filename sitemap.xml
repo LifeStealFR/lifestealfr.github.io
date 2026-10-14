@@ -1,120 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <!-- Page d'accueil -->
+  <!-- Portail single-page : unique URL canonique https://lifestealmc.fr/ -->
   <url>
     <loc>https://lifestealmc.fr/</loc>
-    <lastmod>2026-09-23</lastmod>
-    <changefreq>daily</changefreq>
+    <lastmod>2026-10-14</lastmod>
+    <changefreq>weekly</changefreq>
     <priority>1.0</priority>
   </url>
 
-  <!-- Répertoire & Guides Techniques -->
-  <url>
-    <loc>https://lifestealmc.fr/guides/index.html</loc>
-    <lastmod>2026-09-23</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.9</priority>
-  </url>
-  <url>
-    <loc>https://lifestealmc.fr/guides/guide-lifesteal-debutant.html</loc>
-    <lastmod>2026-09-23</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.9</priority>
-  </url>
-  <url>
-    <loc>https://lifestealmc.fr/guides/crafts-recettes-coeurs.html</loc>
-    <lastmod>2026-09-23</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.9</priority>
-  </url>
-  <url>
-    <loc>https://lifestealmc.fr/guides/optimisation-serveur-minecraft.html</loc>
-    <lastmod>2026-09-23</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.9</priority>
-  </url>
-  <url>
-    <loc>https://lifestealmc.fr/guides/securite-anti-raid-discord.html</loc>
-    <lastmod>2026-09-23</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.9</priority>
-  </url>
-  <url>
-    <loc>https://lifestealmc.fr/guides/strategie-pvp-lifesteal.html</loc>
-    <lastmod>2026-09-23</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.9</priority>
-  </url>
-  <url>
-    <loc>https://lifestealmc.fr/guides/deploiement-bot-discord-2026.html</loc>
-    <lastmod>2026-09-23</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.9</priority>
-  </url>
-
-  <!-- Outils & Simulateurs Interactifs -->
-  <url>
-    <loc>https://lifestealmc.fr/tools/index.html</loc>
-    <lastmod>2026-09-23</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.9</priority>
-  </url>
-  <url>
-    <loc>https://lifestealmc.fr/tools/calculateur-coeurs.html</loc>
-    <lastmod>2026-09-23</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.85</priority>
-  </url>
-  <url>
-    <loc>https://lifestealmc.fr/tools/generateur-embed-discord.html</loc>
-    <lastmod>2026-09-23</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.85</priority>
-  </url>
-  <url>
-    <loc>https://lifestealmc.fr/tools/calculateur-xp-enchantements.html</loc>
-    <lastmod>2026-09-23</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.85</priority>
-  </url>
-
-  <!-- Base de Connaissances & Wiki -->
-  <url>
-    <loc>https://lifestealmc.fr/wiki/index.html</loc>
-    <lastmod>2026-09-23</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.85</priority>
-  </url>
-  <url>
-    <loc>https://lifestealmc.fr/wiki/lexique-termes-gaming.html</loc>
-    <lastmod>2026-09-23</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.85</priority>
-  </url>
-
-  <!-- Pages Institutionnelles & E-E-A-T -->
-  <url>
-    <loc>https://lifestealmc.fr/about.html</loc>
-    <lastmod>2026-09-23</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://lifestealmc.fr/privacy.html</loc>
-    <lastmod>2026-09-23</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://lifestealmc.fr/terms.html</loc>
-    <lastmod>2026-09-23</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://lifestealmc.fr/contact.html</loc>
-    <lastmod>2026-09-23</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
+  <!-- NOTE : les sections (écosystème, Kurotsuki, documentation, légal) sont des
+       ancres de la page d'accueil (#ecosysteme, #kurotsuki, #documentation,
+       #legal) : elles ne constituent pas des URL indexables séparées.
+       Le sous-domaine https://kurotsuki.lifestealmc.fr/ est un hôte distinct :
+       la spec sitemaps.org interdit de le lister ici, il a son propre sitemap. -->
 </urlset>
