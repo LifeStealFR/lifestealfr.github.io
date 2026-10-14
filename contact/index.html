@@ -26,7 +26,7 @@
 }
 </script>
 <style>
-:root{--bg:#09090b;--surface:#101014;--surface-2:#14141b;--border:#26262f;--border-soft:#1f1f28;--text:#f4f4f5;--muted:#a1a1aa;--faint:#71717a;--violet:#8b5cf6;--violet-soft:rgba(139,92,246,.14);--blue:#38bdf8;--radius:14px;--max:860px;color-scheme:dark}
+:root{--bg:#0e0e0c;--surface:#141412;--surface-2:#1a1814;--card:#171613;--border:#2b2924;--border-soft:#201f1b;--text:#ede9dd;--muted:#a29d8d;--faint:#6e6a5f;--violet:#e2a63d;--violet-soft:rgba(226,166,61,.10);--blue:#e2a63d;--radius:8px;--max:860px;color-scheme:dark}
 *{margin:0;padding:0;box-sizing:border-box}
 html{scroll-behavior:smooth}
 body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;line-height:1.75;min-height:100vh;display:flex;flex-direction:column;-webkit-font-smoothing:antialiased}
@@ -34,24 +34,24 @@ a{color:var(--blue)}
 header.nav{position:sticky;top:0;z-index:100;background:rgba(9,9,11,.88);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-bottom:1px solid var(--border-soft)}
 .nav-inner{max-width:1120px;margin:0 auto;padding:.85rem 1.25rem;display:flex;align-items:center;justify-content:space-between;gap:1rem}
 .brand{display:flex;align-items:center;gap:.6rem;text-decoration:none;color:var(--text);font-weight:800;font-size:1.05rem}
-.brand-mark{width:32px;height:32px;border-radius:10px;display:inline-flex;align-items:center;justify-content:center;background:linear-gradient(135deg,var(--violet),#4f46e5 55%,#0284c7)}
-nav.links{display:flex;align-items:center;gap:1.3rem;list-style:none}
-nav.links a{color:var(--muted);text-decoration:none;font-size:.9rem;font-weight:500}
-nav.links a:hover{color:var(--text)}
+.brand-mark{width:32px;height:32px;border-radius:10px;display:inline-flex;align-items:center;justify-content:center;background:var(--violet);color:#191407}
+nav ul.links{display:flex;align-items:center;gap:1.3rem;list-style:none}
+nav ul.links a{color:var(--muted);text-decoration:none;font-size:.9rem;font-weight:500}
+nav ul.links a:hover{color:var(--text)}
 main{flex:1;width:100%}
 .wrap{max-width:var(--max);margin:0 auto;padding:2.5rem 1.25rem 3rem}
 .crumb{font-size:.82rem;color:var(--faint);margin-bottom:1.5rem}
-.crumb a{color:#c4b5fd;text-decoration:none}
+.crumb a{color:#e6c584;text-decoration:none}
 .crumb a:hover{text-decoration:underline}
-h1{font-size:clamp(1.7rem,4vw,2.4rem);letter-spacing:-.015em;margin-bottom:1rem;line-height:1.2}
+h1{font-size:clamp(1.7rem,4vw,2.4rem);letter-spacing:0;font-family:Georgia,'Times New Roman',serif;margin-bottom:1rem;line-height:1.2}
 .lead{color:#d4d4d8;font-size:1.02rem;margin-bottom:1rem}
 h2{font-size:1.25rem;margin:2rem 0 .7rem}
 p{color:#c9c9d1;font-size:.96rem;margin-bottom:1rem}
 p strong{color:#fff}
 ul,ol{padding-left:1.2rem;margin:.4rem 0 1rem;display:flex;flex-direction:column;gap:.35rem;color:#c9c9d1;font-size:.95rem}
-.mailbox{background:linear-gradient(135deg,rgba(139,92,246,.16),rgba(56,189,248,.12));border:1px solid rgba(139,92,246,.4);border-radius:var(--radius);padding:1.8rem;text-align:center;margin:1.5rem 0}
+.mailbox{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:1.8rem;text-align:center;margin:1.5rem 0}
 .mailbox p{margin-bottom:1rem}
-.mailbox a.big{font-size:1.15rem;font-weight:800;color:#fff;text-decoration:none;background:linear-gradient(135deg,#7c3aed,#2563eb);padding:.8rem 1.6rem;border-radius:10px;display:inline-block}
+.mailbox a.big{font-size:1.15rem;font-weight:800;color:#191407;text-decoration:none;background:#e2a63d;padding:.8rem 1.6rem;border-radius:10px;display:inline-block}
 .cards{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin:1.2rem 0}
 @media(max-width:700px){.cards{grid-template-columns:1fr}}
 .card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:1.3rem 1.4rem}
@@ -59,7 +59,7 @@ ul,ol{padding-left:1.2rem;margin:.4rem 0 1rem;display:flex;flex-direction:column
 .card p{font-size:.88rem;margin:0}
 footer{margin-top:2rem;background:#060608;border-top:1px solid var(--border-soft)}
 .foot-inner{max-width:1120px;margin:0 auto;padding:2.2rem 1.25rem;display:grid;grid-template-columns:1.2fr 1fr 1fr;gap:2rem}
-@media(max-width:800px){.foot-inner{grid-template-columns:1fr}nav.links{display:none}}
+@media(max-width:800px){.foot-inner{grid-template-columns:1fr}nav ul.links{display:none}}
 .foot-inner h3{font-size:.85rem;text-transform:uppercase;letter-spacing:.08em;margin-bottom:.9rem;color:#e4e4e7}
 .foot-inner ul{list-style:none;display:flex;flex-direction:column;gap:.5rem;font-size:.88rem;padding:0;margin:0}
 .foot-inner a{color:var(--muted);text-decoration:none}
@@ -72,7 +72,7 @@ footer{margin-top:2rem;background:#060608;border-top:1px solid var(--border-soft
 <body>
 <header class="nav" id="haut">
   <div class="nav-inner">
-    <a class="brand" href="../index.html#haut" aria-label="Studio et Projets — accueil"><span class="brand-mark" aria-hidden="true">◈</span><span>Studio &amp; Projets</span></a>
+    <a class="brand" href="../index.html#haut" aria-label="Studio et Projets — accueil"><span class="brand-mark" aria-hidden="true" style="width:11px;height:11px;border-radius:2px"></span><span>Studio Network</span></a>
     <nav aria-label="Navigation principale">
       <ul class="links">
         <li><a href="../index.html#ecosysteme">Écosystème</a></li>
@@ -94,10 +94,10 @@ footer{margin-top:2rem;background:#060608;border-top:1px solid var(--border-soft
     </div>
     <h2>Bien formuler votre demande</h2>
     <div class="cards">
-      <div class="card"><h3>🐞 Erreur documentaire</h3><p>Indiquez la page exacte (URL), le passage concerné, ce que vous attendiez et, si possible, une capture d'écran.</p></div>
-      <div class="card"><h3>🤖 Projet &amp; bot Kurotsuki</h3><p>Précisez le serveur ou compte concerné, la commande utilisée, l'heure approximative et le message d'erreur affiché.</p></div>
-      <div class="card"><h3>🔒 Données personnelles</h3><p>Objet « RGPD », nature de la demande (accès, rectification, effacement…) et éléments permettant de vous identifier. Détails : <a href="../privacy/">confidentialité</a>.</p></div>
-      <div class="card"><h3>🤝 Partenariat</h3><p>Présentez votre structure, l'usage envisagé de nos outils ou API, vos volumes estimés et vos délais.</p></div>
+      <div class="card"><h3>[01] Erreur documentaire</h3><p>Indiquez la page exacte (URL), le passage concerné, ce que vous attendiez et, si possible, une capture d'écran.</p></div>
+      <div class="card"><h3>[02] Projet &amp; bot Kurotsuki</h3><p>Précisez le serveur ou compte concerné, la commande utilisée, l'heure approximative et le message d'erreur affiché.</p></div>
+      <div class="card"><h3>[03] Données personnelles</h3><p>Objet « RGPD », nature de la demande (accès, rectification, effacement…) et éléments permettant de vous identifier. Détails : <a href="../privacy/">confidentialité</a>.</p></div>
+      <div class="card"><h3>[04] Partenariat</h3><p>Présentez votre structure, l'usage envisagé de nos outils ou API, vos volumes estimés et vos délais.</p></div>
     </div>
     <h2>Ce que nous ne traitons pas par email</h2>
     <ul>
@@ -112,7 +112,7 @@ footer{margin-top:2rem;background:#060608;border-top:1px solid var(--border-soft
 <footer>
   <div class="foot-inner">
     <div>
-      <h3>◈ Studio &amp; Projets</h3>
+      <h3>Studio Network</h3>
       <p>Portail officiel lifestealmc.fr — studio d'outils web, bots Discord, API Gateway et infrastructure.</p>
     </div>
     <div>

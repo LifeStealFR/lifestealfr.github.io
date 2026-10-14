@@ -27,7 +27,7 @@
 }
 </script>
 <style>
-:root{--bg:#09090b;--surface:#101014;--surface-2:#14141b;--border:#26262f;--border-soft:#1f1f28;--text:#f4f4f5;--muted:#a1a1aa;--faint:#71717a;--violet:#8b5cf6;--violet-soft:rgba(139,92,246,.14);--blue:#38bdf8;--radius:14px;--max:860px;color-scheme:dark}
+:root{--bg:#0e0e0c;--surface:#141412;--surface-2:#1a1814;--card:#171613;--border:#2b2924;--border-soft:#201f1b;--text:#ede9dd;--muted:#a29d8d;--faint:#6e6a5f;--violet:#e2a63d;--violet-soft:rgba(226,166,61,.10);--blue:#e2a63d;--radius:8px;--max:860px;color-scheme:dark}
 *{margin:0;padding:0;box-sizing:border-box}
 html{scroll-behavior:smooth}
 body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;line-height:1.75;min-height:100vh;display:flex;flex-direction:column;-webkit-font-smoothing:antialiased}
@@ -35,16 +35,16 @@ a{color:var(--blue)}
 header.nav{position:sticky;top:0;z-index:100;background:rgba(9,9,11,.88);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-bottom:1px solid var(--border-soft)}
 .nav-inner{max-width:1120px;margin:0 auto;padding:.85rem 1.25rem;display:flex;align-items:center;justify-content:space-between;gap:1rem}
 .brand{display:flex;align-items:center;gap:.6rem;text-decoration:none;color:var(--text);font-weight:800;font-size:1.05rem}
-.brand-mark{width:32px;height:32px;border-radius:10px;display:inline-flex;align-items:center;justify-content:center;background:linear-gradient(135deg,var(--violet),#4f46e5 55%,#0284c7)}
-nav.links{display:flex;align-items:center;gap:1.3rem;list-style:none}
-nav.links a{color:var(--muted);text-decoration:none;font-size:.9rem;font-weight:500}
-nav.links a:hover{color:var(--text)}
+.brand-mark{width:32px;height:32px;border-radius:10px;display:inline-flex;align-items:center;justify-content:center;background:var(--violet);color:#191407}
+nav ul.links{display:flex;align-items:center;gap:1.3rem;list-style:none}
+nav ul.links a{color:var(--muted);text-decoration:none;font-size:.9rem;font-weight:500}
+nav ul.links a:hover{color:var(--text)}
 main{flex:1;width:100%}
 .wrap{max-width:var(--max);margin:0 auto;padding:2.5rem 1.25rem 3rem}
 .crumb{font-size:.82rem;color:var(--faint);margin-bottom:1.5rem}
-.crumb a{color:#c4b5fd;text-decoration:none}
+.crumb a{color:#e6c584;text-decoration:none}
 .crumb a:hover{text-decoration:underline}
-h1{font-size:clamp(1.7rem,4vw,2.4rem);letter-spacing:-.015em;margin-bottom:1rem;line-height:1.2}
+h1{font-size:clamp(1.7rem,4vw,2.4rem);letter-spacing:0;font-family:Georgia,'Times New Roman',serif;margin-bottom:1rem;line-height:1.2}
 .lead{color:#d4d4d8;font-size:1.02rem;margin-bottom:1rem}
 h2{font-size:1.25rem;margin:2rem 0 .7rem}
 p{color:#c9c9d1;font-size:.96rem;margin-bottom:1rem}
@@ -58,11 +58,11 @@ ul{padding-left:1.2rem;margin:.4rem 0 1rem;display:flex;flex-direction:column;ga
 .stats{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin:1.4rem 0}
 @media(max-width:700px){.stats{grid-template-columns:1fr 1fr}}
 .stat{background:var(--surface-2);border:1px solid var(--border);border-radius:12px;padding:1rem;text-align:center}
-.stat b{display:block;font-size:1.6rem;color:#c4b5fd}
+.stat b{display:block;font-size:1.6rem;color:#e6c584}
 .stat span{font-size:.75rem;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;font-weight:700}
 footer{margin-top:2rem;background:#060608;border-top:1px solid var(--border-soft)}
 .foot-inner{max-width:1120px;margin:0 auto;padding:2.2rem 1.25rem;display:grid;grid-template-columns:1.2fr 1fr 1fr;gap:2rem}
-@media(max-width:800px){.foot-inner{grid-template-columns:1fr}nav.links{display:none}}
+@media(max-width:800px){.foot-inner{grid-template-columns:1fr}nav ul.links{display:none}}
 .foot-inner h3{font-size:.85rem;text-transform:uppercase;letter-spacing:.08em;margin-bottom:.9rem;color:#e4e4e7}
 .foot-inner ul{list-style:none;display:flex;flex-direction:column;gap:.5rem;font-size:.88rem;padding:0;margin:0}
 .foot-inner a{color:var(--muted);text-decoration:none}
@@ -75,7 +75,7 @@ footer{margin-top:2rem;background:#060608;border-top:1px solid var(--border-soft
 <body>
 <header class="nav" id="haut">
   <div class="nav-inner">
-    <a class="brand" href="../index.html#haut" aria-label="Studio et Projets — accueil"><span class="brand-mark" aria-hidden="true">◈</span><span>Studio &amp; Projets</span></a>
+    <a class="brand" href="../index.html#haut" aria-label="Studio et Projets — accueil"><span class="brand-mark" aria-hidden="true" style="width:11px;height:11px;border-radius:2px"></span><span>Studio Network</span></a>
     <nav aria-label="Navigation principale">
       <ul class="links">
         <li><a href="../index.html#ecosysteme">Écosystème</a></li>
@@ -100,10 +100,10 @@ footer{margin-top:2rem;background:#060608;border-top:1px solid var(--border-soft
     </div>
     <h2>Nos pôles d'expertise</h2>
     <div class="grid">
-      <div class="pole"><h3>🤖 Bots &amp; temps réel</h3><p>Discord.js v14, Gateway Intents, sharding, files d'événements, déploiements PM2 et Docker. Produit phare : <a href="https://kurotsuki.lifestealmc.fr/en-US">Kurotsuki Studio</a>.</p></div>
-      <div class="pole"><h3>🔌 API &amp; sécurité</h3><p>Passerelle unifiée, clés à périmètre restreint, signatures HMAC, quotas, idempotence et journalisation centralisée.</p></div>
-      <div class="pole"><h3>🖥️ Web &amp; Next.js</h3><p>Applications App Router, dashboards de monitoring, politiques de cache et Web Vitals suivis en continu.</p></div>
-      <div class="pole"><h3>🛡️ Infrastructure Linux</h3><p>Debian/Ubuntu, Nginx, TLS, sauvegardes chiffrées testées chaque trimestre, post-mortems systématiques.</p></div>
+      <div class="pole"><h3>[01] Bots &amp; temps réel</h3><p>Discord.js v14, Gateway Intents, sharding, files d'événements, déploiements PM2 et Docker. Produit phare : <a href="https://kurotsuki.lifestealmc.fr/en-US">Kurotsuki Studio</a>.</p></div>
+      <div class="pole"><h3>[02] API &amp; sécurité</h3><p>Passerelle unifiée, clés à périmètre restreint, signatures HMAC, quotas, idempotence et journalisation centralisée.</p></div>
+      <div class="pole"><h3>[03] Web &amp; Next.js</h3><p>Applications App Router, dashboards de monitoring, politiques de cache et Web Vitals suivis en continu.</p></div>
+      <div class="pole"><h3>[04] Infrastructure Linux</h3><p>Debian/Ubuntu, Nginx, TLS, sauvegardes chiffrées testées chaque trimestre, post-mortems systématiques.</p></div>
     </div>
     <h2>Méthodologie</h2>
     <ul>
@@ -118,7 +118,7 @@ footer{margin-top:2rem;background:#060608;border-top:1px solid var(--border-soft
 <footer>
   <div class="foot-inner">
     <div>
-      <h3>◈ Studio &amp; Projets</h3>
+      <h3>Studio Network</h3>
       <p>Portail officiel lifestealmc.fr — studio d'outils web, bots Discord, API Gateway et infrastructure.</p>
     </div>
     <div>

@@ -29,7 +29,7 @@
 }
 </script>
 <style>
-:root{--bg:#09090b;--surface:#101014;--surface-2:#14141b;--card:#17171f;--border:#26262f;--border-soft:#1f1f28;--text:#f4f4f5;--muted:#a1a1aa;--faint:#71717a;--violet:#8b5cf6;--violet-soft:rgba(139,92,246,.14);--blue:#38bdf8;--radius:14px;--max:860px;color-scheme:dark}
+:root{--bg:#0e0e0c;--surface:#141412;--surface-2:#1a1814;--card:#171613;--border:#2b2924;--border-soft:#201f1b;--text:#ede9dd;--muted:#a29d8d;--faint:#6e6a5f;--violet:#e2a63d;--violet-soft:rgba(226,166,61,.10);--blue:#e2a63d;--radius:8px;--max:860px;color-scheme:dark}
 *{margin:0;padding:0;box-sizing:border-box}
 html{scroll-behavior:smooth}
 body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;line-height:1.75;min-height:100vh;display:flex;flex-direction:column;-webkit-font-smoothing:antialiased}
@@ -37,25 +37,25 @@ a{color:var(--blue)}
 header.nav{position:sticky;top:0;z-index:100;background:rgba(9,9,11,.88);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-bottom:1px solid var(--border-soft)}
 .nav-inner{max-width:1120px;margin:0 auto;padding:.85rem 1.25rem;display:flex;align-items:center;justify-content:space-between;gap:1rem}
 .brand{display:flex;align-items:center;gap:.6rem;text-decoration:none;color:var(--text);font-weight:800;font-size:1.05rem}
-.brand-mark{width:32px;height:32px;border-radius:10px;display:inline-flex;align-items:center;justify-content:center;background:linear-gradient(135deg,var(--violet),#4f46e5 55%,#0284c7)}
-nav.links{display:flex;align-items:center;gap:1.3rem;list-style:none}
-nav.links a{color:var(--muted);text-decoration:none;font-size:.9rem;font-weight:500}
-nav.links a:hover{color:var(--text)}
+.brand-mark{width:32px;height:32px;border-radius:10px;display:inline-flex;align-items:center;justify-content:center;background:var(--violet);color:#191407}
+nav ul.links{display:flex;align-items:center;gap:1.3rem;list-style:none}
+nav ul.links a{color:var(--muted);text-decoration:none;font-size:.9rem;font-weight:500}
+nav ul.links a:hover{color:var(--text)}
 main{flex:1;width:100%}
 .wrap{max-width:var(--max);margin:0 auto;padding:2.5rem 1.25rem 3rem}
 .crumb{font-size:.82rem;color:var(--faint);margin-bottom:1.5rem}
-.crumb a{color:#c4b5fd;text-decoration:none}
+.crumb a{color:#e6c584;text-decoration:none}
 .crumb a:hover{text-decoration:underline}
 .meta{font-size:.76rem;color:var(--faint);text-transform:uppercase;letter-spacing:.06em;font-weight:700;margin-bottom:.5rem}
-h1{font-size:clamp(1.7rem,4vw,2.4rem);line-height:1.2;letter-spacing:-.015em;margin-bottom:1rem}
+h1{font-size:clamp(1.7rem,4vw,2.4rem);line-height:1.2;letter-spacing:0;font-family:Georgia,'Times New Roman',serif;margin-bottom:1rem}
 .lead{color:#d4d4d8;font-size:1.02rem;margin-bottom:1rem}
-article h2{font-size:1.25rem;margin:2rem 0 .7rem;letter-spacing:-.01em}
+article h2{font-family:Georgia,'Times New Roman',serif;font-size:1.3rem;margin:2rem 0 .7rem;letter-spacing:0}
 article p{color:#c9c9d1;font-size:.96rem;margin-bottom:1rem}
 article p strong{color:#fff}
 pre{background:#0b0b10;border:1px solid var(--border);border-radius:10px;padding:1rem 1.2rem;overflow-x:auto;margin:1rem 0 1.3rem;font-size:.82rem;line-height:1.6}
-code{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;color:#d8b4fe}
-pre code{color:#e4e4e7}
-.callout{border-left:3px solid var(--violet);background:var(--violet-soft);padding:.9rem 1.1rem;border-radius:0 10px 10px 0;font-size:.9rem;color:#ddd6fe;margin:1rem 0 1.2rem}
+code{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;color:#e6c584}
+pre code{color:#e8e2d2}
+.callout{border-left:3px solid var(--violet);background:var(--violet-soft);padding:.9rem 1.1rem;border-radius:0 10px 10px 0;font-size:.9rem;color:#d9cfb6;margin:1rem 0 1.2rem}
 .pager{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-top:2.5rem}
 @media(max-width:700px){.pager{grid-template-columns:1fr}}
 .pager a{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:1.1rem 1.3rem;text-decoration:none;display:block}
@@ -67,7 +67,7 @@ pre code{color:#e4e4e7}
 .related ul{list-style:none;display:flex;flex-direction:column;gap:.4rem;font-size:.9rem}
 footer{margin-top:2rem;background:#060608;border-top:1px solid var(--border-soft)}
 .foot-inner{max-width:1120px;margin:0 auto;padding:2.2rem 1.25rem;display:grid;grid-template-columns:1.2fr 1fr 1fr;gap:2rem}
-@media(max-width:800px){.foot-inner{grid-template-columns:1fr}nav.links{display:none}}
+@media(max-width:800px){.foot-inner{grid-template-columns:1fr}nav ul.links{display:none}}
 .foot-inner h3{font-size:.85rem;text-transform:uppercase;letter-spacing:.08em;margin-bottom:.9rem;color:#e4e4e7}
 .foot-inner ul{list-style:none;display:flex;flex-direction:column;gap:.5rem;font-size:.88rem}
 .foot-inner a{color:var(--muted);text-decoration:none}
@@ -80,7 +80,7 @@ footer{margin-top:2rem;background:#060608;border-top:1px solid var(--border-soft
 <body>
 <header class="nav" id="haut">
   <div class="nav-inner">
-    <a class="brand" href="../../index.html#haut" aria-label="Studio et Projets — accueil"><span class="brand-mark" aria-hidden="true">◈</span><span>Studio &amp; Projets</span></a>
+    <a class="brand" href="../../index.html#haut" aria-label="Studio et Projets — accueil"><span class="brand-mark" aria-hidden="true" style="width:11px;height:11px;border-radius:2px"></span><span>Studio Network</span></a>
     <nav aria-label="Navigation principale">
       <ul class="links">
         <li><a href="../../index.html#ecosysteme">Écosystème</a></li>
@@ -157,7 +157,7 @@ CMD ["node", "./src/shard-manager.js"]</code></pre>
 <footer>
   <div class="foot-inner">
     <div>
-      <h3>◈ Studio &amp; Projets</h3>
+      <h3>Studio Network</h3>
       <p>Portail officiel lifestealmc.fr — studio d'outils web, bots Discord, API Gateway et infrastructure.</p>
     </div>
     <div>
